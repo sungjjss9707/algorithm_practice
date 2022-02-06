@@ -1,0 +1,79 @@
+#include<iostream>
+
+using namespace std;
+
+int numofpeople;
+int sell[16][16];
+int dp[16][10][32770];
+
+/*
+int backtracking1(int person, int price, int numofmaster){
+	int i, dap = -1 ;
+	if(numofmaster==numofpeople){
+		cout<<numofmaster;
+		exit(0);
+	}
+	for(i=1; i<=numofpeople; ++i){
+		if(!visit[i]&&sell[person][i]>=price){
+			visit[i] = true;
+			dap = max(dap, backtracking1(i,sell[person][i], numofmaster+1));
+			visit[i] = false;
+		}
+	}
+	if(dap==-1){
+		return numofmaster;
+	}
+	return dap;
+}
+*/
+
+int backtracking(int person,int yeejeonprice,int now_situation,int numofmaster){
+	//cout<<person<<" "<<now_situation<<"\n";
+	int ret = dp[person][yeejeonprice][now_situation];
+	//cout<<ret<<endl;
+	if(ret!=-1){
+		return ret;
+	}
+	int i, dap=numofmaster,next_situation, shift;
+	for(i=1; i<=numofpeople; ++i){
+		if(sell[person][i]>=yeejeonprice){
+			shift = 1<<(i-1);
+			if((now_situation&shift)==0){
+				next_situation = now_situation|shift;
+				dap = max(dap, backtracking(i,sell[person][i],next_situation, numofmaster+1));
+			}
+			//next_situation = now_situation;
+		}
+	}
+	ret=dap;
+	dp[person][yeejeonprice][now_situation] = dap;
+	return dap;
+}
+
+void clear(){
+	int i,j,k;
+	for(i=1; i<=numofpeople; ++i){
+		for(j=0; j<=9; ++j){
+			for(k=0; k<32770; ++k){
+				dp[i][j][k] = -1;
+			}	
+		}
+		
+	}
+}
+
+int main(void)
+{
+	cin>>numofpeople;
+	int i,k;
+	char c;
+	clear();
+	for(i=1; i<=numofpeople; ++i){
+		for(k=1; k<=numofpeople; ++k){
+			cin>>c;
+			sell[i][k] = c-'0';
+		}
+	}
+	cout<<backtracking(1,0, 1, 1);
+	return 0;
+}
