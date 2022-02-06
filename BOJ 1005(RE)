@@ -1,0 +1,54 @@
+#include<iostream>
+#include<vector>
+#define fastio ios::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
+using namespace std;
+
+int numofcon, numofrule, goal;
+int buildtime[1001];
+vector<int> canbuild[1001];
+int check[1001];
+
+int calculbuildtime(int nowgoal){
+	int ret = check[nowgoal];
+	if(ret!=-1) return ret;
+	if(canbuild[nowgoal].size()==0){	//다른거 안짓고 지을수 있는거면  
+		return buildtime[nowgoal]; 
+	}	
+	
+	int time,i, smallest=0;
+	for(i=0; i<canbuild[nowgoal].size(); ++i){
+		time = calculbuildtime(canbuild[nowgoal][i]);
+		smallest = max(time, smallest);
+	}
+	ret = smallest+buildtime[nowgoal];
+	check[nowgoal] = ret;
+	return ret;
+}
+
+void clear(){
+	int i;
+	for(i=0; i<=numofcon; ++i){
+		check[i]=-1;
+	}
+}
+
+int main(void)
+{
+	fastio;
+	int testcase, t,i,k, seon, hoo;
+	cin>>testcase;
+	for(t=0; t<testcase; ++t){
+		cin>>numofcon>>numofrule;
+		for(i=1; i<=numofcon; ++i){
+			cin>>buildtime[i];
+			canbuild[i].clear();
+		}
+		for(i=0; i<numofrule; ++i){
+			cin>>seon>>hoo;
+			canbuild[hoo].push_back(seon);
+		}
+		cin>>goal;
+		clear();
+		cout<<calculbuildtime(goal)<<"\n";
+	}
+}
