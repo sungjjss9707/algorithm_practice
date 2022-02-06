@@ -1,0 +1,75 @@
+#include<iostream>
+#include<vector>
+using namespace std;
+
+int hap, len;
+
+vector<int> getevenvec(int start, int getsu){
+	vector<int> myvec;
+	for(int i=start; i<start+getsu; ++i){
+		myvec.push_back(i);
+	}
+	return myvec;
+}
+
+vector<int> getoddvec(int myhap, int mylen){
+	int start, mid,end,i;
+	mid = myhap/mylen;
+	start = mid-(mylen/2);
+	end = mid+(mylen/2);
+	vector<int> myvec;
+	for(i=start; i<=end; ++i){
+		myvec.push_back(i);
+	}
+	return myvec;
+}
+
+vector<int> getvec(){
+	vector<int> vec;
+	int i, k,myhap, temphap;
+	double peace;
+	for(i=len; i<=100; ++i){
+		
+		if(i%2==0){
+			myhap=0;
+			for(k=0; k<i; ++k){
+				myhap=myhap+k;
+			}
+			temphap = hap-myhap;
+			if(temphap<0) continue;
+			if(temphap%i==0){
+				vec = getevenvec(temphap/i, i);
+				if(vec[0]>=0) return vec;
+			}
+		}
+		else{
+			//cout<<i<<endl;
+			if(hap%i==0){
+				vec = getoddvec(hap, i);
+				if(vec[0]>=0) return vec;
+				
+			}
+		}
+		vec.clear();
+	}
+	cout<<-1;
+	exit(0);
+	
+}
+
+void getdap(){
+	vector<int> myvec = getvec();
+	int i;
+	for(i=0; i<myvec.size(); ++i){
+		cout<<myvec[i]<<" ";
+	}
+	return;
+}
+
+
+int main(void)
+{
+	cin>>hap>>len;
+	getdap();
+	return 0;
+}
