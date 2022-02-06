@@ -1,0 +1,46 @@
+#include<iostream>
+#include<math.h>
+using namespace std;
+
+int lsb[10][5];
+int joogee[10] = {1,1,4,4,2,1,1,4,4,2};
+
+int getonejaree(int mit, int jisoo){
+	int realjisoo;
+	if(joogee[mit]==1){
+		realjisoo = 1;
+	}
+	else{
+		realjisoo = jisoo%joogee[mit];	
+	}
+	if(realjisoo==0)  realjisoo=joogee[mit];
+	int ret=(int)(pow(mit, realjisoo))%10;
+	if(ret==0) ret = 10;
+	return ret;
+	/*
+	int ret = lsb[mit][realjisoo];
+	if(ret!=-1){
+		return ret;
+	}
+	*/
+}
+
+
+int main(void)
+{
+	int testcase, t,i,j, mit, jisoo;
+	/*
+	for(i=0; i<10; ++i){
+		for(j=0; j<5; ++j){
+			lsb[i][j]=-1;
+		}
+	}
+	*/
+	int yeeljareesu;
+	cin>>testcase;
+	for(t=0; t<testcase; ++t){
+		cin>>mit>>jisoo;
+		yeeljareesu = mit%10;
+		cout<<getonejaree(yeeljareesu, jisoo)<<"\n";
+	}	
+}
