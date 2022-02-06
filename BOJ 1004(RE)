@@ -1,0 +1,47 @@
+#include<iostream>
+#include<math.h>
+using namespace std;
+
+int startx,starty,endx,endy, numofgalaxy;
+
+struct galaxy{
+	int x,y,r,flag;
+};
+
+galaxy g[51];
+
+int getnumofjump(){
+	int i,j,k,sum=0;
+	double dist1,dist2;
+	for(i=0;i<numofgalaxy;++i){
+		dist1=sqrt((g[i].x-startx)*(g[i].x-startx)+(g[i].y-starty)*(g[i].y-starty));
+		dist2=sqrt((g[i].x-endx)*(g[i].x-endx)+(g[i].y-endy)*(g[i].y-endy));
+		if(dist1<g[i].r) g[i].flag++;
+		if(dist2<g[i].r) g[i].flag++;
+	}
+	for(i=0;i<numofgalaxy;++i){
+		if(g[i].flag==1) sum++;
+	}
+	return sum;
+}
+
+void clear(){
+	for(int i=0;i<numofgalaxy;++i){
+		g[i].flag=0;
+	}
+}
+
+int main(void)
+{
+	int testcase,t;
+	cin>>testcase;
+	for(t=0;t<testcase;++t){
+		cin>>startx>>starty>>endx>>endy;
+		cin>>numofgalaxy;
+		clear();
+		for(int i=0;i<numofgalaxy;++i){
+			cin>>g[i].x>>g[i].y>>g[i].r;
+		}
+		cout<<getnumofjump()<<"\n";
+	}
+}
