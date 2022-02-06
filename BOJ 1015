@@ -1,0 +1,32 @@
+#include<iostream>
+#include<algorithm>
+using namespace std;
+
+vector<pair<int, int>> v1;
+vector<pair<int, int>> v2;
+int numofnum;
+
+bool compare(pair<int, int>p1, pair<int, int> p2){
+	if(p1.second==p2.second){
+		return p1.first<p2.first;
+	}
+	return p1.second<p2.second;
+}
+
+int main(void)
+{
+	cin>>numofnum;
+	int i, num;
+	for(i=0; i<numofnum; ++i){
+		cin>>num;
+		v1.push_back({i,num});
+	}
+	sort(v1.begin(), v1.end(), compare);
+	for(i=0; i<numofnum; ++i){
+		v2.push_back({i,v1[i].first});
+	}
+	sort(v2.begin(), v2.end(), compare);
+	for(i=0; i<numofnum; ++i){
+		cout<<v2[i].first<<" ";
+	}
+}
