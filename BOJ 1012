@@ -1,0 +1,71 @@
+#include<iostream>
+#define fastio ios::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
+using namespace std;
+
+int sero, garo, numofbe;
+int map[51][51];
+int dy[4] = {1,0,-1,0};
+int dx[4] = {0,1,0,-1};
+//int check[51][51];
+
+void clear(){
+	int i,k;
+	for(i=0; i<sero; ++i){
+		for(k=0; k<garo; ++k){
+			map[i][k]=0;
+		}
+	}
+}
+
+void printmap(){
+	int i,k;
+	for(i=0; i<sero; ++i){
+		for(k=0; k<garo; ++k){
+			cout<<map[i][k]<<" ";
+		}
+		cout<<"\n";
+	}
+}
+
+void dfs(int nowy, int nowx, int index){
+	map[nowy][nowx] = index;
+	int nexty, nextx,i;
+	for(i=0; i<4; ++i){
+		nexty = nowy+dy[i];
+		nextx = nowx+dx[i];
+		if(nextx>=0&&nextx<garo&&nexty>=0&&nexty<sero){
+			if(map[nexty][nextx]==-1){
+				dfs(nexty, nextx, index);	
+			}
+		}
+	}
+}
+
+int main(void)
+{
+	fastio;
+	int testcase,i,k, t, y,x;
+	int index;
+	cin>>testcase;
+	for(t=0; t<testcase; ++t){
+		cin>>garo>>sero>>numofbe;
+		clear();
+		for(i=0; i<numofbe; ++i){
+			cin>>x>>y;
+			map[y][x] = -1;
+		}
+		index=0;
+		//printmap();
+		for(i=0; i<sero; ++i){
+			for(k=0; k<garo; ++k){
+				if(map[i][k]==-1){
+					index++;
+					dfs(i,k,index);
+				}
+			}
+		}
+		//cout<<"바뀐거 : \n";
+		//printmap();
+		cout<<index<<"\n";
+	}
+}
