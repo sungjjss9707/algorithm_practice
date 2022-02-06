@@ -1,0 +1,25 @@
+#include<iostream>
+
+using namespace std;
+
+int fibo0[41];
+int fibo1[41];
+
+int main(void)
+{
+    int testcase,n;
+    cin>>testcase;
+    fibo0[0]=1;
+    fibo1[0]=0;
+    fibo0[1]=0;
+    fibo1[1]=1;
+    for(int t=2; t<=40; ++t){
+        fibo0[t]=fibo0[t-1]+fibo0[t-2];
+        fibo1[t]=fibo1[t-1]+fibo1[t-2];
+    }
+    for(int t=0;t<testcase;++t){
+        cin>>n; 
+        cout<<fibo0[n]<<" "<<fibo1[n]<<"\n";
+    }
+    
+}
