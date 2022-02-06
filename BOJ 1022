@@ -1,0 +1,228 @@
+#include<iostream>
+#include<vector>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+struct triple{
+	int y,x,num;
+};
+
+
+int nowy=0, nowx=0;
+int r1,r2,c1,c2;
+vector<triple> ggok;
+triple board[50][5];
+
+void process_one(){
+	nowx=nowy;
+	nowx++;
+}
+void process_two(){
+	nowy=nowx;
+	nowy = 0-nowy;
+}
+void process_three(){
+	nowx=nowy;
+}
+void process_four(){
+	nowy=nowx;
+	nowy=0-nowy;
+}
+
+void findggok(){
+	int len=1;
+	int yeejeony=0, yeejeonx=-1, spot=0,yeejeonspot=0;
+	while(1){
+		if(nowy<-5010||nowy>5010||nowx<-5010||nowx>5010){
+			break;
+		}
+		len = abs((nowy-yeejeony)+(nowx-yeejeonx));
+		yeejeony=nowy;
+		yeejeonx=nowx;
+		spot = yeejeonspot+len;
+		yeejeonspot = spot;
+		ggok.push_back({nowy, nowx, spot});
+		process_one();
+		if(nowy<-5010||nowy>5010||nowx<-5010||nowx>5010){
+			break;
+		}
+		len = abs((nowy-yeejeony)+(nowx-yeejeonx));
+		yeejeony=nowy;
+		yeejeonx=nowx;
+		spot = yeejeonspot+len;
+		yeejeonspot = spot;
+		ggok.push_back({nowy, nowx, spot});
+		process_two();
+		if(nowy<-5010||nowy>5010||nowx<-5010||nowx>5010){
+			break;
+		}
+		len = abs((nowy-yeejeony)+(nowx-yeejeonx));
+		yeejeony=nowy;
+		yeejeonx=nowx;
+		spot = yeejeonspot+len;
+		yeejeonspot = spot;
+		ggok.push_back({nowy, nowx, spot});
+		process_three();
+		if(nowy<-5010||nowy>5010||nowx<-5010||nowx>5010){
+			break;
+		}
+		len = abs((nowy-yeejeony)+(nowx-yeejeonx));
+		yeejeony=nowy;
+		yeejeonx=nowx;
+		spot = yeejeonspot+len;
+		yeejeonspot = spot;
+		ggok.push_back({nowy, nowx, spot});
+		process_four();
+		//ggok.push_back({nowy, nowx, len});
+	}
+	//cout<<ggok.size()<<endl;
+	//cout<<ggok[20000].y<<" "<<ggok[20000].x<<" "<<ggok[20000].num<<endl;
+	
+	int i;
+	/*
+	for(i=0; i<20; ++i){
+		cout<<ggok[i].y<<" "<<ggok[i].x<<" "<<ggok[i].num<<endl;
+	}
+	cout<<endl;
+	*/
+}
+
+void filltheboard(){
+	int i,k;
+	int myy=r1, myx;
+	for(i=0; i<=r2-r1; ++i){
+		myx=c1;
+		for(k=0; k<=c2-c1; ++k){
+			board[i][k]={myy, myx, -1};
+			myx++;
+		}
+		myy++;
+	}
+	/*
+	for(i=0; i<=r2-r1; ++i){
+		
+		for(k=0; k<=c2-c1; ++k){
+			cout<<board[i][k].y<<" "<<board[i][k].x<<" , ";
+		}
+		cout<<endl;
+	}
+	cout<<endl;
+	*/
+}
+
+int jaritsu(int num){
+	int dap=0;
+	//long long mok, namojee;
+	while(1){
+		if(num==0){
+			return dap;
+		}
+		num=num/10;
+		dap++;
+	}
+}
+
+
+int brute(int myy, int myx){
+	//cout<<myy<<" "<<myx<<"일때 : ";
+	int i, currenty, currentx, nexty, nextx, cha, number=1, nownum;
+	for(i=0; i<ggok.size()-1; ++i){
+		currenty = ggok[i].y;
+		currentx = ggok[i].x;
+		nexty = ggok[i+1].y;
+		nextx = ggok[i+1].x;
+		if(currenty==nexty&&nexty==myy){
+			if(currentx<nextx){
+				if(currentx<=myx&&nextx>=myx){
+					//cout<<currenty<<" "<<currentx<<" 와 "<<nexty<<" "<<nextx<<"사이 : ";
+					//cout<<ggok[i].num<<" "<<ggok[i+1].num<<" ";
+					cha = (abs)(ggok[i].x-myx);
+					//nownum = min(ggok[i].num, ggok[i+1].num);
+					number = ggok[i].num+cha;
+					//cout<<number<<"\n";
+					return number;
+				}
+			}
+			else{
+				if(nextx<=myx&&currentx>=myx){
+					//cout<<currenty<<" "<<currentx<<" 와 "<<nexty<<" "<<nextx<<"사이 : ";
+					//cout<<ggok[i].num<<" "<<ggok[i+1].num<<" ";
+					cha = (abs)(ggok[i].x-myx);
+					number = ggok[i].num+cha;
+					//cout<<number<<"\n";
+					return number;
+				}
+			}
+			
+		}
+		else if(currentx==nextx&&nextx==myx){
+			if(currenty<nexty){
+				if(currenty<=myy&&nexty>=myy){
+					//cout<<currenty<<" "<<currentx<<" 와 "<<nexty<<" "<<nextx<<"사이 : ";
+					//cout<<ggok[i].num<<" "<<ggok[i+1].num<<" ";
+					cha = (abs)(ggok[i].y-myy);
+					number = ggok[i].num+cha;
+					//cout<<number<<"\n";
+					return number;
+				}
+			}
+			else{
+				if(nexty<=myy&&currenty>=myy){
+					//cout<<currenty<<" "<<currentx<<" 와 "<<nexty<<" "<<nextx<<"사이 : ";
+					//cout<<ggok[i].num<<" "<<ggok[i+1].num<<" ";
+					cha = (abs)(ggok[i].y-myy);
+					number = ggok[i].num+cha;
+					//cout<<number<<"\n";
+					return number;
+				}
+			}
+		}
+	}
+	return -1;
+}
+
+void findwithbrute(){
+	int i,k, myy, myx, biggest=-1;
+	for(i=0; i<=r2-r1; ++i){	
+		for(k=0; k<=c2-c1; ++k){
+			myy = board[i][k].y;
+			myx = board[i][k].x;
+			board[i][k].num = brute(myy, myx);
+			
+			//board[i][k].num = yeeboon_y(0, ggok.size(), myy, myx);
+		}
+	}
+	
+	for(i=0; i<=r2-r1; ++i){	
+		for(k=0; k<=c2-c1; ++k){
+			biggest = max(board[i][k].num, biggest);
+			//cout<<board[i][k].num<<" ";
+		}
+		//cout<<endl;
+	}
+	int biggestjaree = jaritsu(biggest), myjaree,j;
+	for(i=0; i<=r2-r1; ++i){	
+		for(j=0; j<=c2-c1; ++j){
+			myjaree = jaritsu(board[i][j].num);
+			if(biggestjaree>myjaree){
+				for(k=0; k<biggestjaree-myjaree; ++k){
+					cout<<" ";
+				}
+			}
+			cout<<board[i][j].num<<" ";
+			//cout<<board[i][k].num<<" ";
+		}
+		cout<<"\n";
+		//cout<<endl;
+	}
+}
+
+int main(void)
+{
+	fastio;
+	cin>>r1>>c1>>r2>>c2;
+	findggok();
+	filltheboard();
+	findwithbrute();
+	return 0;
+}
