@@ -1,0 +1,77 @@
+#include<iostream>
+
+using namespace std;
+
+int building[51];
+int numofbuilding;
+
+int get_most_building(){
+	int i,j,k, nowh, dap, flag, biggest = -1;
+	double height, gongcha, cha, mygee, betweengee;
+	for(i=1; i<=numofbuilding; ++i){
+		//cout<<i<<"일떄 : ";
+		dap=0;
+		for(j=i; j>=1; --j){
+			if(j==i) continue;
+			if(abs(j-i)==1){
+				//cout<<j<<" 가능, ";
+				dap++;	
+			}
+			else{
+				cha = (double)(building[j]-building[i]);
+				mygee = cha/(double)(j-i);
+				flag=0;
+				for(k=i-1; k>j; --k){
+					betweengee = (double)(building[k]-building[i])/(double)(k-i);
+					if(mygee>=betweengee){
+						flag=1;
+						break;
+					}	
+				}
+				if(flag==0){
+					//cout<<j<<" 가능, ";
+					dap++;
+				}
+			} 
+		}
+		for(j=i; j<=numofbuilding; ++j){
+			if(j==i) continue;
+			if(abs(j-i)==1){
+				//cout<<j<<" 가능, ";
+				dap++;	
+			}
+			else{
+				cha = (double)(building[j]-building[i]);
+				mygee = cha/(double)(j-i);
+				flag=0;
+				for(k=i+1; k<j; ++k){
+					//height = height+gongcha;
+					betweengee = (double)(building[k]-building[i])/(double)(k-i);
+					if(mygee<=betweengee){
+						flag=1;
+						break;
+					}	
+				}
+				if(flag==0){
+					//cout<<j<<" 가능, ";
+					dap++;
+				}
+			} 
+		}
+		//cout<<" 결국 : "<<dap<<"\n";
+		biggest = max(biggest, dap);
+	}
+	//cout<<endl;
+	return biggest;
+}
+
+int main(void)
+{
+	cin>>numofbuilding;
+	int i;
+	for(i=1; i<=numofbuilding; ++i){
+		cin>>building[i];
+	}
+	cout<<get_most_building();
+	return 0;
+}
