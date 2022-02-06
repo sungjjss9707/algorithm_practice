@@ -1,0 +1,71 @@
+#include<iostream>
+#include<string>
+#define fastio ios::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
+using namespace std;
+
+string jeonpa;
+
+bool panstar(int currentstate, int index){
+	if(index==jeonpa.length()&&(currentstate==1||currentstate==6)) return true;
+	if(currentstate==1){
+		if(jeonpa[index]=='1'){
+			return panstar(2, index+1);
+		}
+		else{
+			return panstar(7, index+1);
+		}
+	}
+	else if(currentstate==2){
+		if(jeonpa[index]=='1'){
+			return false;
+		}
+		else{
+			return panstar(3, index+1);
+		}
+	}
+	else if(currentstate==3){
+		if(jeonpa[index]=='1'){
+			return false;
+		}
+		else{
+			return panstar(5, index+1);
+		}
+	}
+	else if(currentstate==5){
+		if(jeonpa[index]=='1'){
+			return panstar(6, index+1);
+		}
+		else{
+			return panstar(5, index+1);
+		}
+	}
+	else if(currentstate==6){
+		if(jeonpa[index]=='1'){
+			return panstar(6, index+1)||panstar(2, index+1);
+		}
+		else{
+			return panstar(7, index+1);
+		}
+	}
+	else{
+		if(jeonpa[index]=='1'){
+			return panstar(1, index+1);
+		}
+		else{
+			return false;
+		}
+	}
+	
+}
+
+int main(void)
+{
+	//fastio;
+	int testcase, t;
+	cin>>testcase;
+	for(t=0; t<testcase; ++t){
+		cin>>jeonpa;
+		if(panstar(1,0)) cout<<"YES\n";
+		else cout<<"NO\n";
+	}
+}
