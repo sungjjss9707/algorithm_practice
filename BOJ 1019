@@ -1,0 +1,161 @@
+#include<iostream>
+#include<math.h>
+#include<string>
+using namespace std;
+
+long long biggest;
+long long getsu[10];
+string strnum;
+
+int jaritsu(long long num){
+	int dap=0;
+	//long long mok, namojee;
+	while(1){
+		if(num==0){
+			return dap;
+		}
+		num=num/10;
+		dap++;
+	}
+}
+
+int get_floor_number(long long num, int floor){
+	return strnum[strnum.length()-floor]-'0';
+}
+
+void soonchaplus(int start, int end, long long hwetsu){
+	int i;
+	for(i=start; i<=end; ++i){
+		getsu[i]+=hwetsu;
+	}
+}
+
+void jeejeongplus(long long num, long long hwetsu){
+	long long namojee;
+	while(1){
+		if(num==0){
+			//exit(0);
+			return;
+		}
+		namojee = num%10;
+		getsu[namojee]+=hwetsu;
+		//cout<<namojee<<"를 "<<hwetsu<<"번 더함\n";
+		num=num/10;
+	}
+	
+}
+
+long long getright(long long num, int floor){
+	return num%(long long)(pow(10, floor-1));
+}
+
+long long getleft(long long num, int floor){
+	return num/(long long)(pow(10, floor));
+}
+
+void findnumofnumber1(long long num){
+	//한자리일때 예외처리해주는거생각 
+	int jaree = jaritsu(num);
+	int i, floornum;
+	long long left, right;
+	for(i=1; i<=jaree; ++i){
+		floornum = get_floor_number(num, i);
+		//cout<<floornum<<" ";
+		left = getleft(num, i);
+		cout<<floornum<<" "<<left<<endl;
+		soonchaplus(0, floornum, 1);
+		soonchaplus(0, 9, left);
+		getsu[0]--;
+		jeejeongplus(left, floornum*pow(10, i-1));
+		if(i==jaree){
+			////
+		}
+	}
+}
+
+long long makezero(long long num, int jaree){
+	long long mok = num/pow(10, jaree);
+	long long jeesoo = pow(10, jaree);
+	long long ret = (mok)*jeesoo;
+	return ret;
+}
+
+long long one_noorak(long long num, int jaree){
+	string stringnum = to_string(num), temp1, temp2, temp;
+	int i, index = stringnum.length()-jaree;
+	temp1 = stringnum.substr(0,index-0);
+	temp2 = stringnum.substr(index+1,stringnum.length()-index-1);
+	temp = temp1+temp2;
+	long long jeesoo=1, dap=0, jeensoo;
+	for(i=0; i<temp.length(); ++i){
+		jeensoo = temp[temp.length()-i-1]-'0';
+		jeesoo = jeensoo*pow(10, i);
+		dap+=jeesoo;
+	}
+	return dap;
+} 
+
+void findnumofnumber(long long num){
+	//한자리일때 예외처리해주는거생각 ////////////////////////////////////
+	int jaree = jaritsu(num);
+	int i, floornum;
+	long long left, right, madezero, noorak;
+	for(i=1; i<=jaree; ++i){
+		floornum = get_floor_number(num, i);
+		//cout<<floornum<<" ";
+		left = getleft(num, i);
+		right = getright(num,i);
+		if(i==1){
+			soonchaplus(0, floornum, 1);
+			soonchaplus(0, 9, left);
+			getsu[0]--;
+		}
+		else if(i==jaree){
+			
+			soonchaplus(floornum, floornum, right+1);
+			if(floornum!=1){
+				soonchaplus(1, floornum-1, pow(10, i-1));
+			}
+			/////////////////////////////////////////////////// 
+		}
+		else{
+			//cout<<"롸이트 : "<<right<<endl;
+			soonchaplus(floornum, floornum, right+1);
+			if(floornum!=0){
+				soonchaplus(0, floornum-1, pow(10, i-1));	
+			}
+			madezero = makezero(num, i);
+			noorak = one_noorak(madezero, i);
+			//cout<<madezero<<" "<<noorak<<endl;
+			soonchaplus(0,9,noorak);
+			getsu[0]-=pow(10, i-1);
+		}
+		/*
+		for(int k=0; k<10; ++k){
+		cout<<getsu[k]<<" ";
+	}
+	cout<<endl;
+	*/
+	}
+	
+	
+}
+
+void clear(){
+	int i;
+	for(i=0; i<10; ++i){
+		getsu[i]=0;
+	}
+}
+
+int main(void)
+{
+	cin>>biggest;
+	strnum = to_string(biggest);
+	clear();
+	findnumofnumber(biggest);
+	int i;
+	for(i=0; i<10; ++i){
+		cout<<getsu[i]<<" ";
+	}
+}
