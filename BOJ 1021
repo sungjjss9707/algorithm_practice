@@ -1,0 +1,173 @@
+#include<iostream>
+#include<string.h>
+
+using namespace std;
+
+int sizeofqueue, num;
+int queuearr[51];
+class deque{	//큐는 선입선출  
+	int arr[400];
+	int startindex;
+	int endindex;
+	int hap;
+public:
+	deque(){
+		startindex=150;
+		endindex=150;
+		hap=0;
+	}
+	void push_front(int a){
+		arr[startindex-1]=a;
+		startindex--;
+	}
+	void push_back(int a){
+		arr[endindex]=a;
+		endindex++;
+	}
+	
+	int pop_front(){
+		if(endindex-startindex==0){
+			//cout<<-1<<"\n";
+			return -1;
+		}
+		int i;
+		int temp = arr[startindex];
+		startindex++;
+		return temp;
+	}
+	int pop_back(){
+		if(endindex-startindex==0){
+			//cout<<-1<<"\n";
+			return -1;
+		}
+		int i;
+		int temp = arr[endindex-1];
+		endindex--;
+		return temp;
+		//cout<<temp<<"\n";
+	}
+	void size(){
+		cout<<endindex-startindex<<"\n";
+	}
+	void empty(){
+		if(endindex-startindex==0){
+			cout<<1<<"\n";
+			return;
+		} 
+		cout<<0<<"\n";
+	}
+	void front(){
+		if(endindex-startindex==0){
+			cout<<-1<<"\n";
+			return;
+		}
+		cout<<arr[startindex]<<"\n";
+	}
+	void back(){
+		if(endindex-startindex==0){
+			cout<<-1<<"\n";
+			return;
+		}
+		cout<<arr[endindex-1]<<"\n";
+	}
+	void printdeque(){
+		int i;
+		for(i=startindex; i<endindex; ++i){
+			cout<<arr[i]<<" ";
+		}
+		cout<<"\n";
+	}
+	void moveleft(){	//프론트가 잘려서 엔드로  감  
+		this->push_back(this->pop_front());
+	}
+	void moveright(){
+		this->push_front(this->pop_back());
+	}
+	int findnum(int mynum){
+		int i;
+		for(i=startindex; i<endindex; ++i){
+			if(arr[i]==mynum){
+				return i;
+			}
+		}
+	}
+	void calcul(int mynum){
+		int left, right, pivot = findnum(mynum);
+		//cout<<mynum<<" 의 위치는 : "<<pivot<<"\n"; 
+		left = pivot-startindex;
+		right = endindex-1-pivot;
+		
+		if(left>right){	//지금 index가 오른쪽에 치우쳐있을떄  
+			while(1){
+				//this->printdeque();
+				if(arr[startindex]==mynum){
+					break;
+				} 
+				//cout<<"오른쪽으로 한칸 이동 ";
+				this->moveright();
+				hap++;
+			} 
+		}
+		else{	//지금 index가 왼쪽에 치우쳐있을떄 
+			while(1){
+				//this->printdeque();
+				if(arr[startindex]==mynum){
+					break;
+				}
+				//cout<<"왼쪽으로 한칸 이동 "; 
+				this->moveleft();
+				hap++;
+			}
+		}
+		this->pop_front();
+		//cout<<"front pop  ";
+		//this->printdeque(); 
+	}
+	void printhap(){
+		cout<<hap;
+	}
+	
+};
+
+int main(void)
+{
+	//cout<<"fuck\n";
+	/*
+	ios::sync_with_stdio(false);
+	cin.tie(NULL);
+	cout.tie(NULL);
+	*/
+	int numofoper,i, numofpush, nownum, k=1;
+	cin>>sizeofqueue>>num;
+	//string oper;
+	//char oper[11];
+	//cin>>numofoper;
+	deque q = deque();
+	for(i=1; i<=sizeofqueue; ++i){
+		q.push_back(i);
+	} 
+	for(i=0; i<num; ++i){
+		cin>>nownum;
+		q.calcul(nownum);
+	}
+	q.printhap();
+	/*
+	
+	for(i=1; i<=sizeofqueue; ++i){
+		queuearr[i] = -1;
+	}
+	for(i=0; i<num; ++i){
+		cin>>temp;
+		queuearr[temp]= k++;
+	}
+	for(i=1; i<=sizeofqueue; ++i){
+		cout<<queuearr[i]<<" ";
+	}
+	cout<<endl;
+	for(i=1; i<=sizeofqueue; ++i){
+		q.push_back(queuearr[i]);
+	}
+	*/
+	//stack s = stack();
+	
+}
