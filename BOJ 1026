@@ -1,0 +1,29 @@
+#include<iostream>
+#include<algorithm>
+using namespace std;
+
+int a[101];
+int b[101];
+
+bool compare(int i, int j){
+	return i>j?true:false;
+}
+
+int main(void)
+{
+	int i, size, sum=0;
+	cin>>size;
+	for(i=0; i<size; ++i){
+		cin>>a[i];
+	}
+	for(i=0; i<size; ++i){
+		cin>>b[i];
+	}
+	
+	sort(a, a+size);
+	sort(b, b+size, compare);
+	for(i=0; i<size; ++i){
+		sum=sum+a[i]*b[i];
+	}
+	cout<<sum;
+}
