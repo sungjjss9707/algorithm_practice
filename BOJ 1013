@@ -1,0 +1,105 @@
+#include<iostream>
+#include<string>
+#define fastio ios::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
+using namespace std;
+
+bool panstar(string s,int index){
+	int i=index;
+	if(s.length()<2) return false;
+	if(index>=s.length()) return true;
+	if(s[index]=='1'){
+		//if(s.length()-index<3) return false;
+		i++;
+		int numofzero=0, numofone=0;
+		while(i<s.length()){
+			if(s[i]=='0'){
+				i++;
+				numofzero++;
+			}
+			else{
+				numofone++;
+				break;
+			}
+		}
+		if(numofzero<2||numofone==0) return false;
+		if(s[i]=='1'&&i==s.length()-1) return true;
+		//if(i>=s.length()) return false;
+		i++;
+		/*
+		while(i<s.length()){
+			if(s[i]=='1'){
+				if(panstar(s, i)) return true;
+				i++;
+			}
+			else{
+				return false;
+			}
+		}
+		*/
+		int start = i, flag=1;
+		while(i<s.length()){
+			if(s[i]=='1'){
+				if(panstar(s, i)) return true;	
+			}
+			else{
+				if(!panstar(s, i)) return false;
+				else return true;
+			}
+			if(s[i]=='0') flag=0;
+			i++;
+		}
+		if(flag==1) return true;
+	}
+	else{
+		
+		/*
+		if(s.substr(i,2)=="01"){
+			if(panstar(s, i+2)) return true;
+		}
+		return false;
+		*/
+		//if(s.length()-index<1) return false;
+		if(i+1<s.length()){
+			if(s.substr(i,2)=="01"){
+				return panstar(s, i+2);
+			}
+			else return false;	
+		}
+		else{
+			return false;	
+		}
+		
+	}
+		/*
+		int numofpattern=0;
+		while(1){
+			if(i+1<s.length()){
+				if(s.substr(i,2)=="01"){
+					numofpattern++;
+					index+=2;
+				}
+				else{
+					break;
+				}
+			}
+			else break;
+		}
+		if(numofpattern==0) return false;
+		return true;
+	}
+	*/
+	return false;
+}
+
+int main(void)
+{
+	//fastio;
+	int testcase, t;
+	string jeonpa;
+	cin>>testcase;
+	for(t=0; t<testcase; ++t){
+		cin>>jeonpa;
+		if(panstar(jeonpa,0)) cout<<"YES\n";
+		else cout<<"NO\n";
+	}
+}
