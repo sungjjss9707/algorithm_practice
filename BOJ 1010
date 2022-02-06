@@ -1,0 +1,35 @@
+#include<iostream>
+using namespace std;
+
+int johap[31][31];
+int numofleft, numofright;
+int count;
+void init(){
+	int i,k;
+
+	for(i=0; i<31; ++i){
+		for(k=0; k<=i; ++k){
+			if(k==0||k==i) johap[i][k]=1;
+			else johap[i][k]=johap[i-1][k-1]+johap[i-1][k];
+		}
+	}
+	/*
+	for(i=0; i<31; ++i){
+		for(k=0; k<=i; ++k){
+			cout<<johap[i][k]<<" ";
+		}
+		cout<<"\n";
+	}
+	*/
+}
+
+int main(void)
+{
+	int testcase, t;
+	init();
+	cin>>testcase;
+	for(t=0; t<testcase; ++t){
+		cin>>numofleft>>numofright;
+		cout<<johap[numofright][numofleft]<<"\n";
+	}
+}
