@@ -1,0 +1,62 @@
+#include<iostream>
+#include<math.h>
+using namespace std;
+
+int sero, garo, dap = -1;
+int pan[10][10];
+
+bool isthisjegop(int num){
+	int root = sqrt(num);
+	if(root*root == num) return true;
+	return false;
+}
+
+void gothroughtheline(int y1, int x1, int y2, int x2){
+	int y_cha = y2-y1;
+	int x_cha = x2-x1;
+	int nowy = y1, nowx = x1, num=0;
+	while(1){
+		//cout<<nowy<<" "<<nowx<<endl;
+		if(nowy<1||nowy>sero||nowx<1||nowx>garo) break;
+		num = num*10+pan[nowy][nowx];
+		if(isthisjegop(num)){	//제곱수면  
+			dap = max(dap, num);
+		}
+		nowy = nowy+y_cha;
+		nowx = nowx+x_cha;
+	}
+}
+
+void bruteforce(){
+	int i,j,k,l, num;
+	for(i=1; i<=sero; ++i){
+		for(j=1; j<=garo; ++j){
+			num = pan[i][j];
+			if(isthisjegop(num)){
+				dap = max(dap, num);	
+			}
+			for(k=1; k<=sero; ++k){
+				for(l=1; l<=garo; ++l){
+					if(k==i&&j==l) continue;
+					gothroughtheline(i,j,k,l);
+				}
+			}
+		}
+	}
+}
+
+int main(void)
+{
+	cin>>sero>>garo;
+	int i,k;
+	char c;
+	for(i=1; i<=sero; ++i){
+		for(k=1; k<=garo; ++k){
+			cin>>c;
+			pan[i][k] = (int)(c-'0');	
+		}
+	}
+	bruteforce();
+	cout<<dap;
+	return 0;
+}
