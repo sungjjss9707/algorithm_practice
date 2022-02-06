@@ -1,0 +1,118 @@
+#include<iostream>
+#include<vector>
+#include<math.h>
+#define fastio ios::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
+using namespace std;
+
+int numofdot, hwetsu=0;
+double dap;
+int used[21];
+vector<pair<int, int>> v;
+vector<int> vec;
+
+void clear(){
+	int i;
+	for(i=1; i<=numofdot; ++i){
+		used[i]=0;
+	}
+	dap = 100000000000;//////////////
+	v.clear();
+	vec.clear();
+}
+
+void printvec(){
+	int i;
+	cout<<"------------------\n";
+	for(i=0; i<vec.size(); ++i){
+		cout<<vec[i]<<" ";
+	}
+	//cout<<"\n------------------\n";
+}
+
+double get_veclen(){
+	int arr[21];
+	int i;
+	for(i=1; i<=numofdot; ++i){
+		arr[i]=0;
+	}
+	vector<int> vec2;
+	for(i=0; i<vec.size(); ++i){
+		arr[vec[i]]=1;
+	}
+	for(i=1; i<=numofdot; ++i){
+		if(arr[i]==0) vec2.push_back(i);
+	}
+	/*
+	printvec();
+	cout<<"\n";
+	for(i=0; i<vec2.size(); ++i){
+		cout<<vec2[i]<<" ";
+	}
+	cout<<"\n------------------\n";
+	*/
+	long long xplus=0, xminus=0, yplus=0, yminus=0, dy, dx;
+	for(i=0; i<numofdot/2; ++i){
+		yplus = yplus+v[vec[i]-1].first;
+		yminus = yminus+v[vec2[i]-1].first;
+		xplus = xplus+v[vec[i]-1].second;
+		xminus = xminus+v[vec2[i]-1].second;
+	}
+	dy = yplus-yminus;
+	dx = xplus-xminus;
+	//cout<<dy<<" "<<dx<<endl;
+	double len = sqrt(dy*dy+dx*dx);
+	return len;
+}
+
+void findchoidae(int lastindex){
+	if(vec.size()==numofdot/2){
+		//printvec();
+		double len = get_veclen();
+		//cout<<len<<endl;
+		//cout<<"------------------\n"<<endl;
+		dap = min(dap, len);
+		//hwetsu++;
+		return;
+	}
+	int i;
+	int firstindex=0;
+	/*
+	for(i=lastindex+1; i<=numofdot; ++i){
+		if(used[i]==0){
+			firstindex=i;
+			break;
+		}
+	}
+	*/
+	//used[firstindex]=1;
+	for(i=lastindex+1; i<=numofdot; ++i){
+		if(lastindex==0&&i!=1) break;
+		if(used[i]==0){
+			used[i]=1;
+			vec.push_back(i);
+			findchoidae(i);
+			vec.pop_back();
+			used[i]=0;
+		}
+	}
+	//used[firstindex]=0;
+}
+
+int main(void)
+{
+	fastio;
+	cout<<fixed;
+	cout.precision(7);
+	int testcase, t,i,k, y,x;
+	cin>>testcase;
+	for(t=0; t<testcase; ++t){
+		cin>>numofdot;
+		clear();
+		for(i=0; i<numofdot; ++i){
+			cin>>y>>x;
+			v.push_back({y,x});
+		}
+		findchoidae(0);
+		cout<<dap<<endl;
+	}
+}
