@@ -1,0 +1,58 @@
+#include<iostream>
+#include<math.h>
+using namespace std;
+
+int goaly,goalx;
+
+int get_yxcount(int starty, int startx, int side, int dist){
+	if(side==1){
+		
+		return dist;
+	}
+	int ban=side/2;
+	int midy=starty+ban;
+	int midx=startx+ban;
+	
+	int nextstarty, nextstartx,soonbeon,nowdist=dist;
+	int oneblock=(side/2)*(side/2);
+	if(goaly<midy){
+		if(goalx<midx){
+			//soonbeon=0;
+			nextstarty=starty;
+			nextstartx=startx;
+		}
+		else{
+			//soonbeon=1;
+			nextstarty=starty;
+			nextstartx=midx;
+			nowdist+=oneblock;
+		} 
+	}
+	else {
+		if(goalx<midx){
+			//soonbeon=2;
+			nextstarty=midy;
+			nextstartx=startx;
+			nowdist+=(2*oneblock);
+		}
+		else{
+			//soonbeon=3;
+			nextstarty=midy;
+			nextstartx=midx;
+			nowdist+=(3*oneblock);
+		} 
+	}
+	
+	return get_yxcount(nextstarty,nextstartx,side/2,nowdist);
+	
+	
+	
+}
+
+int main(void)
+{
+	int jeesoo,side;
+	cin>>jeesoo>>goaly>>goalx;
+	side=pow(2,jeesoo);
+	cout<<get_yxcount(0,0,side,0);
+}
