@@ -1,0 +1,90 @@
+#include<iostream>
+#include<vector>
+using namespace std;
+
+struct parentchild{
+	int parent;
+	vector<int> child;
+};
+
+parentchild v[50];
+
+//vector<parentchild> v;
+int numofnode;
+
+void cleartree(){
+	int i;
+	for(i=0; i<numofnode; ++i){
+		v[i].parent=-1;		
+	}	
+}
+
+void print(){
+	int i,k;
+	for(i=0; i<numofnode; ++i){
+		cout<<i<<"의 부모 : "<<v[i].parent<<" / 자식들 : ";
+		for(k=0; k<(v[i].child).size(); ++k){
+			cout<<(v[i].child)[k]<<" ";
+		}
+		cout<<"\n";
+	}
+}
+
+int getleafnode(){
+	int i,sum=0;
+	for(i=0; i<numofnode; ++i){
+		if((v[i].child).size()==0&&v[i].parent!=-1){
+			sum++;
+		}		
+	}
+	return sum;
+}
+
+void cutallchild(int node){
+	int i;
+	for(i=0; i<(v[node].child).size(); ++i){
+		cutallchild((v[node].child)[i]);
+	}
+	v[node].parent = -1;
+	(v[node].child).clear();
+}
+
+void cutnode(int node){
+	if(node!=0){
+		int parentnode = v[node].parent;
+		int i;
+		for(i=0; i<(v[parentnode].child).size(); ++i){
+			if((v[parentnode].child)[i]==node){
+				(v[parentnode].child).erase((v[parentnode].child).begin()+i);
+				break;
+			}
+		}	
+	}
+	if(node!=0){
+		v[node].parent = -1;	
+	}
+	
+	cutallchild(node);
+}
+
+int main(void)
+{
+	cin>>numofnode;
+	//cleartree();
+	int i, myparent, goal_tocut;
+	for(i=0; i<numofnode; ++i){
+		cin>>myparent;
+		v[i].parent = myparent;
+		if(myparent!=-1){
+			(v[myparent].child).push_back(i);
+		}		
+	}
+	v[0].parent=-2;
+	//print();
+	
+	cin>>goal_tocut;
+	cutnode(goal_tocut);
+	//print();
+	cout<<getleafnode();
+	return 0;	
+}
