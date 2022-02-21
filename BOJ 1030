@@ -1,0 +1,133 @@
+#include<iostream>
+//#include<math.h>
+using namespace std;
+
+int time, init, center, y1, y2, x1, x2, side;
+int answer_board[60][60];
+
+void boonhal(int starty, int startx, int endy, int endx, int whiteorblack){
+	//cout<<starty<<" "<<startx<<"~"<<endy<<" "<<endx<<" -> ";
+	int my_side = (endy-starty+1);
+	int nextside = my_side/init;
+	int black_len = nextside*center;
+	int i,k, sy=starty,sx, ey, ex;
+	int blackstartx, blackstarty, blackendx, blackendy;
+	blackstarty = starty+((my_side-black_len)/2);
+	blackstartx = startx+((my_side-black_len)/2);
+	blackendy = blackstarty+black_len-1; 
+	blackendx = blackstartx+black_len-1;
+	if(starty>=y1&&endy<=y2&&startx>=x1&&endx<=x2){	//완전히 다 포함하면 
+		//cout<<"완전히 다포함\n";
+		if(starty==endy&&startx==endx){
+			//cout<<"하나니깐 "<<whiteorblack<<"으로 칠함\n";
+			answer_board[starty-y1+1][startx-x1+1]=whiteorblack;
+			return;
+		}
+		if(whiteorblack==1){	//검정이면 
+			int i,k;
+			for(i=starty; i<=endy; ++i){
+				for(k=startx; k<=endx; ++k){
+					answer_board[i-y1+1][k-x1+1] = 1;
+				}
+			}
+		}
+		else{					//흰색이면 또는 섞인거면
+			for(i=1; i<=init; ++i){
+				sx=startx;
+				for(k=1; k<=init; ++k){
+					ey = sy+nextside-1;
+					ex = sx+nextside-1;
+					//cout<<sy<<" "<<sx<<"~"<<ey<<" "<<ex<<endl;
+					if(sy>=blackstarty&&ey<=blackendy&&sx>=blackstartx&&ex<=blackendx){	//검정이면  
+						boonhal(sy, sx, ey, ex,1);
+						//cout<<"black\n";
+					} 
+					else{
+						//cout<<"white\n";
+						boonhal(sy, sx, ey, ex,0);	
+					}
+					sx+=nextside;
+				}
+				sy+=nextside;
+			}			
+		}
+	}
+	else if(y1>endy||x1>endx||y2<starty||x2<startx){	//아예 하나도 안겹치면 
+		//cout<<"하나도 안겹침\n";
+	}
+	else{
+		//cout<<"일부만 포함됨\n";
+		if(whiteorblack==0){
+			for(i=1; i<=init; ++i){
+				sx=startx;
+				for(k=1; k<=init; ++k){
+					ey = sy+nextside-1;
+					ex = sx+nextside-1;
+					//cout<<sy<<" "<<sx<<"~"<<ey<<" "<<ex<<endl;
+					if(sy>=blackstarty&&ey<=blackendy&&sx>=blackstartx&&ex<=blackendx){	//검정이면  
+						boonhal(sy, sx, ey, ex,1);
+						//cout<<"black\n";
+					} 
+					else{
+						//cout<<"white\n";
+						boonhal(sy, sx, ey, ex,0);	
+					}
+					sx+=nextside;
+				}
+				sy+=nextside;
+			}
+		}
+		else{
+			for(i=1; i<=init; ++i){
+				sx=startx;
+				for(k=1; k<=init; ++k){
+					ey = sy+nextside-1;
+					ex = sx+nextside-1;
+					//cout<<sy<<" "<<sx<<"~"<<ey<<" "<<ex<<endl;
+					boonhal(sy, sx, ey, ex,1);
+						//cout<<"black\n";
+					sx+=nextside;
+				}
+				sy+=nextside;
+			}	
+		}	
+	}
+}
+
+void clear(){
+	int i,k;
+	for(i=1; i<=(y2-y1+1); ++i){
+		for(k=1; k<=(x2-x1+1); ++k){
+			answer_board[i][k]=0;
+		}
+	}
+}
+
+void printanswerboard(){
+	int i,k;
+	for(i=1; i<=(y2-y1+1); ++i){
+		for(k=1; k<=(x2-x1+1); ++k){
+			cout<<answer_board[i][k];
+		}
+		cout<<"\n";
+	}
+}
+
+int main(void)
+{
+	cin>>time>>init>>center>>y1>>y2>>x1>>x2;
+	y1++;
+	y2++;
+	x1++;
+	x2++;
+	int i, num=1;
+	for(i=1; i<=time; ++i){
+		num=num*init;
+	}
+	side = num;
+	//side = pow(init, time);
+	clear();
+	//cout<<side<<endl;
+	boonhal(1, 1, side, side, 0);		//0은 흰색, 1은 검은색, 2는 섞인 
+	printanswerboard();
+} 
