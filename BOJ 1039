@@ -1,0 +1,77 @@
+#include<iostream>
+#include<string>
+#include<vector>
+#include<queue>
+using namespace std;
+
+int num, numofswap;
+bool visit[1000001][11];
+
+int find_biggest_num(){
+	
+	queue<pair<string, int>> q;
+	string strnum = to_string(num);
+	if(strnum.length()==1) return -1;
+	int i,k, now_hwetsu, biggest = -1, finalnum, checking;
+	string temp_str, now_str;
+	char temp;
+	
+	for(i=0; i<=1000000; ++i){
+		for(k=0; k<=10; ++k){
+			visit[i][k] = false;	
+		}
+		
+	}
+	
+	for(i=0; i<strnum.length()-1; ++i){
+		for(k=i+1; k<strnum.length(); ++k){
+			//cout<<i<<" , "<<k<<"교환\n";
+			temp_str = strnum;
+			temp = temp_str[i];
+			temp_str[i] = temp_str[k];
+			temp_str[k] = temp;
+			if(temp_str[0]=='0') continue;
+			checking = stoi(temp_str);
+			//cout<<checking<<endl;
+			//cout<<checking<<endl;
+			visit[checking][1] = true;
+			//cout<<temp_str<<"\n";
+			q.push({temp_str, 1});
+		}	
+	}
+	while(!q.empty()){
+		now_str = q.front().first;
+		now_hwetsu = q.front().second;
+		q.pop();
+		if(now_hwetsu==numofswap){
+			finalnum=stoi(now_str);
+			biggest = max(biggest, finalnum);
+			continue;
+		}
+		for(i=0; i<now_str.length()-1; ++i){
+			for(k=i+1; k<now_str.length(); ++k){
+				temp_str = now_str;
+				temp = temp_str[i];
+				temp_str[i] = temp_str[k];
+				temp_str[k] = temp;
+				if(temp_str[0]=='0') continue;
+				checking = stoi(temp_str);
+				if(!visit[checking][now_hwetsu+1]){
+					visit[checking][now_hwetsu+1] = true;
+					q.push({temp_str, now_hwetsu+1});
+				}
+			//cout<<temp_str<<"\n";
+			}	
+		}
+	}
+	return biggest;
+}
+
+
+
+int main(void)
+{
+	cin>>num>>numofswap;
+	cout<<find_biggest_num();
+	return 0;
+}
