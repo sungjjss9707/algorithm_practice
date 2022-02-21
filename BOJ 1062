@@ -1,0 +1,102 @@
+#include<iostream>
+#include<string>
+#include<vector>
+using namespace std;
+
+int numofword, numofalpha, choidae = -1, getsu=0;
+bool used[26];
+bool origin_used[26];
+vector<string> dic;
+vector<int> v;
+
+void init(){
+	int i;
+	for(i=0; i<26; ++i){
+		used[i] = false;
+	}
+	used[0] = true;
+	used[2] = true;
+	used[8] = true; 
+	used[13] = true;
+	used[19] = true;
+	for(i=0; i<26; ++i){
+		origin_used[i] = used[i];
+	}
+}
+
+void print_v(){
+	int i;
+	for(i=0; i<v.size(); ++i){
+		cout<<(char)(v[i]+'a')<<" ";
+	}
+	cout<<endl;
+}
+
+void use_copy(){
+	int i;
+	for(i=0; i<26; ++i){
+		used[i] = origin_used[i];
+	}
+}
+
+void brute_force(int lastindex){
+	if(v.size()==numofalpha-5){
+		//print_v();
+		//getsu++;
+		use_copy();
+		int i,k;
+		for(i=0; i<v.size(); ++i){
+			used[v[i]] = true;
+		}
+		int nowdap = 0, start, end, index, flag;
+		string str;
+		char c;
+		for(i=0; i<dic.size(); ++i){
+			str = dic[i];
+			start = 4;
+			end = str.length()-5;
+			flag=0;
+			for(k=start; k<=end; ++k){
+				c = str[k];
+				index = (int)(c-'a');
+				if(!used[index]){
+					flag=1;
+					break;
+				}
+			}
+			if(flag==0) nowdap++;
+		}
+		choidae = max(choidae, nowdap);
+		return ;
+	}
+	int i, firstindex = lastindex+1;
+	for(i=firstindex; i<26; ++i){
+		if(!used[i]){
+			used[i] = true;
+			v.push_back(i);
+			brute_force(i);
+			used[i] = false;
+			v.pop_back(); 
+		}
+	}
+}
+
+int main(void)
+{
+	cin>>numofword>>numofalpha;
+	int i;
+	string s;
+	init();
+	for(i=0; i<numofword; ++i){
+		cin>>s;
+		dic.push_back(s);
+	}
+	if(numofalpha<5){
+		cout<<0;
+		return 0;
+	}
+	brute_force(-1);
+	//cout<<getsu<<"\n";
+	cout<<choidae;
+	return 0;
+}
