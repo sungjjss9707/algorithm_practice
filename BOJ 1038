@@ -1,0 +1,69 @@
+#include<iostream>
+#include<vector>
+#include<queue>
+using namespace std;
+
+int num;
+vector<long long> v;
+
+bool panstar_decreasenum(long long x){
+	long long mod, lastmod = -1;
+	while(1){
+		mod = x%10;
+		x=x/10;
+		if(lastmod>=mod) return false;
+		lastmod = mod;
+		if(x==0) break; 
+	}
+	return true;
+}
+
+void bfs(){
+	queue<long long> q;
+	int i;
+	for(i=0; i<=9; ++i){
+		q.push(i);
+	}
+	long long lst,nownum;
+	while(!q.empty()){
+		nownum = q.front();
+		lst = nownum%10;
+		q.pop();
+		v.push_back(nownum);
+		for(i=0; i<=9; ++i){
+			if(lst>i) q.push(nownum*10+i);
+			else break;	
+		}
+	}
+	/*
+	for(i=0; i<v.size(); ++i){
+		cout<<v[i]<<endl;
+	}
+	*/
+	if(v.size()<=num) cout<<-1;
+	else cout<<v[num];
+}
+
+long long finddecreasingnum(){
+	long long i;
+	for(i=0; i<=9; ++i){
+		v.push_back(i);
+	}
+	for(i=10; i<=987654321; ++i){
+		if(panstar_decreasenum(i)){
+			//cout<<i<<" ";
+			v.push_back(i);	
+		}
+	}
+	cout<<v.size()<<endl;
+	if(v.size()<num) return -1;
+	return v[num];
+}
+
+int main(void)
+{
+	cin>>num;
+	//cout<<finddecreasingnum();
+	bfs();
+	
+}
