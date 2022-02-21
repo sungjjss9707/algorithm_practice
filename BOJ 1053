@@ -1,0 +1,72 @@
+#include<iostream>
+#include<string>
+using namespace std;
+
+string str, origin_str;
+int dp[51][51];
+int len;
+
+void clear(){
+	int i,k;
+	for(i=0; i<len; ++i){
+		for(k=0; k<len; ++k){
+			dp[i][k] = -1;
+		}
+	}	
+}
+
+int choiso_calcul(int start, int end){
+	int ret = dp[start][end];
+	if(ret!=-1) return ret;
+	if(start==end){
+		return 0;
+	}
+	if(start+1==end){
+		if(str[start]==str[end]) return 0;
+		else return 1;
+	}
+	ret = 2100000000;
+	if(str[start]==str[end]){
+		ret = min(ret, choiso_calcul(start+1, end-1));
+	}
+	//ret = choiso_calcul(start+1, end-1);
+	int one_change, right_add, left_add, right_minus, left_minus;
+	one_change = choiso_calcul(start+1, end-1)+1;
+	right_add = choiso_calcul(start+1, end)+1;
+	left_add = choiso_calcul(start, end-1)+1;
+	
+	ret = min(one_change, ret);
+	ret = min(right_add, ret);
+	ret = min(left_add, ret);	
+	dp[start][end] = ret;
+	return ret;
+}
+
+int main(void)
+{
+	cin>>str;
+	origin_str = str;
+	len = str.length();
+	int i,k, minimum, num;
+	char temp;
+	clear();
+	minimum = choiso_calcul(0, len-1);
+	for(i=0; i<len-1; ++i){
+		for(k=i+1; k<len; ++k){
+			clear();
+			str = origin_str;
+			if(str[i]==str[k]) continue;
+			temp = str[i];
+			str[i] = str[k];
+			str[k] = temp;
+			//cout<<str<<" : ";
+			num = choiso_calcul(0, len-1)+1;
+			//cout<<num<<endl;
+			minimum = min(minimum, num);
+		}
+	}
+	cout<<minimum;
+	return 0;
+	
+	//cout<<choiso_calcul(0, len-1);
+}
