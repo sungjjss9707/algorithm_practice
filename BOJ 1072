@@ -1,0 +1,26 @@
+#include<iostream>
+#include<cmath>
+using namespace std;
+
+double chong, win;
+double startwinrate;
+int main(void)
+{
+	
+		cin>>chong>>win;
+	if(chong==win){
+		cout<<-1<<"\n";
+		return 0;	
+	}
+	startwinrate = (win*100.0/chong);
+	//cout<<startwinrate<<"\n";
+	//cout<<(int)(startwinrate)<<"\n"<<(double)((long long)startwinrate)<<"\n";
+	if((long long)startwinrate==99){
+		cout<<-1<<"\n";
+		return 0;	
+	}
+	double nowwinrate = (double)((long long)startwinrate);
+	long long dap = (long long)(ceil(((nowwinrate+1)*chong-win*100)/(100-(nowwinrate+1))));
+	cout<<dap<<"\n";	
+	
+}
