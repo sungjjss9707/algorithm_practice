@@ -1,0 +1,57 @@
+#include<iostream>
+
+using namespace std;
+
+int initgetsu, handgetsu;
+
+int getchoidae2jegop(int x){
+	int i, num=1;
+	for(i=0;; ++i){
+		num=num*2;
+		if(num>x){
+			num/=2;
+			break;
+		}
+	}
+	return num;
+}
+
+int getchoiso2jegop(int x){
+	if(x==1) return 1;
+	int i, num=1;
+	for(i=0;; ++i){
+		num=num*2;
+		if(num>=x){
+			break;
+		}
+	}
+	return num;
+}
+
+int getdap(){
+	int temp = initgetsu;
+	int num;
+	if(temp==1) return 0;
+	//cout<<num<<endl;
+	int count=0, buy=0;
+	while(1){
+		if(temp==0) return 0;
+		count++;
+		num  = getchoidae2jegop(temp);
+		//cout<<temp<<" "<<num<<" "<<count<<endl;
+		if(count==handgetsu) {
+			buy = getchoiso2jegop(temp)-temp;
+			
+			return buy;
+		}
+		temp-=num;
+	}
+	
+	return -1;
+}
+
+int main(void)
+{
+	cin>>initgetsu>>handgetsu;
+	cout<<getdap();
+}
