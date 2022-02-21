@@ -1,0 +1,37 @@
+#include<iostream>
+
+using namespace std;
+
+int numofstudent,a,b;
+
+int yeeboon(int jisoo,int start, int end){
+	int mid=(start+end)/2;
+	if(a>=start&&a<=mid&&b>=mid+1&&b<=end){
+		return jisoo;
+	}
+	if(b<mid+1) return yeeboon(jisoo-1,start,mid);
+	if(a>mid) return yeeboon(jisoo-1,mid+1,end);
+	//int left=yeeboon(jisoo-1,start,mid);
+	//int right=yeeboon(jisoo-1,mid+1,end);
+	//return min(left,right);
+	
+}
+
+int main(void)
+{
+	cin>>numofstudent>>a>>b;
+	int i,jisoo=0;
+	int sum=a+b;
+	a=min(a,b);
+	b=sum-a;
+	for(i=1;i<=2000000000; i=i*2){
+		if(i>=numofstudent){
+			numofstudent=i;
+			break;
+		}
+		jisoo++;
+	}
+	//cout<<numofstudent<<" "<<jisoo;
+	int dap=yeeboon(jisoo,1,numofstudent);
+	cout<<dap;
+}
