@@ -1,0 +1,45 @@
+#include<iostream>
+#include<math.h>
+using namespace std;
+
+int x,y, int_jump_len, int_time, dist_jegop;
+double double_jump_len, dist;
+
+int main(void)
+{
+	cout << fixed;
+ 	cout.precision(12);
+	cin>>x>>y>>int_jump_len>>int_time;
+	double_jump_len = (double)(int_jump_len);
+	dist_jegop = (x*x)+(y*y); 
+	dist = sqrt(dist_jegop);
+	double just_walk = dist, dap, double_time = (double)(int_time);
+	dap = just_walk; 
+	double case1, case2;
+	int jump_hwetsu = ((int)(dist))/int_jump_len;
+	//cout<<"총거리 : "<<dist<<", "<<"한번 점프 거리 : "<<int_jump_len<<endl;
+	//cout<<"점프횟수 : "<<jump_hwetsu<<endl;
+	if(dist_jegop==(int_jump_len*int_jump_len)){
+		dap = min(dap,double_time);
+	}
+	else if(dist_jegop>(int_jump_len*int_jump_len)){	//점프길이보다 총 거리가 더 길면 
+		double choidae_jump_len = jump_hwetsu*double_jump_len;
+		double rest_len = dist-choidae_jump_len;
+		//cout<<choidae_jump_len<<" "<<rest_len<<endl;
+		case1 = jump_hwetsu*double_time+rest_len;//최대한 점프 후 걸어가기; 
+		dap = min(dap, case1);
+		case2 = ((jump_hwetsu+1)*double_time);
+		//cout<<case1<<" "<<case2<<endl;
+		dap = min(dap, case2);
+	}
+	else{
+		double chogwa_len = double_jump_len-dist;
+		case1 = double_time+chogwa_len;
+		dap = min(dap, case1);
+		case2 = 2*double_time;
+		dap = min(dap, case2);
+	}
+	cout<<dap;
+	
+	return 0;
+}
