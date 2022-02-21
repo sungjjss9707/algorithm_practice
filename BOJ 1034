@@ -1,0 +1,77 @@
+#include<iostream>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+int lamp[51][51];
+int testlamp[51][51];
+int numofturnoff[51];
+int sero, garo, hwetsu;
+
+void copy(){
+	int i,k;
+	for(i=1; i<=sero; ++i){
+		for(k=1 ;k<=garo; ++k){
+			testlamp[i][k] = lamp[i][k];
+		}
+	}
+}
+
+void change_yeol(int yeol_num){
+	int i;
+	for(i=1; i<=sero; ++i){
+		testlamp[i][yeol_num] = 1-testlamp[i][yeol_num];
+	}
+}
+
+int all_one(){
+	int i,k, hap, mydap=0;;
+	for(i=1; i<=sero; ++i){
+		hap=0;
+		for(k=1; k<=garo; ++k){
+			hap+=testlamp[i][k];
+		}
+		if(hap==garo) mydap++;
+	}
+	return mydap;
+}
+
+int get_dap(){
+	int i, k,namojee_one, temp, maximum;
+	copy();
+	maximum = 0;
+	for(i=1; i<=sero; ++i){
+		if(numofturnoff[i]>hwetsu) continue;
+		namojee_one = hwetsu-numofturnoff[i];
+		if(namojee_one%2!=0) continue;
+		copy();
+		for(k=1; k<=garo; ++k){
+			if(testlamp[i][k]==0) change_yeol(k);
+		}
+		maximum = max(all_one(), maximum);
+	}
+	return maximum;
+}
+
+int main(void)
+{
+	fastio;
+	cin>>sero>>garo;
+	int i,k, num, hap;
+	char c;
+	for(i=1; i<=sero; ++i){
+		hap = 0;
+		for(k=1; k<=garo; ++k){
+			cin>>c;
+			num = c-'0';
+			hap+=num;
+			
+			lamp[i][k] = num;	
+			
+		}
+		numofturnoff[i] = garo-hap;
+	}
+	cin>>hwetsu;
+	cout<<get_dap();
+	//cout<<dap;
+	return 0;
+}
