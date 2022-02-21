@@ -1,0 +1,143 @@
+#include<iostream>
+#include<vector>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+int numofver, numofedge;
+int parent[51];
+vector<pair<int, int>> v;
+vector<pair<int, int>> dap;
+int getsu[51];
+
+void clear(){
+	int i;
+	for(i=0; i<numofver; ++i){
+		parent[i] = i;
+		getsu[i]=0;
+	}
+}
+
+int get_parent(int x){
+	if(x==parent[x]) return x;
+	int x_parent = get_parent(parent[x]);
+	parent[x] = x_parent;
+	return x_parent;
+}
+
+void union_set(int x, int y){
+	int p_x = get_parent(x);
+	int p_y = get_parent(y);
+	if(p_x!=p_y){
+		if(p_x<p_y){	//x로 맞추기 
+			parent[p_y] = p_x;
+		}
+		else{			//y로 맞추기 
+			parent[p_x] = p_y;
+		}
+	}
+}
+
+void print_dap(){
+	if(v.size()<numofedge){
+		cout<<-1;
+		return;
+	}
+	int i,k, x, y, px, py,num, flag, used=0, will;
+	vector<bool> visit;
+	for(i=0; i<v.size(); ++i){
+		visit.push_back(false);
+	}
+	for(i=0; i<v.size(); ++i){
+		x = v[i].first;
+		y = v[i].second;
+		px = get_parent(x);
+		py = get_parent(y);
+		if(px==py) continue;
+		visit[i]= true;
+		dap.push_back({x,y});
+		used++;
+		union_set(x,y);
+		//cout<<x<<" "<<y<<" : ";
+		for(k=0; k<numofver; ++k){
+			parent[k] = get_parent(k);
+		}
+		num = parent[0];
+		flag=0;
+		/*
+		for(k=0; k<numofver; ++k){
+			cout<<parent[k]<<" ";
+		}
+		cout<<endl;
+		*/
+		for(k=0; k<numofver; ++k){
+			if(parent[k]!=num){
+				flag=1;	
+				break;
+			}
+		}
+		if(flag==0){
+			will = numofedge-used;
+			break;
+		}
+	}
+	//cout<<will<<endl;
+	for(i=0; i<v.size(); ++i){
+		if(!visit[i]&&used<numofedge){
+			x = v[i].first;
+			y = v[i].second;
+			dap.push_back({x,y});
+			used++;
+		}
+	}
+	/*
+	cout<<endl;
+	for(i=0; i<dap.size(); ++i){
+		x = dap[i].first;
+		y = dap[i].second;
+		cout<<x<<" "<<y<<endl;
+	}
+	*/
+	num = parent[0];
+	flag=0;
+	for(k=0; k<numofver; ++k){
+		if(parent[k]!=num){
+			cout<<-1;
+			return;
+		}
+	}
+	for(i=0; i<dap.size(); ++i){
+		x = dap[i].first;
+		y = dap[i].second;
+		getsu[x]++;
+		getsu[y]++;
+	}
+	for(i=0; i<numofver; ++i){
+		cout<<getsu[i]<<" ";
+	}
+}
+
+int main(void)
+{
+	fastio;
+	cin>>numofver>>numofedge;
+	int i,k;
+	char c;
+	for(i=0; i<numofver; ++i){
+		for(k=0; k<numofver; ++k){
+			cin>>c;
+			if(i<k){
+				if(c=='Y'){
+					v.push_back({i,k});
+				}	
+			}
+		}
+	}
+	/*
+	for(i=0; i<v.size(); ++i){
+		cout<<v[i].first<<" "<<v[i].second<<endl;
+	}
+	*/
+	clear();
+	print_dap();
+	return 0;
+}
