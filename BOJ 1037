@@ -1,0 +1,24 @@
+#include<iostream>
+using namespace std;
+long long arr[51];
+int num;
+
+void calcul(){
+	int i;
+	long long max=0, min=1000001;
+	for(i=0; i<num; ++i){
+		if(arr[i]>max) max=arr[i];
+		if(arr[i]<min) min=arr[i];
+	}
+	cout<<max*min;
+}
+
+int main(void)
+{
+	cin>>num;
+	int i;
+	for(i=0; i<num; ++i){
+		cin>>arr[i];
+	}
+	calcul();
+}
