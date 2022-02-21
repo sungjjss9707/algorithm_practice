@@ -1,0 +1,415 @@
+#include<iostream>
+#include<string>
+#include<vector>
+#include<algorithm>
+using namespace std;
+
+int numofnum, numofchange, biggest_chasoo=-1;
+string arr[51];
+
+int hap[53];
+int hap_score[36][53];
+
+int pick[36];
+int there_is[36];
+int score[36][53];
+
+bool compare(pair<int, int> p1, pair<int, int> p2){
+	if(p1.second==p2.second){
+		
+	}
+	return p1.second>p2.second;
+}
+
+bool rank_compare(pair<int, vector<int>> p1, pair<int, vector<int>> p2){
+	if(p1.second.size()==p2.second.size()){
+		for(int i=0; i<p1.second.size(); ++i){
+			if(p1.second[i]==p2.second[i]) continue;
+			return p1.second[i]>p2.second[i];
+		}
+	}
+	return p1.second.size()>p2.second.size();
+}
+
+void fill_score(){
+	
+	int i, k,chasoo, alpha,index, getsu=0, mod, mok;
+	char c;
+	for(i=1; i<=numofnum; ++i){
+		for(k=arr[i].length()-1; k>=0; --k){
+			c = arr[i][k];
+			index = arr[i].length()-k-1;
+			//cout<<c<<" ";
+			chasoo = arr[i].length()-k-1;
+			if(c>='0'&&c<='9'){	//숫자면 
+				alpha = c-'0';
+			}	
+			else{			//문자면  
+				alpha = c-'A'+10;
+			}
+			there_is[alpha]++;
+			score[alpha][index]++;	
+		}
+	}
+	/*
+	
+	for(i=0; i<36; ++i){
+		if(i>=0&&i<=9){
+			c = (char)(i+'0');
+		}
+		else{
+			c = (char)(i-10+'A');
+		}
+		cout<<c<<" ";
+		for(k=0; k<biggest_chasoo; ++k){
+			cout<<score[i][k]<<" ";
+		}
+		cout<<endl;
+	}
+	cout<<endl;
+	*/
+	if(numofchange==0) return;
+	/*
+	for(i=0; i<36; ++i){
+		if(i>=0&&i<=9){
+			c = (char)(i+'0');
+		}
+		else{
+			c = (char)(i-10+'A');
+		}
+		cout<<c<<" ";
+		for(k=0; k<biggest_chasoo; ++k){
+			cout<<score[i][k]<<" ";
+		}
+		cout<<endl;
+	}
+	cout<<endl;
+	*/
+	for(i=0; i<36; ++i){
+		if(i>=0&&i<=9){
+			c = (char)(i+'0');
+		}
+		else{
+			c = (char)(i-10+'A');
+		}
+		//cout<<c<<" ";
+		for(k=0; k<53; ++k){
+			mok = score[i][k]/36;
+			mod = score[i][k]%36;
+			score[i][k] = mod;
+			score[i][k+1]+=mok;
+			//cout<<score[i][k]<<" ";
+		}
+		//cout<<endl;
+	}
+	for(i=0; i<36; ++i){
+		if(score[i][biggest_chasoo]!=0){
+			biggest_chasoo++;
+			break;
+		}
+	}
+	for(i=0; i<36;++i){
+		if(there_is[i]!=0){
+			getsu++;
+		}
+	}
+	if(getsu<=numofchange){//////////////////////////////있는 알파벳 싹다 z로 바꾸기  
+		for(i=0; i<36;++i){
+			if(there_is[i]!=0){
+				pick[i]=1;
+			}
+		}
+		return;
+	}
+	/*
+	for(i=0; i<36; ++i){
+		if(i>=0&&i<=9){
+			c = (char)(i+'0');
+		}
+		else{
+			c = (char)(i-10+'A');
+		}
+		cout<<c<<" ";
+		for(k=0; k<biggest_chasoo; ++k){
+			cout<<score[i][k]<<" ";
+		}
+		cout<<endl;
+	}
+	cout<<endl;
+	*/
+	int newrank[36][53];
+	for(k=0; k<53; ++k){
+		for(i=0; i<36; ++i){
+ 			newrank[i][k] = (35-i)*score[i][k];	
+		}
+	}
+	
+	
+	for(i=0; i<36;++i){
+		for(k=0; k<53; ++k){
+			mok = newrank[i][k]/36;
+			mod = newrank[i][k]%36;
+			newrank[i][k] = mod;
+			newrank[i][k+1]+=mok;
+		}
+		//cout<<endl;
+	}
+	
+	int jaree[36];
+	/*
+	for(i=0; i<36;++i){
+		//i = hap[k];
+		if(i>=0&&i<=9){
+			c = (char)(i+'0');
+		}
+		else{
+			c = (char)(i-10+'A');
+		}
+		cout<<c<<" : ";
+		for(k=0; k<53; ++k){
+			cout<<newrank[i][k]<<" ";
+		}
+		cout<<endl;
+	}
+	*/
+	for(i=0; i<36;++i){
+		for(k=52; k>=0; --k){
+			if(newrank[i][k]!=0){
+				break;
+			}
+			jaree[i] = k; 
+		}
+	}
+	/*
+	for(i=0; i<36; ++i){
+		if(i>=0&&i<=9){
+			c = (char)(i+'0');
+		}
+		else{
+			c = (char)(i-10+'A');
+		}
+		cout<<c<<" : ";
+		cout<<jaree[i]<<"\n";
+	}
+	*/
+	/*
+	for(i=0; i<36; ++i){
+		if(i>=0&&i<=9){
+			c = (char)(i+'0');
+		}
+		else{
+			c = (char)(i-10+'A');
+		}
+		cout<<c<<" : ";
+		for(k=0; k<jaree[i]; ++k){
+			cout<<newrank[i][k]<<" ";
+		}
+		cout<<endl;
+	}
+	*/
+	pair<int, vector<int>> ranking[36];
+	for(i=0; i<36; ++i){
+		ranking[i].first = i;
+		for(k=jaree[i]-1; k>=0; --k){
+			ranking[i].second.push_back(newrank[i][k]);
+		}
+	}
+	/*
+	for(i=0; i<36; ++i){
+		index = ranking[i].first;	
+		if(i>=0&&i<=9){
+			c = (char)(index+'0');
+		}
+		else{
+			c = (char)(index-10+'A');
+		}
+		cout<<c<<" : ";
+		for(k=0; k<ranking[i].second.size(); ++k){
+			cout<<ranking[i].second[k]<<" ";
+		}
+		cout<<endl;
+	}
+	*/
+	sort(ranking, ranking+36, rank_compare);
+	/*
+	//cout<<endl;
+	for(i=0; i<36; ++i){
+		index = ranking[i].first;	
+		if(index>=0&&index<=9){
+			c = (char)(index+'0');
+		}
+		else{
+			c = (char)(index-10+'A');
+		}
+		cout<<c<<" : ";
+		for(k=0; k<ranking[i].second.size(); ++k){
+			cout<<ranking[i].second[k]<<" ";
+		}
+		cout<<endl;
+	}
+	*/
+	getsu=0;
+	for(i=0; i<35; ++i){
+		index = ranking[i].first;
+		pick[index]=1;
+		getsu++;
+		if(getsu==numofchange) return;	
+	}
+	//cout<<"here\n";
+	/*
+	int my_score,j;
+	getsu=0;
+	
+	vector<pair<int, int> > v;
+	for(k=52; k>=0; --k){
+		v.clear();
+		for(i=0; i<35; ++i){
+			if(pick[i]==1) continue;
+			if(score[i][k]==0) continue;
+			//my_score = (i+1)*score[i][k];
+			my_score = (35-i)*score[i][k];
+			v.push_back({i, my_score});
+		}
+		if(v.empty()) continue;
+		sort(v.begin(), v.end(), compare);
+		for(j=0; j<v.size(); ++j){
+			alpha = v[j].first;
+			pick[alpha]=1;
+			//cout<<alpha<<"선택\n"; 
+			getsu++;
+			if(getsu==numofchange) return;
+		}
+	}
+	*/
+	if(there_is[35]!=0) pick[35]=1;
+	
+}
+
+void get_hap(){
+	
+	int i,j,k, num, mod, mok;
+	char c;
+	for(k=0; k<53; ++k){
+		num=0;
+		for(i=0; i<36; ++i){
+			num+=(score[i][k]*i);
+		}
+		hap[k] = num;
+	}
+	for(k=0; k<53; ++k){
+		mok = hap[k]/36;
+		mod = hap[k]%36;
+		hap[k] = mod;
+		hap[k+1] += mok;
+	}
+	int startindex;
+	for(k=52; k>=0; --k){
+		if(hap[k]!=0){
+			startindex = k;
+			break;
+		}
+	}
+	for(k=startindex; k>=0; --k){
+		i = hap[k];
+		if(i>=0&&i<=9){
+			c = (char)(i+'0');
+		}
+		else{
+			c = (char)(i-10+'A');
+		}
+		cout<<c;
+	}
+	
+}
+
+void hap_after_change(){
+	fill_score();
+	int i,k;
+	char c;
+	/*
+	cout<<"바꾸는거 : \n";
+	for(i=0; i<36; ++i){
+		if(pick[i]==1){
+			if(i>=0&&i<=9){
+				c = (char)(i+'0');
+			}
+			else{
+				c = (char)(i-10+'A');
+			}
+			cout<<c<<" ";
+		}
+	}
+	cout<<endl;
+	*/
+	int j,my_alpha;
+	char char_my_alpha;
+	for(j=0; j<35; ++j){
+		if(pick[j]!=1) continue;
+		for(k=0; k<53; ++k){
+			if(score[j][k]==0) continue;
+			score[35][k] += score[j][k];
+			score[j][k]=0; 
+		}
+	}
+	/*
+	for(i=0; i<36; ++i){
+		if(i>=0&&i<=9){
+			c = (char)(i+'0');
+		}
+		else{
+			c = (char)(i-10+'A');
+		}
+		cout<<c<<" ";
+		for(k=0; k<53; ++k){
+			cout<<score[i][k]<<" ";
+		}
+		cout<<endl;
+	}
+	cout<<endl;
+	*/
+	/*
+	for(j=0; j<36; ++j){
+		if(pick[j]!=1) continue;
+		if(j>=0&&j<=9){
+			char_my_alpha = (char)(j+'0');
+		}
+		else{
+			char_my_alpha = (char)(j-10+'A');
+		} 
+		for(i=1; i<=numofnum; ++i){
+			for(k=arr[i].length()-1; k>=0; --k){
+				if(arr[i][k]==char_my_alpha) arr[i][k]='Z';
+			}
+		}
+	}
+	*/
+	/*
+	for(i=1; i<=numofnum; ++i){
+		for(k=0; k<arr[i].length(); ++k){
+			cout<<arr[i][k];
+		}
+		cout<<endl;
+	}
+	*/
+	get_hap();
+	//return " ";
+	//return get_hap();
+}
+
+int main(void)
+{
+	cin>>numofnum;
+	int i, size;
+	string s;
+	for(i=1; i<=numofnum; ++i){
+		cin>>s;
+		arr[i] = s;
+		size = s.length();
+		biggest_chasoo = max(biggest_chasoo, size);
+	}
+	cin>>numofchange;
+	if(numofnum==0) return 0;
+	//cout<<"제일긴거 "<<biggest_chasoo<<endl;
+	hap_after_change();
+	return 0;
+}
