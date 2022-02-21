@@ -1,0 +1,57 @@
+#include<iostream>
+#include<vector>
+using namespace std;
+
+int numofnode;
+int head, delete_node;
+pair<int, vector<int>> family[51];
+
+int get_leaf_node(){
+	int i,k, count=0;
+	for(i=0; i<numofnode; ++i){
+		if(family[i].second.empty()) count++;
+	}
+	return count;
+}
+
+int dfs(int parent){
+	if(parent==delete_node){
+		return 0;
+	}
+	int i, nextnode, ret=0;
+	for(i=0; i<family[parent].second.size(); ++i){
+		nextnode = family[parent].second[i];
+		ret+=dfs(nextnode);
+	}
+	if(ret==0) ret=1;
+	return ret;
+}
+
+int main(void)
+{
+	cin>>numofnode;
+	int i,k,parent;
+	for(i=0; i<numofnode; ++i){
+		cin>>parent;
+		if(parent==-1){
+			head = i;
+			family[i].first = -1;	
+		}
+		else{
+			family[i].first = parent;
+			family[parent].second.push_back(i);
+		}
+	}
+	cin>>delete_node;
+	/*
+	for(i=0; i<numofnode; ++i){
+		cout<<i<<"의 부모 : "<<family[i].first<<"이고 자식들 : ";
+		for(k=0; k<family[i].second.size(); ++k){
+			cout<<family[i].second[k]<<" ";
+		} 
+		cout<<endl;
+	}
+	*/
+	cout<<dfs(head);
+	//cout<<"자식이 없는 리프노드 개수 : "<<get_leaf_node(); 
+}
