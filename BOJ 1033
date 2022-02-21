@@ -1,0 +1,151 @@
+#include<iostream>
+#include<vector>
+using namespace std;
+
+struct boonsoo{
+	int child, mother;
+};
+
+boonsoo beeyool[11][11];
+vector<int> link[11];
+bool visit[11];
+
+int numofnum;
+
+void clear(){
+	int i;
+	for(i=0; i<numofnum; ++i){
+		beeyool[i][i].child = 1;
+		beeyool[i][i].mother = 1;
+		visit[i] = false;
+	}
+}
+/*
+int find_head(){
+	int i,k;
+	for(i=)
+}
+*/
+
+
+int choidaegong(int a, int b){
+	int cha, big = (max(a,b)), small = min(a,b);
+	while(big!=small){
+		cha = big-small;
+		big = max(small, cha);
+		small = min(small, cha);
+	}
+	return big;
+}
+
+void dfs(int nownode, int boonja, int boonmo){
+	//cout<<nownode<<" "<<boonja<<" "<<boonmo<<endl;
+	visit[nownode]=true;
+	//cout<<nownode<<"방문\n";
+	int gop_c, gop_m, choidae,i, newm, newc;
+	gop_c = boonja*beeyool[nownode][nownode].mother;
+	gop_m = boonmo*beeyool[nownode][nownode].child;
+	choidae = choidaegong(gop_c, gop_m);
+	gop_c = gop_c/choidae;
+	gop_m = gop_m/choidae;
+	
+	//cout<<"fuck";
+	for(i=0; i<numofnum; ++i){
+		if(beeyool[nownode][i].child==0) continue;
+		newm = beeyool[nownode][i].mother*gop_m;
+		newc = beeyool[nownode][i].child*gop_c;
+		choidae = choidaegong(newm, newc);
+		newm = newm/choidae;
+		newc = newc/choidae;
+		//cout<<newc<<" "<<newm<<endl;
+		beeyool[nownode][i].child = newc;
+		beeyool[nownode][i].mother = newm;
+	}
+	//cout<<"now\n";
+	int nextnode; 
+	for(i=0; i<link[nownode].size(); ++i){
+		nextnode = link[nownode][i];
+		if(!visit[nextnode]){
+			
+			dfs(nextnode,beeyool[nownode][nextnode].child,beeyool[nownode][nextnode].mother);
+		}
+	}
+}
+
+void print(){
+	int i;
+	for(i=0; i<numofnum; ++i){
+		cout<<beeyool[i][i].child<<" ";
+	}
+	cout<<endl;
+	for(i=0; i<numofnum; ++i){
+		cout<<beeyool[i][i].mother<<" ";
+	}
+}
+
+void print_arr(){
+	int i;
+	for(i=0; i<numofnum; ++i){
+		for(int k=0; k<numofnum; ++k){
+			cout<<beeyool[i][k].child<<" ";	
+		}
+		cout<<endl;
+		for(int k=0; k<numofnum; ++k){
+			cout<<beeyool[i][k].mother<<" ";	
+		}
+		cout<<endl;
+		cout<<endl;
+	}
+}
+
+int main(void)
+{
+	cin>>numofnum;
+	int i,k, a,b,at, bt, choidae;
+	int first_a, first_b;
+	clear();
+	for(i=0; i<numofnum-1; ++i){
+		cin>>a>>b>>at>>bt;
+		choidae = choidaegong(at,bt);
+		at = at/choidae;
+		bt = bt/choidae;
+		first_a = a;
+		first_b = b;
+		link[a].push_back(b);
+		link[b].push_back(a);
+		beeyool[a][b].mother = at;
+		beeyool[a][b].child = bt;
+		beeyool[b][a].mother = bt;
+		beeyool[b][a].child = at;
+	}
+	//cout<<endl;
+	//print_arr();
+	visit[first_a]=true;
+	//cout<<first_a<<"방문\n";
+	//cout<<first_a<<" ";
+	int nextnode;
+	for(i=0; i<link[first_a].size(); ++i){
+		nextnode = link[first_a][i];
+		
+		if(!visit[nextnode]){
+			//cout<<"다음노드는 : "<<nextnode<<endl;
+			//cout<<nextnode<<"방문\n";
+			dfs(nextnode, beeyool[first_a][nextnode].child,beeyool[first_a][nextnode].mother);
+		}
+	}
+	//print();
+	//cout<<endl;
+	int choisogong, y,x = beeyool[0][0].mother;
+	for(i=1; i<numofnum; ++i){
+		y = beeyool[i][i].mother;
+		choidae = choidaegong(x,y);
+		//cout<<x<<","<<y<<" = "<<choidae<<"=>";
+		choisogong = choidae*(x/choidae)*(y/choidae);
+		//cout<<choisogong<<endl;
+		x = choisogong;
+	}
+	//cout<<choisogong<<endl;;
+	for(i=0; i<numofnum; ++i){
+		cout<<(beeyool[i][i].child)*(choisogong/beeyool[i][i].mother)<<" ";
+	}
+}
