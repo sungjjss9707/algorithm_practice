@@ -1,0 +1,113 @@
+import java.util.*;
+
+class number{
+	int num;
+	int[] mysuyol;
+	
+	number(int _num){
+		this.num = _num;
+		make();
+	}
+	
+	void getnum() {
+		System.out.println(num);
+	}
+
+	void make() {
+		int firstnum = num, seep=0, yeel=0, baek=0, chon=0;
+		int[] suyol = new int[1];
+		
+		if(firstnum>0 && firstnum<10) {
+			yeel = firstnum%10;
+			suyol[0] = yeel;
+		}
+		else if(firstnum>=10 && firstnum<100) {
+			yeel = firstnum%10;
+			seep = firstnum/10;
+			suyol = new int[2];
+			suyol[0] = yeel;
+			suyol[1] = seep;
+		}
+		else if(firstnum>=100 && firstnum<1000) {
+			yeel = firstnum%10;
+			baek = firstnum/100;
+			seep = (firstnum%100)/10;
+			suyol = new int[3];
+			suyol[0] = yeel;
+			suyol[1] = seep;
+			suyol[2] = baek;
+		}
+		else if(firstnum>=1000 && firstnum<10000) {
+			yeel = firstnum%10;
+			chon = firstnum/1000;
+			baek = (firstnum%1000)/100;
+			seep = ((firstnum%1000)%100)/10;
+			seep = (firstnum%100)/10;
+			suyol = new int[4];
+			suyol[0] = yeel;
+			suyol[1] = seep;
+			suyol[2] = baek;
+			suyol[3] = chon;
+		}
+		this.mysuyol =  suyol;
+	}
+	
+	int panstar() {	//등찬지 아닌지 판별	
+		int bool=1,i;
+		if(mysuyol.length<3) {
+			bool = 1;
+		}
+		else{
+			for(i=0; i<mysuyol.length-2; ++i) {
+				if(2*mysuyol[i+1]!=mysuyol[i]+mysuyol[i+2]) {
+					bool=0;
+					break;
+				}
+			}
+		}
+		return bool;
+		
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	void printsuyol() {
+		int i;
+		for(i=0; i<mysuyol.length; ++i) {
+			System.out.print(mysuyol[i]+" ");
+		}
+	}
+}
+
+
+public class Main {
+
+	public static void main(String[] args) {
+		int i,n, sum = 0;
+		Scanner sc =  new Scanner(System.in);
+		n = sc.nextInt();
+		number[] numbers = new number[n+1];
+		//number n1 = new number(n);
+		for(i=1; i<=n; ++i) {
+			numbers[i] = new number(i);
+		}
+		
+		for(i=1; i<=n; i++) {
+			if(numbers[i].panstar()==1) {
+				sum = sum+1;
+			}
+		}
+		
+		System.out.println(sum);
+		
+		
+		
+		
+	}
+
+}
