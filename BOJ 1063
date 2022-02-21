@@ -1,0 +1,147 @@
+#include<iostream>
+#include<string>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+string king_pos, dol_pos;
+int numofgo;
+int king_y, king_x, dol_y, dol_x;
+int chess[9][9];
+
+void init_chess(){
+	//char char_king_y, char_king_x, char_dol_y, char_dol_x;
+	king_y = (int)(king_pos[1]-'0');
+	king_x = (int)(king_pos[0]-'A')+1;
+	dol_y = (int)(dol_pos[1]-'0');
+	dol_x = (int)(dol_pos[0]-'A')+1;
+	//cout<<king_y<<" "<<king_x<<" , "<<dol_y<<" "<<dol_x<<endl;;
+}
+
+bool isitinchess(int y, int x){
+	if(y>=1&&y<=8&&x>=1&&x<=8) return true;
+	return false;
+}
+
+void print_king_and_dol_pos(){
+	cout<<(char)(king_x-1+'A');
+	cout<<(char)(king_y+'0');
+	cout<<"\n";
+	cout<<(char)(dol_x-1+'A');
+	cout<<(char)(dol_y+'0');
+}
+
+void go_king_and_dol(string go){
+	int next_king_y,next_king_x, next_dol_y, next_dol_x; 
+	next_king_y = king_y;
+	next_king_x = king_x;
+	next_dol_y = dol_y;
+	next_dol_x = dol_x;
+	if(go=="R"){	//오른쪽
+		next_king_x++;
+		if(isitinchess(next_king_y, next_king_x)){
+			if(next_king_y==next_dol_y&&next_king_x==next_dol_x){
+				next_dol_x++;
+				if(!isitinchess(next_dol_y, next_dol_x)) return;
+			}
+		} 
+		else return; 
+	}
+	else if(go=="L"){	//왼쪽 
+		next_king_x--;
+		if(isitinchess(next_king_y, next_king_x)){
+			if(next_king_y==next_dol_y&&next_king_x==next_dol_x){
+				next_dol_x--;
+				if(!isitinchess(next_dol_y, next_dol_x)) return;
+			}
+		} 
+		else return;
+	}
+	else if(go=="B"){	//아래	 
+		next_king_y--;
+		if(isitinchess(next_king_y, next_king_x)){
+			if(next_king_y==next_dol_y&&next_king_x==next_dol_x){
+				next_dol_y--;
+				if(!isitinchess(next_dol_y, next_dol_x)) return;
+			}
+		} 
+		else return;
+	}
+	else if(go=="T"){	//위	 
+		next_king_y++;
+		if(isitinchess(next_king_y, next_king_x)){
+			if(next_king_y==next_dol_y&&next_king_x==next_dol_x){
+				next_dol_y++;
+				if(!isitinchess(next_dol_y, next_dol_x)) return;
+			}
+		} 
+		else return;
+	}
+	else if(go=="RT"){	//오른쪽위	 
+		next_king_x++;
+		next_king_y++;
+		if(isitinchess(next_king_y, next_king_x)){
+			if(next_king_y==next_dol_y&&next_king_x==next_dol_x){
+				next_dol_y++;
+				next_dol_x++;
+				if(!isitinchess(next_dol_y, next_dol_x)) return;
+			}
+		} 
+		else return; 
+	}
+	else if(go=="LT"){		//왼쪽위	 
+		next_king_x--;
+		next_king_y++;
+		if(isitinchess(next_king_y, next_king_x)){
+			if(next_king_y==next_dol_y&&next_king_x==next_dol_x){
+				next_dol_y++;
+				next_dol_x--;
+				if(!isitinchess(next_dol_y, next_dol_x)) return;
+			}
+		} 
+		else return;
+	}
+	else if(go=="RB"){	//오른쪽 아래 
+		next_king_x++;
+		next_king_y--;
+		if(isitinchess(next_king_y, next_king_x)){
+			if(next_king_y==next_dol_y&&next_king_x==next_dol_x){
+				next_dol_x++;
+				next_dol_y--;
+				if(!isitinchess(next_dol_y, next_dol_x)) return;
+			}
+		} 
+		else return;
+	}
+	else{		//LB	왼쪽 아 래  
+		next_king_x--;
+		next_king_y--;
+		if(isitinchess(next_king_y, next_king_x)){
+			if(next_king_y==next_dol_y&&next_king_x==next_dol_x){
+				next_dol_x--;
+				next_dol_y--;
+				if(!isitinchess(next_dol_y, next_dol_x)) return;
+			}
+		} 
+		else return;
+	}
+	king_y = next_king_y;
+	king_x = next_king_x;
+	dol_y = next_dol_y;
+	dol_x = next_dol_x;
+}
+
+int main(void)
+{
+	fastio;
+	cin>>king_pos>>dol_pos>>numofgo;
+	init_chess();
+	int i;
+	string go;
+	for(i=0; i<numofgo; ++i){
+		cin>>go;
+		go_king_and_dol(go);
+	}
+	print_king_and_dol_pos();
+	//cout<<king_y<<" "<<king_x<<" , "<<dol_y<<" "<<dol_x;
+	return 0;
+}
