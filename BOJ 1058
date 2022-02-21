@@ -1,0 +1,100 @@
+#include<iostream>
+#include<vector>
+#include<queue>
+using namespace std;
+
+//int friendship[51][51];
+int visit[51];
+vector<int> myfriend[51];
+
+
+int numofpeople;
+
+void clear(){
+	int i;
+	for(i=1; i<=numofpeople; ++i){
+		visit[i]=0;
+	}
+}
+
+int dfs(int x, int dept){
+	visit[x]=1;
+	if(dept==3) return 1;
+	
+	int i, next, num=1;
+	for(i=0; i<myfriend[x].size(); ++i){
+		next = myfriend[x][i];
+		if(visit[next]==0) num+=dfs(next, dept+1);
+	}
+	return num;
+	
+}
+
+int bfs(int start){
+	clear();
+	queue<pair<int, int>> q;
+	q.push({start, 1});
+	visit[start]=1;
+	int now, dept,i, dap=0, next;
+	while(!q.empty()){
+		now = q.front().first;
+		dept = q.front().second;
+		q.pop();
+		if(dept==3){	
+			continue;
+		}
+		for(i=0; i<myfriend[now].size(); ++i){
+			next = myfriend[now][i];
+			if(visit[next]==0){
+				visit[next]=1;
+				q.push({next, dept+1});	
+			} 
+		}
+	}
+	for(i=1; i<=numofpeople; ++i){
+		if(visit[i]==1) dap++;
+	}
+	return dap-1;
+}
+
+int main(void)
+{
+	cin>>numofpeople;
+	int i,k, maxnum=-1, num;
+	char c;
+	for(i=1; i<=numofpeople; ++i){
+		for(k=1; k<=numofpeople; ++k){
+			cin>>c;
+			if(c=='Y'){
+				myfriend[i].push_back(k);
+			}
+		}
+	}
+	/*
+	for(i=1; i<=numofpeople; ++i){
+		cout<<i<<" 의 친구 : ";
+		for(k=0; k<myfriend[i].size(); ++k){
+			cout<<myfriend[i][k]<<" "; 
+		}
+		cout<<endl;
+	}
+	*/
+	for(i=1; i<=numofpeople; ++i){
+		//clear();
+		maxnum = max(bfs(i), maxnum);
+		//maxnum = max(dfs(i,1)-1, maxnum);
+		/*
+		cout<<i<<" 의 -2 친구 : ";
+		cout<<dfs(i, 1);
+		cout<<"     ";
+		
+		
+		for(k=1; k<=numofpeople; ++k){
+			if(visit[k]==1) cout<<k<<" ";
+		}
+		cout<<endl;
+		*/
+	}
+	cout<<maxnum;
+	
+}
