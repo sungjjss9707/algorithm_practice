@@ -1,0 +1,64 @@
+#include<iostream>
+#include<queue>
+
+using namespace std;
+
+long long num;
+//321
+bool isthisdecreasenum(long long number){
+	if(number<10) return true;
+	long long mok, namojee, yeejeonnamojee = -1;
+	while(1){
+		if(number==0) break;
+		namojee = number%10;
+		number = number/10;
+		if(yeejeonnamojee>=namojee) return false;
+		yeejeonnamojee = namojee;
+	}
+	return true;
+}
+
+long long decreasenum(){
+	if(num==0||num==1) return num;
+	long long i, count=0,number=1;
+	for(i=1; i<=9876543210; ++i){
+		if(isthisdecreasenum(i)){
+			//cout<<number<<endl;
+			count++;
+		}
+		if(count==num) return i;
+	}
+	return -1;
+}
+
+long long bfs(){
+	long long i;
+	queue<long long> q;
+	for(i=0; i<=9; ++i){
+		q.push(i);
+		
+	}
+	vector<long long> v;
+	long long nownum, lst,count=0;
+	while(!q.empty()){
+		nownum = q.front();
+		v.push_back(nownum);
+		lst = nownum%10;
+		if(count==num) return nownum;
+		count++;
+		q.pop();
+		
+		for(i=0; i<=9; ++i){
+			if(lst>i) q.push(nownum*10+i);
+		}
+	}
+	return -1;
+}
+
+int main(void)
+{
+	cin>>num;
+//	cout<<decreasenum();
+	cout<<bfs();
+	return 0;
+}
