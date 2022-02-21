@@ -1,0 +1,48 @@
+#include<iostream>
+#include<algorithm>
+using namespace std;
+
+int numofnum, must;
+int arr[51];
+
+int getnumofgood(){
+	int i;
+	sort(arr+1, arr+numofnum+1);
+	for(i=1; i<=numofnum; ++i){
+		if(arr[i]==must) return 0;
+		else if(arr[i]>must) break;
+	}
+	int upperindex = i;
+	int underindex=i-1;
+	int upper, under;
+	if(underindex==0) under = 1;
+	else under = arr[underindex]+1;
+	upper = arr[upperindex]-1;
+	//cout<<under<<" "<<upper<<endl;
+	int k,count=0;
+	for(i=under; i<=upper; ++i){
+		for(k=under; k<=upper; ++k){
+			if(i<k&&i<=must&&k>=must){
+				//cout<<i<<" "<<k<<endl;
+				count++;
+			}
+		}
+	}
+	return count;
+}
+/*
+5 
+5 10 17 21 30
+2
+*/
+int main(void)
+{
+	cin>>numofnum;
+	int i;
+	for(i=1; i<=numofnum; ++i){
+		cin>>arr[i];
+	}
+	cin>>must;
+	cout<<getnumofgood();
+	return 0;
+}
