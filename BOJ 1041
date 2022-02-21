@@ -1,0 +1,75 @@
+#include<iostream>
+
+using namespace std;
+
+long long dice[6], line[12], dot[8];
+long long max_side = -1, min_line = 200, min_dot = 200, min_side=200;
+long long len;
+
+
+void fill_line_dot(){
+	long long i;
+	line[0] = dice[0]+dice[2];
+	line[1] = dice[0]+dice[4];
+	line[2] = dice[0]+dice[3];
+	line[3] = dice[0]+dice[1];
+	line[4] = dice[2]+dice[4];
+	line[5] = dice[3]+dice[4];
+	line[6] = dice[1]+dice[3];
+	line[7] = dice[1]+dice[2];
+	line[8] = dice[5]+dice[2];
+	line[9] = dice[4]+dice[5];
+	line[10] = dice[3]+dice[5];
+	line[11] = dice[1]+dice[5];
+	for(i=0; i<12; ++i){
+		min_line = min(min_line, line[i]);
+	}
+	dot[0] = dice[0]+dice[2]+dice[4];
+	dot[1] = dice[0]+dice[3]+dice[4];
+	dot[2] = dice[0]+dice[1]+dice[3];
+	dot[3] = dice[0]+dice[1]+dice[2];
+	dot[4] = dice[5]+dice[2]+dice[4];
+	dot[5] = dice[3]+dice[5]+dice[4];
+	dot[6] = dice[1]+dice[3]+dice[5];
+	dot[7] = dice[1]+dice[2]+dice[5];
+	for(i=0; i<8; ++i){
+		min_dot = min(min_dot, dot[i]);
+	}
+}
+
+long long biggest_num(){
+	long long i;
+	long long dap = 0;
+	if(len==1){
+		for(i=0; i<6; ++i){
+			dap+=(long long)(dice[i]);
+		}
+		dap-=max_side;
+		return dap;
+	}
+	long long up_dot, down_dot, myeon, mo;
+	up_dot = min_dot*4;
+	down_dot = min_line*4;
+	myeon = min_side*((len-2)*(len-2)+(len-2)*(len-1)*4);
+	mo = min_line*(len-2)*8;
+	//cout<<up_dot<<" "<<down_dot<<" "<<myeon<<" "<<mo<<endl;
+	dap = up_dot+ down_dot+ myeon+ mo;
+	return dap;
+	
+	
+}
+
+int main(void)
+{
+	cin>>len;
+	long long i;
+	for(i=0; i<6; ++i){
+		cin>>dice[i];
+		min_side = min(min_side, dice[i]);
+		max_side = max(max_side, dice[i]);
+	}
+	fill_line_dot();
+	//cout<<min_line<<" "<<min_dot;
+	cout<<biggest_num();
+	return 0;
+}
