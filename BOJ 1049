@@ -1,0 +1,41 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+using namespace std;
+
+int numofbrokenstring, numofbrend, dap=0;
+vector<int> setprice;
+vector<int> oneprice;
+
+void input(){
+	cin>>numofbrokenstring>>numofbrend;
+	int i,p1, p2;
+	for(i=0; i<numofbrend; ++i){
+		cin>>p1>>p2;
+		setprice.push_back(p1);
+		oneprice.push_back(p2);
+	}
+}
+
+void calcul(){
+	sort(setprice.begin(), setprice.end());
+	sort(oneprice.begin(), oneprice.end());
+	int cheapest_one = oneprice[0];
+	int cheapest_set = setprice[0];
+	if(6*cheapest_one<cheapest_set) dap = numofbrokenstring*cheapest_one;
+	else{
+		int mok = numofbrokenstring/6;
+		int mod = numofbrokenstring%6;
+		dap = mok*cheapest_set+mod*cheapest_one;
+		if(mod!=0){
+			dap = min(dap, (mok+1)*cheapest_set);
+		}
+	}
+}
+
+int main(void)
+{
+	input();
+	calcul();
+	cout<<dap;
+}
