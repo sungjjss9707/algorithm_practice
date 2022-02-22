@@ -1,0 +1,17 @@
+#include<iostream>
+
+using namespace std;
+
+int main(void)
+{
+	int num;
+	cin>>num;
+	int mok, namojee, numofone=0;
+	while(1){
+		if(num==0) break;
+		namojee = num%2;
+		numofone = numofone+namojee;
+		num = num/2;
+	}
+	cout<<numofone;
+}
