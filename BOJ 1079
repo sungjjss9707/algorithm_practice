@@ -1,0 +1,143 @@
+#include<iostream>
+
+using namespace std;
+
+int jeesoo[16];
+int arr[16][16];
+int dp[70000];
+bool alive[16];
+int numofpeople, maf;
+int morning(int days);
+int night(int days);
+
+void clear(){
+	int i;
+	for(i=0; i<numofpeople; ++i){
+		alive[i] = true;
+	}
+	for(i=0; i<70000; ++i){
+		dp[i] = -1;
+	}
+}
+
+int get_die(){
+	int i, biggest = -1, die;
+	for(i=0; i<numofpeople; ++i){
+		if(alive[i]){
+			biggest = max(biggest, jeesoo[i]);
+		}
+	}
+	for(i=0; i<numofpeople; ++i){
+		if(alive[i]&&biggest==jeesoo[i]){
+			die = i;
+			break;
+		}
+	}
+	return die;
+}
+
+bool maf_only_alive(){
+	if(!alive[maf]) return false;
+	int i;
+	for(i=0; i<numofpeople;++i){
+		if(i!=maf&&alive[i]){
+			return false;
+		}
+	}
+	return true;
+}
+
+int night(int days){
+	int i,k,lastindex, myindex, dap=0;
+	int copy_jeesoo[16];
+	bool copy_alive[16];
+	for(i=0; i<numofpeople; ++i){
+		copy_jeesoo[i] = jeesoo[i];
+		copy_alive[i] = alive[i];
+	} 
+	
+	for(i=0; i<numofpeople; ++i){		//이때가 밤임 
+		if(alive[i]&&i!=maf){
+			alive[i] = false;
+			for(k=0; k<numofpeople; ++k){
+				jeesoo[k] += arr[i][k];
+			} 
+			dap = max(dap, morning(days));
+			//alive[i] = true;
+			for(k=0; k<numofpeople; ++k){
+				jeesoo[k] = copy_jeesoo[k];
+				alive[k] = copy_alive[k];
+			}	
+		}
+	}
+	return dap;
+	
+}
+
+int morning(int days){
+	if(maf_only_alive()) return days;
+	int die = get_die();
+	//cout<<die<<"투표로 사망\n";
+	if(die==maf){
+		return days;
+	}
+	alive[die] = false;
+	if(maf_only_alive()) return days;
+	return night(days+1);
+}
+
+int main(void)
+{
+	cin>>numofpeople;
+	int i,k;
+	for(i=0; i<numofpeople; ++i){
+		cin>>jeesoo[i];	
+	}
+	for(i=0; i<numofpeople; ++i){
+		for(k=0; k<numofpeople; ++k){
+			cin>>arr[i][k];
+		}
+	}
+	cin>>maf;
+	clear();
+	int die, dap=0, index=0, myindex=1, lastindex;
+	if(numofpeople%2==1){		//낮  
+		die = get_die();
+		//cout<<die<<"투표로 사망\n";
+		if(die==maf){
+			cout<<0;
+			return 0;
+		}
+		alive[die] = false;
+		index = 1<<die;
+	}
+	int copy_jeesoo[16];
+	bool copy_alive[16];
+	for(i=0; i<numofpeople; ++i){
+		copy_jeesoo[i] = jeesoo[i];
+		copy_alive[i] = alive[i];
+	} 
+	
+	for(i=0; i<numofpeople; ++i){		//이때가 밤임 
+		if(alive[i]&&i!=maf){
+			//cout<<"처음 "<<i<<"마피아가 죽임\n";
+			myindex = 1<<i;
+			lastindex = myindex|index;
+			//cout<<lastindex<<" ";
+			alive[i] = false;
+			for(k=0; k<numofpeople; ++k){
+				jeesoo[k] += arr[i][k];
+			} 
+			dap = max(dap, morning(1));
+			//alive[i] = true;
+			for(k=0; k<numofpeople; ++k){
+				jeesoo[k] = copy_jeesoo[k];
+				alive[k] = copy_alive[k];
+			}	
+		}
+		
+	}
+	cout<<dap;
+	return 0;
+	
+}
