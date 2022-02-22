@@ -1,0 +1,58 @@
+#include<iostream>
+#include<vector>
+using namespace std;
+
+int numofnum,goal;
+int num[21];
+int use[21];
+int dap=0;
+vector<int> v;
+
+int vectorhap(){
+	int sum=0;
+	for(int i=0;i<v.size();++i){
+		sum=sum+v[i];
+	}
+	return sum;
+}
+
+void printvec(){
+	for(int i=0;i<v.size();++i){
+		cout<<v[i]<<" ";
+	}
+	cout<<"\n";
+}
+
+
+void findgoalcase(){
+
+	if(vectorhap()==goal&&v.size()!=0){
+		//printvec();
+		dap++;
+	}
+	int i,lastindex=-1;
+	for(i=numofnum-1;i>=0;--i){
+		if(use[i]==1){
+			lastindex=i;
+			break;
+		}
+	}
+	for(i=lastindex+1;i<numofnum;++i){
+		use[i]=1;
+		v.push_back(num[i]);
+		findgoalcase();
+		use[i]=0;
+		v.pop_back();
+	}
+}
+
+int main(void)
+{
+	cin>>numofnum>>goal;
+	for(int i=0;i<numofnum;++i){
+		cin>>num[i];
+		use[i]=0;
+	}
+	findgoalcase();
+	cout<<dap;
+}
