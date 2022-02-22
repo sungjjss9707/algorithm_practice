@@ -1,0 +1,79 @@
+#include<iostream>
+#include<vector>
+#define fastio ios::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
+using namespace std;
+
+int nodenum;
+
+vector<pair<int,int>> arr[100001];		//first가 인덱스, seconde가 거리 
+int visit[100001];
+int longestindex;
+void clear(){
+	int i;
+	for(i=1; i<=nodenum; ++i){
+		visit[i]=0;
+	}
+}
+
+long long jeerum=0;
+
+void dfs(int root, int dist){
+	visit[root]=1;
+	if(dist>jeerum){
+		jeerum = dist;
+		longestindex = root;	
+	} 
+	int i, nextnode, gori;
+	
+	for(i=0; i<arr[root].size(); ++i){
+		nextnode = (arr[root][i]).first;
+		if(visit[nextnode]==0){
+			gori = (arr[root][i]).second;
+			dfs(nextnode, dist+gori);	
+		}
+	}
+	
+}
+
+int main(void)
+{
+	fastio;
+	cin>>nodenum;
+	int i,k, nextnum, node,dist, root;
+	for(i=1; i<=nodenum; ++i){
+		cin>>node;
+		while(1){
+			cin>>nextnum;
+			if(nextnum==-1) break;
+			cin>>dist;
+			arr[node].push_back({nextnum, dist});	
+		}
+	}
+	dfs(1,0);
+	clear();
+	dfs(longestindex, 0);
+	/*
+	for(i=1; i<=nodenum; ++i){		//루트 노드 찾기 
+		//clear();
+		if(arr[i].size()==1){
+			clear();
+			dfs(i,0);
+			//cout<<i<<" ";	
+		}
+		//dfs(i,0);
+	}
+	*/
+	//cout<<root;
+	
+	//dfs(5,0); 
+	cout<<jeerum;
+	/*//////////////////////////////////////////
+	for(i=1; i<=nodenum; ++i){
+		cout<<i<<" 랑 연결된점 : ";
+		for(k=0; k<arr[i].size(); ++k){
+			cout<<(arr[i][k]).first<<"(거리:"<<(arr[i][k]).second<<")  ";
+		}
+		cout<<"\n";
+	}
+	*/////////////////////////////////////////////////////////
+}
