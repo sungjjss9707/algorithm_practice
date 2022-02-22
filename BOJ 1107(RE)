@@ -1,0 +1,79 @@
+#include<iostream>
+#include<math.h>
+#include<vector>
+
+using namespace std;
+
+int number[10]={0,0,0,0,0,0,0,0,0,0};
+int goal, numofgojang,goal_jaritsu;
+int chayee=2000000000,closest,closest100;
+int gocloseupdown=2000000000;
+vector<int> onjeonnumber;
+
+int jaritsu(int num){
+	if(num==0) return 1;
+	int mynum=num,jaree=0;
+	while(mynum!=0){
+		jaree++;
+		mynum=mynum/10;
+	}
+	return jaree;
+}
+
+int chayeewith100(){
+	return abs(goal-100);
+}
+
+void close_num(int num){
+	int jaree=jaritsu(num);
+	if(num==0||jaree==goal_jaritsu||jaree==goal_jaritsu-1||jaree==goal_jaritsu+1){
+		int cha=abs(num-goal);
+		int imsidap=cha+jaritsu(num);
+		if(gocloseupdown>imsidap){
+			//cout<<num<<" "<<cha<<"\n";
+			chayee=cha;
+			closest=num;
+			gocloseupdown=imsidap;
+			//cout<<closest<<endl;
+		}
+		if(num==0||jaree==goal_jaritsu+1) return;
+	}
+	int i, nextnum;
+	for(i=0; i<onjeonnumber.size();++i){
+		nextnum=10*num+onjeonnumber[i];
+		close_num(nextnum);
+	}
+}
+
+int main(void)
+{
+	cin>>goal;
+	goal_jaritsu=jaritsu(goal);
+	//cout<<goal_jaritsu<<endl;
+	cin>>numofgojang;
+	int i,temp;
+	for(i=0;i<numofgojang;++i){
+		cin>>temp;
+		number[temp]=1;
+	}
+	for(i=0;i<10;++i){
+		if(number[i]==0){
+			onjeonnumber.push_back(i);
+		}
+	}
+	//for(i=0;i<onjeonnumber.size();++i){
+	//	cout<<onjeonnumber[i]<<" ";
+	//}
+	//cout<<endl;
+	for(i=0;i<onjeonnumber.size();++i){
+		//cout<<onjeonnumber[i]<<endl;
+		close_num(onjeonnumber[i]);	
+	}
+	//close_num(0);
+	//gocloseupdown=chayee+jaritsu(closest);
+	//cout<<closest<<endl;
+	//cout<<gocloseandupdown<<" ";
+	//cout<<chayeewith100();
+	cout<<min(gocloseupdown, chayeewith100());
+	return 0;
+}
