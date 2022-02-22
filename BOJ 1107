@@ -1,0 +1,132 @@
+#include<iostream>
+#include<math.h>
+using namespace std;
+
+int goal;
+int goalarr[10];
+int goaljaritsu;
+int num;			//사용가능한 번호의 개수  
+int usenum[10];		//사용가능한 번호가 저장됨  
+int smallest;
+
+int jaritsu(){
+	int a = goal,b;
+	int jaree=0;
+	
+	while(1){
+		a=a/10;
+		jaree++;
+		if(a==0) break;
+	}
+	a=goal;
+	int k=jaree;
+	while(1){
+		b=a%10;
+		goalarr[k--] = b;
+		a=a/10;
+		if(a==0) break;
+	}
+	return jaree;
+}
+
+int mainjaritsu(int num){
+	int a = num;
+	int jaree=0;
+	
+	while(1){
+		a=a/10;
+		jaree++;
+		if(a==0) break;
+	}
+	return jaree;
+}
+
+bool isthisganoong(int nownum){
+	if(num==0){
+		if(usenum[0]==0) return true;
+		else return false;
+	}
+	int i,k,a=nownum,b;
+	while(1){
+		b=a%10;
+		for(k=0; k<num; ++k){
+			if(usenum[k]==b) break;
+		}
+		if(k==num){
+			//cout<<nownum<<"불가능\n";
+			return false;	
+		} 
+		
+		
+		a=a/10;	
+		if(a==0) break;
+	}
+	//cout<<nownum<<"가능\n";
+	return true;
+}
+
+int main(void)
+{
+	cin>>goal;
+	goaljaritsu = jaritsu();
+	
+	if(goal>100){
+		smallest = goal-100;
+	}
+	else{
+		smallest = 100-goal;
+	}
+	int number[10] = {0,1,2,3,4,5,6,7,8,9};
+	int gojangnum,i,k=0, gojang;
+	cin>>gojangnum;
+	num = 10-gojangnum;
+	/*
+	for(int i=1; i<=goaljaritsu; ++i){
+		cout<<"+"<<goalarr[i];
+	}
+	*/
+	for(i=1; i<=gojangnum; ++i){
+		cin>>gojang;
+		number[gojang] = -1;
+	}
+	if(num==0){
+		if(goal>100){
+			cout<<goal-100;
+			return 0;
+		}
+		else{
+			cout<<100-goal;
+			return 0;
+		}
+	}
+	for(i=0; i<10; ++i){
+		if(number[i] != -1){
+			usenum[k++] = i;
+		}
+	}
+	/*
+	for(i=0; i<num; ++i){
+		cout<<usenum[i]<<" ";
+	}
+	cout<<"\n";
+	*/
+	int numofnum, onlyupdown, updownwithnumber, hwetsu;
+	for(i=0; i<=1000000;++i){
+		onlyupdown=abs(100-goal);
+		updownwithnumber = 1000000000;
+		if(isthisganoong(i)){
+			//cout<<i<<"가능 -> 자릿수 : ";
+			numofnum = mainjaritsu(i);
+			//cout<<numofnum<<" -> " ;
+			updownwithnumber = numofnum+abs(goal-i);
+			//cout<<updownwithnumber<<"\n";
+		}
+		hwetsu = onlyupdown<updownwithnumber?onlyupdown:updownwithnumber;
+		//cout<<i<<"일때 : "<<hwetsu<<"\n";
+		if(hwetsu<smallest) smallest = hwetsu;
+		
+	}
+
+	
+	cout<<smallest;
+}
