@@ -1,0 +1,110 @@
+#include<iostream>
+#include<string>
+#include<stdlib.h>
+
+using namespace std;
+
+# define MAX_SIZE 200001
+string wordarr[MAX_SIZE];
+string sorted[MAX_SIZE]; // 추가적인 공간이 필요
+
+void printarr(int numofword){
+	int i;
+	string yeejeon = ".";
+	for(i=0; i<numofword; ++i){
+		//cout<<wordarr[i]<<" ";
+		//yeejeon = wordarr[i];	
+		
+		//if(!yeejeon.compare(wordarr[i])){	//같으면  
+		if(yeejeon==wordarr[i]){	//같으면  
+			continue;
+		}
+		else{
+			cout<<wordarr[i]<<"\n";
+			yeejeon = wordarr[i];	
+		}
+		
+	}
+}
+
+void merge(int left, int right){
+	int i,j,k, l, mid = (left+right)/2;
+	i=left;
+	j = mid+1;
+	k = left;
+	while(i<=mid&&j<=right){
+		if(wordarr[i].size()<=wordarr[j].size()){	//중복되면 등호 붙이면됨
+			if(wordarr[i].size()==wordarr[j].size()){//길이가 같다면?  
+				if(wordarr[i].compare(wordarr[j])<0){
+					sorted[k]=wordarr[i];
+					k++;
+					i++;
+				}
+				else{
+					sorted[k]=wordarr[j];
+					k++;
+					j++;
+				}
+			} 
+			else{	
+				sorted[k]=wordarr[i];
+				k++;
+				i++;
+			} 
+			
+		}
+		else{
+			sorted[k]=wordarr[j];
+			k++;
+			j++;
+		}
+	}
+	if(i>mid){
+		for(l=j; l<=right; ++l){
+			sorted[k] = wordarr[l];
+			k++;
+		}
+	}
+	else{
+		for(l=i; l<=mid; ++l){
+			sorted[k] = wordarr[l];
+			k++;
+		}
+	}
+	for(l=left; l<=right; ++l){
+		wordarr[l] = sorted[l];
+	}
+}
+
+void merge_sort(int left, int right){
+	int mid;
+	if(right>left){
+		mid = (right+left)/2;
+		merge_sort(left, mid);
+		merge_sort(mid+1, right);
+		merge(left, right);
+	}
+}
+
+void delete_joongbok(int numofword){
+	int i;
+	for(i=0; i<numofword; ++i){
+		
+	}
+}
+
+int main(void)
+{
+	int i,numofword;
+	
+	//string a[3] = {"123", "abcdef", " "};
+	cin>>numofword;
+	//string* wordarr = (string*)malloc(sizeof(string)* numofword);
+	for(i=0; i<numofword; ++i){
+		cin>>wordarr[i];
+	}
+	//printarr(numofword);
+	//cout<<endl;
+	merge_sort(0, numofword-1);
+	printarr(numofword);
+}
