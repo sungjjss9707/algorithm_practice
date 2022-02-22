@@ -1,0 +1,20 @@
+#include<stdio.h>
+
+int main(void)
+{
+	int i,x,y, xw, yw, d,s,n,b;	//동서남북 
+	scanf("%d %d %d %d", &x,&y,&xw,&yw);
+	d= xw-x;
+	s = x;
+	n = y;
+	b = yw-y;
+	int arr[4] = {d,s,n,b};
+	int temp = d;
+	for(i=0; i<4; ++i){
+		if(temp>arr[i]){
+			temp = arr[i];
+		}
+	}
+	printf("%d", temp);
+	 
+}
