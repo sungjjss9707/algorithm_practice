@@ -1,0 +1,29 @@
+import java.util.*;
+
+
+
+public class Main {
+
+	static int hamsu(int a) {
+		int ship, yil, dohagee, answer;
+		ship = a/10;
+		yil = a%10;
+		dohagee = (ship + yil)%10;
+		answer = (yil*10) + dohagee;
+		return answer;
+	}
+	
+	public static void main(String[] args) {
+		int a,index=0;
+		Scanner sc = new Scanner(System.in);
+		a=sc.nextInt();
+		int init = hamsu(a);
+		while(a!=init) {
+			//System.out.println(init);
+			index=index+1;
+			init = hamsu(init);
+		}
+		System.out.println(index+1);
+	}
+
+}
