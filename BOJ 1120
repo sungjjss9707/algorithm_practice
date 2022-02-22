@@ -1,0 +1,30 @@
+#include<iostream>
+#include<string>
+using namespace std;
+
+string longstr,shortstr;
+
+int getbiggestcha(){
+	int i,k,sum,biggest=2000000000;
+	int longlen=longstr.length();
+	int shortlen=shortstr.length();
+	for(i=0; i<=longlen-shortlen;++i){
+		sum=0;
+		for(k=0; k<shortlen;++k){
+			//cout<<longstr[k+i]<<shortstr[k]<<"\n";
+			if(longstr[k+i]!=shortstr[k]){
+				sum++;
+			}
+		}
+		//cout<<sum<<"----\n";
+		biggest=min(sum,biggest);
+	}
+	return biggest;
+}
+
+int main(void)
+{
+	cin>>shortstr>>longstr;
+	cout<<getbiggestcha();
+	return 0;
+}
