@@ -1,0 +1,26 @@
+#include<iostream>
+
+using namespace std;
+
+char chess[8][8];
+
+int onthewhite(){
+	int i,k, sum=0;
+	for(i=0; i<8; ++i){
+		for(k=0; k<8; ++k){
+			if((i+k)%2==0&&chess[i][k]=='F') sum++;
+		}
+	}
+	return sum;
+}
+
+int main(void)
+{
+	int i,k;
+	for(i=0; i<8; ++i){
+		for(k=0; k<8; ++k){
+			cin>>chess[i][k];
+		}
+	}
+	cout<<onthewhite();
+}
