@@ -1,0 +1,77 @@
+import java.util.*;
+
+class word{
+	String capitalword;
+	int[] alphabet = new int[27];
+	
+	word(String newstring){
+		String myword = newstring;
+		this.capitalword = myword.toUpperCase();
+		int i;
+		for(i=1; i<=26; ++i) {
+			alphabet[i]=0;
+		}
+	}
+	
+	void countword() {
+		String _str = capitalword;	
+		int i;
+		int index;
+		for(i=0; i<_str.length(); ++i) {
+			index = (int)_str.charAt(i)-64;
+			alphabet[index] = alphabet[index]+1; 
+		}
+		for(i=1; i<=26; ++i) {
+			//System.out.print(alphabet[i]+" ");
+		}
+		System.out.println(bubblesort(alphabet));
+		
+	}
+	
+	static char bubblesort(int[] arr) {
+		int delete=0,temp1,temp2,k,length = arr.length;
+		char a='a';
+		temp1 = arr[1];
+		for(k=1; k<length; ++k) {
+			if(temp1<=arr[k]) {
+				delete = k;
+				temp1 = arr[k];
+				a = (char)(k+64);
+			}
+		}
+		arr[delete] = 0;
+		temp2 = arr[2];
+		for(k=1; k<length; ++k) {
+			if(temp2<=arr[k]) {
+				temp2 = arr[k];
+			}
+		}
+		
+		if(temp1 == temp2) {
+			return ('?');
+			
+		}
+		else
+			return a;
+	}
+	
+	
+	
+	
+	
+}
+
+
+
+
+public class Main {
+
+	public static void main(String[] args) {
+		String newstr;
+		Scanner sc = new Scanner(System.in);
+		newstr = sc.next();
+		word w1 = new word(newstr);
+		w1.countword();
+	}
+
+}
