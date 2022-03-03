@@ -1,0 +1,59 @@
+#include<iostream>
+#include<string>
+#include<algorithm>
+using namespace std;
+
+int numofg;
+string arr[1001];
+
+int jaritsuhap(string str){
+	int i, hap=0;
+	char c;
+	for(i=0; i<str.length();++i){
+		c=str[i];
+		if(c>='0'&&c<='9'){
+			hap=hap+(int)(c-'0');
+		}
+	}
+	return hap;
+}
+
+bool compare(string a, string b){
+	if(a.length()!=b.length()){
+		return a.length()<b.length();
+	}
+	 int ahap=jaritsuhap(a);
+	 int bhap=jaritsuhap(b);
+	 if(ahap!=bhap){
+	 	return ahap<bhap;
+	 }
+	 return a<b;
+}
+
+int main(void)
+{
+	cin>>numofg;
+	int i;
+	for(i=0; i<numofg;++i){
+		cin>>arr[i];
+	}
+	sort(arr, arr+numofg, compare);
+	for(i=0; i<numofg;++i){
+		//cout<<arr[i]<<" "<<jaritsuhap(arr[i])<<"\n";
+		cout<<arr[i]<<endl;
+	}
+	/*
+	cout<<"111111111111111\n";
+	string a,b;
+	while(1){
+		cin>>a>>b;
+		if(a=="0"&&b=="0") break;
+		if(a>b){
+			cout<<a<<" > "<<b<<endl;
+		}
+		else{
+			cout<<a<<" < "<<b<<endl;
+		}
+	}
+	*/
+}
