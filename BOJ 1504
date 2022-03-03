@@ -1,0 +1,65 @@
+#include<iostream>
+#include<vector>
+#include<queue>
+using namespace std;
+vector<pair<int,int>> town[801];
+
+int dist[801][801];
+int vertex,edge,must1,must2,inf=200000001;
+
+int finddap(){
+	if(must1==1&&must2==vertex)
+		return dist[1][vertex];
+	else if(must1==1&&must2!=vertex)
+		return dist[1][must2]+dist[must2][vertex];
+	else if(must1!=1&&must2==vertex)
+		return dist[1][must1]+dist[must1][vertex];
+	else{
+		int L1=dist[1][must1]+dist[must1][must2]+dist[must2][vertex];
+		int L2=dist[1][must2]+dist[must2][must1]+dist[must1][vertex];
+		return min(L1,L2);
+	}
+}
+
+void dijkstra(int startv){
+	int i,nowv,nowd,nextv,nextd;
+	for(i=1;i<=vertex;++i){
+		dist[startv][i]=inf;
+	}
+	dist[startv][startv]=0;
+	priority_queue<pair<int,int>,vector<pair<int,int>>,greater<pair<int,int>>> pq;
+	pq.push({0,startv});
+	while(!pq.empty()){
+		nowd=(pq.top()).first;
+		nowv=(pq.top()).second;
+		//cout<<nowv<<" "<<nowd<<endl;
+		pq.pop();
+		if(dist[startv][nowv]<nowd) continue;
+		for(i=0;i<town[nowv].size();++i){
+			nextv=town[nowv][i].first;
+			nextd=town[nowv][i].second;
+			if(dist[startv][nextv]>nowd+nextd){
+				dist[startv][nextv]=nowd+nextd;
+				pq.push({nextd+nowd,nextv});
+			}
+		}
+	}
+}
+
+int main(void)
+{
+	cin>>vertex>>edge;
+	int i,s,e,w;
+	for(i=0;i<edge;++i){
+		cin>>s>>e>>w;
+		town[s].push_back({e,w});
+		town[e].push_back({s,w});
+	}
+	cin>>must1>>must2;
+	dijkstra(1);
+	if(must1!=1) dijkstra(must1);
+	if(must2!=vertex) dijkstra(must2);
+	int dap=finddap();
+	if(dap>=inf) cout<<-1;
+	else cout<<dap;
+}
