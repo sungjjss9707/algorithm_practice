@@ -1,0 +1,55 @@
+import java.util.*;
+
+class dano{
+	String mystr;
+	ArrayList<Character> alphabet = new ArrayList<>();
+	dano(String a){
+		this.mystr = a;
+	}
+	
+	boolean panstar() {
+		int i,k;
+		boolean it = true;
+		for(i=0; i<mystr.length()-1; ++i) {
+			alphabet.add(mystr.charAt(i));
+			if(mystr.charAt(i)!=mystr.charAt(i+1)) {
+				for(k=0; k<alphabet.size(); ++k) {
+					if(mystr.charAt(i+1) == alphabet.get(k)) {
+						it = false;
+						break;
+					}
+				}
+			}
+		}
+		return it;
+	}
+	
+	
+	
+	
+}
+
+
+public class Main{
+
+	public static void main(String[] args) {
+		String mystr;
+		int i, numbercase, sum = 0;
+		Scanner sc = new Scanner(System.in);
+		numbercase = sc.nextInt();
+		dano words[] = new dano[numbercase];
+		for(i=0; i<numbercase; ++i) {
+			mystr = sc.next();
+			words[i] = new dano(mystr);
+		}	
+		
+		for(i=0; i<numbercase; ++i) {
+			if(words[i].panstar()==true) {
+				sum = sum+1;
+			}
+			
+		}
+		System.out.println(sum);
+		
+	}
+}
