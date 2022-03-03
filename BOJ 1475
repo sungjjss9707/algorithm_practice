@@ -1,0 +1,63 @@
+#include<stdio.h>
+
+int bangnumber, numofnumber=0;
+int charnumber[8];
+
+
+void changetochar(){
+	if(bangnumber==0){
+		numofnumber=1;
+		charnumber[0]=0;
+		return;
+	}
+	int i=0,namojee, temp = bangnumber;
+	while(1){
+		if(temp==0) break;
+		namojee = temp%10;
+		numofnumber++;
+		charnumber[i++] = namojee;
+		temp = temp/10;
+	}
+}
+
+int getgetsu(){
+	int numofset=0;
+	int dasomhave[10] = {0,0,0,0,0,0,0,0,0,0};
+	int i, nownum, k, flag;
+	for(i=0; i<numofnumber; ++i){
+		nownum = charnumber[i];
+		flag=0;
+		if(dasomhave[nownum]==0){
+			if(nownum==6){
+				if(dasomhave[9]==0)	flag=1;
+				else nownum = 9;
+			}
+			else if(nownum==9){
+				if(dasomhave[6]==0)	flag=1;
+				else nownum = 6;
+			}	
+			else{
+				flag=1;
+			}
+		}
+		if(flag==1){
+			numofset++;
+			for(k=0; k<10; ++k){
+				dasomhave[k] = dasomhave[k]+1;
+			}
+		}
+		dasomhave[nownum]=dasomhave[nownum]-1;
+		
+	}
+	return numofset;
+}
+
+int main(void)
+{
+	scanf("%d", &bangnumber);
+	changetochar();
+	int i;
+	int dap = getgetsu();
+	
+	printf("%d", dap);	
+}
