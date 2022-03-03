@@ -1,0 +1,71 @@
+#include<iostream>
+#include<string>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+//abcdefab
+//abcdefa
+string str;
+int len;
+int pi[1000001];
+
+/*
+int get_len_kmp(){
+	int i,j, flag=0, biggest=0;
+	for(i=0; i<len; ++i){
+		if(str[0]!=str[i]){
+			flag=1;
+			break;
+		}
+	}
+	if(flag==0){
+		return len-1;
+	}
+	
+	for(i=len-1; i>0; --i){
+		if(str[0]==str[i]){
+			flag=0;
+			for(j=i; j<len; ++j){
+				if(str[j-i]!=str[j]){
+					flag=1;
+					break;
+				}
+			}
+			if(flag==0){
+				biggest = len-i;	
+			}
+		}
+	}
+	return biggest;
+}
+*/
+
+int get_len_kmp(){
+	int h=0, t;
+	for(t=0; t<len; ++t){
+		pi[t]=0;
+	}
+	for(t=1; t<len; ++t){
+		while(str[h]!=str[t]&&h>0){
+			h=pi[h-1];
+		}
+		if(str[h]==str[t]){
+			h++;
+			pi[t] = h;
+			
+		}
+	}
+	
+	return pi[len-1];
+}
+
+int main(void)
+{
+	fastio;
+	cin>>len;
+	cin>>str;
+	int len_kmp = get_len_kmp();
+	//cout<<len_kmp<<endl;
+	cout<<len-len_kmp;
+	return 0;
+}
