@@ -1,0 +1,56 @@
+#include<iostream>
+#include<math.h>
+using namespace std;
+
+int numofwaterout, lenoftape, dap=2100000000;
+//double waterout[1001];
+bool waterpoint[2001];
+
+bool watercheck(double start, double end){
+	int realstart = (int)(start+0.5);
+	int realend = (int)(end-0.5);
+	int i;
+	for(i=realstart; i<=realend; ++i){
+		if(waterpoint[i]) return true;
+	}
+	return false;
+}
+
+void bruteforce(int start, int getsu){
+	int firstwater=-1;
+	int i;
+	for(i=start; i<=2000; i++){
+		if(waterpoint[i]){
+			firstwater = i;
+			break;
+		}
+	}
+	if(firstwater==-1){
+		//cout<<dap<<" "<<getsu<<endl;
+		dap = min(dap, getsu);
+		return;
+	}
+	int tapestart = firstwater-1;
+	int tapeend  = tapestart+lenoftape;
+	if(tapeend>2000){
+		dap = min(dap, getsu+1);
+		return;
+	}
+	bruteforce(tapeend, getsu+1);
+}
+
+int main(void)
+{
+	cin>>numofwaterout>>lenoftape;
+	lenoftape = lenoftape*2;
+	int i, num;
+	for(i=1; i<=numofwaterout; ++i){
+		cin>>num;
+		//a=(double)(num);
+		//waterout[i]=a;
+		waterpoint[2*num]=true;
+		
+	}
+	bruteforce(0,0);
+	cout<<dap;
+}
