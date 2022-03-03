@@ -1,0 +1,73 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+using namespace std;
+
+int numofjeon;
+int arr[100001];
+int dp[100001];
+
+void clear(){
+	int i;
+	for(i=1; i<=numofjeon; ++i){
+		dp[i] = -1;
+	}
+}
+
+int makedp(int end){
+	int ret = dp[end];
+	if(ret!=-1) return ret;
+	if(end==1){
+		dp[end] = 1;
+		return 1;
+	}
+	int i, maxnum=-1;
+	for(i=end-1; i>=1; --i){
+		if(arr[end]>arr[i])  maxnum = max(maxnum, makedp(i));
+	}
+	if(maxnum==-1) ret = 1;
+	else ret = maxnum+1;
+	dp[end] = ret;
+	return ret;
+}
+
+int makedp_2(){
+	//int temp[100001];
+	int i, lb_index;
+	vector<int> temp;
+	for(i=1; i<=numofjeon; ++i){
+		if(temp.empty()) temp.push_back(arr[i]);
+		else{
+			int last = temp[temp.size()-1];
+			if(last<arr[i]) temp.push_back(arr[i]);
+			else{
+				lb_index = lower_bound(temp.begin(), temp.end(), arr[i])-temp.begin();
+				temp[lb_index] = arr[i];	
+			}
+		}
+	}
+	return numofjeon-temp.size();
+}
+
+int findcut(){
+	clear();
+	//int maxnum = -1,lis = makedp(numofjeon);
+	int maxnum = -1;
+	for(int i=numofjeon; i>=1; --i){
+		dp[i] = makedp(i);
+		//cout<<dp[i]<<" ";
+		maxnum = max(maxnum, dp[i]);
+	}
+	//cout<<endl;
+	return numofjeon-maxnum;
+}
+
+int main(void)
+{
+	cin>>numofjeon;
+	int i;
+	for(i=1; i<=numofjeon; ++i){
+		cin>>arr[i];
+	}
+	cout<<makedp_2();
+}
