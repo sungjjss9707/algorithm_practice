@@ -1,0 +1,108 @@
+#include<iostream>
+#include<string>
+#include<vector>
+using namespace std;
+
+vector<string> v;
+vector<int> num;
+int alphaarr[27];
+int bejeong[27];
+int use[10];
+int numarr[10];
+int biggest=0;
+int numofword, numofalpha=0;
+
+int calculalpha(){
+	int i,index=0,k;
+	char c;
+	string s;
+	for(i=0; i<27; ++i){
+		if(alphaarr[i]==1){
+			bejeong[i]=num[index++];	
+		}	
+	}
+	int temphap, hap=0;
+	for(i=0; i<numofword; ++i){
+		s=v[i];
+		temphap=0;
+		//cout<<s<<"\n";
+		for(k=0; k<s.length(); ++k){
+			c=s[k];
+			index=(int)(c-'A');
+			temphap=temphap*10;
+			temphap=temphap+bejeong[index];	
+		}
+		hap=hap+temphap;	
+	}
+	//cout<<hap<<endl;
+	return hap;
+}
+
+void printvec(){
+	int i;
+	for(i=0; i<num.size(); ++i){
+		cout<<num[i]<<" ";
+	}
+	cout<<endl;	
+}
+
+void bruteforce(){
+	if(num.size()==numofalpha){
+		//printvec();
+		int dap = calculalpha();
+		biggest = max(biggest, dap);
+		return ;	
+	}
+	/*
+	int firstindex=-1,i;
+	for(i=9; i>=0; --i){
+		if(use[i]==1){
+			firstindex=i;
+			break;	
+		}	
+	}
+	*/
+	int i;
+	for(i=0;  i<10; ++i){
+		if(use[i]==0){
+			num.push_back(i);
+			use[i]=1;
+			bruteforce();
+			use[i]=0;
+			num.pop_back();	
+		}
+			
+	}	
+	
+}
+
+int main(void)
+{
+	cin>>numofword;
+	int i,k;
+	char c;
+	string s;
+	for(i=0; i<10; ++i){
+		use[i]=0;	
+	}
+	for(i=0; i<numofword; ++i){
+		cin>>s;
+		v.push_back(s);
+		for(k=0; k<s.length(); ++k){
+			c=s[k];
+			//cout<<c;
+			//cout<<(int)(c-'A')<<" ";
+			alphaarr[(int)(c-'A')]=1;	
+		}
+		//cout<<endl;	
+	}
+	for(i=0; i<26; ++i){
+		if(alphaarr[i]==1){
+			numofalpha++;
+			//cout<<char(i+'A')<<" ";	
+		}	
+	}
+	//cout<<numofalpha<<endl;
+	bruteforce();
+	cout<<biggest;
+}
