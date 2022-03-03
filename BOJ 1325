@@ -1,0 +1,96 @@
+#include<iostream>
+#include<vector>
+
+using namespace std;
+
+vector<int> mylink[10001];
+int dp[10001];
+int dfs_arr[10001];
+int use[10001];
+
+int numofver, numofedge;
+
+void clear(){
+	int i;
+	for(i=1; i<=numofver;++i){
+		dp[i]=-1;
+	}
+}
+void clear_dfs(){
+	int i;
+	for(i=1; i<=numofver;++i){
+		use[i]=0;
+	}
+}
+void printlink(){
+	int i,k;
+	for(i=1; i<=numofver; ++i){
+		cout<<i<<" : ";
+		for(k=0; k<mylink[i].size(); ++k){
+			cout<<mylink[i][k]<<" ";
+		}
+		cout<<endl;
+	}
+}
+
+int get_hacking(int vertex){
+	int ret=dp[vertex];
+	if(ret!=-1){
+		return ret;
+	}
+	
+	int i,sum=1;
+	for(i=0; i<mylink[vertex].size(); ++i){
+		sum=sum+get_hacking(mylink[vertex][i]);
+	}
+	return sum;
+}
+int get_hacking_dfs(int vertex){
+	//if(use[vertex]==1) return 0;
+	use[vertex]=1;
+	int i,sum=1;
+	for(i=0; i<mylink[vertex].size(); ++i){
+		if(use[mylink[vertex][i]]==0){
+			sum=sum+get_hacking_dfs(mylink[vertex][i]);
+		}
+	}
+	
+	return sum;
+	
+}
+void get_all_hacking_dp(){
+	int maximum=0,i;
+	for(i=1; i<=numofver; ++i){
+		dp[i]=get_hacking(i);
+		maximum=max(maximum,dp[i]);
+	}
+	for(i=1; i<=numofver; ++i){
+		if(dp[i]==maximum) cout<<i<<" ";
+	}
+}
+
+void get_all_hacking_dfs(){
+	int maximum=0,i;
+	for(i=1; i<=numofver; ++i){
+		clear_dfs();
+		dfs_arr[i]=get_hacking_dfs(i);
+		maximum=max(maximum,dfs_arr[i]);
+	}
+	for(i=1; i<=numofver; ++i){
+		if(dfs_arr[i]==maximum) cout<<i<<" ";
+	}
+}
+
+int main(void)
+{
+	cin>>numofver>>numofedge;
+	clear();
+	int i,k,a,b;
+	for(i=0; i<numofedge; ++i){
+		cin>>a>>b;
+		mylink[b].push_back(a);
+	}
+	//get_all_hacking_dp();
+	get_all_hacking_dfs();
+	return 0;
+}
