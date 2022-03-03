@@ -1,0 +1,23 @@
+#include<iostream>
+using namespace std;
+
+int main(void)
+{
+	int e,s,m;
+	cin>>e>>s>>m;
+	int i=1,j=1,k=1, year=1;
+	while(1){
+		if(i==e&&j==s&&k==m){
+			break;
+		}
+		//cout<<i<<" "<<j<<" "<<k<<" = "<<year<<"\n";
+		i++;
+		if(i==16) i=1;
+		j++;
+		if(j==29) j=1;
+		k++;
+		if(k==20) k=1;
+		year++;
+	}
+	cout<<year;
+}
