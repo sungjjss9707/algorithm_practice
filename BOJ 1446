@@ -1,0 +1,141 @@
+#include<iostream>
+#include<vector>
+#include<queue>
+#include<algorithm>
+using namespace std;
+
+struct triple{
+	int start, end, dist;
+};
+
+vector<triple> v;
+vector<triple> realv;
+int numofwormhole, lengthofhighway, inf=2000000000;
+int realnumofwormhole=0;
+int dp[10001];
+int dist[10001];
+
+
+
+void highway_init(){
+	int i;
+	for(i=0; i<=lengthofhighway; ++i){
+		dp[i]=-1;
+		dist[i]=i;
+	}
+}
+
+
+int get_choiso_dist(int wichi){
+	
+	if(dp[wichi]!=-1){
+		return dp[wichi];
+	}
+	if(wichi==0){
+		return 0;
+	}
+	int i;
+	for(i=0; i<numofwormhole; ++i){
+		if(v[i].end==wichi){
+			
+		}
+	}	
+}
+
+int dijkstra(){
+	
+	priority_queue<pair<int, int>, vector<pair<int,int>>, greater<pair<int,int>>> pq;
+	pq.push({0,0});
+	dist[0]=0;
+	int i, nowv, nowd, nextv, nextd;
+	while(!pq.empty()){
+		nowd = pq.top().first;
+		nowv = pq.top().second;
+		
+		pq.pop();
+		if(nowd>dist[nowv]) continue;
+		//cout<<nowv<<"  "<<nowd<<endl;
+		for(i=0; i<realv.size(); ++i){
+			if(realv[i].start==nowv){
+				nextv = realv[i].end;
+				nextd = realv[i].dist+nowd;
+				if(dist[nextv]>nextd){
+					dist[nextv]=nextd;
+					pq.push({nextd, nextv});
+				}
+			}
+			else if(realv[i].start>nowv){
+				nextv = realv[i].start;
+				nextd = nowd+(realv[i].start-nowv);
+				if(dist[nextv]>=nextd){
+					dist[nextv]=nextd;
+					pq.push({nextd, nextv});
+				}
+			}
+		}
+		
+	}
+/*
+	for(i=0; i<=lengthofhighway; ++i){
+		dist[lengthofhighway] = min(lengthofhighway-dist[i], dist[lengthofhighway]);
+	}
+*/	
+	return dist[lengthofhighway];
+}
+
+bool compare(triple t1, triple t2){
+	if(t1.start==t2.start){
+		if(t1.end==t2.end){
+			return t1.dist<t2.dist;
+		}
+		return t1.end<t2.end;
+	}
+	return t1.start<t2.start;
+}
+
+int main(void)
+{
+	cin>>numofwormhole>>lengthofhighway;
+	int i,k, s, e, d;
+	highway_init();
+	for(i=0; i<numofwormhole; ++i){
+		cin>>s>>e>>d;
+		if(e>lengthofhighway) continue;
+		realnumofwormhole++;
+		v.push_back({s,e,d});
+	}
+	sort(v.begin(), v.end(), compare);
+	/*
+	cout<<endl;
+	for(i=0; i<realnumofwormhole; ++i){
+		cout<<v[i].start<<" "<<v[i].end<<" "<<v[i].dist<<endl;	
+	}
+	*/
+	s=-1;
+	e=-1;
+	d=-1;
+	/*
+	s=v[0].start;
+	e=v[0].end;
+	d=v[0].dist;
+	*/
+	for(i=0; i<realnumofwormhole; ++i){
+		if(!(s==v[i].start&&e==v[i].end)){
+			realv.push_back({v[i].start, v[i].end, v[i].dist});
+			s=v[i].start;
+			e=v[i].end;
+			d=v[i].dist;
+		}
+	}
+	realv.push_back({lengthofhighway, lengthofhighway, 0});
+	/*
+	cout<<endl;
+	for(i=0; i<realv.size(); ++i){
+		cout<<realv[i].start<<" "<<realv[i].end<<" "<<realv[i].dist<<endl;	
+	}
+	cout<<endl<<endl<<"+++++++++++++++++++++++++++++\n";
+	*/
+	//cout<<get_choiso_dist(lengthofhighway);
+	cout<<dijkstra();
+	//cout<<"\n+++++++++++++++++++++++++++++++++";
+}
