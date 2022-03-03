@@ -1,0 +1,31 @@
+#include<iostream>
+#include<string>
+using namespace std;
+
+string yee;
+int arr[400000];
+
+int main(void)
+{
+	cin>>yee;
+	int i, len = yee.length(),su=0 ,num=1, k=0;
+	for(i=len-1; i>=0; --i){
+		if(num==8){
+			//cout<<su<<" ";
+			arr[k++] = su;
+			su=0;
+			num=1;
+		}
+		su=su+(yee[i]-'0')*num;
+		num=num*2;	
+	}
+	arr[k++] = su;
+	for(i=k-1; i>=0; --i){
+		cout<<arr[i];
+	}
+	/*
+	if(len%3!=0){
+		
+	}
+	*/
+}
