@@ -1,0 +1,90 @@
+#include<iostream>
+#include<string>
+#include<deque>
+using namespace std;
+
+string str;
+int numofoper;
+deque<char> d1;
+deque<char> d2;
+
+int main(void)
+{
+	//cin>>str;
+	ios::sync_with_stdio(false);
+	cin.tie(NULL);
+	cout.tie(NULL);
+	//getline(cin, str);
+	cin>>str;
+	int i;
+	for(i=0; i<str.length(); ++i){
+		d1.push_back(str[i]);
+	}
+	cin>>numofoper;
+	//string insert;
+	char temp;
+	
+	char oper1;
+	int corsor = str.length();
+	int len = str.length();
+	///////str = str.substr(0,corsor)+"fuck"+str.substr(corsor, str.length());//////
+	//cout<<str;
+	
+	for(i=0; i<numofoper; ++i){
+		cin>>oper1;
+		if(oper1=='P'){
+			cin>>temp;
+			d1.push_back(temp);
+			/*
+			cin>>insert;
+			str = str.substr(0,corsor)+insert+str.substr(corsor, len);
+			corsor++;
+			len++;
+			*/
+		}
+		else if(oper1=='D'){
+			if(d2.size()!=0){
+				temp = d2.front();
+				d2.pop_front();
+				d1.push_back(temp);
+			}
+			/*
+			if(corsor<len){	/////////// 
+				corsor++; 
+			}
+			*/
+		}
+		else if(oper1=='B'){
+			if(d1.size()!=0){
+				d1.pop_back();
+			}
+			/*
+			if(corsor>0){
+				str = str.substr(0,corsor-1)+str.substr(corsor, len);
+				corsor--;
+				len--;
+			}
+			*/
+		}
+		else{
+			if(d1.size()!=0){
+				temp = d1.back();
+				d1.pop_back();
+				d2.push_front(temp);
+			}
+			/*
+			if(corsor>0){
+				corsor--; 
+			}
+			*/
+		}
+		//cout<<str<<"\n";
+	}
+	for(i=0; i<d1.size(); ++i){
+		cout<<d1[i];
+	}
+	for(i=0; i<d2.size(); ++i){
+		cout<<d2[i];
+	}
+	
+}
