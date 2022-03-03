@@ -1,0 +1,87 @@
+#include<iostream>
+#include<vector>
+#include<queue>
+using namespace std;
+
+int numofstruct;
+
+int maketime[501];
+int chasoo[501];
+int dap[501];
+vector<int> hoohang[501];
+
+void clear(){
+	for(int i=1; i<=numofstruct; ++i){
+		chasoo[i]=0;
+		dap[i]=0;
+	}
+}
+
+void weesangsort(){
+	//priority_queue<int,vector<int>,greater<int>> pq;
+	queue<int> pq;
+	int i;
+	for(i=1; i<=numofstruct; ++i){
+		if(chasoo[i]==0) pq.push(i);
+	}
+	int nowv,nextv;
+	while(!pq.empty()){
+		nowv=pq.front();
+		pq.pop();
+		//dap[nowv]=dap[nowv]+maketime[nowv];
+		for(i=0; i<hoohang[nowv].size();++i){
+			nextv=hoohang[nowv][i];
+			/*
+			if(dap[nextv]==0){
+				dap[nextv]=dap[nowv];
+			}
+			else{
+				dap[nextv]=min(dap[nextv],dap[nextv]+dap[nowv]);
+			}
+			*/
+			dap[nextv]=max(dap[nextv],maketime[nowv]+dap[nowv]);
+			chasoo[nextv]--;
+			if(chasoo[nextv]==0){
+				
+				pq.push(nextv);
+			}
+		}
+	}
+	for(i=1; i<=numofstruct; ++i){
+		cout<<dap[i]+maketime[i]<<"\n";
+	}
+}
+
+int main(void)
+{
+	cin>>numofstruct;
+	int i,num;
+	clear();
+	for(i=1; i<=numofstruct; ++i){
+		cin>>maketime[i];
+		while(1){
+			cin>>num;
+			if(num==-1) break;
+			chasoo[i]++;
+			hoohang[num].push_back(i);
+		}
+	}
+	/*
+	for(i=1; i<=numofstruct; ++i){
+		cout<<chasoo[i]<<" ";
+	}
+	cout<<endl;
+	for(i=1; i<=numofstruct; ++i){
+		cout<<maketime[i]<<" ";
+	}
+	cout<<endl;
+	for(i=1; i<=numofstruct; ++i){
+		for(int k=0;k<hoohang[i].size();++k){
+			cout<<hoohang[i][k]<<" ";
+		}
+		cout<<endl;
+	}
+	cout<<endl;
+	*/
+	weesangsort();
+}
