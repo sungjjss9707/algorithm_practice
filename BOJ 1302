@@ -1,0 +1,59 @@
+#include<iostream>
+#include<string>
+#include<algorithm>
+#include<vector>
+using namespace std;
+
+string books[1001];
+int numofbooks;
+//vector<string> distinctbooks;
+//vector<int> booknum;
+vector<pair<string, int>> pairvec;
+
+bool compare(pair<string, int> p1, pair<string, int> p2){
+	if(p1.second==p2.second){
+		return p1.first<p2.first;
+	}
+	return p1.second>p2.second;
+	
+}
+
+
+int main(void)
+{
+	cin>>numofbooks;
+	int i, num;
+	string str;
+	for(i=0; i<numofbooks; ++i){
+		cin>>books[i];
+	}
+	sort(books, books+numofbooks);
+	str="";
+	num=1;
+	for(i=0; i<numofbooks-1; ++i){
+		if(books[i]==books[i+1]){
+			num++;
+		}
+		else{
+			pairvec.push_back({books[i], num});
+			//distinctbooks.push_back(books[i]);
+			//booknum.push_back(num);
+			num=1;	
+		}
+	}
+	//distinctbooks.push_back(books[numofbooks-1]);
+	if(books[numofbooks-1]==books[numofbooks-2]){
+		pairvec.push_back({books[numofbooks-1], num});
+		//booknum.push_back(num);
+	}
+	else{
+		pairvec.push_back({books[numofbooks-1], 1});
+	}
+	/*
+	for(i=0; i<pairvec.size(); ++i){
+		cout<<pairvec[i].first<<" "<<pairvec[i].second<<endl;
+	}
+	*/
+	sort(pairvec.begin(), pairvec.end(), compare);
+	cout<<pairvec[0].first;
+}
