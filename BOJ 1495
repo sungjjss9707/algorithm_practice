@@ -1,0 +1,70 @@
+#include<iostream>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+int numofgok, startvol, maxvol;
+int vol[51];
+int dp[51][1001];
+
+void makedp(int goksoo, int volume){
+	if(dp[goksoo][volume]!=-1){
+		return ;
+	}
+	if(goksoo>numofgok) return; 
+	dp[goksoo][volume] = 1;
+	int plus, minus;
+	plus = volume+vol[goksoo+1];
+	minus = volume-vol[goksoo+1];
+	//cout<<volume<<" "<<plus<<" "<<minus<<endl;
+	if(plus<=maxvol){
+		makedp(goksoo+1, plus);
+	}
+	if(minus>=0){
+		makedp(goksoo+1, minus);
+	}
+}
+
+void clear(){
+	int i,k;
+	for(i=0; i<=50; ++i){
+		for(k=0; k<=1000; ++k){
+			dp[i][k]=-1;
+		}
+	}
+}
+
+void print(){
+	int i,k;
+	for(i=0; i<=numofgok; ++i){
+		for(k=0; k<=maxvol; ++k){
+			if(dp[i][k]!=-1){
+				cout<<i<<" "<<k<<" = "<<dp[i][k]<<"\n";	
+			} 
+		}
+		cout<<endl;
+	}
+}
+
+void findmaxvol(){
+	for(int i=1000; i>=0 ;--i){
+		if(dp[numofgok][i]!=-1){
+			cout<<i;
+			return;
+		}
+	}
+	cout<<-1;
+}
+
+int main(void)
+{
+	fastio;
+	cin>>numofgok>>startvol>>maxvol;
+	int i;
+	for(i=1; i<=numofgok; ++i){
+		cin>>vol[i];
+	}
+	clear();
+	makedp(0,startvol);
+	findmaxvol();
+	//print();
+}
