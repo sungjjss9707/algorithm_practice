@@ -1,0 +1,46 @@
+#include<iostream>
+
+using namespace std;
+
+int side, k;
+
+int calculnum(int mid){
+	int i;
+	int num=0, temp;
+	int end = mid<side? mid:side;
+	for(i=1; i<=end; ++i){
+		temp = (mid/i)<side? mid/i:side;
+		num=num+temp;
+	}
+	return num;
+}
+
+int calcul(int start, int end){
+	//cout<<start<<" "<<end;
+	if(start==end){
+		return start;	
+	}
+	else if(start==end-1){
+		int one = calculnum(start);
+		//int two = calculnum(end);
+		if(one>=k) return start;
+		return end;
+	}
+	
+	int mid = (start+end)/2;
+	int num = calculnum(mid);
+	if(num<k){
+		return calcul(mid+1, end);
+	}
+	else if(num>=k){
+		return calcul(start, mid);
+	}
+
+}
+
+int main(void)
+{
+	cin>>side>>k;
+	int i=1, sum=0;
+	cout<<calcul(1, k);
+}
