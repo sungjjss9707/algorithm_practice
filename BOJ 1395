@@ -1,0 +1,75 @@
+#include<iostream>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+int numofswitch;
+int seg_tree[400010];
+int lazy[400010];
+
+void seg_init(){
+	int i;
+	for(i=1; i<=400009; ++i){
+		seg_tree[i]=0;
+	}
+}
+
+void lazy_prop(int index, int start, int end){
+	if(lazy[index]!=0){
+		int now_lazy = lazy[index];
+		if(now_lazy%2==1){  //홀수일떄  
+			seg_tree[index] = (end-start+1)-seg_tree[index];
+		}
+		lazy[index]=0;
+		if(start!=end){
+			lazy[2*index] = lazy[2*index]+now_lazy;
+			lazy[2*index+1] = lazy[2*index+1]+now_lazy;
+		}	 
+	}
+}
+
+int seg_hap(int index, int start, int end, int left, int right){
+	lazy_prop(index, start, end);
+	if(start>right||end<left) return 0;
+	if(start>=left&&end<=right){
+		//lazy_prop(index, start, end);
+		return seg_tree[index];
+	}
+	int mid = (start+end)/2, ret1, ret2;
+	ret1 = seg_hap(2*index, start, mid, left, right);
+	ret2 = seg_hap(2*index+1, mid+1, end, left, right);
+	return ret1+ret2;
+}
+
+void seg_modify(int index, int start, int end, int left, int right){
+	lazy_prop(index, start, end);
+	//cout<<index<<" "<<start<<" "<<end<<endl;
+	if(start>right||end<left) return;
+	if(start>=left&&end<=right){
+		lazy[index]++;
+		//seg_tree[index] = (end-start+1)-seg_tree[index];
+		lazy_prop(index, start, end);
+		//lazy[index] = 1;
+		return ;
+	}
+	int mid = (start+end)/2;
+	seg_modify(2*index, start, mid, left, right);
+	seg_modify(2*index+1, mid+1, end, left, right);
+	seg_tree[index] = seg_tree[2*index]+seg_tree[2*index+1];
+}
+
+int main(void)
+{
+	fastio;
+	int a,b,c,i, numofwork;
+	cin>>numofswitch>>numofwork;
+	seg_init();
+	for(i=1; i<=numofwork; ++i){
+		cin>>a>>b>>c;
+		if(a==0){	//상태반전 
+			seg_modify(1,1,numofswitch, b,c);
+		}
+		else{
+			cout<<seg_hap(1,1,numofswitch, b,c)<<"\n";
+		} 
+	}	
+} 
