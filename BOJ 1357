@@ -1,0 +1,37 @@
+#include<iostream>
+#include<math.h>
+using namespace std;
+
+int num1,num2;
+
+int get_jaritsu(int a){
+	int num=a,jaree=0;
+	while(1){
+		if(num==0) return jaree;	
+		num=num/10;
+		jaree++;
+	}
+}
+
+int rev(int a){
+	int num=a, ret=0,i,jaritsu=get_jaritsu(a)-1,mod;
+	while(1){
+		if(num==0) return ret;
+		mod=num%10;
+		num=num/10;
+		ret=ret+mod*pow(10,jaritsu);
+		jaritsu--;
+	}
+}
+
+int main(void)
+{
+	cin>>num1>>num2;
+	int rev1=rev(num1);
+	int rev2=rev(num2);
+	/*
+	cout<<rev1<<endl;
+	cout<<rev2<<endl;
+	*/
+	cout<<rev(rev1+rev2);
+}
