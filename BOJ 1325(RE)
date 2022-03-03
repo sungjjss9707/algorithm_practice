@@ -1,0 +1,54 @@
+#include<iostream>
+#include<vector>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+int numofcom, numofrel;
+//a b => a가 b를 신뢰한다 => b를 해킹하면 a도 해킹가능  
+vector<int> v[10001];
+int visit[10001];
+int numofgam[10001];
+
+void clear(){
+	int i;
+	for(i=1; i<=numofcom; ++i){
+		visit[i] = -1;
+	}
+}
+
+int dfs(int x){
+	visit[x] = 1;
+	int i, ret = 1, nextx;
+	for(i=0; i<v[x].size(); ++i){
+		nextx = v[x][i];
+		if(visit[nextx]==-1) ret+=dfs(nextx);
+	}
+	return ret;
+}
+
+void get_dap(){
+	int i, biggest = -1;
+	for(i=1; i<=numofcom; ++i){
+		numofgam[i] = 0;
+	}
+	for(i=1; i<=numofcom; ++i){
+		clear();
+		numofgam[i] = dfs(i);
+		biggest = max(biggest, numofgam[i]);
+	}
+	for(i=1; i<=numofcom; ++i){
+		if(numofgam[i]==biggest) cout<<i<<" ";
+	}
+}
+
+int main(void)
+{
+	fastio;
+	cin>>numofcom>>numofrel;
+	int i, com1, com2;
+	for(i=1; i<=numofrel; ++i){
+		cin>>com1>>com2;
+		v[com2].push_back(com1);
+	}
+	get_dap();
+}
