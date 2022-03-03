@@ -1,0 +1,28 @@
+#include<iostream>
+
+using namespace std;
+
+int sizeofcage;
+int check[100001][3];
+int mod = 9901;
+int lion(){	//index에 leftright쪽에 사자넣었을때 넣을수있는 경우의 수  
+	check[1][0]=1;
+	check[1][1]=1;
+	check[1][2]=1;
+	int i;
+	for(i=2; i<=sizeofcage; ++i){
+		check[i][0] = (check[i-1][0]%mod+check[i-1][1]%mod+check[i-1][2]%mod)%mod;
+		check[i][1] = (check[i-1][0]%mod+check[i-1][2]%mod)%mod;
+		check[i][2] = (check[i-1][0]%mod+check[i-1][1]%mod)%mod;
+	}
+	int ret = (check[sizeofcage][0]%mod+check[sizeofcage][1]%mod+check[sizeofcage][2]%mod)%mod;
+	return ret;
+}
+
+int main(void)
+{
+	cin>>sizeofcage;
+	int i;
+	int numofcase = lion();
+	cout<<numofcase;
+}
