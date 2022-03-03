@@ -1,0 +1,79 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#include<queue>
+using namespace std;
+int v, e, start;
+int* visit;
+vector<int> * graph;
+vector<int>::iterator iter;
+void printvector(){
+	int i,k;
+	for(i=1; i<=v; ++i){
+		for(iter=graph[i].begin(); iter<graph[i].end(); ++iter){
+			cout<<*iter<<" ";
+		}
+		cout<<"\n";
+	}
+}
+
+void clear(){
+	for(int i=1; i<=v; ++i){
+		visit[i]=0;
+	}
+}
+
+void dfs(int start){	
+	visit[start]=1;
+	int i, next;
+	cout<<start<<" ";
+	
+	for(i=0; i<graph[start].size(); ++i){
+		next = graph[start][i];
+		if(visit[next]==0){
+			dfs(next);
+		}
+	}
+}
+
+void bfs(int start){
+	queue<int> q;
+	q.push(start);
+	visit[start]=1;
+	int i;
+	while(!q.empty()){
+		int tmp = q.front();
+		q.pop();
+		cout<<tmp<<" ";
+		for(i=0; i<graph[tmp].size(); ++i){
+			if(visit[graph[tmp][i]]==0){
+				q.push(graph[tmp][i]);
+				visit[graph[tmp][i]] = 1;
+			}
+		}
+	}
+}
+
+
+
+int main(void)
+{
+	cin>>v>>e>>start;
+	int i,j, d1,d2;
+	graph = new vector<int>[v+1];	//벡터 동적생성 
+	visit = new int[v+1];
+	clear();
+	for(i=0; i<e; ++i){
+		cin>>d1>>d2;
+		graph[d1].push_back(d2);
+		graph[d2].push_back(d1);
+	}
+	for(i=1; i<=v; ++i){
+		sort(graph[i].begin(), graph[i].end());
+	}
+	dfs(start);
+	cout<<"\n";
+	clear();
+	bfs(start);
+	
+}
