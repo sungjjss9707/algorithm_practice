@@ -1,0 +1,102 @@
+#include<iostream>
+
+using namespace std;
+int sero, garo;
+int arr[101][101];
+char chararr[101][101];
+long long rect_area(int starty, int startx, int endy, int endx){
+	int i,k;
+	long long sum=0;
+	for(i=starty; i<=endy; ++i){
+		for(k=startx; k<=endx; ++k){
+			sum=sum+arr[i][k];
+		}
+	}
+	return sum;
+}
+
+void returngophap(){
+	
+	int i, k,j;
+	long long sum=0, biggest=0;
+	long long nowarea,sumoftwoarea, area1, area2,case1,case2;
+	for(i=1; i<=sero; ++i){
+		for(k=1; k<=garo; ++k){
+			if(i==sero&&k==garo) break;
+			nowarea = rect_area(1,1, i,k);
+			//cout<<i<<","<<k<<"넓이 : "<<nowarea<<" / ";
+			if(k<garo){
+				if(i<sero){
+					area1 = rect_area(1,k+1,i,garo);
+					area2 = rect_area(i+1, 1, sero, garo);
+					case1 = area1*area2;
+					//cout<<area1<<","<<area2<<"  ";
+					area1 = rect_area(1,k+1,sero,garo);
+					area2 = rect_area(i+1, 1, sero, k);
+					case2 = area1*area2;
+					//cout<<area1<<","<<area2<<"  ";
+					sumoftwoarea = case1>case2 ? case1:case2;
+					sum = nowarea*sumoftwoarea;
+					if(sum>biggest) biggest = sum;	
+				}
+				else{
+					if(garo-k>=2){
+						for(j=k+1; j<garo; ++j){
+							area1= rect_area(1,k+1,sero,j);
+							area2 = rect_area(1,j+1, sero, garo);
+							//cout<<area1<<","<<area2<<"  ";
+							sum = nowarea*area1*area2;
+							if(sum>biggest) biggest = sum;
+						}
+					}
+					if(sero>=2){
+						for(j=1; j<sero; ++j){
+							area1 = rect_area(1,k+1,j,garo);
+							area2 = rect_area(j+1, k+1, sero, garo);
+							//cout<<area1<<","<<area2<<"  ";
+							sum = nowarea*area1*area2;
+							if(sum>biggest) biggest = sum;
+						}
+					}
+				}
+			}
+			else if(k==garo){
+				if(sero-i>=2){
+					for(j=i+1; j<sero; ++j){
+						area1 = rect_area(i+1,1,j,garo);
+						area2 = rect_area(j+1,1,sero,garo);
+						//cout<<area1<<","<<area2<<"  ";
+						sum = nowarea*area1*area2;
+						if(sum>biggest) biggest = sum;
+					}
+				}
+				if(garo>=2){
+					for(j=1; j<garo; ++j){
+						area1 = rect_area(i+1,1,sero,j);
+						area2 = rect_area(i+1,j+1,sero,garo);
+						//cout<<area1<<","<<area2<<"  ";
+						sum = nowarea*area1*area2;
+						if(sum>biggest) biggest = sum;
+					}
+				}
+			}
+			//cout<<"\n이때까지 구한 최대넓이 : "<<biggest<<"\n\n";
+		}
+	}
+	cout<<biggest;		
+}
+
+	
+
+int main(void)
+{
+	cin>>sero>>garo;
+	int i,k;
+	for(i=1; i<=sero; ++i){
+		for(k=1; k<=garo; ++k){
+			cin>>chararr[i][k];
+			arr[i][k] = (int)(chararr[i][k]-'0');
+		}
+	}
+	returngophap();
+}
