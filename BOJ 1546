@@ -1,0 +1,84 @@
+import java.util.*;
+
+class sejunscore{
+	ArrayList<Double> score = new ArrayList<>();
+	
+	sejunscore(){}
+	
+	void addscore(double sc) {
+		this.score.add(sc);
+	}
+	
+	double biggest() {
+		int i;
+		double big=0;
+		for(i=0; i<score.size(); ++i) {
+			if(big < score.get(i)) {
+				big = score.get(i);
+			}
+		}
+		
+		return big;
+	}
+	
+	
+	void jojak() {
+		int i;
+		double jomsu,bigscore = biggest();
+		for(i=0; i<score.size(); ++i) {
+			jomsu = (score.get(i)/bigscore)*100;
+			score.set(i, jomsu);
+		}
+	}
+	
+	double getsum() {
+		int i;
+		double sum = 0.0;
+		for(i=0; i<score.size(); ++i) {
+			sum=sum+score.get(i);
+		}
+		
+		return sum;
+	}
+	
+	
+	double getavg() {
+		double sum = getsum(), getsu = (double)score.size();
+		return (sum/getsu);
+	}
+	
+	
+	void printarr() {
+		int i;
+		for(i=0; i<score.size(); ++i) {
+			System.out.println(score.get(i)+" ");
+		}
+	}
+	
+}
+
+
+public class Main {
+
+	public static void main(String[] args) {
+	
+		sejunscore sejun = new sejunscore();
+		int i,numofscore;
+		double score;
+		Scanner sc = new Scanner(System.in);
+		numofscore = sc.nextInt();
+		for(i=0; i<numofscore; ++i) {
+			score = sc.nextDouble();
+			sejun.addscore(score);
+		}
+		
+		//sejun.printarr();
+		//System.out.println(sejun.getavg());
+		//System.out.println("제일큰거 "+sejun.biggest());
+		sejun.jojak();
+		//sejun.printarr();
+		System.out.println(sejun.getavg());
+		
+		
+	}
+}
