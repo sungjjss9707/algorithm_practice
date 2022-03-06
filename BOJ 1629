@@ -1,0 +1,31 @@
+#include<iostream>
+using namespace std;
+long long A, B, C;
+ 
+long long jegop(long long tempA, long long tempB){
+	long long a,b;
+	if(tempB==1) return tempA%C;
+	if(tempB%2==0){
+		a=jegop(tempA%C, tempB/2)%C;
+		return (a*a)%C;	
+	}
+	else{
+		a=jegop(tempA%C, tempB/2)%C;
+		b=(a*tempA%C)%C;
+		return (a*b)%C;
+	}
+}
+
+int main(void)
+{
+	cin>>A>>B>>C;
+	cout<<jegop(A%C,B)%C<<"\n";
+	/*
+	int i, hap=0, gop=1, temphap=0, tempgop=1;
+	
+	for(i=0; i<B; ++i){
+		tempgop = (tempgop*A)%C;
+	}
+	cout<<tempgop;
+	*/
+}
