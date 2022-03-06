@@ -1,0 +1,29 @@
+#include<iostream>
+#include<string>
+using namespace std;
+
+string sixteen;
+
+int sixteentoten(){
+	int sum=0,i, index, chasoo=1, num;
+	char c;
+	for(i=0; i<sixteen.length(); ++i){
+		index = sixteen.size()-i-1;
+		c = sixteen[index];
+		if(c>='A'&&c<='F'){
+			num=c-'A'+10;
+		}
+		else{
+			num=c-'0';
+		}
+		sum=sum+num*chasoo;
+		chasoo=chasoo*16;
+	}
+	return sum;
+	
+}
+int main(void)
+{
+	cin>>sixteen;
+	cout<<sixteentoten();
+}
