@@ -1,0 +1,70 @@
+#include<iostream>
+#define fastio ios::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
+using namespace std;
+
+int arr[500001];
+int temp[500001];
+int num;
+long long count=0;
+void printarr(){
+	int i;
+	for(i=1; i<=num; ++i){
+		cout<<arr[i]<<" ";
+	}
+	cout<<"\n";
+}
+
+void merge(int start, int end){
+	int mid = (start+end)/2;
+	int i,left=start, right=mid+1, whole=start;
+	while(left<=mid&&right<=end){
+		if(arr[left]>arr[right]){
+			//cout<<arr[left]<<"랑"<<arr[right]<<"비교\n"; 
+			temp[whole++] = arr[right++];
+			count=count+mid-left+1;
+		}
+		else{
+			temp[whole++] = arr[left++];
+		}
+	}
+	
+	if(left>mid){
+		for(i=right; i<=end; ++i){
+			temp[whole++] = arr[i];
+		}
+	}
+	else{
+		for(i=left; i<=mid; ++i){
+			temp[whole++] = arr[i];
+		}
+	}
+	for(i=start; i<=end; ++i){
+		arr[i] = temp[i];
+	}
+}
+
+void merge_sort(int start, int end){
+	if(start<end){
+		int mid = (start+end)/2;
+		merge_sort(start, mid);
+		merge_sort(mid+1, end);
+		merge(start, end);
+		//printarr();
+	}
+}
+
+
+
+int main(void)
+{
+	fastio;
+	cin>>num;
+	int i;
+	for(i=1; i<=num; ++i){
+		cin>>arr[i];
+	}
+	//printarr();
+	merge_sort(1, num);
+	cout<<count;
+	//printarr();
+}
