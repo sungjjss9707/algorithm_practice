@@ -1,0 +1,47 @@
+#include<iostream>
+#include<string>
+using namespace std;
+
+string moonseo,word;
+
+int getnumofword(){
+	int i=0,k,flag,dap=0;
+	while(i<moonseo.length()){
+		flag=0;
+		for(k=0; k<word.length();++k){
+			if(moonseo[i+k]!=word[k]){
+				flag=1;
+				break;
+			}
+		}
+		if(flag==0){
+			dap++;
+			i=i+word.length();
+		}
+		else i++;
+	}
+	/*
+	for(i=0; i<=moonseo.length()-word.length();++i){
+		flag=0;
+		for(k=0; k<word.length();++k){
+			if(moonseo[i+k]!=word[k]){
+				flag=1;
+				break;
+			}
+		}
+		if(flag==0){
+			dap++;
+			i=i+word.length();
+		}
+	}
+	*/
+	return dap;
+}
+
+int main(void)
+{
+	 getline(cin,moonseo);
+	 getline(cin,word);
+	 cout<<getnumofword();
+	// cout<<moonseo<<endl<<word;
+}
