@@ -1,0 +1,70 @@
+#include<iostream>
+#include<string>
+#include<queue>
+#include<set>
+using namespace std;
+
+char arr[4][4];
+int dy[4] = {1,0,-1,0};
+int dx[4] = {0,1,0,-1};
+set<string> s;
+
+void bfs(string initstr){
+	string nowstring, nextstring;
+	char temp;
+	int nowy, nowx, nexty, nextx,nowhwetsu,i,k,index, zero_pos, nextposinstr;
+	queue<pair<string, int>> q;
+	q.push({initstr, 0});
+	s.insert(initstr);
+	while(!q.empty()){
+		nowstring = q.front().first;
+		nowhwetsu = q.front().second;
+		//cout<<nowstring<<"\n";
+		//cout<<v.size()<<"\n";
+		//printvector();
+		q.pop();
+		if(nowstring.compare("123456780")==0){
+			cout<<nowhwetsu;
+			return;
+		}
+		zero_pos = nowstring.find('0');
+		//cout<<nowy<<" "<<nowx<<"\n";
+		nowy = zero_pos/3;
+		nowx = zero_pos%3;
+		for(i=0; i<4; ++i){
+			nexty = nowy+dy[i];
+			nextx = nowx+dx[i];
+			if(nexty>=0&&nexty<3&&nextx>=0&&nextx<3){
+				nextposinstr = 3*nexty+nextx;
+				nextstring = nowstring;
+				temp = nextstring[nextposinstr];
+				nextstring[nextposinstr]=nextstring[zero_pos];
+				nextstring[zero_pos] = temp;
+				
+				if(s.count(nextstring)==0){
+					//cout<<nextstring<<" ";
+					s.insert(nextstring);
+					q.push({nextstring, nowhwetsu+1});
+				} 
+			}
+			
+		}
+	}
+	cout<<-1;
+}
+
+int main(void)
+{
+	int i,k, ypos, xpos;
+	string str = "";
+	char num;
+	for(i=1; i<=3; ++i){
+		for(k=1; k<=3; ++k){
+			cin>>num;
+			str=str+num;
+			arr[i][k]=num;
+		}
+	}
+	bfs(str);
+	//cout<<str;
+}
