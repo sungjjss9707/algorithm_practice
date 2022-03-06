@@ -1,0 +1,95 @@
+#include<iostream>
+#include<string.h>
+#include<string>
+//1+2+3-4+5-6-7+8
+using namespace std;
+string sik;
+int numarr[25];
+string strnumarr[25];
+char oper[25];
+int lastnumarr[25];
+char lastoper[25];
+int len_strnumarr, len_oper;
+
+void calcul(){
+	int i, temp, k=0, j=0;
+	for(i=0; i<len_oper; ++i){
+		if(oper[i]=='+'){
+			temp = numarr[i]+numarr[i+1];
+			numarr[i]=-1;
+			numarr[i+1] = temp;
+			oper[i] = '*';
+		}
+	}
+	for(i=0; i<len_oper; ++i){
+		if(oper[i]=='-'){
+			lastoper[k++] = '-';
+		}
+	}
+	for(i=0; i<len_strnumarr; ++i){
+		if(numarr[i]!=-1){
+			lastnumarr[j++] = numarr[i];
+		}
+	}
+	
+	
+	/*
+	cout<<lastnumarr[0]<<" ";
+	for(i=0; i<k; ++i){
+		cout<<lastoper[i]<<" "<<lastnumarr[i+1]<<" ";
+		
+	}
+	*/
+	for(i=0; i<k; ++i){
+		if(lastoper[i]=='-'){
+			temp = lastnumarr[i]-lastnumarr[i+1];
+			lastnumarr[i]=-1;
+			lastnumarr[i+1] = temp;
+			lastoper[i] = '*';
+		}
+	}
+	/*
+	cout<<"====================="<<endl;
+	cout<<lastnumarr[0]<<" ";
+	for(i=0; i<k; ++i){
+		cout<<lastoper[i]<<" "<<lastnumarr[i+1]<<" ";
+		
+	}
+	*/
+	cout<<lastnumarr[k];
+	
+}
+
+int main(void)
+{
+	cin>>sik;
+	string a = "123";
+	int initindex=0;
+	int i,j=0,k=0;
+	for(i=0; i<sik.length(); ++i){
+		if(sik[i]=='+'||sik[i]=='-'){
+			oper[j]=sik[i];
+			strnumarr[k] = sik.substr(initindex, i-initindex);
+			initindex = i+1;
+			k++;
+			j++;
+		}
+	}
+	strnumarr[k] = sik.substr(initindex);
+	len_strnumarr = k+1;
+	len_oper = j;
+	for(i=0; i<len_strnumarr; ++i){
+		numarr[i] = stoi(strnumarr[i]); 
+	}
+	calcul();
+	/*
+	for(i=0; i<len_strnumarr; ++i){ 
+		cout<<numarr[i]<<" ";
+	}
+	cout<<endl;
+	
+	for(i=0; i<len_oper; ++i){
+		cout<<oper[i]<<" ";
+	}
+	*/
+}
