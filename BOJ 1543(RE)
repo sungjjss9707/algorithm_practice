@@ -1,0 +1,56 @@
+#include<iostream>
+#include<string>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+string sen, word;
+
+int find_first(int index){
+	int i;
+	if(sen.length()-index<word.length()) return -1;
+	for(i=index; i<sen.length(); ++i){
+		if(sen[i]==word[0]){
+			return i;
+		}
+	}
+	return -1;
+}
+
+bool isitequal(int index){
+	int i;
+	for(i=0; i<word.length(); ++i){
+		if(word[i]!=sen[index+i]) return false;
+	}
+	return true;
+}
+
+int solve(){
+	int i=0,j,k, index, getsu, biggest = -1;
+	for(i=0;i<sen.length(); ++i){
+		j=i;
+		getsu=0;
+		while(1){
+			if(j>=sen.length()) break;
+			j = find_first(j);
+			if(j==-1) break;
+			if(isitequal(j)){
+				getsu++;
+				j+=word.length();
+			}
+			else{
+				j++;
+			}
+		}
+		biggest = max(biggest, getsu);
+	}
+	return biggest;
+}
+
+int main(void)
+{
+	fastio;
+	getline(cin, sen);
+	getline(cin, word);
+	cout<<solve();
+	return 0;
+}
