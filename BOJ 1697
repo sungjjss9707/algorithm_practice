@@ -1,0 +1,57 @@
+#include<iostream>
+#include<queue>
+using namespace std;
+
+int soobinpos, brotherpos;
+
+int visit[100010];
+queue<pair<int,int>> q;
+
+
+void bfs(){
+	int hwetsu=0, nowpos, oneplus, oneminus, doobae, beeyong;
+	//cout<<q.front()<<"\n";
+	while(!q.empty()){
+		nowpos = q.front().first;
+		beeyong = q.front().second;
+		//cout<<nowpos<<"\n";
+		
+		if(nowpos==brotherpos){
+			cout<<beeyong;
+			return;
+		}
+		
+		q.pop();
+		oneplus = nowpos+1;
+		oneminus = nowpos-1;
+		doobae = 2*nowpos;
+		
+		if(visit[oneplus]==0&&oneplus<=100000&&oneplus>=0){
+			visit[oneplus]=1;
+			q.push({oneplus, beeyong+1});
+		}
+		
+		if(visit[oneminus]==0&&oneminus<=100000&&oneminus>=0){
+			visit[oneminus]=1;
+			q.push({oneminus, beeyong+1});
+		}
+		if(doobae>=0&&doobae<=100000){
+			if(visit[doobae]==0){
+				visit[doobae]=1;
+				q.push({doobae, beeyong+1});
+			}	
+		}
+		
+	//	hwetsu++;
+	}
+	
+}
+
+int main(void)
+{
+	cin>>soobinpos>>brotherpos;
+	q.push({soobinpos,0});
+	visit[soobinpos]=1;
+	bfs();
+	//calcul(soobinpos, brotherpos,0);
+}
