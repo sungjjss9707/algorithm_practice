@@ -1,0 +1,77 @@
+#include<iostream>
+#include<vector>
+#include<string>
+#include<algorithm>
+#define fastio ios::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
+using namespace std;
+
+vector<string> hear;
+vector<string> see;
+vector<string> dap;
+int numofhear, numofsee;
+
+int findnameinsee(int start, int end, string name){
+	
+	if(start==end){
+		//cout<<see[start]<<" 랑 "<<name<<"랑 비교\n";
+		if(see[start].compare(name)==0) return 1;
+		else return 0;
+	}
+	if(start==end-1){
+		//cout<<see[start]<<","<<see[end]<<" 랑 "<<name<<"랑 비교\n";
+		if(see[start].compare(name)==0||see[end].compare(name)==0) return 1;
+		else return 0;
+	}
+	
+	int mid = (start+end)/2;
+	//cout<<see[mid]<<" 랑 "<<name<<"랑 비교\n";
+	if(see[mid].compare(name)==0) return 1;
+	else if(name<see[mid]){
+		return findnameinsee(start, mid-1, name);
+	}
+	else{
+		return findnameinsee(mid+1, end, name);
+	}
+}
+
+int main(void)
+{
+	fastio;
+	cin>>numofhear>>numofsee;
+	int i;
+	string str;
+	for(i=0; i<numofhear; ++i){
+		cin>>str;
+		hear.push_back(str);
+	}
+	for(i=0; i<numofsee; ++i){
+		cin>>str;
+		see.push_back(str);
+	}
+	sort(hear.begin(), hear.end());
+	sort(see.begin(), see.end());
+	/*
+	cout<<"\n\n";
+	cout<<"hear : \n";
+	for(i=0; i<numofhear; ++i){
+		cout<<hear[i]<<"\n";
+	}
+	cout<<"see : \n";
+	for(i=0; i<numofsee; ++i){
+		cout<<see[i]<<"\n";
+	}
+	*/
+	for(i=0; i<numofhear; ++i){
+		str = hear[i];
+		//cout<<str<<"찾기\n";
+		if(findnameinsee(0,numofsee-1, str)==1){
+			dap.push_back(str);
+			//cout<<str<<"\n";
+		}
+		
+	}
+	cout<<dap.size()<<"\n";
+	for(i=0; i<dap.size(); ++i){
+		cout<<dap[i]<<"\n";
+	}
+}
