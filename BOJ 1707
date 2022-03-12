@@ -1,0 +1,78 @@
+#include<iostream>
+#include<vector>
+using namespace std;
+int v,e;
+vector<int> * graph;
+int* visit;
+
+void dfs(int start,int color){	
+	visit[start]=color;
+	//cout<<start<<"점 "<<color<<"로 칠함\n";
+	int i, next;
+	for(i=0; i<graph[start].size(); ++i){
+		next = graph[start][i];
+		if(visit[next]==0){
+			dfs(next, 3-color);
+		}
+	}
+}
+
+void pandan(){
+	int i,k, mycolor;
+	for(i=1; i<=v; ++i){
+		mycolor = visit[i];
+		//cout<<i<<"의색깔 : "<<mycolor<<"\n";
+		for(k=0; k<graph[i].size(); ++k){
+			//cout<<visit[graph[i][k]]<<" ";
+			if(mycolor==visit[graph[i][k]]){
+				cout<<"NO\n";
+				return;
+			}
+		}
+		//cout<<"\n";
+	}
+	cout<<"YES\n";
+	return;
+}
+
+void print(){
+	int i,k;
+	for(i=1; i<=v; ++i){
+		cout<<visit[i]<<" - ";
+		for(k=0; k<graph[i].size(); ++k){
+			cout<<visit[graph[i][k]]<<" ";
+		}
+		cout<<"\n";
+	}
+}
+
+void clear(){
+	for(int i=1; i<=v; ++i){
+		visit[i]=0;
+	}
+}
+
+int main(void)
+{
+	int t,testcase, i, d1,d2;
+	cin>>testcase; 
+	for(t=0; t<testcase; ++t){
+		cin>>v>>e;
+		graph = new vector<int>[v+1];	//벡터 동적생성 
+		visit = new int[v+1];
+		clear();
+		for(i=0; i<e; ++i){
+			cin>>d1>>d2;
+			graph[d1].push_back(d2);
+			graph[d2].push_back(d1);
+		}
+		for(i=1; i<=v; ++i){
+			if(visit[i]==0){
+				dfs(i,1);
+			}
+		}
+		pandan();
+	//	print();
+		//dfs(1, d1);
+	}
+}
