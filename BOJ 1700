@@ -1,0 +1,96 @@
+#include<iostream>
+#include<vector>
+#include<queue>
+#include<set>
+using namespace std;
+
+int numofplug, hwetsu, numoftool=-1;
+int tool[101];
+queue<int> ranking[101];
+set<int> usingtool;
+
+void printranking(){
+	int i,k, num;
+	cout<<endl;
+	for(i=1; i<=numoftool; ++i){
+		cout<<"ranking["<<i<<"] : ";
+		while(!ranking[i].empty()){
+			num = ranking[i].front();
+			ranking[i].pop();
+			cout<<num<<" ";
+		}
+		cout<<endl;
+	}
+	cout<<endl;
+}
+
+void eraseone(){
+	int i, nowtool, maximum=-1, priority, bbelggo;
+	set<int>::iterator iter;
+	for(iter=usingtool.begin(); iter!=usingtool.end(); ++iter){
+		nowtool = *iter;
+		//cout<<nowtool<<" : ";
+		if(ranking[nowtool].empty()){
+			priority = 500;
+		}
+		else{
+			priority = ranking[nowtool].front();
+		}
+		//cout<<priority<<endl;
+		if(maximum<priority){
+			maximum = priority;
+			bbelggo = nowtool;
+		}
+		maximum = max(maximum, priority);
+	}
+	//cout<<endl;
+	
+	usingtool.erase(usingtool.find(bbelggo));
+	
+}
+
+
+
+int getbbobkkee(){
+	int i, beenjaree=numofplug, count=0, nowtool;
+	
+	for(i=0; i<hwetsu; ++i){
+		nowtool = tool[i];
+		//cout<<"지금넣을거 : "<<nowtool<<endl;;
+		ranking[nowtool].pop();
+		//printranking();
+		if(beenjaree>=1){	 //자리가 있으면  
+			if(!usingtool.count(nowtool)){
+				beenjaree--;
+				usingtool.insert(nowtool); 
+			}
+		}
+		else{		//자리가 없으면  
+			if(!usingtool.count(nowtool)){
+				//이미 꽂아져있던걸 빼는 함수
+				eraseone();
+				count++;  
+				usingtool.insert(nowtool); 
+			}
+		}
+		
+	}
+	return count;
+}
+
+int main(void)
+{
+	cin>>numofplug>>hwetsu;
+	int i, k,num, temp;
+	for(i=0; i<hwetsu; ++i){
+		cin>>num;
+		tool[i]=num;
+		ranking[num].push(i+1);
+		numoftool = max(numoftool, num);
+	}
+	
+	//printranking();
+	
+	
+	cout<<getbbobkkee();
+}
