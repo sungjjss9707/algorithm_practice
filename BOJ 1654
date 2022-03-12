@@ -1,0 +1,138 @@
+#include<iostream>
+using namespace std;
+
+long long my_lan;
+long long goal;
+long long hae=0;
+long long arr[10001];
+long long temparr[10001];
+long long longest;
+
+/*
+long long isthismanjok(long long len){
+	long long i, sum=0;
+	for(i=1; i<=my_lan; ++i){
+		sum = sum+(arr[i]/len);
+		if(sum>=goal){
+			return 1;
+		}
+	}
+	return 0;
+}
+*/
+
+long long isthismanjokwithyeebun(long long start, long long end, long long len){
+	if(start==end){
+		return arr[start]/len;
+	}
+	else if(start == end-1){
+		return (arr[start]/len + arr[end]/len);
+	}
+	
+	long long mid = (start+end)/2;
+	return isthismanjokwithyeebun(start, mid,len)+isthismanjokwithyeebun(mid+1, end, len);
+}
+
+long long panstar(long long len){
+	if(isthismanjokwithyeebun(1, my_lan, len)>=goal) return 1;
+	return 0; 
+}
+
+void findbiggest(long long start, long long end){
+	if(start==end){
+		if(panstar(start)){	//딱 중간값이 만족하면(목표이상이면) 
+			if(start>hae) hae = start; 
+		}
+		return ;
+	}
+	else if(start==end-1){
+		if(panstar(end)){	//딱 중간값이 만족하면(목표이상이면) 
+			if(end>hae) hae = end; 
+		}
+		else{
+			if(panstar(start)){	//딱 중간값이 만족하면(목표이상이면) 
+				if(start>hae) hae = start; 
+			}
+		}
+		return ;
+	}
+	
+	long long mid = (start+end)/2;
+	if(panstar(mid)){	//딱 중간값이 만족하면(목표이상이면) 
+		findbiggest(mid, end); 
+	}
+	else{
+		findbiggest(start, mid-1);
+	}
+}
+
+void merge(long long startindex, long long endindex, long long mid){
+	long long i=startindex,j=mid+1,k=startindex,l;
+	while(i<=mid&&j<=endindex){
+		if(arr[i]>arr[j]){
+			temparr[k++] = arr[i++]; 	
+		}
+		else{
+			temparr[k++] = arr[j++];
+		}
+	}
+	if(i>mid){
+		for(l=j; l<=endindex; ++l){
+			temparr[k++] = arr[l];
+		}
+	}
+	else{
+		for(l=i; l<=mid; ++l){
+			temparr[k++] = arr[l];
+		}
+	}
+	for(l=startindex; l<=endindex; ++l){
+		arr[l] = temparr[l];
+	}
+}
+
+void merge_sort(long long left, long long right){
+	if(left<right){
+		long long mid = (left+right)/2;
+		merge_sort(left, mid);
+		merge_sort(mid+1, right);
+		merge(left, right, mid);
+	}
+}
+
+int main(void)
+{
+	cin>>my_lan>>goal;
+	long long i,j,k;
+	longest=0;
+	for(i=1; i<=my_lan; ++i){
+		cin>>arr[i];
+		/*
+		if(arr[i]>longest){
+			longest = arr[i];
+		}
+		*/
+	}
+	merge_sort(1, my_lan);
+	
+	/*
+	for(i=1; i<=my_lan; ++i){
+		cout<<arr[i]<<" ";
+	}
+	*/
+	longest = arr[1];
+	//cout<<lon<<endl;
+	/*
+	for(i=longest; i>=1; --i){
+		getsu=0;
+		for(j=1; j<=my_lan; ++j){
+			getsu = getsu+arr[j]/i;
+		}
+		if(getsu>=goal) break;
+	}
+	cout<<i<<endl;
+	*/
+	//cout<<findbiggest(1,longest);
+	findbiggest(1, longest);
+	cout<<hae;
+}
