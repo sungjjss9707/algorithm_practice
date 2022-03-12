@@ -1,0 +1,40 @@
+#include <iostream>
+#define fastio ios::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
+using namespace std;
+
+int parent[1000001];
+
+int do_find(int x) {
+    if (x == parent[x]) return x;
+    int ret = do_find(parent[x]);
+	parent[x] = ret;
+	return ret;
+}
+
+void do_union(int x, int y) {
+    int px = do_find(x);
+    int py = do_find(y);
+
+    if (px > py) parent[px] = py;
+    else parent[py] = px;
+}
+
+int main() {
+	fastio;
+    int m, n,op, x, y;
+	cin>>n>>m;
+    for (int i = 0; i <= n; i++){
+    	parent[i] = i;	
+	} 
+    for (int i = 0; i < m; i++) {
+    	cin>>op>>x>>y;
+        if (op == 0) {
+            do_union(x, y);
+        }
+		else {
+            if (do_find(x) == do_find(y)) printf("YES\n");
+            else printf("NO\n");
+        }
+    }
+    return 0;
+}
