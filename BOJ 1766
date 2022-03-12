@@ -1,0 +1,45 @@
+#include<iostream>
+#include<vector>
+#include<queue>
+
+using namespace std;
+
+int indegree[32001];
+vector<int> jineep[32001];
+int numofproblem;
+
+void weesangsort(){
+	int nowprob, nextprob,i;
+	priority_queue<int, vector<int>, greater<int>> zero;	
+	for(i=1; i<=numofproblem; ++i){
+		if(indegree[i]==0) zero.push(i);	
+	}
+	while(!zero.empty()){
+		nowprob = zero.top();
+		zero.pop();
+		cout<<nowprob<<" ";
+		for(i=0; i<jineep[nowprob].size(); ++i){
+			nextprob = jineep[nowprob][i];
+			indegree[nextprob]--;
+			if(indegree[nextprob]==0){
+				zero.push(nextprob);	
+			}	
+		}	
+	}
+}
+
+int main(void)
+{
+	int numofrule,i,a,b;
+	cin>>numofproblem>>numofrule;
+	for(i=1; i<=numofproblem; ++i){
+		indegree[i]=0;	
+	}
+	for(i=0; i<numofrule; ++i){
+		cin>>a>>b;
+		jineep[a].push_back(b);
+		indegree[b]++;	
+	}
+	weesangsort();
+	
+}
