@@ -1,0 +1,50 @@
+#include<stdio.h>
+
+
+int beeyong(long long int gojeong, long long int gabyeon, long long int jeongga){
+	long long int sengsan, panme,x=0, hap=0;
+	while(1){
+		sengsan = gojeong+gabyeon*x;
+		panme = jeongga*x;
+		if(sengsan<panme){
+			break;
+		}
+		printf("%d : %d %d\n", x,sengsan, panme);
+		x=x+1000;
+	}
+	printf("%d : %d %d\n", x,sengsan, panme);
+	x=x-1000;
+	while(1){
+		sengsan = gojeong+gabyeon*x;
+		panme = jeongga*x;
+		if(sengsan<panme){
+			break;
+		}
+		printf("%d : %d %d\n", x,sengsan, panme);
+		x=x+1;
+	}
+	
+	
+	
+	
+	printf("%d : %d %d\n", x,sengsan, panme);
+	return x;
+}
+
+
+int main(void)
+{
+	double gojeong, gabyeon, jeongga,sonik;
+	scanf("%lf %lf %lf", &gojeong, &gabyeon, &jeongga);
+	
+	//printf("%lf %lf %lf\n", gojeong, gabyeon, jeongga);
+	
+	if(gabyeon>=jeongga){
+		printf("-1");
+		return 0;
+	}
+	sonik = gojeong/(jeongga-gabyeon);
+	//printf("고정가격 : %f    정가-가변 : %f\n", gojeong, sonik);
+	printf("%d", int(sonik)+1);
+	//printf("%d",beeyong(gojeong, gabyeon, jeongga));
+}
