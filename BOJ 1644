@@ -1,0 +1,82 @@
+#include<iostream>
+#include<vector>
+using namespace std;
+
+long long num;
+long long chae[4000001];
+vector<long long> sosu;	//갯수 총 280000 
+
+void eras(){
+	long long i,k;
+	for(i=2; i<=4000000; ++i){
+		if(chae[i]!=-1){
+			sosu.push_back(i);
+			for(k=i; k<=4000000; k=k+i){
+				chae[k]=-1;
+			}
+		}	
+		
+	};
+	//cout<<sosu.size();
+}
+
+
+
+long long get_getsu_with_twopoint(){
+	long long left=0,right=0, dap=0;
+	long long hap=sosu[0], count=0;
+	while(1){
+		/*
+		count++;
+		if(right==left){
+			if(sosu[right]==num){
+				prlong long_sosu(left, right, num);
+				dap++;
+				break;
+			}
+			if(hap<num){
+				right++;
+				hap+=sosu[right];
+				continue;
+			}
+			else{
+				break;
+			}
+		}
+		*/
+		if(hap==num){
+			dap++;
+			hap-=sosu[left];
+			left++;
+			if(left>right) break;
+			right++;
+			if(right>=sosu.size()) break;
+			hap+=sosu[right];
+		}
+		else if(hap<num){
+			right++;
+			if(right>=sosu.size()) break;
+			hap+=sosu[right];
+		}
+		else{
+			hap-=sosu[left];
+			left++;
+			if(left>right) break;
+		}
+		
+	}
+	//cout<<"tqkf->"<<count<<endl; 
+	return dap;
+} 
+
+void init(){
+	long long i;
+	eras();
+}
+
+int main(void)
+{
+	cin>>num;
+	eras();
+	cout<<get_getsu_with_twopoint();
+}
