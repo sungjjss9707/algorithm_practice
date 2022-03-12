@@ -1,0 +1,64 @@
+#include<iostream>
+
+using namespace std;
+
+long long chart[100001];
+int numofmak;
+
+int biggestrect(int start, int end){
+	
+	if(start==end) {
+		return chart[start];
+	}
+	
+	int mid = (start+end)/2;
+	long long rightrect = biggestrect(start, mid);
+	long long leftrect = biggestrect(mid+1, end);
+	long long temp = max(rightrect, leftrect);
+	int leftindex=mid, rightindex=mid+1;
+	long long highest = 1000000001, garolen=1, biggest =0, nolbee;
+	while(1){
+		//cout<<leftindex<<" "<<rightindex<<"\n";
+		if(leftindex>=start&&rightindex<=end){
+			if(chart[leftindex]>chart[rightindex]){
+				highest = min(highest, chart[leftindex]);
+				nolbee = highest*garolen;
+				leftindex--;
+			}
+			else{
+				highest = min(highest, chart[rightindex]);
+				nolbee = highest*garolen;
+				rightindex++;
+			}
+		}
+		else if(leftindex>=start){
+			highest = min(highest, chart[leftindex]);
+			nolbee = highest*garolen;
+			leftindex--;
+		}
+		else if(rightindex<=end){
+			highest = min(highest, chart[rightindex]);
+			nolbee = highest*garolen;
+			rightindex++;
+		}
+		else{
+			break;
+		}
+		biggest = max(biggest, nolbee);
+		garolen++;
+	}
+	
+	biggest = max(biggest, temp);
+	return biggest;
+}
+
+int main(void)
+{
+	cin>>numofmak;
+	int i;
+	for(i=1; i<=numofmak; ++i){
+		cin>>chart[i];
+	}
+	int biggest = biggestrect(1, numofmak);
+	cout<<biggest;
+}
