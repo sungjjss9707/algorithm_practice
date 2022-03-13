@@ -1,0 +1,61 @@
+#include<iostream>
+#include<vector>
+using namespace std;
+vector<pair<int,int>> mymap[1001];
+int dist[1001], visit[1001];
+int start,myend,v,e;
+int inf=900000000;
+
+int choisodist(){
+	int georee=inf,index=-1;
+	for(int i=1;i<=v;++i){
+		if(dist[i]<georee&&visit[i]==0){
+			index=i;
+			georee=dist[i];
+		}
+	}
+	return index;
+}
+
+void dijkstra(){
+	int i,k,startindex,endindex,distance;
+	for(i=1;i<=v;++i){
+		dist[i]=inf;
+		visit[i]=0;
+	}
+	dist[start]=0;
+	for(i=0;i<v;++i){
+		startindex=choisodist();
+		if(startindex==-1) return;
+		visit[startindex]=1;
+		for(k=0;k<mymap[startindex].size();++k){
+			endindex=mymap[startindex][k].first;
+			if(visit[endindex]==0){
+				distance=mymap[startindex][k].second;
+				if(dist[endindex]>dist[startindex]+distance){
+					dist[endindex]=dist[startindex]+distance;
+				}
+			}	
+		}
+	}
+	/*
+	for(i=1;i<=v;++i){
+		cout<<dist[i]<<" ";
+	}
+	cout<<endl;
+	*/
+}
+
+int main(void)
+{
+	cin>>v;
+	cin>>e;
+	int st,en, we;
+	for(int i=0;i<e;++i){
+		cin>>st>>en>>we;
+		mymap[st].push_back({en,we});
+	}
+	cin>>start>>myend;
+	dijkstra();
+	cout<<dist[myend];
+}
