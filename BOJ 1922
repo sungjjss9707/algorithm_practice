@@ -1,0 +1,76 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+using namespace std;
+
+struct edge{
+	int v1,v2,g;
+};
+
+vector<edge> v;
+int numofver, numofedge;
+int parent[1001];
+
+void clear(){
+	int i;
+	for(i=1; i<=numofver; ++i){
+		parent[i]=i;
+	}
+}
+
+bool compare(edge e1, edge e2){
+	return e1.g<e2.g;
+}
+
+int get_parent(int v){
+	if(parent[v]==v){
+		return v;
+	}
+	int vparent=get_parent(parent[v]);
+	parent[v]=vparent;
+	return vparent;
+}
+
+void parentunion(int v1p, int v2p){
+	if(v1p>v2p){
+		parent[v1p]=v2p;
+	}
+	else parent[v2p]=v1p;
+	
+}
+
+int kruscal(){
+	int i,v_1,v_2,v1p,v2p,sum=0;
+	clear();
+	for(i=0; i<numofedge; ++i){
+		v_1=v[i].v1;
+		v_2=v[i].v2;
+		v1p=get_parent(v_1);
+		v2p=get_parent(v_2);
+		if(v1p!=v2p){
+			
+			parentunion(v1p,v2p);
+			sum=sum+v[i].g;
+		}
+	}
+	return sum;
+}
+
+int main(void)
+{
+	cin>>numofver>>numofedge;
+	int i,a,b,c;
+	for(i=0; i<numofedge; ++i){
+		cin>>a>>b>>c;
+		if(a==b) continue;
+		v.push_back({a,b,c});
+	}
+	
+	sort(v.begin(),v.end(), compare);
+	/*
+	for(i=0; i<numofedge; ++i){
+		cout<<v[i].g<<endl;
+	}
+	*/
+	cout<<kruscal();
+}
