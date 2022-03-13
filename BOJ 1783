@@ -1,0 +1,47 @@
+#include<iostream>
+
+using namespace std;
+
+int sero, garo;
+
+void smallcalcul(){
+	if(sero==1||garo==1){	//둘다 작을떄  
+		cout<<1;
+		return;
+	}
+	if(sero==2){	//가로는큰데 세로가 너무작을떄  
+		int getsu = (garo+1)/2;
+		if(getsu>=5){
+			getsu = 4;
+		}
+		cout<<getsu;
+		return;
+	}
+	if(sero>=3){	//세로는 큰데 가로가 7이하일떄  
+		int getsu = garo;
+		if(getsu>=5){
+			getsu = 4;
+		}
+		cout<<getsu;
+		return; 
+	}
+}
+
+void bigcalcul(){
+	cout<<garo-2;
+}
+
+void calcul(){
+	if(sero<3||garo<7){
+		smallcalcul();
+	}
+	else{
+		bigcalcul();
+	}
+}
+
+int main(void)
+{
+	cin>>sero>>garo;
+	calcul();	
+}
