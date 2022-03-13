@@ -1,0 +1,63 @@
+#include<iostream>
+#include<string>
+#include<stack>
+using namespace std;
+
+string soosik;
+int numofbyeon;
+
+long long daeyeep[26];
+
+double calcul(){
+	stack<double> s;
+	double temp,last,next,dap;
+	int i;
+	long long num,intdap;
+	char c;
+	for(i=0; i<soosik.length();++i){
+		c=soosik[i];
+		if(c>='A'&&c<='Z'){
+			num=daeyeep[c-'A'];
+			//cout<<num<<" ";
+			s.push((double)(num));
+		}
+		else{
+			last=s.top();
+			s.pop();
+			next=s.top();
+			s.pop();
+			if(c=='+'){
+				temp=next+last;
+			}
+			else if(c=='-'){
+				temp=next-last;
+			}
+			else if(c=='*'){
+				temp=next*last;
+			}
+			else{
+				temp=next/last;
+			}
+			s.push(temp);
+		}
+	}
+	
+	dap=s.top();
+	dap=dap*100;
+	intdap=(long long)(dap);
+	dap=(double)(intdap)/100;
+	return dap;
+}
+
+int main(void)
+{
+	cin>>numofbyeon;
+	cin>>soosik;
+	int i;
+	for(i=0; i<numofbyeon;++i){
+		cin>>daeyeep[i];
+	}
+	cout<<fixed;
+	cout.precision(2);
+	cout<<calcul();
+}
