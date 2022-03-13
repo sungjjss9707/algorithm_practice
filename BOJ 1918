@@ -1,0 +1,86 @@
+#include<iostream>
+#include<string>
+#include<stack>
+using namespace std;
+
+string soosik;
+
+string joongtohoo(){
+	stack<char> s;
+	int i,k;
+	string str="";
+	char c,temp;
+	/*
+	string a="pppp=";
+	a=a+'q';
+	cout<<a<<endl;
+	*/
+	for(i=0; i<soosik.length();++i){
+		c=soosik[i];
+		//cout<<c<<" ";
+		if(c=='('){
+			s.push(c);
+		}
+		else if(c==')'){
+			while(1){
+				temp=s.top();
+				s.pop();
+				if(temp=='(') break;
+				str=str+temp;
+			}
+		}
+		else if(c=='*'||c=='/'){
+			if(s.empty()){
+				s.push(c);
+				continue;
+			} 
+			while(1){
+				if(s.empty()) break;
+				temp=s.top();			
+				if(temp=='*'||temp=='/'){
+					str=str+temp;
+					s.pop();
+				}
+				else{
+					break;
+				}			
+			}
+			s.push(c);
+		}
+		else if(c=='+'||c=='-'){
+			if(s.empty()){
+				s.push(c);
+				continue;
+			} 
+			while(1){
+				if(s.empty()) break;
+				temp=s.top();
+				//s.pop();
+				
+				if(temp=='*'||temp=='/'||temp=='+'||temp=='-'){
+					str=str+temp;
+					s.pop();
+				}
+				else{
+					break;
+				}	
+			}
+			s.push(c);
+		}
+		else{
+			str=str+c;
+		}
+	}
+	while(!s.empty()){
+		temp=s.top();
+		str=str+temp;
+		s.pop();
+	}
+	return str;
+}
+
+int main(void)
+{
+	cin>>soosik;
+	cout<<joongtohoo();
+}
