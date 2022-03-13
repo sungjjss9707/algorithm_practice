@@ -1,0 +1,61 @@
+#include<iostream>
+using namespace std;
+long long arr[100001];
+long long hap[100001];
+long long num;
+
+void calcul(){
+	long long i;
+	long long sum=0, biggest=-1001;
+	for(i=1; i<=num; ++i){
+		
+		if(arr[i]<0){
+			sum=0;
+			hap[i] = arr[i];
+		}
+		else{
+			hap[i] = arr[i]+sum;
+			sum=hap[i];	
+		}
+		if(hap[i]>biggest) biggest = hap[i];
+		cout<<hap[i]<<" ";
+			
+	}
+	cout<<endl;
+	cout<<biggest;
+}
+
+void calcul2(){
+	long long i;
+	long long sum=0;
+	long long biggest;
+	if(num==1){
+		cout<<arr[1];
+		return;
+	}
+	hap[1] = arr[1];
+	biggest = hap[1];
+	for(i=2; i<=num; ++i){
+		if(arr[i]+hap[i-1]>=0){
+			hap[i] = arr[i]+hap[i-1]>arr[i] ? arr[i]+hap[i-1]:arr[i];
+		}
+		else{
+			hap[i] = arr[i];
+		}
+		
+		//cout<<hap[i]<<" ";
+		if(biggest<hap[i]) biggest = hap[i];
+	}
+	//cout<<endl;
+	cout<<biggest;
+}
+
+int main(void)
+{
+	cin>>num;
+	long long i;
+	for(i=1; i<=num; ++i){
+		cin>>arr[i];
+	}
+	calcul2();
+}
