@@ -1,0 +1,70 @@
+#include<iostream>
+
+using namespace std;
+
+int map[101][101];
+long long check[101][101];
+int side;
+
+long long getnumofcase(int starty, int startx){
+	//cout<<starty<<" "<<startx<<"\n";
+	long long ret = check[starty][startx];
+	if(ret!=-1){
+		return ret;
+	}
+	if(starty==side&&startx==side){
+		return 1;
+	}
+	int rightx=startx+map[starty][startx];
+	int downy = starty+map[starty][startx];
+	long long rightcasenum=0, downcasenum=0; 
+	int i, flag;
+	flag=0;
+	if(rightx<=side){	//오른쪽으로 
+		for(i=startx; i<=rightx; ++i){
+			if(map[starty][i]==0){
+				flag=1;
+				break;
+			}
+		}
+		if(flag==0) rightcasenum = getnumofcase(starty, rightx);
+	}
+	flag=0;
+	if(downy<=side){	//왼쪽으로  
+		for(i=starty; i<=downy; ++i){
+			if(map[i][startx]==0){
+				flag=1;
+				break;
+			}
+		}
+		if(flag==0) downcasenum = getnumofcase(downy, startx);
+		
+	}
+	ret = rightcasenum+downcasenum;
+	check[starty][startx] = ret;
+	return ret;
+}
+
+int main(void)
+{
+	cin>>side;
+	int i,k;
+	for(i=1; i<=side; ++i){
+		for(k=1; k<=side; ++k){
+			cin>>map[i][k];
+			check[i][k]=-1;
+		}
+	}
+	map[side][side]=-1;
+	long long dap = getnumofcase(1,1);
+	cout<<dap;
+	/*
+	cout<<"\n";
+	for(i=1; i<=side; ++i){
+		for(k=1; k<=side; ++k){
+			cout<<check[i][k]<<" ";
+		}
+		cout<<"\n";
+	}
+*/
+}
