@@ -1,0 +1,143 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#include<queue>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+struct triple{
+	int a,b,w;
+};
+
+int numofver,numofedge;
+int startv,endv;
+
+vector<pair<int,int>> mymap[100001];
+int inf=2000000000;
+/*
+void clear(){
+	int i;
+	for(i=1; i<=numofver;++i){
+		dp[i]=-1;
+	}
+}
+*/
+/*
+int get_biggest_weight(int vertex){
+	if(vertex==startv){
+		return inf;
+	}
+	
+	int i, yeejeonv, weight, temp;
+	for(i=0; i<mymap[vertex].size();++i){
+		yeejeonv=mymap[vertex][i].first;
+		weight=mymap[vertex][i].second;
+		temp=min(weight,get_biggest_weight(yeejeonv));
+		
+	}
+}
+
+bool isthisbiggest(int start, int end, int gajoong){
+	if(mymap[start].empty()){
+		return true;
+	}
+	
+}
+*/
+
+int dijkstra(){
+	
+	priority_queue<pair<int,int>> pq;
+	int nowv, noww, nextv,nextw,i;
+	int dist[10001];
+	int visit[10001];
+	for(i=1; i<=numofver;++i){
+		dist[i]=0;
+		visit[i]=0;
+	}
+	dist[startv]=inf;
+	pq.push({inf, startv});
+	while(!pq.empty()){
+		nowv=pq.top().second;
+		noww=pq.top().first;
+		pq.pop();
+		if(noww<dist[nowv]) continue;
+		//if(visit[nowv]==1) continue;
+		//visit[nowv]=1;
+		for(i=0; i<mymap[nowv].size();++i){
+			nextv=mymap[nowv][i].first;
+			nextw=min(mymap[nowv][i].second,noww);
+			if(nextw>dist[nextv]){
+				dist[nextv]=nextw;
+				pq.push({nextw,nextv});
+			}
+		}
+	}/*
+	for(i=1; i<=numofver;++i){
+		cout<<dist[i]<<" ";
+	}
+	cout<<endl;
+	*/
+	return dist[endv];
+}
+
+bool compare(triple t1, triple t2){
+	if(t1.a==t2.a){
+		if(t1.b==t2.b){
+			return t1.w>t2.w;
+		}
+		return t1.b<t2.b;
+	}
+	return t1.a<t2.a;
+}
+
+int main(void)
+{
+	fastio;
+	cin>>numofver>>numofedge;
+	
+	int i,v1,v2,gajoong;
+	//clear();
+	vector<triple> v;
+	for(i=0; i<numofedge;++i){
+		cin>>v1>>v2>>gajoong;
+		v.push_back({v1,v2,gajoong});
+		/*
+		if(isthisbiggest(v1,v2,gajoong)){
+			mymap[v1].push_back({v2,gajoong});
+			mymap[v2].push_back({v1,gajoong});
+		}	
+		*/
+	}
+	sort(v.begin(),v.end(), compare);
+	/*
+	for(i=0; i<numofedge;++i){
+		cout<<v[i].a<<" "<<v[i].b<<" "<<v[i].w<<endl;
+	}
+	*/
+	int yeejeon_a=0,yeejeon_b=0,now_a,now_b;
+	for(i=0; i<numofedge;++i){
+		now_a=v[i].a;
+		now_b=v[i].b;
+		if(now_a==yeejeon_a&&now_b==yeejeon_b){
+			continue;
+		}
+		mymap[now_a].push_back({now_b,v[i].w});
+		mymap[now_b].push_back({now_a,v[i].w});
+		yeejeon_a=now_a;
+		yeejeon_b=now_b;
+	}
+	cin>>startv>>endv;
+	/*
+	int k;
+	for(i=1; i<=numofver;++i){
+		cout<<i<<" : ";
+		for(k=0; k<mymap[i].size();++k){
+			cout<<mymap[i][k].first<<"("<<mymap[i][k].second<<") , ";
+		}
+		cout<<endl;
+	}
+	*/
+	//cout<<get_biggest_weight(endv);
+	cout<<dijkstra();
+}
