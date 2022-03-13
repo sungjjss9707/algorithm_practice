@@ -1,0 +1,56 @@
+#include<iostream>
+
+using namespace std;
+
+int numofbox;
+int box[1001];
+int dap[1001];
+
+int getnumofbox(int end){
+	int ret = dap[end];
+	if(ret!=-1){
+		return ret;
+	}
+	if(end==1){
+		dap[end]=1;
+		return 1;
+	}
+	int i, bestyeejeon=-1;
+	for(i=1; i<end; ++i){
+		if(box[i]<box[end]){
+			bestyeejeon = max(bestyeejeon, getnumofbox(i));
+		}
+	}
+	if(bestyeejeon==-1){
+		ret=1;
+	}
+	else{
+		ret = bestyeejeon+1;
+	}
+	dap[end] = ret;
+	return ret;
+	
+}
+
+int main(void)
+{
+	cin>>numofbox;
+	int i, getsu, biggest=-1;
+	for(i=1; i<=numofbox; ++i){
+		cin>>box[i];
+	}
+	for(i=1; i<=numofbox; ++i){
+		dap[i]=-1;
+	}
+	
+	//getsu = getnumofbox(numofbox);
+	//cout<<getsu;
+	//if(getsu==1) cout<<0;
+	//else cout<<getsu;
+	
+	
+	for(i=1; i<=numofbox; ++i){
+		biggest = max(biggest, getnumofbox(i));
+	}
+	cout<<biggest;
+}
