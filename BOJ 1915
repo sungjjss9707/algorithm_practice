@@ -1,0 +1,111 @@
+#include<iostream>
+#include<math.h>
+
+using namespace std;
+
+int sero,garo;
+int map[1001][1001];
+int check[1001][1001];
+
+void printmap(){
+	int i,k;
+	for(i=1; i<=sero; ++i){
+		for(k=1; k<=garo; ++k){
+			cout<<map[i][k]<<" ";
+		}
+		cout<<"\n";
+	}
+}
+void printcheck(){
+	int i,k;
+	for(i=1; i<=sero; ++i){
+		for(k=1; k<=garo; ++k){
+			cout<<check[i][k]<<" ";
+		}
+		cout<<"\n";
+	}
+}
+
+int square(int nowy, int nowx){	//map[nowy][nowx] 에서 시작하는 최대 사각형 넓이반환  
+	
+	int ret = check[nowy][nowx];
+	if(ret!=-1) return ret;
+	
+	
+	if(nowy==sero||nowx==garo){
+		check[nowy][nowx]=1;
+		return 1;
+	} 
+	
+	int belowsquare = square(nowy+1, nowx+1);
+	if(belowsquare==0){
+		ret=1;
+	}
+	else{
+		int side = (int)(sqrt(belowsquare));
+		int garolen=-1, serolen=-1, smallest;
+		int i;
+		for(i=nowy+1; i<=nowy+side; ++i){
+			if(map[i][nowx]!=1){
+				serolen = i-nowy-1;
+				break;
+			}	
+		}
+		if(serolen==-1) serolen=side;
+		for(i=nowx+1; i<=nowx+side; ++i){
+			if(map[nowy][i]!=1){
+				garolen = i-nowx-1;
+				break;
+			}
+		}
+		if(garolen==-1) garolen=side;
+		smallest = min(garolen, serolen);
+		side = min(smallest, side);
+		/*
+		for(i=nowy+1; i<=nowy+side; ++i){
+			if(map[i][nowx]!=1){
+				check[nowy][nowx]=1;
+				return 1;
+			}	
+		}
+		for(i=nowx+1; i<=nowx+side; ++i){
+			if(map[nowy][i]!=1){
+				check[nowy][nowx]=1;
+				return 1;
+			}
+		}
+		*/
+		ret = (side+1)*(side+1);	
+	}
+	
+	check[nowy][nowx]=ret;
+	return ret;
+	
+}
+
+int main(void)
+{
+	cin>>sero>>garo;
+	int i,k;
+	char alpha;
+	for(i=1; i<=sero; ++i){
+		for(k=1; k<=garo; ++k){
+			cin>>alpha;
+			map[i][k] = alpha-'0';
+			check[i][k] = map[i][k]==0 ? 0:-1;
+		}
+	}
+	//printcheck();
+	int biggest=0;
+	for(i=sero; i>=1; --i){
+		for(k=garo; k>=1; --k){
+			if(map[i][k]!=0){
+				biggest = max(biggest, square(i,k));	
+			}
+		}
+	}
+	//printcheck();
+	cout<<biggest;
+	
+	
+}
