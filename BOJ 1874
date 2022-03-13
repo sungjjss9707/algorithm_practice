@@ -1,0 +1,137 @@
+#include<iostream>
+
+using namespace std;
+
+class stack{	//스택은 선입후출
+	int arr[100001];
+	int endindex;
+public:
+	stack(){
+		endindex=0;
+	}
+	void push(int a){
+		arr[endindex]=a;
+		//cout<<"+\n";
+		endindex++;
+	}
+	int pop(){
+		int temp = arr[endindex-1];
+		arr[endindex-1]=0;
+		endindex--;
+		//cout<<"-\n";
+		return temp;
+	}
+	int size(){
+		return endindex;
+	}
+	
+	int empty(){
+		if(endindex==0) return 1;
+		return 0;
+	}
+	
+	int top(){
+		if(endindex==0) return -1;
+		return arr[endindex-1];
+	}
+	
+	void pop1(){
+		arr[endindex-1]=0;
+		endindex--;
+	}
+	
+	void printstack(){
+		int i;
+		for(i=0; i<endindex; ++i){
+			cout<<arr[i]<<" ";
+		}
+		cout<<endl;
+	}
+	
+	void printhap(){
+		int i;
+		long long sum=0;
+		for(i=0; i<endindex; ++i){
+			sum=sum+arr[i];
+		}
+		cout<<sum;
+	}
+};
+
+
+
+int main(void)
+{
+	int numofnum,i, nownum,k,j,pop, yeejeon, temp, imsi;
+	string dap = "";
+	cin>>numofnum;
+	int* suncha = (int*)malloc(sizeof(int)*(numofnum+1));
+	int* goal = (int*)malloc(sizeof(int)*(numofnum+1));
+	for(i=1; i<=numofnum; ++i){
+		suncha[i]=i;
+	}
+	stack s = stack();
+	for(i=1; i<=numofnum; ++i){
+		cin>>goal[i];
+	}
+	k=1;
+	i=1;
+	yeejeon = 0;
+	while(k<=numofnum){
+		nownum = goal[k];
+		//cout<<"--------------------------수가"<<nownum<<" 일떄 --------------\n";
+		if(nownum==suncha[i]){
+			s.push(suncha[i]);
+			yeejeon = s.pop();
+			dap.append("+");
+			dap.append("-");
+			i++;
+			k++;
+		}
+		else{
+			if(yeejeon>nownum){
+				temp = s.pop();
+				dap.append("-");
+				if(temp == goal[k]){
+					yeejeon = temp;
+				}
+				else{
+					cout<<"NO";
+					return 0;
+				}
+				k++;	
+			}
+			else{
+				while(suncha[i]<=nownum){
+					temp = suncha[i];
+					//cout<<temp<<"푸시 ";
+					dap.append("+");
+					s.push(temp);
+					if(temp==nownum) break;
+					i++;	
+				}
+				//cout<<endl;
+				if(temp==nownum){
+					imsi = s.pop();
+					dap.append("-");
+					//cout<<imsi<<"를 다시 뺌\n";
+					yeejeon=imsi;
+					i++;
+					k++;
+				}
+			}
+			
+		}
+		if(k==numofnum+1) break;
+	}
+	for(i=0; i<dap.length(); ++i){
+		cout<<dap[i]<<"\n";
+	}
+	//char* daparr=(char*)malloc(sizeof());
+	/*
+	for(i=1; i<=numofoper; ++i){
+		cout<<goal[i]<<" ";
+	}
+	*/
+	
+}
