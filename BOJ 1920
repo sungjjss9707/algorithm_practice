@@ -1,0 +1,86 @@
+#include<iostream>
+using namespace std;
+
+int arr[100001];
+int temparr[100001];
+int goal[100001];
+int num;
+int numofgoal;
+
+void merge(int startindex, int endindex, int mid){
+	int i=startindex,j=mid+1,k=startindex,l;
+	while(i<=mid&&j<=endindex){
+		if(arr[i]<arr[j]){
+			temparr[k++] = arr[i++]; 	
+		}
+		else{
+			temparr[k++] = arr[j++];
+		}
+	}
+	if(i>mid){
+		for(l=j; l<=endindex; ++l){
+			temparr[k++] = arr[l];
+		}
+	}
+	else{
+		for(l=i; l<=mid; ++l){
+			temparr[k++] = arr[l];
+		}
+	}
+	for(l=startindex; l<=endindex; ++l){
+		arr[l] = temparr[l];
+	}
+}
+
+void merge_sort(int left, int right){
+	if(left<right){
+		int mid = (left+right)/2;
+		merge_sort(left, mid);
+		merge_sort(mid+1, right);
+		merge(left, right, mid);
+	}
+}
+
+int findnum(int left, int right, int thisgoal){
+	if(left==right){
+		if(arr[left]==thisgoal) return 1;
+		else return 0;
+	}
+	else if(right-left==1){
+		if(arr[left]==thisgoal||arr[right]==thisgoal) return 1;
+		else return 0;
+	}
+	int mid, find;
+	mid = (left+right)/2;
+	int midvalue = arr[mid];
+	if(thisgoal>midvalue){
+		find = findnum(mid+1,right, thisgoal);	
+	}
+	else{
+		find = findnum(left, mid, thisgoal);	
+	}
+
+	return find;
+}
+
+int main(void)
+{
+	cin>>num;
+	int i;
+	for(i=1; i<=num; ++i){
+		cin>>arr[i];
+	}
+	cin>>numofgoal;
+	for(i=1; i<=numofgoal; ++i){
+		cin>>goal[i];
+	}
+	merge_sort(1,num);
+	for(i=1; i<=numofgoal; ++i){
+		cout<<findnum(1, num, goal[i])<<"\n";
+	}
+	/*
+	for(i=1; i<=num; ++i){
+		cout<<arr[i]<<" ";
+	}
+	*/	
+}
