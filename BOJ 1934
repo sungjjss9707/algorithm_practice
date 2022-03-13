@@ -1,0 +1,35 @@
+#include<iostream>
+
+using namespace std;
+
+int gcd(int a, int b){
+	int big = a>b?a:b;
+	int small = a+b-big;
+	int temp;
+	while(1){
+		temp = big%small;
+		if(temp==0) return small;
+		big = small;
+		small = temp;
+	}
+}
+
+int choisogong(int a, int b){
+	int choide = gcd(a,b);
+	return a*(b/choide);
+}
+
+int main(void)
+{
+	int testcase,i, temp1, temp2;
+	//cin>>temp1>>temp2;
+	//cout<<gcd(temp1, temp2);
+	
+	cin>>testcase;
+	for(i=0; i<testcase; ++i){
+		cin>>temp1>>temp2;
+		cout<<choisogong(temp1, temp2)<<"\n";
+	}
+	
+		
+}
