@@ -1,0 +1,41 @@
+#include<iostream>
+
+using namespace std;
+
+
+/*
+long long gcd(long long a, long long b){
+	long long big = a>b?a:b;
+	long long small = a+b-big;
+	long long temp;
+	while(1){
+		temp = big%small;
+		if(temp==0) return small;
+		big = small;
+		small = temp;
+	}
+}
+*/
+
+long long onegcd(long long a, long long b){
+	long long big = a>b?a:b;
+	long long small = a+b-big;
+	long long temp;
+	while(1){
+		temp = big%small;
+		if(temp==0) return small;
+		big = small;
+		small = temp;
+	}
+}
+
+int main(void)
+{
+	long long i,a,b;
+	cin>>a>>b;
+	long long hwetsu = onegcd(a,b);
+	for(i=0; i<hwetsu; ++i){
+		cout<<1;
+	}
+		
+}
