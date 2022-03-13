@@ -1,0 +1,59 @@
+#include<iostream>
+#include<stdlib.h>
+#include<string.h>
+
+using namespace std;
+char** arr;
+int hanbyeon;
+string calcul(int lenofside, int m, int n){
+	if(lenofside==1){
+		if(arr[m][n]=='1') return "1";
+		else return "0";
+		//return ;	////////////////////////////////////
+	}
+	int i,k, flag = 1;
+	char num = arr[m][n];
+	for(i=m; i<lenofside+m; ++i){
+		for(k=n; k<lenofside+n; ++k){
+			if(num!=arr[i][k]){
+				flag=0;
+				break; 
+			}
+			num = arr[i][k];
+		}
+		if(flag==0) break;
+	}
+	string one, two, three, four; 
+	int nextlen = lenofside/2;
+	
+	if(flag==0){	//하나라도 다른게 있으면
+	
+		one = calcul(nextlen, m,n);
+		two = calcul(nextlen, m,n+nextlen);
+		three = calcul(nextlen, m+nextlen,n);
+		four = calcul(nextlen, m+nextlen,n+nextlen);
+		return "("+one+two+three+four+")";	
+	}
+	else{	//다똑같으면 
+		if(arr[m][n]=='1') return "1";
+		else return "0";
+	}
+}
+
+int main(void)
+{
+	cin>>hanbyeon;
+	arr = (char**)malloc(sizeof(char*)*(hanbyeon+1));
+	int i,k;
+	for(i=1; i<=hanbyeon; ++i){
+		arr[i] = (char*)malloc(sizeof(char)*(hanbyeon+1));
+	}
+	for(i=1; i<=hanbyeon; ++i){
+		for(k=1; k<=hanbyeon; ++k){
+			cin>>arr[i][k];
+		}
+	}
+	//calcul(hanbyeon, 1,1);
+	cout<<calcul(hanbyeon, 1,1);;
+
+}
