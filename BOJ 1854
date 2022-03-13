@@ -1,0 +1,64 @@
+#include<iostream>
+#include<vector>
+#include<queue>
+using namespace std;
+
+int numofver, numofedge, ranking;
+priority_queue<int> dist[1001];
+vector<pair<int,int>> v[1001];
+
+void dijkstra(){
+	priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
+	//for(i=1; i<=numofver; ++i){
+	//	dist[i].push_back(inf);
+	//}
+	int i,nowd, nowv, nextd, nextv,index;
+	pq.push({0,1});
+	dist[1].push(0);
+	while(!pq.empty()){
+		nowd = pq.top().first;
+		nowv = pq.top().second;
+		pq.pop();
+		for(i=0; i<v[nowv].size(); ++i){
+			nextd= nowd+v[nowv][i].second;
+			nextv = v[nowv][i].first;
+			if(dist[nextv].size()<ranking){
+				dist[nextv].push(nextd);
+				pq.push({nextd, nextv});
+			}
+			else{
+				if(dist[nextv].top()>nextd){
+					dist[nextv].pop();
+					dist[nextv].push(nextd);
+					pq.push({nextd, nextv});	
+				}
+			}
+			
+		}
+	}
+}
+
+void findranking(){
+	dijkstra();
+	int i;
+	for(i=1; i<=numofver; ++i){
+		//cout<<dist[i].size()<<"  ";
+		if(dist[i].size()!=ranking){
+			cout<<-1;
+		}
+		else{
+			cout<<dist[i].top();	
+		}
+		cout<<"\n";
+	}
+}
+int main(void)
+{
+	cin>>numofver>>numofedge>>ranking;
+	int i, start, end, gajoong;
+	for(i=0; i<numofedge; ++i){
+		cin>>start>>end>>gajoong;
+		v[start].push_back({end, gajoong});
+	}
+	findranking();
+}
