@@ -1,0 +1,23 @@
+#include<iostream>
+
+using namespace std;
+
+int arr[13] = {0,31,28,31,30,31,30,31,31,30,31,30,31};
+
+int main(void)
+{
+	int m, d;
+	cin>>m>>d;
+	int i, dayhap=0;
+	for(i=0; i<m; ++i){
+		dayhap = dayhap+arr[i];
+	}
+	dayhap=dayhap+d;
+	if(dayhap%7==1) cout<<"MON";
+	else if(dayhap%7==2) cout<<"TUE";
+	else if(dayhap%7==3) cout<<"WED";
+	else if(dayhap%7==4) cout<<"THU";
+	else if(dayhap%7==5) cout<<"FRI";
+	else if(dayhap%7==6) cout<<"SAT";
+	else if(dayhap%7==0) cout<<"SUN";
+}
