@@ -1,0 +1,101 @@
+#include<iostream>
+#include<queue>
+#define fastio ios::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
+using namespace std;
+
+int sosu[10000];
+int visit[10000];
+
+bool isthisprime(int num){
+	int i;
+	for(i=2; i<=(num/3)+5; ++i){
+		if(num/2==0) return false;
+	}
+	return true;
+}
+
+void sosuinit(){		//소수인덱스는 0 임  
+	int i,j, num;
+	for(i=2; i<=9999; ++i){
+		if(sosu[i]==0){
+			num=i;
+			for(j=1; num<=9999; j++){
+				sosu[num]=1;
+				num=j*i;
+			}
+			sosu[i]=0;	
+		}
+		
+	}
+}
+
+void bfs(int start, int end){
+	queue<pair<int,int>> q;
+	int namojee, testnum,i,nownum, nowhwetsu;
+	q.push({start, 0});
+	while(!q.empty()){
+		nownum = q.front().first;
+		nowhwetsu = q.front().second;
+		q.pop();
+		//cout<<nownum<<" "<<nowhwetsu<<"\n";
+		if(nownum==end){
+			cout<<nowhwetsu<<"\n";
+			return;
+		}
+		namojee = nownum%1000;
+		for(i=1; i<=9; ++i){
+			testnum = i*1000+namojee;
+			if(testnum!=nownum&&sosu[testnum]==0&&visit[testnum]==0){
+				q.push({testnum, nowhwetsu+1});
+				visit[testnum]=1;
+			}	
+		}
+		namojee = (nownum/1000)*1000+(nownum%100);
+		for(i=0; i<=9; ++i){
+			testnum = i*100+namojee;
+			if(testnum!=nownum&&sosu[testnum]==0&&visit[testnum]==0){
+				q.push({testnum, nowhwetsu+1});
+				visit[testnum]=1;
+			}
+		}
+		namojee = (nownum/100)*100+(nownum%10);
+		for(i=0; i<=9; ++i){
+			testnum = i*10+namojee;
+			if(testnum!=nownum&&sosu[testnum]==0&&visit[testnum]==0){
+				q.push({testnum, nowhwetsu+1});
+				visit[testnum]=1;
+			}
+		}
+		namojee = (nownum/10)*10;
+		for(i=0; i<=9; ++i){
+			testnum = i+namojee;
+			if(testnum!=nownum&&sosu[testnum]==0&&visit[testnum]==0){
+				q.push({testnum, nowhwetsu+1});
+				visit[testnum]=1;
+			}
+		}
+	}
+	cout<<"Impossible\n"; 
+}
+
+void clear(){
+	for(int i=1000; i<=9999; ++i){
+		visit[i]=0;
+	}
+}
+
+int main(void)
+{
+	fastio;
+	int testcase,t,start, end,i;
+	cin>>testcase;
+	sosuinit();
+	for(t=0; t<testcase; ++t){
+		cin>>start>>end;
+		clear();
+		bfs(start, end);
+		
+		//v.push_back({start, end});
+	}
+	
+}
