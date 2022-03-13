@@ -1,0 +1,143 @@
+#include<iostream>
+#include<string.h>
+
+using namespace std;
+int numofcase, goalindex, numofarr;
+
+
+class queue{	//큐는 선입선출  
+	int arr[50000];
+	int startindex;
+	int endindex;
+public:
+	queue(){
+		startindex=0;
+		endindex=0;
+	}
+	void push(int a){
+		arr[endindex]=a;
+		endindex++;
+	}
+	int pop(){
+		if(endindex-startindex==0){
+			return -1;
+		}
+		int i;
+		int temp = arr[startindex];
+		startindex++;
+		return temp;
+	}
+	void voidpop(){
+		if(endindex-startindex==0){
+			cout<<-1<<"\n";
+			return ;
+		}
+		int i;
+		int temp = arr[startindex];
+		startindex++;
+		//cout<<temp<<"\n";
+	}
+	void pop1(){
+		if(endindex-startindex==0){
+			cout<<-1<<"\n";
+			return ;
+		}
+		int i;
+		int temp = arr[startindex];
+		startindex++;
+		cout<<temp<<"\n";
+	}
+	int size(){
+		return endindex-startindex;
+	}
+	int empty(){
+		if(endindex-startindex==0){
+			return 1;
+		} 
+		return 0;
+	}
+	int front(){
+		if(endindex-startindex==0){
+			return -1;
+		}
+		return arr[startindex];
+	}
+	int back(){
+		if(endindex-startindex==0){
+			return -1;
+		}
+		return arr[endindex-1];
+	}
+	void printqueue(){
+		int i;
+		for(i=startindex; i<endindex; ++i){
+			cout<<arr[i]<<" ";
+		}
+		cout<<endl;
+	}
+	void clearqueue(){
+		startindex=0;
+		endindex=0;
+	}
+	int isthisbiggest(){
+		if(endindex-startindex==1) return 1;
+		int i;
+		for(i=startindex+1; i<endindex; ++i){
+			if(arr[i]>arr[startindex]) return 0;
+		}
+		return 1;
+	}
+};
+//numofcase, goalindex, numofarr
+int main(void)
+{
+	ios::sync_with_stdio(false);
+	cin.tie(NULL);
+	cout.tie(NULL);
+	int i, j,k, num, index, tempname;
+	cin>>numofcase;
+	queue wooseon = queue();
+	queue name = queue();
+	for(i=0; i<numofcase; ++i){
+		cin>>numofarr>>goalindex;
+		index=1;
+		for(j=0; j<numofarr; ++j){
+			cin>>num;
+			wooseon.push(num);
+			name.push(j);
+		}
+		
+		while(1){
+			//wooseon.printqueue();
+			//name.printqueue();
+			if(wooseon.isthisbiggest()){
+				wooseon.voidpop();
+				tempname = name.pop();
+				if(tempname==goalindex){
+					cout<<index<<"\n";
+					break;		
+				}
+				else{
+					index++;
+				}
+			}
+			else{
+				wooseon.push(wooseon.pop());
+				name.push(name.pop());
+			}	
+		}
+		
+		wooseon.clearqueue();
+		name.clearqueue();		
+	}
+
+
+	
+}
+/*
+1
+6 0
+1 1 9 1 1 1
+*/
+
+
