@@ -1,0 +1,27 @@
+#include<iostream>
+#include<math.h>
+using namespace std;
+int startnum,endnum;
+
+void findsmallestandhap(){
+	int jegop,sum=0,smallest;
+	for(int i=100; i>=1; --i){
+		jegop=i*i;
+		if(jegop>=startnum&&jegop<=endnum){
+			sum=sum+jegop;
+			smallest=jegop;
+		}
+	}
+	if(sum==0){
+		cout<<-1;
+		exit(0);
+	}
+	cout<<sum<<"\n"<<smallest;
+}
+
+int main(void)
+{
+	cin>>startnum>>endnum;
+	findsmallestandhap();
+	return 0;
+}
