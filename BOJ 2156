@@ -1,0 +1,56 @@
+#include<iostream>
+using namespace std;
+int n;
+int arr[10001];
+int sum[10001];
+
+int max(int a, int b){
+	return a>=b ? a:b;
+}
+int maxamong3(int a, int b, int c){
+	int temp = a>=b ? a:b;
+	return temp>=c ? temp:c;
+}
+
+void calcul(){
+	if(n==1){
+		cout<<arr[1];
+		return ;
+	}
+	else if(n==2){
+		cout<<arr[1]+arr[2];
+		return ;
+	}
+	else if(n==3){
+		cout<<maxamong3(arr[1]+arr[3], arr[2]+arr[3], arr[1]+arr[2]);
+		return ;
+	}
+	int i;
+	sum[1] = arr[1];
+	sum[2] = arr[1]+arr[2];
+	sum[3] = maxamong3(arr[1]+arr[3], arr[2]+arr[3], arr[1]+arr[2]); 
+	for(i=4; i<=n; ++i){
+		sum[i] = maxamong3(sum[i-2]+arr[i], sum[i-3]+arr[i-1]+arr[i], sum[i-1]);
+	}
+	/*
+	for(i=1; i<=n; ++i){
+		cout<<sum[i]<<" ";
+	}
+	*/
+	cout<<sum[n];
+	
+}
+
+int main(void)
+{
+	cin>>n;
+	int i;
+	for(i=1; i<=n; ++i){
+		cin>>arr[i];
+	}
+	for(i=1; i<=n; ++i){
+		sum[i]=0;
+	}
+	calcul();
+	//cout
+}
