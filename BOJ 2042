@@ -1,0 +1,99 @@
+#include<iostream>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+long long seg_tree[4000010];
+long long arr[1000001];
+int numofnum;
+
+long long seg_init(int index, int start, int end){
+	if(start==end){
+		seg_tree[index]=arr[start];
+		return arr[start];
+	}
+	int mid=(start+end)/2;
+	long long ret=seg_init(2*index,start,mid)+seg_init(2*index+1,mid+1,end);
+	seg_tree[index]=ret;
+	return ret;
+}
+
+long long seg_hap(int index,int start,int end,int left,int right){
+	
+	if(end<left||start>right) return 0;
+	else if(left<=start&&right>=end){
+		return seg_tree[index];
+	}
+	else{
+		int mid=(start+end)/2;
+		long long ret1=seg_hap(2*index,start,mid,left,right);
+		long long ret2=seg_hap(2*index+1,mid+1,end,left,right);
+		return ret1+ret2;
+	}
+}
+
+void seg_modify(int index,int start,int end,int modifyindex, int cha){
+	if(modifyindex<start||modifyindex>end) return;
+	seg_tree[index]=seg_tree[index]+cha;
+	int mid=(start+end)/2;
+	if(start!=end){
+		seg_modify(2*index,start,mid,modifyindex,cha);
+		seg_modify(2*index+1,mid+1,end,modifyindex,cha);
+	}
+	
+}
+int get_seg_index(int index,int start,int end,int arrindex){
+	if(start==end&&start==arrindex) return index;
+	//if(start>arrindex||end<arrindex) return -1;
+	int mid=(start+end)/2;
+	int dap;
+	if(arrindex<=mid){
+		dap=get_seg_index(2*index,start,mid,arrindex);
+	}
+	else{
+		dap=get_seg_index(2*index+1,mid+1,end,arrindex);
+	}
+	return dap;
+}
+
+void seg_modify2(int segindex, long long goal){
+	if(segindex==1){
+		seg_tree[segindex]=goal;
+		return;
+	}
+	seg_tree[segindex]=goal;
+	int t=segindex/2;
+	while(1){
+		seg_tree[t]=seg_tree[2*t]+seg_tree[2*t+1];
+		if(t==1) break;
+		t=t/2;
+	}
+	
+}
+
+int main(void)
+{
+	fastio;
+	int numofmodify,numofhap;
+	cin>>numofnum>>numofmodify>>numofhap;
+	int i;
+	long long a,b,c,cha;
+	for(i=1;i<=numofnum;++i){
+		cin>>arr[i];
+	}
+	seg_init(1,1,numofnum);
+	for(i=0; i<numofhap+numofmodify;++i){
+		cin>>a>>b>>c;
+		if(a==1){
+			/*
+			cha=c-arr[b];
+			arr[b]=c;
+			seg_modify(1,1,numofnum,b,cha);
+			*/
+			int segindex=get_seg_index(1,1,numofnum,b);
+			seg_modify2(segindex,c);
+		}
+		else{
+			cout<<seg_hap(1,1,numofnum,b,c)<<"\n";
+		}	
+	}
+}
