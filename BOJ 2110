@@ -1,0 +1,93 @@
+#include<iostream>
+
+using namespace std;
+
+int numofhouse, numofshare;
+long long arr[200001];
+long long temparr[200001];
+int longest=0;
+
+int panstar(int interval){
+	int i, house=1;
+	int yeejeon = arr[1];
+	for(i=2; i<=numofhouse; ++i){
+		if(arr[i]-yeejeon>=interval){
+			house++;
+			yeejeon = arr[i];
+		}
+	}
+	if(house>=numofshare) return 1;
+	return 0;
+}
+
+
+void calcul(int start, int end){
+	
+	if(start==end){
+		if(start>longest) longest=start;
+		return ;
+	}
+	else if(start==end-1){
+		if(panstar(end)){
+			if(end>longest) longest=end;
+		}
+		else{
+			if(start>longest) longest=start;
+		}
+		return ;
+	}
+	
+	int mid = (start+end)/2;
+	if(panstar(mid)){
+		calcul(mid, end);
+	}
+	else{
+		calcul(start, mid-1);
+	}
+}
+
+void merge(int startindex, int endindex, int mid){
+	int i=startindex,j=mid+1,k=startindex,l;
+	while(i<=mid&&j<=endindex){
+		if(arr[i]<arr[j]){
+			temparr[k++] = arr[i++]; 	
+		}
+		else{
+			temparr[k++] = arr[j++];
+		}
+	}
+	if(i>mid){
+		for(l=j; l<=endindex; ++l){
+			temparr[k++] = arr[l];
+		}
+	}
+	else{
+		for(l=i; l<=mid; ++l){
+			temparr[k++] = arr[l];
+		}
+	}
+	for(l=startindex; l<=endindex; ++l){
+		arr[l] = temparr[l];
+	}
+}
+
+void merge_sort(int left, int right){
+	if(left<right){
+		int mid = (left+right)/2;
+		merge_sort(left, mid);
+		merge_sort(mid+1, right);
+		merge(left, right, mid);
+	}
+}
+
+int main(void)
+{
+	int i;
+	cin>>numofhouse>>numofshare;
+	for(i=1; i<=numofhouse; ++i){
+		cin>>arr[i];
+	}
+	merge_sort(1, numofhouse);
+	calcul(1, arr[numofhouse]-arr[1]);
+	cout<<longest;
+}
