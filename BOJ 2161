@@ -1,0 +1,28 @@
+#include<iostream>
+#include<deque>
+using namespace std;
+
+deque<int> dq;
+int numofnum; 
+
+void print_garbage(){
+	int top;
+	while(!dq.empty()){
+		cout<<dq.front()<<" ";
+		dq.pop_front();
+		if(dq.empty()) break;
+		top = dq.front();
+		dq.pop_front();
+		dq.push_back(top);
+	}
+}
+
+int main(void)
+{
+	cin>>numofnum;
+	int i;
+	for(i=1; i<=numofnum; ++i){
+		dq.push_back(i);
+	}
+	print_garbage();	
+}
