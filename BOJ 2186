@@ -1,0 +1,197 @@
+#include<iostream>
+#include<string>
+#include<queue>
+using namespace std;
+
+char map[101][101];
+
+int dp[81][101][101];
+
+int sero, garo, jump;
+int count=0;
+string word;
+
+struct tripple{
+	int y,x,index;
+};
+
+void dfs(int nowy, int nowx, int nowindex){
+	if(nowindex==word.length()){
+		count++;
+		return;
+	}
+	int firsty, lasty, firstx, lastx,i;
+	char nextalpha = word[nowindex];
+	firsty = (nowy-jump)>1? (nowy-jump):1;
+	lasty = (nowy+jump)<sero? (nowy+jump):sero;
+	firstx = (nowx-jump)>1? (nowx-jump):1;
+	lastx = (nowx+jump)<garo? (nowx+jump):garo;
+	for(i=firsty; i<=lasty; ++i){
+		if(i!=nowy){
+			if(map[i][nowx]==nextalpha){
+				dfs(i,nowx, nowindex+1);
+			}
+		}
+	}
+	for(i=firstx; i<=lastx; ++i){
+		if(i!=nowx){
+			if(map[nowy][i]==nextalpha){
+				dfs(nowy,i, nowindex+1);
+			}
+		}
+	}
+}
+
+void bfs(int starty, int startx){
+	queue<tripple> q;
+	q.push({starty, startx, 1});
+	int nowy, nowx, firsty, firstx, lasty, lastx,i, nowindex;
+	char nextalpha;
+	while(!q.empty()){
+		nowy = (q.front()).y;
+		nowx = (q.front()).x;
+		//cout<<map[nowy][nowx]<<"\n";
+		nowindex = (q.front()).index;
+		q.pop();
+		if(nowindex==word.length()){
+			count++;
+			continue;
+		}
+		nextalpha = word[nowindex]; 
+		firsty = (nowy-jump)>1? (nowy-jump):1;
+		lasty = (nowy+jump)<sero? (nowy+jump):sero;
+		firstx = (nowx-jump)>1? (nowx-jump):1;
+		lastx = (nowx+jump)<garo? (nowx+jump):garo;
+		for(i=firsty; i<=lasty; ++i){
+			if(i!=nowy){
+				if(map[i][nowx]==nextalpha){
+					q.push({i,nowx, nowindex+1});
+				}
+			}
+		}
+		for(i=firstx; i<=lastx; ++i){
+			if(i!=nowx){
+				if(map[nowy][i]==nextalpha){
+					q.push({nowy,i, nowindex+1});
+				}
+			}
+		}
+	}	
+}
+
+void recursive(){
+	int i,j,k,l ,count=0;
+	int firsty, lasty, firstx, lastx;
+	char nowalphabet;
+	for(i=0; i<word.length(); ++i){
+		nowalphabet = word[i];
+		for(j=1; j<=sero; ++j){
+			for(k=1; k<=garo; ++k){
+				if(map[j][k]==nowalphabet){
+					count++;
+					dp[i][j][k] = 1;
+				}
+			}
+		}
+	}
+	/*
+	for(k=1; k<=sero; ++k){
+		for(j=1; j<=garo; ++j){
+			cout<<dp[0][k][j]<<" ";
+		}
+		cout<<"\n";
+	}
+	cout<<"\n";
+	*/
+	if(word.length()==1){
+		cout<<count;
+		return;
+	}
+	for(i=1; i<word.length(); ++i){
+		nowalphabet = word[i];
+		//cout<<nowalphabet<<"일때 : \n";
+		for(j=1; j<=sero; ++j){
+			for(k=1; k<=garo; ++k){
+				dp[i][j][k]=0;
+				if(map[j][k]==nowalphabet){
+					firsty = (j-jump)>1? (j-jump):1;
+					lasty = (j+jump)<sero? (j+jump):sero;
+					firstx = (k-jump)>1? (k-jump):1;
+					lastx = (k+jump)<garo? (k+jump):garo;
+					for(l=firsty; l<=lasty; ++l){
+						if(l!=j){
+							if(map[l][k]==word[i-1]){
+								//cout<<i-1<<" "<<l<<" "<<k<<" 더함\n";
+								//cout<<dp[i][j][k]<<" "<<dp[i-1][l][k]<<"\n";
+								dp[i][j][k] = dp[i][j][k] + dp[i-1][l][k];
+								
+								//cout<<i-1<<" "<<l<<" "<<k<<" 더함\n";
+							}
+						}
+					}
+					for(l=firstx; l<=lastx; ++l){
+						if(l!=k){
+							if(map[j][l]==word[i-1]){
+								//cout<<i-1<<" "<<j<<" "<<l<<" 더함\n";
+								//cout<<dp[i][j][k]<<" "<<dp[i-1][j][l]<<"\n";
+								dp[i][j][k] = dp[i][j][k] + dp[i-1][j][l];
+								//cout<<i-1<<" "<<j<<" "<<l<<" 더함\n";
+								//q.push({nowy,l, nowindex+1});
+							}
+						}
+					}
+					
+				}
+			}
+		}
+		/*
+		for(k=1; k<=sero; ++k){
+			for(j=1; j<=garo; ++j){
+				cout<<dp[i][k][j]<<" ";
+			}
+			cout<<"\n";
+		}
+		cout<<"\n";
+		*/
+	}
+	count = 0;
+	/*
+	for(i=1; i<=sero; ++i){
+		for(j=1; j<=garo; ++j){
+			cout<<dp[word.length()-1][i][j]<<" ";
+		}
+		cout<<"\n";
+	}
+	*/
+	for(i=1; i<=sero; ++i){
+		for(j=1; j<=garo; ++j){
+			count = count+dp[word.length()-1][i][j];
+		}
+	}
+	cout<<count;
+}
+
+
+int main(void){
+	cin>>sero>>garo>>jump;
+	int i,j,k;
+	for(i=1; i<=sero; ++i){
+		for(j=1; j<=garo; ++j){
+			cin>>map[i][j];
+		}
+	}
+	cin>>word;
+	/*
+	for(i=1; i<=sero; ++i){
+		for(j=1; j<=garo; ++j){
+			if(map[i][j]==word[0]){
+				//bfs(i,j);
+				dfs(i,j,1);	
+			}
+		}
+	}
+	cout<<count;
+	*/
+	recursive();
+
+}
