@@ -1,0 +1,32 @@
+#include<iostream>
+#include<algorithm>
+using namespace std;
+
+int arr[100001];
+int numofrope;
+
+bool compare(int i, int j){
+	return j<i;
+}
+
+int getbiggest(){
+	int i, len, choidaemoogae, hap, biggest=0;
+	for(i=0; i<numofrope; ++i){
+		len=i+1;
+		choidaemoogae = arr[i];
+		hap = len*choidaemoogae;
+		biggest = max(biggest, hap);
+	}
+	return biggest;
+}
+
+int main(void)
+{
+	cin>>numofrope;
+	int i;
+	for(i=0; i<numofrope; ++i){
+		cin>>arr[i];
+	}
+	sort(arr, arr+numofrope, compare);
+	cout<<getbiggest();
+}
