@@ -1,0 +1,54 @@
+#include<iostream>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+int inorder[100001];
+int postorder[100001];
+int pos[100001];
+int numofnum;
+
+void myfunction(int istart, int iend, int pstart, int pend){
+	if(pstart==pend){
+		cout<<postorder[pstart]<<" ";
+		return;
+	}
+	if(pend==pstart+1){
+		cout<<postorder[pend]<<" "<<postorder[pstart]<<" ";
+		return;
+	}
+	int root=postorder[pend];
+	int postrootindex=pend;
+	int i,inrootindex;
+	cout<<root<<" ";
+	/*
+	for(i=istart; i<=iend; ++i){
+		if(inorder[i]==root){
+			inrootindex=i;
+			break;
+		}
+	}
+	*/
+	inrootindex=pos[root];
+	int left=inrootindex-istart;
+	int right=iend-inrootindex;
+	if(left!=0)
+		myfunction(istart, inrootindex-1, pstart,pstart+left-1);
+	if(right!=0)	myfunction(inrootindex+1,iend, pstart+left, pend-1);
+}
+
+int main(void)
+{
+	fastio;
+	cin>>numofnum;
+	int i;
+	for(i=1; i<=numofnum;++i){
+		cin>>inorder[i];
+	}
+	for(i=1; i<=numofnum;++i){
+		cin>>postorder[i];
+	}
+	for(i=1; i<=numofnum;++i){
+		pos[inorder[i]]=i;
+	}
+	myfunction(1,numofnum,1,numofnum);
+}
