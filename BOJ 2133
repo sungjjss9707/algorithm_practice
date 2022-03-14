@@ -1,0 +1,47 @@
+#include<iostream>
+using namespace std;
+
+int num;
+int arr[31];
+void calcul(){
+	if(num%2==1){
+		cout<<0;
+		return;
+	}
+	else if(num==2){
+		cout<<3;
+		return;
+	}
+	arr[0]=1;
+	arr[2] = 3;
+	int temp,k,i;
+	for(i=4; i<=num; ++i){
+		if(i%2==1) continue;
+		k=i-2;
+		temp=arr[k]*3;
+		while(1){
+			k=k-2;
+			if(k==0){
+				temp=temp+2;
+				break;	
+			} 
+			temp = temp+arr[k]*2;		
+		}
+		arr[i] = temp;
+		//arr[i] = arr[i-2]*3+arr[i-4]*2;
+	}
+	/*
+	for(i=1; i<=num; ++i){
+		cout<<arr[i]<<" ";
+	}
+	*/
+	cout<<arr[num];
+	
+	
+}
+
+int main(void)
+{
+	cin>>num;
+	calcul();
+}
