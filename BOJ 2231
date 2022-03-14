@@ -1,0 +1,62 @@
+import java.util.*;
+
+class MakeSengsong{
+	int number;
+	
+	MakeSengsong(int newnum){
+		number = newnum;
+	}
+	
+	int calcul(int num) {
+		int sum=num, namojee=0;
+		while(true) {
+			namojee = num%10;
+			num = num/10;
+			sum = sum+namojee;
+			if(num==0) {
+				break;
+			}
+		}
+		
+		return sum;
+	}
+	
+	void findsmallest() {
+		int i=0;
+		for(i=1; i<=number; ++i) {
+			if(calcul(i)==number) {
+				System.out.println(i);
+				return;
+			}
+		}
+		System.out.println(0);
+		
+	}
+}
+
+public class Main {
+	static int calcul(int num) {
+		int sum=num, namojee=0;
+		while(true) {
+			namojee = num%10;
+			num = num/10;
+			sum = sum+namojee;
+			if(num==0) {
+				break;
+			}
+		}
+		
+		return sum;
+	}
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		int num;
+		Scanner sc = new Scanner(System.in);
+		num = sc.nextInt();
+		//System.out.println(calcul(num));
+		
+		MakeSengsong ms = new MakeSengsong(num);
+		ms.findsmallest();
+	}
+
+}
