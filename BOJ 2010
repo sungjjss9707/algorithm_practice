@@ -1,0 +1,16 @@
+#include<iostream>
+
+using namespace std;
+
+int getsu;
+
+int main(void)
+{
+	int i, sum=0, num;
+	cin>>getsu;
+	for(i=1; i<=getsu; ++i){
+		cin>>num;
+		sum+=num;
+	}
+	cout<<sum-getsu+1;
+}
