@@ -1,0 +1,196 @@
+#include<iostream>
+#include<queue>
+#include<map>
+#include<vector>
+using namespace std;
+
+
+int arr[103][103];
+int side;
+int dx[4] = {1,0,-1,0};
+int dy[4] = {0,1,0,-1};
+pair<int, int> wow[103][103];	//처음껀 대륙번호, 두번째건 다리만드는 비용  
+
+queue<pair<int,pair<int,int>>> q;
+
+
+void printarr(){
+	int i,k;
+	for(i=1; i<=side; ++i){
+		for(k=1; k<=side; ++k){
+			cout<<arr[i][k]<<" ";
+		}
+		cout<<"\n";
+	}
+}
+
+void printarr2(){
+	int i,k;
+	for(i=1; i<=side; ++i){
+		for(k=1; k<=side; ++k){
+			cout<<wow[i][k].second<<" ";
+		}
+		cout<<"\n";
+	}
+}
+
+int isthisbeach(int myy, int myx){
+	if(arr[myy][myx]!=0){
+		int i, nexty, nextx;
+		for(i=0; i<4; ++i){
+			nexty = myy+dy[i];
+			nextx = myx+dx[i];
+			if(arr[nexty][nextx]==0) return 1;
+		}
+	}
+	return 0;
+}
+
+int isitinmap(int myy, int myx){
+	if(myy<=side&&myy>=1&&myx>=1&&myx<=side) return 1;
+	return 0;
+}
+
+void bfs(){
+	int nowx, nowy, islandnumber,nextx, nexty,i;
+	int smallest = 200, bridge;
+	
+	while(!q.empty()){
+		islandnumber = (q.front()).first;
+		nowy = (q.front()).second.first;
+		nowx = (q.front()).second.second;
+		//cout<<nowy<<" "<<nowx<<"일떄\n";
+		q.pop();
+		for(i=0; i<4; ++i){
+			nexty = nowy+dy[i];
+			nextx = nowx+dx[i];
+			//cout<<nexty<<" "<<nextx<<" "<<isitinmap(nexty, nextx)<<" "<<(wow[nexty][nextx]).first<<"\n";
+			if(isitinmap(nexty, nextx)){
+				if(wow[nexty][nextx].first==0){
+					
+					//arr[nexty][nextx] = arr[nowy][nowx] +1;
+					
+					wow[nexty][nextx].first = islandnumber;
+					wow[nexty][nextx].second = wow[nowy][nowx].second+1;
+					//cout<<nexty<<" "<<nextx<<"를 "<<wow[nexty][nextx].second<<"로 채움\n";
+					
+					q.push({islandnumber,{nexty, nextx}}); 
+				}
+				else if(wow[nexty][nextx].first!=0){
+					if(wow[nexty][nextx].first!=wow[nowy][nowx].first){
+						//cout<<nexty<<" "<<nextx<<"일때 브리찌를 갱신함\n";
+						bridge = (wow[nowy][nowx].second)+(wow[nexty][nextx].second)-2;
+						//cout<<bridge<<"\n";
+						if(smallest>bridge) smallest = bridge;
+					}
+					
+					/*
+					cout<<nowy<<","<<nowx<<"랑"<<nexty<<","<<nextx<<"랑 만남"; 
+					bridge = arr[nowy][nowx]+arr[nexty][nextx]-1;
+					cout<<" 길이는 "<<bridge<<"\n";
+					*/
+					
+				}	
+			}
+		}
+		
+		//printarr2();
+		//cout<<"\n";
+		
+	}
+	cout<<smallest<<"\n";
+}
+
+
+void dfs(int myy, int myx, int islandindex){
+	arr[myy][myx] = islandindex;
+	int nexty, nextx,i;
+	for(i=0; i<4; ++i){
+		nexty = myy+dy[i];
+		nextx = myx+dx[i];
+		if(isitinmap(nexty, nextx)&&arr[nexty][nextx]==-1){
+			dfs(nexty, nextx, islandindex);	
+		}	
+	}
+	
+}
+int main(void)
+{
+	cin>>side;
+	int i,k, islandindex=1;
+	for(i=0; i<103; ++i){
+		for(k=0; k<103; ++k){
+			arr[i][k]=-2;
+		}
+	}
+	for(i=1; i<=side; ++i){
+		for(k=1; k<=side; ++k){
+			cin>>arr[i][k];
+		}
+	}
+	for(i=1; i<=side; ++i){
+		for(k=1; k<=side; ++k){
+			if(arr[i][k]==1) arr[i][k] = -1;
+			else arr[i][k]=0;
+		}
+	}
+	//printarr();
+	for(i=1; i<=side; ++i){
+		for(k=1; k<=side; ++k){
+			if(arr[i][k]==-1){
+				dfs(i,k, islandindex++);
+			}
+		}
+	}
+	//printarr();
+	for(i=1; i<=side; ++i){
+		for(k=1; k<=side; ++k){
+			wow[i][k].first = arr[i][k];
+			if(arr[i][k]!=0) wow[i][k].second = 1;
+			if(isthisbeach(i,k)){
+				//cout<<arr[i][k]<<" "<<i<<" "<<k<<"\n";
+				q.push({arr[i][k],{i, k}});	
+			} 
+		}
+	}
+	//cout<<"\n";
+	/*
+	for(i=1; i<=side; ++i){
+		for(k=1; k<=side; ++k){
+			cout<<wow[i][k].first<<" ";
+		}
+		cout<<endl;
+	}
+	*/
+	/*
+	cout<<"\n";
+	printarr();
+	cout<<"\n";
+	int nowx, nowy, number;
+	
+	while(!q.empty()){
+		number = (q.front()).first;
+		nowx = (q.front()).second.first;
+		nowy = (q.front()).second.second;
+		q.pop();
+		cout<<number<<" "<<nowx<<" "<<nowy<<"\n";
+	}
+	*/
+	//printarr();
+	//cout<<"\n";
+	/*
+	for(i=1; i<=side; ++i){
+		for(k=1; k<=side; ++k){
+			if(isthisbeach(i,k)){
+				//cout<<i<<" "<<k<<"\n";
+				q.push({i,k});
+			}
+		}
+		//cout<<"\n";
+	}
+	*/
+//	cout<<"+++++++++\n";
+	bfs();
+	//cout<<"\n";
+	//printarr();
+}
