@@ -1,0 +1,68 @@
+import sys
+
+numofnum = int(sys.stdin.readline());
+arr = [0 for i in range(8001)]
+sum=0;
+joongan = int(numofnum/2)+1;
+#print(joongan);
+for i in range(0, numofnum):
+    a= int(sys.stdin.readline())
+    b=4000+a;
+    sum=sum+a;
+    arr[b] = arr[b]+1;
+
+sansul = round(sum/numofnum); #반올림하기
+#print("산술평균 : ", end = "");
+print(sansul);
+indexsum=0;
+
+for i in range(0, 8001):
+    if(arr[i]!=0):
+        for k in range(0, arr[i]):
+            indexsum=indexsum+1;
+            if(indexsum==joongan):
+                joongangap = i;
+                break;
+            #print(i, end="\n");
+#print("중간값 : ", end = "");
+print(joongangap-4000);
+biggest = 0;
+biggestindex = 0;
+joongbok=0;
+for i in range(0, 8001):
+    if(arr[i]!=0):
+        if(arr[i]>biggest):
+            biggest = arr[i];
+            #biggestindex = i;
+for i in range(0, 8001):
+    if(arr[i]!=0):
+        if(arr[i]==biggest):
+            biggestindex = i;
+            joongbok=joongbok+1;
+            if(joongbok==2):
+                break;
+            #biggestindex = i;
+#print("최빈값 : ", end = "");
+print(biggestindex-4000);
+
+smallest = 0;
+biggest = 0;
+for i in range(0, 8001):
+    if(arr[i]!=0):
+        smallest = i;
+        break;
+for i in range(8000, -1, -1):
+    if(arr[i]!=0):
+        biggest = i;
+        break;
+
+#print("범위 : ", end = "");
+print(biggest-smallest);
+#for i in range(1, 10001):
+#    if(arr[i]!=0):
+#        for k in range(0, arr[i]):
+#            print(i, end="\n");
+
+
+
+
