@@ -1,0 +1,107 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+
+vector<long long> a;
+vector<long long> b;
+vector<long long> hap_a;
+vector<long long> hap_b;
+vector<long long> all_a;
+vector<long long> all_b;
+vector<pair<long long, long long>> dist_a;
+long long goal;
+long long numofa, numofb;
+
+long long yeeboon(long long start, long long end, long long find){
+	if(start==end){
+		if(dist_a[start].first==find){
+			return dist_a[start].second;
+		}
+		else{
+			return 0;
+		}	
+	}
+	long long mid = (start+end)/2;
+	if(dist_a[mid].first>=find){
+		return yeeboon(0,mid ,find);
+	}
+	else{
+		return yeeboon(mid+1, end, find);
+	}
+	
+}
+
+long long finddap(){
+	long long i,num,size = dist_a.size(), find, dap=0;
+	for(i=0; i<all_b.size(); ++i){
+		num = all_b[i];
+		find = goal-num;
+		dap+=yeeboon(0, size-1, find);
+		//cout<<dist_a[i].first<<" "<<dist_a[i].second<<endl;
+	}
+	return dap;
+}
+
+void makeallvec(){
+	long long i,k, hap;
+	for(i=0; i<numofa; ++i){
+		for(k=i; k<numofa; ++k){
+			hap = hap_a[k]-hap_a[i]+a[i];
+			all_a.push_back(hap);
+		}
+	}
+	for(i=0; i<numofb; ++i){
+		for(k=i; k<numofb; ++k){
+			hap = hap_b[k]-hap_b[i]+b[i];
+			all_b.push_back(hap);
+		}
+	}
+	sort(all_a.begin(), all_a.end());
+	sort(all_b.begin(), all_b.end());
+	
+	long long count=1;
+	for(i=0; i<all_a.size()-1; ++i){
+		if(all_a[i]==all_a[i+1]){
+			count++;
+		}
+		else{
+			dist_a.push_back({all_a[i], count});
+			count=1;
+		}
+	}
+	if(all_a[all_a.size()-1]==all_a[all_a.size()-2]){
+		dist_a.push_back({all_a[all_a.size()-1], count});
+	}
+	else{
+		dist_a.push_back({all_a[all_a.size()-1], 1});
+	}
+	
+}
+
+int main(void)
+{
+	fastio;
+	cin>>goal;
+	cin>>numofa;
+	long long i, num, hap=0;
+	for(i=0; i<numofa; ++i){
+		cin>>num;
+		hap+=num;
+		a.push_back(num);
+		hap_a.push_back(hap);
+	}
+	cin>>numofb;
+	hap=0;
+	for(i=0; i<numofb; ++i){
+		cin>>num;
+		hap+=num;
+		b.push_back(num);
+		hap_b.push_back(hap);
+	}		
+	makeallvec();
+	cout<<finddap();
+	return 0;
+}
