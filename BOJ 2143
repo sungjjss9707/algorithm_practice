@@ -1,0 +1,169 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+int goal;
+int a[1001], b[1001];
+int suma[1001], sumb[1001];
+int numofa, numofb;
+vector<int> allcase_a;
+vector<int> allcase_b;
+vector<pair<int, int>> allcase_distinct_a;
+vector<pair<int, int>> allcase_distinct_b;
+
+void getsumofab(){
+	int i, k, sum=0;
+	for(i=1; i<=numofa; ++i){
+		sum=sum+a[i];
+		suma[i] = sum;
+	}
+	sum=0;
+	for(i=1; i<=numofb; ++i){
+		sum=sum+b[i];
+		sumb[i] = sum;
+	}
+	/*
+	for(i=1; i<=numofa; ++i){
+		cout<<suma[i]<<" ";
+	}
+	cout<<endl;
+	for(i=1; i<=numofb; ++i){
+		cout<<sumb[i]<<" ";
+	}
+	*/
+	for(i=1; i<=numofa; ++i){
+		for(k=1; k<=numofa; ++k){
+			if(i>k) continue;
+			sum=suma[k]-suma[i]+a[i];
+			allcase_a.push_back(sum);
+			//cout<<i<<"~"<<k<<" = "<<sum<<endl;
+		}
+	}
+	//cout<<endl;
+	for(i=1; i<=numofb; ++i){
+		for(k=1; k<=numofb; ++k){
+			if(i>k) continue;
+			sum=sumb[k]-sumb[i]+b[i];
+			allcase_b.push_back(sum);
+			//cout<<i<<"~"<<k<<" = "<<sum<<endl;
+		}
+	}
+	sort(allcase_a.begin(), allcase_a.end());
+	sort(allcase_b.begin(), allcase_b.end());
+	int temp, num;
+	for(i=0; i<allcase_a.size(); ++i){
+		if(i==0){
+			num=1;
+			temp=allcase_a[i];
+			continue;
+		}
+		if(temp==allcase_a[i]){
+			num++;
+		}
+		else{
+			allcase_distinct_a.push_back({temp,num});
+			num=1;
+			temp=allcase_a[i];
+		}
+	}
+	if(allcase_a.size()==1){
+		allcase_distinct_a.push_back({allcase_a[0],1});
+	}
+	else{
+		if(allcase_a[allcase_a.size()-1]==allcase_a[allcase_a.size()-2]){
+			allcase_distinct_a.push_back({temp,num});
+		}
+		else{
+			allcase_distinct_a.push_back({allcase_a[allcase_a.size()-1],1});
+		}
+	}
+	
+	for(i=0; i<allcase_b.size(); ++i){
+		if(i==0){
+			num=1;
+			temp=allcase_b[i];
+			continue;
+		}
+		if(temp==allcase_b[i]){
+			num++;
+		}
+		else{
+			allcase_distinct_b.push_back({temp,num});
+			num=1;
+			temp=allcase_b[i];
+		}
+	}
+	/*
+	cout<<"a size : "<<allcase_a.size()<<endl;
+	cout<<"b size : "<<allcase_b.size()<<endl;
+	*/
+	if(allcase_b.size()==1){
+		allcase_distinct_b.push_back({allcase_b[0],1});
+	}
+	else{
+		if(allcase_b[allcase_b.size()-1]==allcase_b[allcase_b.size()-2]){
+			allcase_distinct_b.push_back({temp,num});
+		}
+		else{
+			allcase_distinct_b.push_back({allcase_b[allcase_b.size()-1],1});
+		}
+	}
+	/*
+	cout<<endl;
+	for(i=0; i<allcase_distinct_a.size(); ++i){
+		cout<<allcase_distinct_a[i].first<<" "<<allcase_distinct_a[i].second<<endl;
+	}
+	cout<<endl<<endl;
+	for(i=0; i<allcase_distinct_b.size(); ++i){
+		cout<<allcase_distinct_b[i].first<<" "<<allcase_distinct_b[i].second<<endl;
+	}
+	cout<<endl;
+	*/
+}
+
+int findinb(int start, int end, int num){
+	if(start==end){
+		if(allcase_distinct_b[start].first==num) return allcase_distinct_b[start].second;
+		return 0;
+	}
+	int mid = (start+end)/2;
+	if(num<=allcase_distinct_b[mid].first){
+		return findinb(start, mid, num);
+	}
+	else{
+		return findinb(mid+1, end, num);
+	}
+}
+
+long long getjjak(){
+	int i, num, size = allcase_distinct_b.size();
+	long long dap=0,getsu;
+	for(i=0; i<allcase_distinct_a.size(); ++i){
+		num = goal-allcase_distinct_a[i].first;
+		//cout<<"찾아야하는 숫자 : "<<num<<endl;
+		getsu = (long long)(findinb(0, size-1, num));
+		dap = dap+(long long)(allcase_distinct_a[i].second)*getsu;
+	}
+	return dap;
+}
+
+int main(void)
+{
+	fastio;
+	int i;
+	cin>>goal;
+	cin>>numofa;
+	for(i=1; i<=numofa; ++i){
+		cin>>a[i];
+	}
+	cin>>numofb;
+	for(i=1; i<=numofb; ++i){
+		cin>>b[i];
+	}
+	getsumofab();
+	//cout<<"\n++++++++++++++++++++\n";
+	cout<<getjjak();
+	return 0;
+}
