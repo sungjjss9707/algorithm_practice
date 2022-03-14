@@ -1,0 +1,49 @@
+#include<iostream>
+#include<string.h>
+using namespace std;
+
+int mymap[16][16];
+int numofcity,goalbit,startv=0,inf=20000000;
+int dp_cost[16][1<<16];
+
+int dfs(int nowv, int nowbit){//현재 정점이 nowv이고 현재상
+							//태가 nowbit일때 최소 외판원순
+							//환cost반환 
+	if(nowbit==goalbit){
+		if(mymap[nowv][startv]==0){
+			return inf;
+		}
+		else{
+			return mymap[nowv][startv];
+		}
+	}
+	int ret=dp_cost[nowv][nowbit];
+	if(ret!=-1){
+		return ret;
+	}
+	ret=inf;
+	int i,nextbit;
+	for(i=0; i<numofcity;++i){
+		if(mymap[nowv][i]==0) continue;//no road
+		nextbit=nowbit|(1<<i);
+		if(nowbit==nextbit) continue;//already visit
+		
+		ret=min(ret,mymap[nowv][i]+dfs(i,nextbit));
+	}
+	dp_cost[nowv][nowbit]=ret;
+	return ret;
+}
+
+int main(void)
+{
+	cin>>numofcity;
+	int i,k;
+	for(i=0; i<numofcity;++i){
+		for(k=0; k<numofcity;++k){
+			cin>>mymap[i][k];
+		}
+	}
+	memset(dp_cost,-1,sizeof(dp_cost));
+	goalbit=(1<<numofcity)-1;
+	cout<<dfs(0,1);
+}
