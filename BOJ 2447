@@ -1,0 +1,41 @@
+#include<iostream>
+#define fastio ios::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
+using namespace std;
+
+int side;
+char arr[2200][2200];
+
+void calcul(int y, int x , int len){
+	if(len==1){
+		arr[y][x]='*';
+		return;
+	}
+	
+	int tripple = len/3;
+	int i,k;
+	for(i=y; i<y+len; i=i+tripple){
+		for(k=x; k<x+len; k=k+tripple){
+			if(i==y+tripple&&k==x+tripple){
+				
+			}
+			else{
+				calcul(i,k,tripple);
+			}
+		}
+	}
+}
+
+int main(void)
+{
+	fastio;
+	cin>>side;
+	calcul(1,1, side);
+	int i,k;
+	for(i=1; i<=side; ++i){
+		for(k=1; k<=side; ++k){
+			if(arr[i][k]=='*') cout<<arr[i][k];
+			else cout<<" ";
+		}
+		cout<<"\n";
+	}	
+}
