@@ -1,0 +1,132 @@
+#include<iostream>
+
+using namespace std;
+
+int side;
+int mymap[21][21];
+
+
+int numofdirt(int sy, int sx, int ey, int ex){
+	int i,k, num=0;
+	for(i=sy; i<=ey;++i){
+		for(k=sx; k<=ex; ++k){
+			if(mymap[i][k]==1) num++;
+			//if(mymap[i][k]==2) numofjam++;
+		}
+	}
+	return num;
+}
+
+int numofjam(int sy, int sx, int ey, int ex){
+	int i,k, num=0;
+	for(i=sy; i<=ey;++i){
+		for(k=sx; k<=ex; ++k){
+			if(mymap[i][k]==2) num++;
+			//if(mymap[i][k]==2) numofjam++;
+		}
+	}
+	return num;
+}
+
+bool dirt_jonjae(int sy, int sx, int ey, int ex){
+	int i,k;
+	for(i=sy; i<=ey;++i){
+		for(k=sx; k<=ex; ++k){
+			if(mymap[i][k]==1) return true;
+			//if(mymap[i][k]==2) numofjam++;
+		}
+	}
+	return false;
+}
+bool jam_jonjae(int sy, int sx, int ey, int ex){
+	int i,k;
+	for(i=sy; i<=ey;++i){
+		for(k=sx; k<=ex; ++k){
+			if(mymap[i][k]==2) return true;
+			//if(mymap[i][k]==2) numofjam++;
+		}
+	}
+	return false;
+}
+int numofsplit(int sy, int sx, int ey, int ex,int yeejeon){
+	//1 sero 2 garo
+	//cout<<sy<<" "<<sx<<" ~ "<<ey<<" "<<ex<<" = "<<endl;
+	int dirt=numofdirt(sy,sx,ey,ex);
+	int jam=numofjam(sy,sx,ey,ex);
+	
+	if(dirt==0&&jam==1){
+		//cout<<sy<<" "<<sx<<" ~ "<<ey<<" "<<ex<<" = "<<jam<<endl;
+		return 1;
+	}
+	if(jam==0) return 0;
+	if(jam==1&&dirt>0) return 0;
+	if(jam>=2&&dirt==0) return 0;
+	int i,j,k,sum=0;
+	if(yeejeon==1&&ey>=sy+2){//now = garo
+		int up,down;
+		for(i=sy+1; i<ey; ++i){
+			if(dirt_jonjae(i,sx,i,ex)&&!jam_jonjae(i,sx,i,ex)){
+				up=numofsplit(sy,sx,i-1,ex,2);
+				down=numofsplit(i+1,sx,ey,ex,2);
+				//cout<<sy<<","<<sx<<"~"<<i-1<<","<<ex<<" = "<<up<<endl;
+				//cout<<i+1<<","<<sx<<"~"<<ey<<","<<ex<<" = "<<down<<endl;
+				 sum=sum+up*down;
+			}	
+		}
+	}
+	else if(yeejeon==2&&ex>=sx+2){//now=sero
+		int left,right;
+		for(i=sx+1; i<ex; ++i){
+			if(dirt_jonjae(sy,i,ey,i)&&!jam_jonjae(sy,i,ey,i)){
+				left=numofsplit(sy,sx,ey,i-1,1);
+				right=numofsplit(sy,i+1,ey,ex,1);
+				 sum=sum+left*right;
+			}	
+		}
+	}
+	else{
+		if(ey>=sy+2){
+			int up,down;
+			for(i=sy+1; i<ey; ++i){
+				if(dirt_jonjae(i,sx,i,ex)&&!jam_jonjae(i,sx,i	,ex)){
+					up=numofsplit(sy,sx,i-1,ex,2);
+					down=numofsplit(i+1,sx,ey,ex,2);
+					 sum=sum+up*down;
+				}	
+			}
+		}
+		if(ex>=sx+2){
+			int left,right;
+			for(i=sx+1; i<ex; ++i){
+				if(dirt_jonjae(sy,i,ey,i)&&!jam_jonjae(sy,i,	ey,i)){
+					left=numofsplit(sy,sx,ey,i-1,1);
+					right=numofsplit(sy,i+1,ey,ex,1);
+					 sum=sum+left*right;
+				}	
+			}
+		}
+	}
+	//cout<<sy<<" "<<sx<<" ~ "<<ey<<" "<<ex<<" = "<<sum<<endl;
+	return sum;
+}
+
+int main(void)
+{
+	cin>>side;
+	int i,k;
+	for(i=1; i<=side;++i){
+		for(k=1; k<=side;++k){
+			cin>>mymap[i][k];
+		}
+	}
+	int dirt=numofdirt(1,1,side,side);
+	int jam=numofjam(1,1,side,side);
+	if(dirt==0&&jam==1){
+		//cout<<sy<<" "<<sx<<" ~ "<<ey<<" "<<ex<<" = "<<jam<<endl;
+		cout<<-1;
+		return 0;
+	}
+	int dap=numofsplit(1,1,side,side,0);
+	if(dap==0) cout<<-1;
+	else cout<<dap;
+}
