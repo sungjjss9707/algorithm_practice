@@ -1,0 +1,75 @@
+#include<iostream>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+int numofnum;
+//int arr[1000001];
+long long seg_tree[4000010];
+
+void seg_init(){
+	int i;
+	for(i=1; i<=numofnum*4; ++i){
+		seg_tree[i]=0;
+	}
+}
+
+long long seg_hap(int index, int start, int end, int left, int right){
+	if(end<left||start>right){
+		return 0;
+	}
+	else if(start>=left&&end<=right){
+		return seg_tree[index];
+	}
+	int mid = (start+end)/2;
+	long long ret1 = seg_hap(2*index, start, mid, left, right);
+	long long ret2 = seg_hap(2*index+1, mid+1, end, left, right);
+	return ret1+ret2;
+}
+
+int find_root(int index, int start, int end, int mod_index){
+	if(start==end){
+		return index;
+	}
+	int mid = (start+end)/2;
+	if(mod_index<=mid){
+		return find_root(2*index, start, mid, mod_index);
+	}
+	else{
+		return find_root(2*index+1, mid+1, end, mod_index);
+	}
+}
+
+void seg_modify(int index, int start, int end, int mod_index, long long mod_num){
+	int root = find_root(index, start, end, mod_index), parent;
+	seg_tree[root] = mod_num;
+	while(1){
+		if(root==1) break;
+		parent = root/2;
+		seg_tree[parent] = seg_tree[parent*2]+seg_tree[parent*2+1];
+		root = parent;
+	}
+}
+
+int main(void)
+{
+	fastio;
+	int numofquest,a,b, temp;
+	long long c;
+	cin>>numofnum>>numofquest;
+	int i;
+	seg_init();
+	for(i=0; i<numofquest; ++i){
+		cin>>a>>b>>c;
+		if(a==0){	//sum
+			if(b>c){
+				temp = b;
+				b = c;
+				c = temp;
+			}
+			cout<<seg_hap(1,1,numofnum, b,c)<<"\n";
+		}
+		else{		//modify
+			seg_modify(1,1,numofnum, b, c);
+		}
+	}
+}
