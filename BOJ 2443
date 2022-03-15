@@ -1,0 +1,19 @@
+#include<iostream>
+
+using namespace std;
+
+int main(void)
+{
+	int num, i,k, temp;
+	cin>>num;
+	for(i=0; i<num; ++i){
+		for(k=0; k<i; ++k){
+			cout<<" ";
+		}
+		temp = -2*i+2*num-1;
+		for(k=1; k<=temp; k++){
+			cout<<"*";
+		}
+		cout<<"\n";
+	}
+}
