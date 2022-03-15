@@ -1,0 +1,69 @@
+#include<iostream>
+#define fastio ios::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
+using namespace std;
+int n;
+char arr[3080][6150];
+
+void calcul2(int topy,int topx, int smalln){
+	if(smalln==3){	//제일 기본 삼각형 
+		arr[topy][topx]='*';
+		arr[topy+2][topx-1] = '*';
+		arr[topy+2][topx+1] = '*';
+		for(int i=topx-2; i<=topx+2; ++i){
+			arr[topy+4][i] = '*';
+		}
+		return;	
+	}
+	
+	int oney, onex, twoy, twox, threey, threex;
+	oney = topy;
+	onex = topx;
+	twoy = topy+smalln;
+	twox = topx-(smalln/2);
+	threey = topy+smalln;
+	threex = topx+(smalln/2);
+	calcul2(oney, onex, smalln/2);
+	calcul2(twoy, twox, smalln/2);
+	calcul2(threey, threex, smalln/2);
+}
+
+void calcul(int topy,int topx, int smalln){
+	if(smalln==3){	//제일 기본 삼각형 
+		arr[topy][topx]='*';
+		arr[topy+1][topx-1] = '*';
+		arr[topy+1][topx+1] = '*';
+		for(int i=topx-2; i<=topx+2; ++i){
+			arr[topy+2][i] = '*';
+		}
+		return;	
+	}
+	int nextn;
+	int oney, onex, twoy, twox, threey, threex;
+	nextn = smalln/2;
+	oney = topy;
+	onex = topx;
+	twoy = topy+nextn;
+	twox = topx-nextn;
+	threey = topy+nextn;
+	threex = topx+nextn;
+	calcul(oney, onex, nextn);
+	calcul(twoy, twox, nextn);
+	calcul(threey, threex, nextn);
+}
+
+int main(void)
+{
+	fastio;
+	cin>>n;
+	calcul(1,n, n);
+	
+	int i,k;
+	for(i=1; i<=n; ++i){
+		for(k=1; k<=2*n-1; ++k){
+			if(arr[i][k]=='*') cout<<'*';
+			else cout<<" ";
+		}
+		cout<<"\n";
+	}
+	
+}
