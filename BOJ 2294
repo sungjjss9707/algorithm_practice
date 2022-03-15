@@ -1,0 +1,92 @@
+#include<iostream>
+#include<algorithm>
+using namespace std;
+
+int numofcoin, goal;
+int coin[101];
+int dap[101][10001];
+
+int calcul(){
+	
+	int i,k, nowcoin, yeejeon;
+	//dap[0]=1;
+	//v[0].first = 1;
+	for(i=0; i<numofcoin; ++i){
+		nowcoin = coin[i];
+		//cout<<nowcoin<<"일때 : ";
+		for(k=1; k<=goal; ++k){
+			if(i==0){
+				if(k%nowcoin==0){
+					dap[i][k] = k/nowcoin;	
+				}
+				else{
+					dap[i][k] = -1;
+				}
+			}
+			else{
+				yeejeon = dap[i-1][k];
+				if(yeejeon==-1){
+					if(k%nowcoin==0){
+						dap[i][k] = k/nowcoin;
+					}
+					else{
+						if(k>=nowcoin){
+							if(dap[i][k-nowcoin]==-1) dap[i][k]=-1;
+							else dap[i][k] = dap[i][k-nowcoin]+1;
+						}
+						else{
+							dap[i][k]=-1;
+						}
+						
+					}
+				}
+				else{
+					if(k%nowcoin==0){
+						dap[i][k] = min(dap[i-1][k], k/nowcoin);
+					}
+					else{
+						if(k>=nowcoin){
+							if(dap[i][k-nowcoin]==-1) dap[i][k]=dap[i-1][k];
+							else dap[i][k] = min(dap[i-1][k], dap[i][k-nowcoin]+1);
+						}
+						else{
+							if(dap[i][k-nowcoin]==-1) dap[i][k]=dap[i-1][k];
+							else dap[i][k] = dap[i-1][k];
+						}
+					}
+				}
+
+			}
+			
+		}
+		/*
+		for(k=1; k<=goal; ++k){
+			cout<<dap[i][k]<<" ";
+		}
+		cout<<"\n";
+	*/
+	}
+	int ans = dap[numofcoin-1][goal];
+	if(ans==0) ans=-1;
+	return ans;
+	
+}
+
+int main(void)
+{
+	cin>>numofcoin>>goal;
+	int i;
+	for(i=0; i<numofcoin; ++i){
+		cin>>coin[i];
+		//dap[i]=0;
+		//v[i].second=0;
+	}
+	sort(coin, coin+numofcoin);
+	//cout<<"df";
+	cout<<calcul();
+	/*
+	for(i=0; i<=goal; ++i){
+		cout<<dap[i]<<" ";
+	}
+	*/
+}
