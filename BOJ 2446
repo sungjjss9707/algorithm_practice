@@ -1,0 +1,41 @@
+#include<stdio.h>
+
+int main(void)
+{
+	int i,k,a;
+	scanf("%d", &a);
+	for(i=0; i<a-1; ++i){
+		for(k=0; k<i; ++k){
+			printf(" ");
+		}
+		for(k=0; k<(2*a)-(2*i+1); ++k){
+			printf("*");
+		}
+		/*
+		for(k=0; k<i; ++k){
+			printf(" ");
+		}
+		*/
+		printf("\n");
+	}
+	/////////////////////////////////
+	for(i=0;i<a-1;++i){
+		printf(" ");
+	}
+	printf("*");
+	////////////////////////////////
+	for(i=2; i<=a; ++i){
+		printf("\n");
+		for(k=0 ; k<a-i; ++k){
+			printf(" ");
+		}
+		for(k=0; k<2*i-1; ++k){
+			printf("*");
+		}
+		
+		
+	}
+	
+	
+		
+}
