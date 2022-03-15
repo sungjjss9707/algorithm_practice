@@ -1,0 +1,102 @@
+#include<iostream>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+int seg_tree[4000101];
+//int maxindex=0;
+
+void seg_init(){
+	for(int i=1; i<=4000100; ++i){
+		seg_tree[i]=0;	
+	}
+}
+
+int seg_findleapnode(int index, int start, int end, int goalindex){
+	if(start==end){
+		return index;	
+	}	
+	int mid = (start+end)/2;
+	if(goalindex<=mid) return seg_findleapnode(2*index, start, mid, goalindex);
+	else return seg_findleapnode(2*index+1, mid+1, end, goalindex);
+}
+
+
+void seg_query(int index, int start, int end, int goalindex, int changenum){
+	int leafnode = seg_findleapnode(1, start, end, goalindex);
+	//cout<<leafnode<<"---\n";
+	if(leafnode==1){
+		seg_tree[1]=seg_tree[1]+changenum;	
+		return;
+	}
+	
+	seg_tree[leafnode]=seg_tree[leafnode]+changenum;
+	//leafnode=(leafnode/2)*2;
+	while(leafnode!=1){
+		leafnode=(leafnode/2)*2;
+		seg_tree[leafnode/2]=seg_tree[leafnode]+seg_tree[leafnode+1];
+		leafnode=leafnode/2;
+	}
+}
+
+int findmat(int index, int start, int end, int lanking){
+	
+	//if(seg_tree[2*index]==0&&seg_tree[2*index+1]==0){
+	if(start==end){
+		//cout<<"ㅣ발"<<start<<endl;
+		seg_tree[index]--;	
+		if(index!=1){
+			int tempindex=index;
+			//seg_tree[tempindex]--;
+			while(tempindex!=1){
+				tempindex=(tempindex/2)*2;
+				seg_tree[tempindex/2]=seg_tree[tempindex]+seg_tree[tempindex+1];
+				tempindex=tempindex/2;
+			}		
+		}
+		//업뎃 
+		
+		return start;	
+	}
+	int mid = (start+end)/2;
+	//cout<<mid<<"ㅋㅋ\n";
+	//cout<<lanking<<" 이랑 "<<seg_tree[2*index]<<"비교  ";
+	if(lanking<=seg_tree[2*index]){
+		//cout<<"left\n";
+		return findmat(2*index, start, mid, lanking);
+	}
+	else{
+		//cout<<"right\n";
+		return findmat(2*index+1, mid+1, end, lanking-seg_tree[2*index]);
+	}	
+}
+
+void printseg_tree(){
+	for(int i=1; i<=7; ++i){
+		cout<<seg_tree[i]<<" ";	
+	}
+	cout<<endl;
+}
+
+int main(void)
+{
+	fastio;
+	int numofquest,i,a,b,c;
+	cin>>numofquest;
+	seg_init();
+	//printseg_tree();
+	for(i=0; i<numofquest; ++i){
+		cin>>a>>b;
+		if(a==1){
+			cout<<findmat(1, 1, 1000000, b)<<"\n";
+			//printseg_tree();
+		}
+		else{
+			cin>>c;
+			//cout<<a<<b<<c<<endl;
+			//maxindex=max(maxindex,b);
+			seg_query(1, 1, 1000000, b, c);
+			//printseg_tree();
+		}
+		//printseg_tree();
+	}
+}
