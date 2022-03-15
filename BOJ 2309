@@ -1,0 +1,43 @@
+#include<iostream>
+#include<algorithm>
+#include<vector>
+using namespace std;
+
+int mini[9];
+int cha;
+vector<int> seven;
+
+void printseven(int index1, int index2){
+	for(int i=0; i<9;++i){
+		if(i==index1||i==index2) continue;
+		seven.push_back(mini[i]);
+	}
+	sort(seven.begin(), seven.end());
+	for(int i=0; i<7;++i){
+		cout<<seven[i]<<"\n";
+	}
+}
+
+void find7mini(){
+	int i,k;
+	for(i=0; i<8; i++){
+		for(k=i+1; k<9; ++k){
+			if(mini[i]+mini[k]==cha){
+				printseven(i,k);
+				exit(0);
+			}
+		}
+	}
+}
+
+int main(void)
+{
+	int sum=0,i;
+	for(i=0;i<9;++i){
+		cin>>mini[i];
+		sum=sum+mini[i];
+	}
+	cha=sum-100;	
+	find7mini();
+	return 0;
+}
