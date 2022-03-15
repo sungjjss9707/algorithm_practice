@@ -1,0 +1,44 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+using namespace std;
+
+int numofport;
+int port[40001];
+
+int lis(){
+	int i, lastindex, insertindex;
+	vector<int> v;
+	for(i=1; i<=numofport; ++i){
+		if(v.empty()){
+			v.push_back(port[i]);
+		}
+		else{
+			lastindex = v.size()-1;
+			if(v[lastindex]<port[i]){
+				v.push_back(port[i]);
+			}
+			else{
+				insertindex = lower_bound(v.begin(), v.end(), port[i])-v.begin();
+				v[insertindex] = port[i];
+			}
+		}
+		/*
+		for(int k=0; k<v.size(); ++k){
+			cout<<v[k]<<" ";
+		}
+		cout<<endl;
+		*/
+	}
+	return v.size();
+}
+
+int main(void)
+{
+	cin>>numofport;
+	int i;
+	for(i=1; i<=numofport; ++i){
+		cin>>port[i];
+	}
+	cout<<lis();
+}
