@@ -1,0 +1,228 @@
+#include<iostream>
+#include<math.h> 
+using namespace std;
+
+int  numofdotwithjoongbok;
+int arr_x[100001];
+int arr_y[100001];
+int temparr_x[100001];
+int temparr_y[100001];
+int temparray_x[100001];
+int temparray_y[100001];
+
+void merge_x(int startindex, int endindex, int mid, int* x, int* y){
+	int i=startindex ,j = startindex,k=mid+1, l;
+	while(j<=mid && k<=endindex){
+		if(x[j]>=x[k]){
+			temparr_x[i] = x[k];
+			temparr_y[i] = y[k];
+			i++;
+			k++;
+		}
+		/*
+		else if(x[j]==x[k]){
+			if(arr_y[j]>=arr_y[k]){
+				temparr_x[i] = x[k];
+				temparr_y[i] = y[k];
+				i++;
+				k++;
+			}
+			else{
+				temparr_x[i] = x[j];
+				temparr_y[i] = y[j];
+				i++;
+				j++;
+			}	
+		}
+		*/
+		else{
+			temparr_x[i] = x[j];
+			temparr_y[i] = y[j];
+			i++;
+			j++;
+		}
+	}
+	if(j>mid){	//왼쪽(j)을 먼저 다 소모함  
+		for(l=k; l<=endindex; ++l){
+			temparr_x[i] = x[l];
+			temparr_y[i] = y[l];
+			i++;
+		}
+	}
+	else{			//오른쪽(k)을 모두 다 소모함  
+		for(l=j; l<=mid; ++l){
+			temparr_x[i] = x[l];
+			temparr_y[i] = y[l];
+			i++;
+		}
+	}
+	for(l=startindex; l<=endindex; ++l){
+		x[l] = temparr_x[l];
+		y[l] = temparr_y[l];
+	}
+}
+
+void merge_sort_x(int startindex, int endindex, int* x, int* y){
+	int mid = (startindex+endindex)/2;
+	if(startindex<endindex){
+		merge_sort_x(startindex, mid, x,y);
+		merge_sort_x(mid+1, endindex, x,y);
+		merge_x(startindex, endindex, mid, x,y);	
+	}	
+}
+
+void merge_y(int startindex, int endindex, int mid, int* x, int*y){
+	int i=startindex ,j = startindex,k=mid+1, l;
+	while(j<=mid && k<=endindex){
+		if(y[j]>y[k]){
+			temparr_x[i] = x[k];
+			temparr_y[i] = y[k];
+			i++;
+			k++;
+		}
+		else if(y[j]==y[k]){
+			if(x[j]>=x[k]){
+				temparr_x[i] = x[k];
+				temparr_y[i] = y[k];
+				i++;
+				k++;
+			}
+			else{
+				temparr_x[i] = x[j];
+				temparr_y[i] = y[j];
+				i++;
+				j++;
+			}	
+		}
+		else{
+			temparr_x[i] = x[j];
+			temparr_y[i] = y[j];
+			i++;
+			j++;
+		}
+	}
+	if(j>mid){	//왼쪽(j)을 먼저 다 소모함  
+		for(l=k; l<=endindex; ++l){
+			temparr_x[i] = x[l];
+			temparr_y[i] = y[l];
+			i++;
+		}
+	}
+	else{			//오른쪽(k)을 모두 다 소모함  
+		for(l=j; l<=mid; ++l){
+			temparr_x[i] = x[l];
+			temparr_y[i] = y[l];
+			i++;
+		}
+	}
+	for(l=startindex; l<=endindex; ++l){
+		x[l] = temparr_x[l];
+		y[l] = temparr_y[l];
+	}
+}
+
+void merge_sort_y(int startindex, int endindex, int* x, int* y){
+	int mid = (startindex+endindex)/2;
+	if(startindex<endindex){
+		merge_sort_y(startindex, mid,x,y);
+		merge_sort_y(mid+1, endindex,x,y);
+		merge_y(startindex, endindex, mid,x,y);	
+	}	
+}
+
+int distancezegop(int i, int k, int* x, int* y){
+	int x1 = x[i];
+	int y1 = y[i];
+	int x2 = x[k];
+	int y2 = y[k];
+	int georee = (x1-x2)*(x1-x2)+(y1-y2)*(y1-y2);
+	return georee;
+}
+
+int choisodistance(int startindex, int endindex){	//startindex와 endindex 사이구간에서
+	if(endindex-startindex==1){												//최소거리의 제곱을 반환 
+		return distancezegop(startindex, endindex, arr_x, arr_y);
+	}
+	else if(endindex-startindex==2){
+		int onetwo, onethree, twothree, temp;
+		onetwo = distancezegop(startindex, startindex+1, arr_x, arr_y);
+		onethree = distancezegop(startindex, endindex, arr_x, arr_y);
+		twothree = distancezegop(startindex+1, endindex, arr_x, arr_y);
+		temp = onetwo<onethree ? onetwo:onethree;
+		return temp<twothree ? temp:twothree;
+	}
+	
+	int mid = (startindex+endindex)/2;
+	int left = choisodistance(startindex, mid);
+	if(left==0) return 0;
+	int right = choisodistance(mid+1, endindex);
+	if(right==0) return 0;
+	int smaller = left<right ? left:right;
+	int rootsmaller = (int)(sqrt(smaller));
+	int start=mid, end=mid, newsmaller;
+	while(1){
+		if((arr_x[mid]-arr_x[start])>rootsmaller||start<startindex){
+			start++;
+			break;
+		}	
+		start--;
+	}
+	
+	while(1){
+		if((arr_x[end]-arr_x[mid])>rootsmaller||end>endindex){
+			end--;
+			break;
+		}	
+		end++;
+	}
+	if(end==start){
+		return smaller;
+	}
+	else if(end-start==1){												//최소거리의 제곱을 반환 
+		newsmaller = distancezegop(start, end, arr_x, arr_y);
+	}
+	else if(end-start==2){
+		int onetwo, onethree, twothree, temp;
+		onetwo = distancezegop(start, start+1, arr_x, arr_y);
+		onethree = distancezegop(start, end, arr_x, arr_y);
+		twothree = distancezegop(start+1, end, arr_x, arr_y);
+		temp = onetwo<onethree ? onetwo:onethree;
+		newsmaller =  temp<twothree ? temp:twothree;
+	}
+	else{
+		int i,k;
+		for(i=start; i<=end; ++i){
+			temparray_x[i] = arr_x[i];
+			temparray_y[i] = arr_y[i];
+		}
+		merge_sort_y(start, end, temparray_x, temparray_y);
+		int tempsmaller=900000000;
+		int dist;
+		for(i=start; i<end; ++i){
+			for(k=i+1; k<=end; ++k){
+				if((temparray_y[k]-temparray_y[i])>rootsmaller) break;
+				dist = distancezegop(i, k, temparray_x, temparray_y);
+				if(dist<tempsmaller){
+					tempsmaller = dist;
+				}
+			}
+		}
+		newsmaller = tempsmaller;
+	}
+	return smaller<newsmaller?smaller:newsmaller;							
+}
+
+
+
+int main(void)
+{
+	cin>>numofdotwithjoongbok;
+	int i, tempx, tempy, j;
+	for(i=1; i<=numofdotwithjoongbok; ++i){
+		cin>>tempx>>tempy;
+		arr_x[i] = tempx;
+		arr_y[i] = tempy;
+	}
+	merge_sort_x(1, numofdotwithjoongbok, arr_x, arr_y);
+	cout<<choisodistance(1,numofdotwithjoongbok);
+}
