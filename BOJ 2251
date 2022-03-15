@@ -1,0 +1,178 @@
+#include<iostream>
+#include<queue>
+#include<vector>
+#include<set>
+using namespace std;
+
+struct tripple{
+	int one, two, three;
+};
+
+//vector<tripple> v; 
+set<int> s;
+int a,b,c;
+int visit[201][201][201];
+/*
+bool check(int tempa, int tempb, int tempc){		//중복된게 있으면 거짓 반환  
+	for(int i=0; i<v.size(); ++i){
+		if(v[i].one==tempa&&v[i].two==tempb&&v[i].three==tempc) return false;
+	}
+	return true;	//중복된거 없으면 참 반환  
+}
+*/
+
+void bfs()
+{
+	//set<tripple> s;
+	queue<tripple> q;
+	q.push({0,0,c});
+	visit[0][0][c]=1;
+	//v.push_back({a,b,c});
+	s.insert(c);
+	int nowa, nowb, nowc, empty;
+	int nexta, nextb, nextc;
+	while(!q.empty()){
+		nowa = (q.front()).one;
+		nowb = (q.front()).two;
+		nowc = (q.front()).three;
+		q.pop();
+		if(nowa!=0){
+			if(nowb!=b){	//a->b로 줌 
+				empty = b-nowb;
+				if(nowa>=empty){
+					nexta = nowa-empty;
+					nextb = b;
+					nextc = nowc;
+				}
+				else{
+					nexta = 0;
+					nextb = nowa+nowb;
+					nextc = nowc;
+				}
+				if(visit[nexta][nextb][nextc]==0){
+					q.push({nexta, nextb, nextc});
+					visit[nexta][nextb][nextc]=1;
+					//v.push_back({nexta, nextb, nextc});
+					if(nexta==0) s.insert(nextc);
+				} 
+			}
+			if(nowc!=c){	//a->c로 줌 
+				empty = c-nowc;
+				if(nowa>=empty){
+					nexta = nowa-empty;
+					nextb = nowb;
+					nextc = c;
+				}
+				else{
+					nexta = 0;
+					nextb = nowb;
+					nextc = nowa+nowc;
+				}
+				if(visit[nexta][nextb][nextc]==0){
+					q.push({nexta, nextb, nextc});
+					visit[nexta][nextb][nextc]=1;
+					//v.push_back({nexta, nextb, nextc});
+					if(nexta==0) s.insert(nextc);
+				} 
+			}
+		}
+		if(nowb!=0){
+			if(nowa!=a){	//b->a로 줌 
+				empty = a-nowa;
+				if(nowb>=empty){
+					nexta = a;
+					nextb = nowb-empty;
+					nextc = nowc;
+				}
+				else{
+					nexta = nowa+nowb;
+					nextb = 0;
+					nextc = nowc;
+				}
+				if(visit[nexta][nextb][nextc]==0){
+					q.push({nexta, nextb, nextc});
+					visit[nexta][nextb][nextc]=1;
+					//v.push_back({nexta, nextb, nextc});
+					if(nexta==0) s.insert(nextc);
+				} 
+			}
+			if(nowc!=c){	//b->c로 줌 
+				empty = c-nowc;
+				if(nowb>=empty){
+					nexta = nowa;
+					nextb = nowb-empty;
+					nextc = c;
+				}
+				else{
+					nexta = nowa;
+					nextb = 0;
+					nextc = nowc+nowb;
+				}
+				if(visit[nexta][nextb][nextc]==0){
+					q.push({nexta, nextb, nextc});
+					visit[nexta][nextb][nextc]=1;
+					//v.push_back({nexta, nextb, nextc});
+					if(nexta==0) s.insert(nextc);
+				} 
+			}
+		}
+		if(nowc!=0){
+			if(nowa!=a){	//c->a로 줌 
+				empty = a-nowa;
+				if(nowc>=empty){
+					nexta = a;
+					nextb = nowb;
+					nextc = nowc-empty;
+				}
+				else{
+					nexta = nowa+nowc;
+					nextb = nowb;
+					nextc = 0;
+				}
+				if(visit[nexta][nextb][nextc]==0){
+					q.push({nexta, nextb, nextc});
+					visit[nexta][nextb][nextc]=1;
+				//v.push_back({nexta, nextb, nextc});
+					if(nexta==0) s.insert(nextc);
+				} 
+			}
+			if(nowb!=b){	//c->b로 줌 
+				empty = b-nowb;
+				if(nowc>=empty){
+					nexta = nowa;
+					nextb = b;
+					nextc = nowc-empty;
+				}
+				else{
+					nexta = nowa;
+					nextb = nowb+nowc;
+					nextc = 0;
+				}
+				if(visit[nexta][nextb][nextc]==0){
+					q.push({nexta, nextb, nextc});
+					visit[nexta][nextb][nextc]=1;
+					//v.push_back({nexta, nextb, nextc});
+					if(nexta==0) s.insert(nextc);
+				} 
+			}
+		}
+		
+	}
+}
+/*
+void printvec(){
+	for(int i = 0; i<v.size(); ++i){
+		cout<<v[i].one<<" "<<v[i].two<<" "<<v[i].three<<"\n";
+	}
+}
+*/
+int main(void)
+{
+	cin>>a>>b>>c;
+	bfs();
+	set<int>::iterator iter;
+	for(iter = s.begin(); iter!=s.end(); ++iter){
+		cout<<*iter<<" ";
+	}
+	//printvec();
+}
