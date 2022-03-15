@@ -1,0 +1,105 @@
+#include <iostream>
+#define fastio ios::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
+using namespace std;
+
+int bigtree[400010];
+int smalltree[400010];
+int arr[100001];
+int numofnum;
+int biggestindex=0;
+
+void printtree(){
+	int i;
+	for(i=1; i<=biggestindex; ++i){
+    	cout<<bigtree[i]<<" ";
+	}
+	cout<<"\n";
+	for(i=1; i<=biggestindex; ++i){
+    	cout<<smalltree[i]<<" ";
+	}
+	cout<<"\n";
+}
+
+
+int biginit(int index, int start, int end){
+    if(biggestindex<index) biggestindex=index;
+	if (start == end){
+		bigtree[index] = arr[start]; 
+	}
+        
+    else{
+        int mid = (start+end)/2;
+        bigtree[index] = max(biginit(index*2, start, mid), biginit(index*2+1, mid+1, end));
+    }
+    return bigtree[index];
+}
+
+int smallinit(int index, int start, int end){
+	if (start == end){
+        smalltree[index] = arr[start];
+	}
+        
+    else{
+        int mid = (start+end)/2;
+        smalltree[index] = min(smallinit(index*2, start, mid), smallinit(index*2+1, mid+1, end));
+    }
+    return smalltree[index];
+}
+
+int biggest(int index, int start, int end, int left, int right){
+	if (start > right || end < left){// 구간이 전혀 겹치지 않는 경우
+    	return 0;
+	}
+    else if(start >= left && end <= right){
+    	return bigtree[index];
+	}
+    else{
+        int mid = (start+end)/2;
+        return max(biggest(index*2, start, mid, left, right), biggest(index*2+1, mid+1, end, left, right));
+    }
+}
+
+int smallest(int index, int start, int end, int left, int right){
+	if (start > right || end < left){// 구간이 전혀 겹치지 않는 경우
+    	return 1000000001;
+	}
+    else if(start >= left && end <= right){
+    	return smalltree[index];
+	}
+    else{
+        int mid = (start+end)/2;
+        return min(smallest(index*2, start, mid, left, right), smallest(index*2+1, mid+1, end, left, right));
+    }
+}
+
+int treesum(int index, int start, int end, int left, int right){
+    //	start, end는 트리의 양끝, left,right는 탐색범위임 - left right는 재귀할떄도 불변  
+    if (start > right || end < left){// 구간이 전혀 겹치지 않는 경우
+    	return 0;
+	}
+    else if(start >= left && end <= right){
+    	return bigtree[index];
+	}
+    else{
+        int mid = (start+end)/2;
+        return treesum(index*2, start, mid, left, right) + treesum(index*2+1, mid+1, end, left, right);
+    }
+}
+
+
+int main(void){
+	fastio;
+	int numofquery;
+	cin>>numofnum>>numofquery;
+    int i, num, a,b;
+    for(i=1; i<=numofnum; ++i){
+    	cin>>arr[i];
+	}
+	biginit(1,1,numofnum);
+	smallinit(1,1,numofnum);
+	//printtree();
+	for(i=1; i<=numofquery; ++i){
+    	cin>>a>>b;
+		cout<<smallest(1,1,numofnum,a,b)<<" "<<biggest(1,1,numofnum,a,b)<<"\n";
+	}
+}
