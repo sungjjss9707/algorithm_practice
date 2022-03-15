@@ -1,0 +1,39 @@
+#include<iostream>
+
+using namespace std;
+
+int numofcoin, goal;
+int coin[101];
+int dap[10001];
+
+int calcul(){
+	
+	int i,k, nowcoin;
+	dap[0]=1;
+	for(i=0; i<numofcoin; ++i){
+		nowcoin = coin[i];
+		for(k=0; k<=goal; ++k){
+			if(k>=nowcoin){
+				dap[k] = dap[k]+dap[k-nowcoin];	
+			}
+			
+		}
+	}
+	return dap[goal];
+	
+}
+
+int main(void)
+{
+	cin>>numofcoin>>goal;
+	int i;
+	for(i=0; i<numofcoin; ++i){
+		cin>>coin[i];
+	}
+	cout<<calcul();
+	/*
+	for(i=0; i<=goal; ++i){
+		cout<<dap[i]<<" ";
+	}
+	*/
+}
