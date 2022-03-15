@@ -1,0 +1,70 @@
+import java.util.*;
+
+class numbor{
+	int mynum;
+	
+	numbor(int a){
+		mynum = a;
+	}
+	
+	int chonghap(int a) {
+		int i, sum=0;
+		for(i=0; i<=a; ++i) {
+			sum = sum+i;
+		}
+		return sum;
+	}
+	
+	
+	
+	int panstar() {
+		int k,i,dap=0, flag = 0;
+		if(mynum == 1) {
+			return 1;
+		}
+		
+		for(i=1; ; ++i) {
+			//System.out.println((6*chonghap(i-1)+2)+" "+mynum+" "+ (6*chonghap(i)+1));
+			if(mynum<=(6*chonghap(i)+1) && mynum>=(6*chonghap(i-1)+2)) {
+				dap = i+1;
+				break;
+			}
+		}
+		
+		
+		/*
+		for(i=1; ; ++i) {
+			for(k=6*chonghap(i-1)+2; k<=6*chonghap(i)+1 ; ++k) {
+				//System.out.print(k+" ");
+				if(mynum == k) {
+					dap = i+1;
+					flag = 1;
+					break;
+				}
+			}
+			if(flag == 1) break;
+			//System.out.println();
+		}
+		*/
+		//System.out.println(dap);
+		return dap;
+	}
+	
+	
+	
+}
+
+
+public class Main {
+
+
+	public static void main(String[] args) {
+		int num;
+		Scanner sc = new Scanner(System.in);
+		num = sc.nextInt();
+		numbor n1 = new numbor(num);
+		System.out.println(n1.panstar());
+		
+	}
+
+}
