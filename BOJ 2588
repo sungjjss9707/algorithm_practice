@@ -1,0 +1,19 @@
+#include<iostream>
+
+using namespace std;
+
+int main(void)
+{
+	int first, second,arr[3],answer[3], i;
+	cin >> first;
+	cin >> second;
+	arr[2]=second/100;
+	arr[1] = (second%100)/10;
+	arr[0] = second%10;
+	for(i=0; i<3; ++i){
+		answer[i]= arr[i]*first;
+		cout << answer[i]<<endl;
+	}
+	cout<< answer[0]+10*answer[1]+100*answer[2]<<endl;
+	//cout<< first*second;
+}
