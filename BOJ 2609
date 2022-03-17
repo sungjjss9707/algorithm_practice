@@ -1,0 +1,31 @@
+#include<iostream>
+using namespace std;
+int a,b;
+
+int minvalue(int n1, int n2){
+	return n1>n2 ? n2:n1;
+}
+
+int findchoidae(){
+	int num1=a, num2=b, choidae;
+	int factor=minvalue(a,b);
+	while(1){
+		if(a%factor==0&&b%factor==0){
+			choidae=factor;
+			break;
+		}
+		factor--;
+		if(factor==1){
+			choidae=1;
+			break;
+		} 	
+	}
+	return choidae;
+}
+
+int main(void)
+{
+	cin>>a>>b;
+	int choidae = findchoidae();
+	cout<<choidae<<"\n"<<choidae*(a/choidae)*(b/choidae);
+}
