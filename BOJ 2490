@@ -1,0 +1,29 @@
+#include<iostream>
+
+using namespace std;
+
+int main(void)
+{
+	int i;
+	int a,b,c,d, hap;
+	for(i=0; i<3; ++i){
+		cin>>a>>b>>c>>d;
+		hap = a+b+c+d;
+		if(hap==0){
+			cout<<"D";
+		}
+		else if(hap==1){
+			cout<<"C";
+		}
+		else if(hap==2){
+			cout<<"B";
+		}
+		else if(hap==3){
+			cout<<"A";
+		}
+		else{
+			cout<<"E";
+		}
+		cout<<"\n";
+	}
+}
