@@ -1,0 +1,17 @@
+#include<iostream>
+
+using namespace std;
+
+int main(void)
+{
+	int i;
+	int ta, ne, sum=0, biggest=0;
+	for(i=0; i<4; ++i){
+		cin>>ne>>ta;
+		sum=sum-ne;
+		biggest = max(biggest, sum);
+		sum=sum+ta;
+		biggest = max(biggest, sum);
+	}
+	cout<<biggest;
+}
