@@ -1,0 +1,113 @@
+#include<iostream>
+
+using namespace std;
+
+int sero, garo;
+int mysea[301][301];
+int tempsea[301][301];
+int visit[301][301];
+int dy[4]={1,0,-1,0};
+int dx[4]={0,1,0,-1};
+
+void clear(){
+	int i,k;
+	for(i=1; i<=sero; ++i){
+		for(k=1; k<=garo; ++k){
+			visit[i][k]=0;
+		}
+	}
+}
+
+void dfs(int y, int x, int color){
+	visit[y][x]=color;
+	int i,ny,nx;
+	for(i=0; i<4;++i){
+		ny=y+dy[i];
+		nx=x+dx[i];
+		if(mysea[ny][nx]!=0&&!visit[ny][nx]) dfs(ny, nx, color);
+	}
+}
+
+int numoficeberg(){
+	int i,k, color=0;
+	clear();
+	for(i=1; i<=sero; ++i){
+		for(k=1; k<=garo; ++k){
+			if(mysea[i][k]!=0&&!visit[i][k]){
+				color++;
+				dfs(i,k,color);
+			}
+		}
+	}
+	return color;
+}
+
+int getnumofbeach(int y,int x){
+	int sum=0;
+	int i, ny, nx;
+	for(i=0; i<4; ++i){
+		ny=y+dy[i];
+		nx=x+dx[i];
+		if(mysea[ny][nx]==0) sum++;
+	}
+	return sum;
+}
+
+void icemelt(){
+	int i,k, bando, nextheight;
+	for(i=1; i<=sero; ++i){
+		for(k=1; k<=garo; ++k){
+			if(mysea[i][k]!=0){
+				bando = getnumofbeach(i,k);
+				nextheight=mysea[i][k]-bando>0?mysea[i][k]-bando:0;
+			}
+			else{
+				nextheight=0;
+			}
+			tempsea[i][k]=nextheight;
+		}
+	}
+	for(i=1; i<=sero; ++i){
+		for(k=1; k<=garo; ++k){
+			mysea[i][k]=tempsea[i][k];
+		}
+	}
+}
+
+void printsea(){
+	int i,k;
+	for(i=1; i<=sero; ++i){
+		for(k=1; k<=garo; ++k){
+			cout<<mysea[i][k]<<" ";
+		}
+		cout<<endl;
+	}
+	cout<<endl;
+}
+
+int findicebergbreak(){
+	int i,k,color, year=0, icebergnum;
+	//printsea();
+	while(1){
+		icebergnum=numoficeberg();
+		if(icebergnum==0) return 0;
+		if(icebergnum!=1) return year;
+			//cout<<numoficeberg()<<" "<<year<<endl;
+		//cout<<numoficeberg()<<" "<<year<<endl;
+		icemelt();
+		//printsea();
+		year++; 		
+	}
+}
+
+int main(void)
+{
+	cin>>sero>>garo;
+	int i,k;
+	for(i=1; i<=sero; ++i){
+		for(k=1; k<=garo; ++k){
+			cin>>mysea[i][k];
+		}
+	}
+	cout<<findicebergbreak();
+}
