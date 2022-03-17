@@ -1,0 +1,23 @@
+#include<stdio.h>
+
+int main(void)
+{
+	int a,b,c, num,i;
+	int arr[10];
+	for(i=0; i<10; ++i){
+		arr[i]=0;
+	}
+	scanf("%d %d %d", &a, &b, &c);
+	num = a*b*c;
+	int imsinum = num, temp;
+	while(imsinum != 0){
+		temp = imsinum%10;
+		arr[temp] = arr[temp]+1;
+		imsinum = imsinum/10;
+		
+	}	
+	
+	for(i=0; i<10; ++i){
+		printf("%d\n", arr[i]);
+	}
+} 
