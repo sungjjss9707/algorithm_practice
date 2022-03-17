@@ -1,0 +1,90 @@
+#include<iostream>
+#include<vector>
+#include<string>
+using namespace std;
+int numofboo,numofnum;
+long long smallest=9999999999999;
+long long biggest=0;
+string strbiggest,strsmallest;
+vector<char> v;
+vector<int> numv;
+vector<int> use;
+string vtostrnum(){
+	string strnum="";
+	for(int i=0;i<numofnum;++i){
+		strnum=strnum+(char)(numv[i]+'0');
+	}
+	return strnum;
+}
+
+long long vtoint(){
+	long long dap=0;
+	for(int i=0;i<numofnum;++i){
+		dap=dap*10+numv[i];
+	}
+	return dap;
+}
+
+void printnumv(){
+	for(int i=0;i<numofnum;++i){
+		cout<<numv[i]<<" ";
+	}
+	cout<<endl;
+}
+
+bool panstar(){
+	for(int i=0;i<numofboo;++i){
+		if(v[i]=='>'){
+			if(numv[i]<numv[i+1]) return false;
+		}
+		else{
+			if(numv[i]>numv[i+1]) return false;
+		}
+	}
+	return true;
+}
+
+void findbigsmall(){
+	if(numv.size()==numofnum){
+		if(panstar()){
+			string strnum=vtostrnum();
+		    //cout<<strnum<<endl;
+			long long intnum=vtoint();
+		//cout<<intnum<<endl;
+			strbiggest=intnum>biggest?strnum:strbiggest;
+			biggest=max(intnum,biggest);
+			strsmallest=intnum<smallest?strnum:strsmallest;
+			smallest=min(intnum,smallest);
+		}
+		return;	
+	}
+	int i;
+	for(i=0;i<=9;++i){
+		if(use[i]==0){
+			use[i]=1;
+			numv.push_back(i);
+			findbigsmall();
+			numv.pop_back();
+			use[i]=0;
+		}
+	}
+	
+	
+}
+
+int main(void)
+{
+	cin>>numofboo;
+	numofnum=numofboo+1;
+	char oper;
+	for(int i=0; i<numofboo; ++i){
+		cin>>oper;
+		v.push_back(oper);
+	}
+	for(int i=0; i<10; ++i){
+		use.push_back(0);
+	}
+	findbigsmall();
+	cout<<strbiggest<<"\n"<<strsmallest;
+	return 0;
+}
