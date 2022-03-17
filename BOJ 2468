@@ -1,0 +1,70 @@
+#include<iostream>
+
+using namespace std;
+
+int copiedmap[101][101];
+int originmap[101][101];
+int side;
+int dy[4]={1,0,-1,0};
+int dx[4]={0,1,0,-1};
+
+void mapcopy(){
+	for(int i=1; i<=side; ++i){
+		for(int k=1; k<=side; ++k){
+			originmap[i][k]=copiedmap[i][k];
+		}
+	}
+}
+
+void printmap(){
+	for(int i=1; i<=side; ++i){
+		for(int k=1; k<=side; ++k){
+			cout<<originmap[i][k]<<" ";
+		}
+		cout<<endl;
+	}
+	cout<<endl<<endl;
+}
+
+void dfs(int y, int x, int height){
+	originmap[y][x]=-1;
+	int i,ny,nx;
+	for(i=0;i<4;++i){
+		ny=y+dy[i];
+		nx=x+dx[i];
+		if(ny>=1&&ny<=side&&nx>=1&&nx<=side){
+			if(originmap[ny][nx]!=-1&&originmap[ny][nx]>height){
+				dfs(ny,nx,height);
+			} 
+		}
+	}
+}
+
+int main(void)
+{
+	cin>>side;
+	int i,j,k,maxheight=0,count,maxcount=0,num;
+	for(i=1;i<=side;++i){
+		for(k=1;k<=side;++k){
+			cin>>num;
+			copiedmap[i][k]=num;
+			originmap[i][k]=num;
+			maxheight=max(maxheight,num);
+		}
+	}
+	for(j=0;j<=maxheight;++j){
+		mapcopy();
+		count=0;
+		for(i=1;i<=side;++i){
+			for(k=1;k<=side;++k){
+				if(originmap[i][k]!=-1&&originmap[i][k]>j){
+					dfs(i,k,j);
+					count++;
+				}
+			}
+		}
+		//printmap();
+		maxcount=max(maxcount,count);
+	}
+	cout<<maxcount;
+}
