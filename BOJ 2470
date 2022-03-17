@@ -1,0 +1,99 @@
+#include<iostream>
+#include<algorithm>
+#include<math.h>
+using namespace std;
+
+int numofnum, numofp=1, numofm=1;
+int plusarr[100001];
+int minusarr[100001];
+
+bool compare(int a, int b){
+	return a<b;	
+}
+
+int findplusnum(int start, int end, int goal){
+	if(start==end) return plusarr[start];
+	
+	if(end-start==1){
+		int ret=abs(plusarr[end]-goal)>abs(goal-plusarr[start])?plusarr[start]:plusarr[end];
+		return ret;
+	}
+	
+	int mid=(start+end)/2;
+	if(plusarr[mid]==goal) return plusarr[mid];
+	else if(plusarr[mid]>goal){
+		return findplusnum(start,mid,goal);
+	}
+	else{
+		return findplusnum(mid,end,goal);
+	}
+}
+
+void findtwonum(){
+	if(numofp==0){	//모두 음수일떄 
+		cout<<minusarr[numofm-1]<<" "<<minusarr[numofm];
+		return ;	
+	}
+	if(numofm==0){	//모두 양수일떄 
+		cout<<plusarr[1]<<" "<<plusarr[2];
+		return ;	
+	}	
+	int minimum=2000000000,i,plusnum, minusnum, goalp, goalm;
+	for(i=1; i<=numofm; ++i){
+		minusnum=minusarr[i];
+		plusnum=findplusnum(1, numofp,(-1)*minusnum);	
+		if(abs(minusnum+plusnum)<minimum){
+			minimum = abs(minusnum+plusnum);
+			goalp = plusnum;
+			goalm = minusnum;	
+		}
+	}
+	if(numofm>=2){
+		if(abs(minusarr[numofm]+minusarr[numofm-1])<minimum){
+			minimum = abs(minusarr[numofm]+minusarr[numofm-1]);
+			goalp = minusarr[numofm];
+			goalm = minusarr[numofm-1];
+		}
+	}
+	if(numofp>=2){
+		if(plusarr[1]+plusarr[2]<minimum){
+			minimum = plusarr[1]+plusarr[2];
+			goalp = plusarr[2];
+			goalm = plusarr[1];
+		}
+	}
+	cout<<goalm<<" "<<goalp;
+	return ;
+}
+
+int main(void)
+{
+	cin>>numofnum;
+	int i;
+	int num;
+	for(i=0; i<numofnum; ++i){
+		cin>>num;
+		if(num>0){
+			plusarr[numofp++]=num;	
+		}
+		else{
+			minusarr[numofm++]=num;
+		}	
+	}
+	numofp--;
+	numofm--;
+	/*
+	for(i=1; i<=numofp; ++i) cout<<plusarr[i]<<" ";
+	cout<<endl;
+	for(i=1; i<=numofm; ++i) cout<<minusarr[i]<<" ";
+	*/
+	sort(plusarr+1, plusarr+numofp+1);
+	sort(minusarr+1, minusarr+numofm+1, compare);	
+	/*
+	cout<<endl<<endl;
+	for(i=1; i<=numofp; ++i) cout<<plusarr[i]<<" ";
+	cout<<endl;
+	for(i=1; i<=numofm; ++i) cout<<minusarr[i]<<" ";
+	*/
+	findtwonum();
+}
