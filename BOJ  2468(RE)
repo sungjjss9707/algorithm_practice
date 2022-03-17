@@ -1,0 +1,99 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+using namespace std;
+
+int numofplus, numofminus;
+vector<int> plusvec;
+vector<int> minusvec;
+
+int yeeboon(int start, int end, int goal){
+	if(start==end){	
+		return plusvec[start];
+	}
+	if(start==end-1){
+		if(abs(plusvec[start]-goal)>abs(plusvec[end]-goal)){
+			return plusvec[end];
+		}
+		else{
+			return plusvec[start];
+		}
+	}
+	int mid = (start+end)/2;
+	if(plusvec[mid]==goal){
+		return plusvec[mid];
+	}
+	if(plusvec[mid]>goal){
+		return yeeboon(start, mid, goal);
+	}
+	else{
+		return yeeboon(mid, end,goal);
+	}
+}
+
+void findbestjohap(){
+	if(numofplus==0){
+		cout<<minusvec[numofminus-2]<<" "<<minusvec[numofminus-1];
+		return ;
+	}
+	if(numofminus==0){
+		cout<<plusvec[0]<<" "<<plusvec[1];
+		return ;
+	}
+	int plushap = plusvec[0]+plusvec[1];
+	int minushap = minusvec[numofminus-2]+minusvec[numofminus-1];
+	int temphap, tempbig, tempsmall;
+	if((abs)(plushap)>(abs)(minushap)){
+		temphap = minushap;
+		tempbig = minusvec[numofminus-1];
+		tempsmall = minusvec[numofminus-2];
+	}
+	else{
+		temphap = plushap;
+		tempbig = plusvec[1];
+		tempsmall = plusvec[0];
+	}
+	int i, goal, find, minimum = 2100000000, small, big;
+	for(i=0; i<numofminus; ++i){
+		goal = minusvec[i];
+		find = yeeboon(0, numofplus-1, 0-goal);
+		if(minimum>abs(goal+find)){
+			small = goal;
+			big = find;
+			minimum = abs(small+big);
+		}
+	}
+	if((abs)(temphap)>(abs)(minimum)){
+		cout<<small<<" "<<big;
+	}
+	else{
+		cout<<tempsmall<<" "<<tempbig;	
+	}
+}
+
+int main(void)
+{
+	int getsu, num;
+	cin>>getsu;
+	int i;
+	for(i=0; i<getsu; ++i){
+		cin>>num;
+		if(num>=0) plusvec.push_back(num);
+		else minusvec.push_back(num);
+	}
+	numofplus = plusvec.size(); 
+	numofminus = minusvec.size();
+	sort(plusvec.begin(), plusvec.end());
+	sort(minusvec.begin(), minusvec.end());
+	/*
+	for(i=0; i<plusvec.size(); ++i){
+		cout<<plusvec[i]<<" ";
+	}
+	cout<<endl;
+	for(i=0; i<minusvec.size(); ++i){
+		cout<<minusvec[i]<<" ";
+	}
+	cout<<endl;
+	*/
+	findbestjohap();
+}
