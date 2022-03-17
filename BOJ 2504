@@ -1,0 +1,152 @@
+#include<iostream>
+#include<string>
+#include<stack>
+#include<vector>
+
+using namespace std;
+
+string gwalho;
+
+vector<int> v;
+
+bool rightgwalho(){	//올바른거면 true, 틀린거면 false반환  
+	stack<char> s;
+	int i;
+	char temp, yeejeon;
+	for(i=0; i<gwalho.length(); ++i){
+		temp = gwalho[i];
+		if(temp=='('||temp=='[') s.push(temp);
+		else{
+			if(s.empty()) return false;
+			if(temp==')'){
+				if(s.top() != '(') return false;
+				s.pop();
+			}
+			else{
+				if(s.top() != '[') return false;
+				s.pop();
+			}
+		}
+	}
+	if(s.empty()) return true;
+	else return false;
+	
+}
+
+int getvalue(){
+	if(!rightgwalho()){
+		//cout<<"불가능\n";
+		return 0;	
+	} 
+	stack<int> s;
+	int i, temp, num, number;
+	for(i=0; i<v.size(); ++i){
+		temp = v[i];
+		//cout<<temp<<"일때 \n";
+		
+		if(temp==-2||temp==-3) s.push(temp);
+		else{
+			if(temp==-4){
+				if(s.top()==-2){
+					s.pop();
+					if(s.empty()){
+						s.push(2);
+					}
+					else if(s.top()==-2||s.top()==-3){
+						s.push(2);
+					}
+					else{
+						num = s.top();
+						s.pop();
+						s.push(num+2);
+					}
+				}
+				else{
+					num = s.top();
+					s.pop();
+					s.pop();
+					num=num*2;
+					if(s.empty()){
+						s.push(num);
+					}
+					else if(s.top()==-2||s.top()==-3){
+						s.push(num);
+					}
+					else{
+						number = s.top();
+						s.pop();
+						s.push(num+number);
+					}
+				}
+			}
+			else{
+				if(s.top()==-3){
+					s.pop();
+					if(s.empty()){
+						s.push(3);
+					}
+					else if(s.top()==-2||s.top()==-3){
+						s.push(3);
+					}
+					else{
+						num = s.top();
+						s.pop();
+						s.push(num+3);
+					}
+				}
+				else{
+					num = s.top();
+					s.pop();
+					s.pop();
+					num=num*3;
+					if(s.empty()){
+						s.push(num);
+					}
+					else if(s.top()==-2||s.top()==-3){
+						s.push(num);
+					}
+					else{
+						number = s.top();
+						s.pop();
+						s.push(num+number);
+					}
+				}
+			}
+		}
+	}
+	if(s.size()==1){
+		return s.top();
+	}
+	return 0;
+	 
+	
+}
+
+int main(void)
+{
+	cin>>gwalho;
+	int i;
+	
+	for(i=0; i<gwalho.length(); ++i){
+		if(gwalho[i]=='['){
+			v.push_back(-3);
+		}
+		else if(gwalho[i]==']'){
+			v.push_back(-6);
+		}
+		else if(gwalho[i]=='('){
+			v.push_back(-2);
+		}
+		else{
+			v.push_back(-4);
+		}
+		
+	}
+	/*
+	for(i=0; i<v.size(); ++i){
+		cout<<v[i]<<" ";
+	}
+	cout<<"\n";
+	*/
+	cout<<getvalue();
+}
