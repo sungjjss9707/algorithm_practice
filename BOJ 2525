@@ -1,0 +1,26 @@
+#include<iostream>
+
+using namespace std;
+
+void calcul(int see, int bun, int seegan){
+	int soyosee, soyobun;
+	int returnsee=see, returnbun=bun;
+	soyosee = seegan/60;
+	soyobun = seegan%60;
+	returnbun = returnbun+soyobun;
+	if(returnbun>=60){
+		returnsee++;
+		returnbun = returnbun%60;
+	}
+	returnsee = returnsee+soyosee;
+	returnsee = returnsee%24;
+	//cout<<soyosee<<" "<<soyobun<<"\n";
+	cout<<returnsee<<" "<<returnbun;
+}
+
+int main(void)
+{
+	int see, bun, seegan;
+	cin>>see>>bun>>seegan;
+	calcul(see,bun,seegan);
+}
