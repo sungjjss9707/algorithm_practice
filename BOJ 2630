@@ -1,0 +1,82 @@
+#include<iostream>
+#include<stdlib.h>
+
+using namespace std;
+int** arr;
+int hanbyeon;
+int numofone=0;
+int numofzero=0;
+void calcul(int lenofside, int x, int y){
+	if(lenofside==1){
+		//cout<<x<<","<<y<<"이고 길이가 1인 정사각형\n";
+		if(arr[y][x]==1) numofone++;
+		else numofzero++;
+		return ;
+		//return 1;
+	}
+	
+	int i,k, num = arr[y][x], flag = 1;
+	for(i=y; i<lenofside+y; ++i){
+		for(k=x; k<lenofside+x; ++k){
+			if(num!=arr[i][k]){
+				flag=0;
+				break; 
+			}
+			num = arr[i][k];
+		}
+		if(flag==0) break;
+	}
+	int one, two, three, four, nextlen = lenofside/2;
+	
+	if(flag==0){	//하나라도 다른게 있으면
+		//cout<<x<<y<<"이고 길이가 "<<lenofside<<"인거 다 일치 안해서 쪼갬\n"; 
+		//cout<<x<<y<<endl;
+		//cout<<x+nextlen<<y<<endl;
+		//cout<<x<<y+nextlen<<endl;
+		//cout<<x+nextlen<<y+nextlen<<endl;
+		calcul(nextlen, x,y);
+		calcul(nextlen, x+nextlen,y);
+		calcul(nextlen, x,y+nextlen);
+		calcul(nextlen, x+nextlen,y+nextlen);
+		/*
+		one =calcul(nextlen, x,y);
+		two = calcul(nextlen, x+nextlen,y);
+		three = calcul(nextlen, x,y+nextlen);
+		four = calcul(nextlen, x+nextlen,y+nextlen);
+		*/
+		//return one+two+three+four;	
+	}
+	else{	//다똑같으면 
+		//cout<<x<<","<<y<<"이고 길이가 "<<lenofside<<"인 정사각형\n";
+		//cout<<x<<y<<"이고 길이가 "<<lenofside<<"인거 다 일치함 \n";
+		if(arr[y][x]==1) numofone++;
+		else numofzero++;
+		//return 1;
+	}
+}
+
+int main(void)
+{
+	cin>>hanbyeon;
+	arr = (int**)malloc(sizeof(int*)*(hanbyeon+1));
+	int i,k;
+	for(i=1; i<=hanbyeon; ++i){
+		arr[i] = (int*)malloc(sizeof(int)*(hanbyeon+1));
+	}
+	for(i=1; i<=hanbyeon; ++i){
+		for(k=1; k<=hanbyeon; ++k){
+			cin>>arr[i][k];
+		}
+	}
+	calcul(hanbyeon, 1,1);
+	cout<<numofzero<<"\n"<<numofone;
+	/*
+	cout<<endl;
+	for(i=1; i<=hanbyeon; ++i){
+		for(k=1; k<=hanbyeon; ++k){
+			cout<<arr[i][k]<<" ";
+		}
+		cout<<endl;
+	}
+	*/
+}
