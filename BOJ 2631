@@ -1,0 +1,56 @@
+#include<iostream>
+
+using namespace std;
+
+int numofnum;
+int num[201];
+int dp[201];
+int lis_len(int index){
+	int ret=dp[index];
+	if(ret!=-1) return ret;
+	if(index==1){
+		ret=1;
+	}
+	else{
+		int i, temp ,maximum=0;
+		for(i=1; i<index; ++i){
+			if(num[i]<num[index]){
+				temp = lis_len(i);
+				maximum=max(maximum, temp);
+			}
+		}
+		maximum++;
+		ret=maximum;
+	}
+	dp[index]=ret;
+	return ret;
+}
+
+int numofchange(){
+	//cout<<lis_len(numofnum)<<endl;
+	int i, maximum=0;
+	for(i=1; i<=numofnum; ++i){
+		dp[i]=lis_len(i);
+		maximum = max(dp[i], maximum);
+	}
+	
+	/*
+	cout<<lis_len(numofnum)<<endl;
+	for(i=1; i<=numofnum; ++i){
+		cout<<dp[i]<<" ";
+	}
+	cout<<endl;
+	*/
+	return numofnum-maximum;
+}
+
+int main(void)
+{
+	cin>>numofnum;
+	int i;
+	for(i=1; i<=numofnum; ++i){
+		cin>>num[i];
+		dp[i]=-1;
+	}
+	cout<<numofchange();
+}
