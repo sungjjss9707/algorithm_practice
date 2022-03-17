@@ -1,0 +1,74 @@
+#include<iostream>
+#include<vector>
+#include<queue>
+
+using namespace std;
+struct jeedo{
+	int ypos;
+	int xpos;
+	int dist;
+};
+
+int sero, garo, shortestdist=0;
+char island[51][51], originisland[51][51];
+vector<pair<int,int>> ddang;
+int dy[4]={1,0,-1,0};
+int dx[4]={0,1,0,-1};
+
+
+void islandcopy(){
+	for(int i=1;i<=sero;++i){
+		for(int k=1;k<=garo;++k){
+			island[i][k]=originisland[i][k];
+		}
+	}
+}
+
+int bfs(int y, int x){
+	queue<jeedo> q;
+	q.push({y,x,0});
+	island[y][x]='x';
+	int ny,nx,jx,jy,jdist,longest=0,i;
+	while(!q.empty()){
+		jy=(q.front()).ypos;
+		jx=(q.front()).xpos;
+		jdist=(q.front()).dist;
+		//cout<<jy<<" "<<jx<<" "<<jdist<<"\n";
+		q.pop();
+		longest=max(jdist,longest);
+		for(i=0;i<4;++i){
+			ny=jy+dy[i];
+			nx=jx+dx[i];
+			if(ny>=1&&ny<=sero&&nx>=1&&nx<=garo){
+				if(island[ny][nx]=='L'){
+					island[ny][nx]='x';
+					q.push({ny,nx,jdist+1});
+				}
+			}
+		}
+	}
+	return longest;
+}
+
+int main(void)
+{
+	cin>>sero>>garo;
+	int i,k,georee;
+	char a;
+	for(i=1;i<=sero;++i){
+		for(k=1;k<=garo;++k){
+			cin>>a;
+			originisland[i][k]=a;
+			if(a=='L') ddang.push_back({i,k});
+		}
+	}
+	for(i=0;i<ddang.size();++i){
+		islandcopy();
+		georee=bfs(ddang[i].first,ddang[i].second);
+		//cout<<ddang[i].first<<" "<<ddang[i].second;
+		//cout<<" "<<georee<<endl;
+		shortestdist=max(shortestdist,georee);
+	}
+	cout<<shortestdist;
+	return 0;
+}
