@@ -1,0 +1,91 @@
+#include<iostream>
+#include<string>
+using namespace std;
+
+int numofquest,numofallcase=0;
+string arr[101];
+int strike[101];
+int ball[101];
+string allcase[730];
+int allcasepanstar[730];
+
+int get_numofstrike(string a, string b){
+	int i,sum=0;
+	for(i=0; i<3; ++i){
+		if(a[i]==b[i]) sum++;
+	}
+	return sum;
+}
+
+int get_numofball(string a, string b){
+	int i,j,k,sum=0;
+	for(i=0; i<3; ++i){
+		for(j=0; j<3;++j){
+			if(a[i]==b[j]&&i!=j) sum++;
+		}
+	}
+	return sum;
+}
+
+void get_all_case(){
+	int i,j,k,num,index=0;
+	string strnum;
+	for(i=1; i<=9;++i){
+		for(j=1; j<=9; ++j){
+			if(i==j) continue;
+			for(k=1; k<=9; ++k){
+				if(j==k||k==i) continue;
+				//strnum="";
+				num=i*100+j*10+k;
+				//cout<<num<<endl;
+				strnum=to_string(num);
+				//strnum=char(i)+char(j)+char(k);
+				//cout<<strnum<<endl;
+				allcasepanstar[index]=1;
+				allcase[index++]=strnum;
+				//index++;
+			}
+		}
+	}
+	numofallcase=index;
+	/*
+	cout<<numofallcase<<endl;
+	for(i=0; i<index; ++i){
+		cout<<allcase[i]<<endl;
+	}
+	*/
+}
+
+int calcul(){
+	int i,k,s,b;
+	string num,goal;
+	for(i=0; i<numofquest;++i){
+		goal=arr[i];
+		for(k=0; k<numofallcase;++k){
+			if(allcasepanstar[k]==0) continue;
+			num=allcase[k];
+			s=get_numofstrike(goal,num);
+			b=get_numofball(goal,num);
+			//cout<<goal<<" "<<num<<" "<<strike[i]<<" "<<ball[i]<<" "<<s<<" "<<b<<endl;
+			if(s!=strike[i]||b!=ball[i]){
+				allcasepanstar[k]=0;
+			}
+		}
+	}
+	int sum=0;
+	for(i=0; i<numofallcase;++i){
+		if(allcasepanstar[i]==1) sum++;
+	}
+	return sum;
+}
+
+int main(void)
+{
+	cin>>numofquest;
+	int i;
+	for(i=0; i<numofquest;++i){
+		cin>>arr[i]>>strike[i]>>ball[i];
+	}
+	get_all_case();
+	cout<<calcul();
+}
