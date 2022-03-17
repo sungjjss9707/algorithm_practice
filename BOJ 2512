@@ -1,0 +1,70 @@
+#include<iostream>
+
+using namespace std;
+
+int numofcity, chong;
+int sincheong[10001];
+int maximum=0;
+
+void findyesan(int start, int end){
+	if(end<start) return;
+	if(start==end){
+		
+		//cout<<start<<" "<<end<<"가 같을떄  ";
+		int sum=0, choidaeyesan=0;
+		for(int i=0; i<numofcity; ++i){
+			if(sincheong[i]<=start){
+				sum=sum+sincheong[i];
+				choidaeyesan = max(choidaeyesan, sincheong[i]);
+			}
+			else{
+				sum=sum+start;
+			}
+		}
+		if(sum>chong){
+			//cout<<"sum이 넘어버려서 불가능\n";
+			 return;
+		}
+		//cout<<"sum이 안안넘서가능\n";	
+		choidaeyesan = max(choidaeyesan, start);
+		maximum = max(choidaeyesan, maximum);
+		
+		return;
+	}
+	int mid=(start+end)/2;
+	
+	int sum=0;
+	for(int i=0; i<numofcity; ++i){
+		if(sincheong[i]<=mid){
+			sum=sum+sincheong[i];
+		}
+		else{
+			sum=sum+mid;
+		}
+	}
+	//int ret;
+//	cout<<start<<" "<<end<<"       mid "<<mid;
+	if(sum>chong){
+//		cout<<"   넘으므로 왼쪽에서 탐색\n";
+		 findyesan(start, mid-1);	
+	}
+	else{
+		maximum = max(maximum, mid);
+//		cout<<" 안넘으므로 오른쪽에서 탐색\n";
+		 findyesan(mid+1,end);	
+	}
+}
+
+int main(void)
+{
+	cin>>numofcity;
+	int i, biggest=0, smallest=1000001;
+	for(i=0; i<numofcity; ++i){
+		cin>>sincheong[i];	
+		biggest = max(sincheong[i], biggest);
+		smallest = min(sincheong[i], smallest);
+	}
+	cin>>chong;
+	findyesan(1, biggest);
+	cout<<maximum;
+}
