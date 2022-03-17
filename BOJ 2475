@@ -1,0 +1,17 @@
+#include<iostream>
+
+using namespace std;
+
+int arr[5];
+
+int main(void)
+{
+	int i, sum=0;
+	for(i=0; i<5; ++i){
+		cin>>arr[i];
+	}
+	for(i=0; i<5; ++i){
+		sum=sum+(arr[i]*arr[i]);
+	}
+	cout<<sum%10;
+}
