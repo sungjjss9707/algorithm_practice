@@ -1,0 +1,105 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#include<math.h>
+using namespace std;
+
+int numofp=0,numofm=0,numofnum=0;
+vector<int> parr;
+vector<int> marr;
+
+int yeeboon(int start, int end, int goal){
+	if(start==end){
+		return parr[start];
+	}
+	if(end-start==1){
+		int ret;
+		ret=abs(goal-parr[start])<abs(parr[end]-goal)?parr[start]:parr[end];
+		return ret;
+	}
+	int mid=(start+end)/2;
+	if(parr[mid]==goal) return parr[mid];
+	if(parr[mid]>goal){
+		return yeeboon(start, mid, goal);
+	}
+	else{
+		return yeeboon(mid,end,goal);
+	}
+}
+
+void findtwopair(){
+	if(numofm==0){
+		cout<<parr[0]<<" "<<parr[1];
+		return;
+	}
+	if(numofp==0){
+		cout<<marr[numofm-2]<<" "<<marr[numofm-1];
+		return;
+	}
+	
+	int i;
+	int goal, findnum,choiso=2000000010,p,m;
+	for(i=0; i<numofm; ++i){
+		goal=(-1)*marr[i];
+		findnum=yeeboon(0, numofp-1,goal);
+		//cout<<marr[i]<<" "<<findnum<<endl;
+		
+		if(abs(marr[i]+findnum)<choiso){
+			m=marr[i];
+			p=findnum;
+			//cout<<m<<" "<<p<<endl;
+			choiso=abs(p+m);
+		}
+	}
+	//cout<<m<<" "<<p<<endl;
+	
+	if(numofp>=2){
+		if(choiso>parr[0]+parr[1]){
+			m=parr[0];
+			p=parr[1];
+			choiso=abs(p+m);
+		}
+	}
+	if(numofm>=2){
+		if(choiso>abs(marr[numofm-1]+marr[numofm-2])){
+			m=marr[numofm-2];
+			p=marr[numofm-1];
+			choiso=abs(p+m);
+		}
+	}
+	
+	cout<<m<<" "<<p;
+}
+
+int main(void)
+{
+	cin>>numofnum;
+	int i;
+	int num;
+	//parr.push_back(0);
+	//marr.push_back(0);
+	for(i=0; i<numofnum;++i){
+		cin>>num;
+		if(num>0) {
+			parr.push_back(num);
+			numofp++;
+		}
+		else{
+			marr.push_back(num);
+			numofm++;
+		}
+	}
+	//sort(parr.begin(), parr.end());
+	//sort(marr.begin(), marr.end());
+	/*
+	for(i=1; i<=numofp;++i){
+		cout<<parr[i]<<" ";
+	}
+	cout<<endl;
+	for(i=1; i<=numofm;++i){
+		cout<<marr[i]<<" ";
+	}
+	cout<<endl;
+	*/
+	findtwopair();
+}
