@@ -1,0 +1,57 @@
+#include<iostream>
+#include<vector>
+
+using namespace std;
+
+int numofcom, numoflink;
+
+vector<int> link[101];
+int check[101];
+
+void dfs(int nowcom){
+	
+	int i, nextcom;
+	for(i=0; i<link[nowcom].size(); ++i){
+		nextcom = link[nowcom][i];
+		if(check[nextcom]==0){
+			check[nextcom]=1;
+			dfs(nextcom);
+		}
+	}
+}
+
+int main(void)
+{
+	cin>>numofcom>>numoflink;
+	int i, k,com1, com2;
+	for(i=0; i<numoflink; ++i){
+		cin>>com1>>com2;
+		link[com1].push_back(com2);
+		link[com2].push_back(com1);
+	}
+	for(i=1; i<=numofcom; ++i){
+		check[i]=0;
+	}
+	/*
+	for(i=1; i<=numofcom; ++i){
+		cout<<check[i]<<" ";
+	}
+	cout<<"\n";
+	*/
+	check[1]=1;
+	dfs(1);
+	int sum=0;
+	for(i=1; i<=numofcom; ++i){
+		sum=sum+check[i];
+	}
+	cout<<sum-1;
+	/*
+	for(i=1; i<=numofcom; ++i){
+		cout<<i<<"번컴에 연결된 컴퓨터 : ";
+		for(k=0; k<link[i].size(); ++k){
+			cout<<link[i][k]<<" ";
+		}
+		cout<<"\n";
+	}
+	*/
+}
