@@ -1,0 +1,43 @@
+#include<stdio.h>
+
+int calcul1(int olla, int nero, int height){
+	if((height-olla)%(olla-nero)==0)
+		return (height-olla)/(olla-nero) +1 ;
+	else{
+		double a = double(height-olla);
+		double b = double(olla-nero);	
+		int mok = int(a/b)+1;
+		return mok+1;
+	}
+}
+
+int calcul(int olla, int nero, int height){
+	
+	int wichi = 0,days = 0, realolla = olla-nero;
+	double nalsu = (double)height/(double)realolla;
+	int integernalsu = (int)nalsu;
+	if(olla == height)
+		return 1;
+	while(1){
+		days = days + 1;
+		wichi = wichi + olla;
+		if(wichi >= height){
+			break;
+		}
+		wichi = wichi - nero;
+		//printf("%d\n", wichi);
+	}
+	
+	return days; 	
+}
+
+
+
+
+int main(void)
+{
+	int height, olla, nero;
+	scanf("%d %d %d", &olla,&nero, &height);
+	//printf("%d  %d", calcul1(olla, nero, height),calcul(olla, nero, height));
+	printf("%d", calcul1(olla, nero, height));
+} 
