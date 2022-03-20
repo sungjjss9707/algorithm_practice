@@ -1,0 +1,24 @@
+#include<iostream>
+
+using namespace std;
+int arr[5][4];
+int main(void)
+{
+	int i,k, sum, minimum=0, a;
+	for(i=0; i<5; ++i){
+		for(k=0; k<4; ++k){
+			cin>>arr[i][k];	
+		}	
+	}
+	for(i=0; i<5; ++i){
+		sum=0;
+		for(k=0; k<4; ++k){
+			sum=sum+arr[i][k];	
+		}
+		if(sum>minimum){
+			a=i+1;
+			minimum = sum;
+		}	
+	}
+	cout<<a<<" "<<minimum;
+}
