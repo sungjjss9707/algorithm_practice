@@ -1,0 +1,50 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+using namespace std;
+
+int nine[9];
+
+vector<int> real7nan;
+
+bool keehap(){
+	int i,sum=0;
+	for(i=0;i<7;++i){
+		sum=sum+real7nan[i];
+	}
+	if(sum==100) return true;
+	return false;
+}
+
+void printnan(){
+	//sort(real7nan.begin(), real7nan.end());
+	for(int i=0;i<7;++i){
+		cout<<real7nan[i]<<endl;
+	}
+}
+
+void find7nan(int firstindex){
+	if(real7nan.size()==7){
+		if(keehap()){
+			printnan();
+			return;
+		}
+	}
+	
+	int i;
+	for(i=firstindex; i<9;++i){
+		real7nan.push_back(nine[i]);
+		find7nan(i+1);
+		real7nan.pop_back();
+	}
+}
+
+int main(void)
+{
+	int i;
+	for(i=0; i<9;++i){
+		cin>>nine[i];
+	}
+	
+	find7nan(0);
+}
