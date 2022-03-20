@@ -1,0 +1,103 @@
+#include<iostream>
+#include<queue>
+#include<algorithm>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+int arr[1000000];
+int temp[1000000];
+void merge(int start, int end){
+    int mid = (start+end)/2;
+    int left = start, right = mid+1, index = start,i;
+    while(left<=mid&&right<=end){
+      if(arr[left]<arr[right]){
+        temp[index++] = arr[left++];
+      }
+      else{ //같으면 여기로 와서 왼쪽 무리에 있는거부터 들어감(stable함)
+        temp[index++] = arr[right++];
+      }
+    }
+    if(left>mid){ 
+      while(right<=end){
+        temp[index++] = arr[right++];
+      }
+    }
+    else{
+      while(left<=mid){
+        temp[index++] = arr[left++];
+      }
+    }
+    for(i=start; i<=end; ++i){  //템프라는 임시저장소가 필요하기때문에 메모리가 좀더 많이 듬
+      arr[i] = temp[i];
+   }
+}
+  
+void quick_sort(int start, int end){
+      if(start>=end) return;
+      int pivot = arr[start];
+      int temp;
+      int left = start+1, right = end; //left는 pivot보다 큰 원소를, right는 pivot보다 작은 원소를 찾음
+      while(1){
+	  cout<<endl;
+        if(left>=right){
+          if(arr[left]>pivot){
+            left--;
+          }
+          break;
+        }
+        if(arr[left]>pivot&&arr[right]<pivot){
+          temp = arr[left];
+          arr[left] = arr[right];
+          arr[right] = temp;
+          
+        }
+        if(arr[left]<=pivot){
+          left++;
+        }
+        if(arr[right]>=pivot){
+          right--;
+        }
+      }
+      temp = arr[left];
+      arr[left] = arr[start];
+      arr[start] = temp;
+      quick_sort(start, left-1);
+      quick_sort(left+1, end);
+    }  
+  
+void merge_sort(int start, int end){
+    if(start>=end) return;
+    int mid = (start+end)/2;
+    merge_sort(start, mid);
+    merge_sort(mid+1, end);
+    merge(start, end);
+}
+  
+void heap_sort(int numofnum){
+	int i;
+	priority_queue<int, vector<int>, greater<int>> pq;
+	for(i=0; i<numofnum; ++i){
+		pq.push(arr[i]);
+	}
+	for(i=0; i<numofnum; ++i){
+		arr[i] = pq.top();
+		pq.pop();
+	}
+}  
+  
+int main(void)
+{
+	fastio;
+  	int i, numofnum;
+  	cin>>numofnum;
+  	for(i=0; i<numofnum; ++i){
+  		cin>>arr[i];
+	}
+	//sort(arr, arr+numofnum);
+	//merge_sort(0, numofnum-1);
+	//quick_sort(0, numofnum-1);
+	 heap_sort(numofnum); 
+	  for(i=0; i<numofnum; ++i){
+  		cout<<arr[i]<<"\n";
+	  }
+  }
