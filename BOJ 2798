@@ -1,0 +1,43 @@
+#include<iostream>
+#include<vector>
+using namespace std;
+int numofcard,goal,biggest=0;
+int card[101], use[101];
+
+void findbiggest(vector<int>& v){
+	if(v.size()==3){
+		//cout<<v[0]<<" "<<v[1]<<" "<<v[2]<<"\n";
+		int sum=v[0]+v[1]+v[2];
+		if(sum>biggest&&sum<=goal) biggest=sum;
+		return;	
+	}
+	int i, firstcard=-1;
+	for(i=numofcard-1; i>=0; --i){
+		if(use[i]==1){
+			firstcard=i;
+			break;
+		}
+	}
+	for(i=firstcard+1; i<numofcard;++i){
+		if(use[i]==0){
+			v.push_back(card[i]);
+			use[i]=1;
+			findbiggest(v);
+			v.pop_back();
+			use[i]=0;
+		}
+	}
+}
+
+int main(void)
+{
+	cin>>numofcard>>goal;
+	for(int i=0; i<numofcard; ++i){
+		cin>>card[i];
+		use[i]=0;
+	}
+	vector<int> v;
+	findbiggest(v);
+	cout<<biggest;
+	return 0;
+}
