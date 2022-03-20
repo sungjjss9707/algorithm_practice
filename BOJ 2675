@@ -1,0 +1,59 @@
+import java.util.*;
+
+class munjayol{
+	int iter;
+	String mystr;
+	
+	munjayol(int a, String b){
+		iter = a;
+		mystr = b;
+	}
+	
+	
+	String banbokmunja(char a, int b) {
+		int i;
+		String ans = "";
+		for(i=0; i<b; ++i) {
+			ans = ans.concat(Character.toString(a));
+		}
+		return ans;
+	}
+	
+	
+	
+	String makenewstr() {
+		String newstr = "", _mystr = mystr;
+		int i,hwetsu = iter;
+		for(i=0; i<_mystr.length();++i) {
+			newstr = newstr.concat(banbokmunja(_mystr.charAt(i), iter));
+		}
+		
+		return newstr;
+	}
+	
+	
+	
+}
+
+public class Main {
+	
+
+	public static void main(String[] args) {
+		int i, hwetsu, testcase;
+		String mystr;
+		Scanner sc = new Scanner(System.in);
+		testcase = sc.nextInt();
+		munjayol[] str = new munjayol[testcase];
+		for(i=0; i<testcase; ++i) {
+			hwetsu = sc.nextInt();
+			mystr = sc.next();
+			str[i] = new munjayol(hwetsu, mystr);
+		}
+		for(i=0; i<testcase; ++i) {
+			System.out.println(str[i].makenewstr());
+		}
+		
+		
+	}
+
+}
