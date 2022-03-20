@@ -1,0 +1,61 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#define fastio ios::sync_with_stdio(0), cin.tie(0), cout.tie(0)
+using namespace std;
+
+int side;
+char town[30][30];
+int visit[30][30];
+int numofhouse;
+int numoftown=0;
+void dfs(int index_i, int index_k){
+	visit[index_i][index_k]=1;
+	numofhouse++;
+	if(town[index_i][index_k+1]=='1'&&visit[index_i][index_k+1]==0)
+		dfs(index_i, index_k+1);
+	if(town[index_i+1][index_k]=='1'&&visit[index_i+1][index_k]==0)
+		dfs(index_i+1, index_k);
+	if(town[index_i][index_k-1]=='1'&&visit[index_i][index_k-1]==0)
+		dfs(index_i, index_k-1);
+	if(town[index_i-1][index_k]=='1'&&visit[index_i-1][index_k]==0)
+		dfs(index_i-1, index_k);  
+}
+
+int main(void)
+{
+	cin>>side;
+	int i,k;
+	vector<int> v;
+	for(i=1; i<=side; ++i){
+		for(k=1; k<=side; ++k){
+			cin>>town[i][k];
+		}
+	}
+	for(i=1; i<=side; ++i){
+		for(k=1; k<=side; ++k){
+			if(visit[i][k]==0&&town[i][k]=='1'){
+				numofhouse=0;
+				dfs(i,k);
+				//if(numofhouse>1){
+					numoftown++;
+					v.push_back(numofhouse);
+				//}
+				//cout<<numofhouse<<"\n";
+			}
+		}
+	}
+	sort(v.begin(), v.end());
+	cout<<numoftown<<"\n";
+	for(i=0; i<numoftown; ++i){
+		cout<<v[i]<<"\n";
+	}
+	/*
+	for(i=1; i<=side; ++i){
+		for(k=1; k<=side; ++k){
+			cout<<town[i][k];
+		}
+		cout<<"\n";
+	}
+	*/
+}
