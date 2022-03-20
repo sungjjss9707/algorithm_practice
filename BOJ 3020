@@ -1,0 +1,86 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+
+/*
+14 5
+1 2 2 2 3 3 3 3 3 3 3 4 4 4
+*/
+
+using namespace std;
+
+int length, height, minimal, numofmin;
+int bomb[500001]={0};
+vector<int> bot;
+vector<int> top;
+
+void fillarray(){
+	
+	int i;
+	/*
+	int bot_len = bot[0];
+	bomb[bot_len] = bot.size();
+	cout<<bot_len<<" "<<bomb[bot_len]<<endl;
+	
+	for(i=0; i<bot.size(); ++i){
+		if(bot[i]==bot_len){
+			
+		}
+		else{
+			bomb[bot[i]]=bot.size()-i;
+			bot_len = bot[i];
+		}
+	}
+	cout<<endl;
+	for(i=1; i<=height; ++i){
+		cout<<bomb[i]<<" ";
+	}
+	*/
+	int index;
+	for(i=1; i<=height; ++i){
+		//cout<<i<<" "<<bot.size()-(lower_bound(bot.begin(), bot.end(), i)-bot.begin())<<endl;
+		bomb[i] = bot.size()-(lower_bound(bot.begin(), bot.end(), i)-bot.begin());
+	}
+//	cout<<endl;
+	for(i=1; i<=height; ++i){
+		index = height-i+1;
+		//cout<<index<<" "<<top.size()-(lower_bound(top.begin(), top.end(), i)-top.begin())<<endl;
+		bomb[index] = bomb[index]+top.size()-(lower_bound(top.begin(), top.end(), i)-top.begin());
+	}
+	/*
+	for(i=1; i<=height; ++i){
+		cout<<bomb[i]<<" ";
+	}
+	*/
+	sort(bomb+1, bomb+height+1);
+	int minist = bomb[1], getsu=0;
+	for(i=1; i<=height; ++i){
+		if(bomb[i]==minist){
+			getsu++;
+		}
+		else{
+			break;
+		}
+	}
+	minimal=minist;
+	numofmin=getsu;
+}
+
+int main(void)
+{
+	cin>>length>>height;
+	int i, num;
+	for(i=1; i<=length; ++i){
+		cin>>num;
+		if(i%2==1){
+			bot.push_back(num);
+		}
+		else{
+			top.push_back(num);
+		}
+	}
+	sort(bot.begin(), bot.end());
+	sort(top.begin(), top.end());
+	fillarray();
+	cout<<minimal<<" "<<numofmin;
+}
