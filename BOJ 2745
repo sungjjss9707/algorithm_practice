@@ -1,0 +1,31 @@
+#include<iostream>
+#include<string>
+using namespace std;
+
+int b;
+string n;
+
+int main(void)
+{
+	cin>>n>>b;
+	if(n=="0"){
+		cout<<0;
+		return 0;
+	}
+	int i,jaritsu = n.length();
+	char temp;
+	int gop = 1, shipjeensu=0, su;
+	for(i=jaritsu-1; i>=0; --i){
+		temp = n[i];
+		if(temp>='0'&&temp<='9'){
+			su = temp-'0';
+		}
+		else{
+			su=temp-'A'+10;
+		}
+		//cout<<su<<" ";
+		shipjeensu = shipjeensu + gop*(su);
+		gop = gop*b;
+	}
+	cout<<shipjeensu;
+}
