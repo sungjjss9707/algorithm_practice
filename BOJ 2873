@@ -1,0 +1,142 @@
+#include<iostream>
+#define fastio ios::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
+using namespace std;
+
+int arr[1001][1001];
+int y,x;
+int nox, noy;
+
+void calcul(){
+	char command;
+	int i,k, hwetsu;
+	if(y%2!=0){	//행의 수가 홀수일때  -> 완료  
+		for(i=1; i<=y; ++i){
+			for(k=1; k<=x; ++k){
+				if(i%2==1){
+					command = 'R';
+				}
+				else{
+					command = 'L';
+				}
+				if(k!=x) cout<<command;
+			}
+			if(i!=y) cout<<'D';
+		}
+	}
+	else if(x%2!=0){
+		for(i=1; i<=x; ++i){
+			for(k=1; k<=y; ++k){
+				if(i%2==1){
+					command = 'D';
+				}
+				else{
+					command = 'U';
+				}
+				if(k!=y) cout<<command;
+			}
+			if(i!=x) cout<<'R';
+		}
+	}
+	else{	//열과 행이 모두 짝수일떄  
+		if(x==2&&y==2){
+			if(arr[1][2]>arr[2][1]){
+				cout<<"RD";
+			}
+			else{
+				cout<<"DR";
+			}
+		}
+		else{
+			
+			if(nox%2==1){
+				for(i=1; i<nox; ++i){
+					for(k=1; k<y; ++k){
+						if(i%2==1) cout<<'D';
+						else cout<<'U';
+					}
+					cout<<'R';
+				}
+				int floor=1;
+				while(1){
+					if(floor<noy){
+						if(floor%2==1) cout<<'R';
+						else cout<<'L';	
+					}
+					else if(floor>noy){
+						if(floor%2==1) cout<<'L';
+						else cout<<'R';
+					}
+					if(floor==y){
+						break;	
+					} 
+					cout<<'D';
+					floor++;
+				}
+				if(nox==x-1) return;
+				cout<<'R';
+				for(i=nox+2; i<=x; ++i){
+					for(k=1; k<y; ++k){
+						if(i%2==1) cout<<'U';
+						else cout<<'D';
+					}
+					if(i!=x) cout<<'R';
+				}
+			}
+			else{
+				for(i=1; i<nox-1; ++i){
+					for(k=1; k<y; ++k){
+						if(i%2==1) cout<<'D';
+						else cout<<'U';
+					}
+					cout<<'R';
+				}
+				int floor=1;
+				while(1){
+					if(floor<noy){
+						if(floor%2==1) cout<<'R';
+						else cout<<'L';	
+					}
+					else if(floor>noy){
+						if(floor%2==1) cout<<'L';
+						else cout<<'R';
+					}
+					if(floor==y){
+						break;	
+					} 
+					cout<<'D';
+					floor++;
+				}
+				if(nox==x) return;
+				cout<<'R';
+				for(i=nox+1; i<=x; ++i){
+					for(k=1; k<y; ++k){
+						if(i%2==1) cout<<'U';
+						else cout<<'D';
+					}
+					if(i!=x) cout<<'R';
+				}
+			}
+		} 
+	}
+}
+
+int main(void)
+{
+	fastio;
+	cin>>y>>x;
+	int i,k, smallest=1001;
+	for(i=1; i<=y; ++i){
+		for(k=1; k<=x; ++k){
+			cin>>arr[i][k];
+			if((i+k)%2==1){
+				if(arr[i][k]<smallest){
+					smallest = arr[i][k];
+					noy=i;
+					nox=k;
+				}
+			}
+		}
+	}
+	//cout<<noy<<" "<<nox<<" "<<smallest;
+	calcul();
+}
