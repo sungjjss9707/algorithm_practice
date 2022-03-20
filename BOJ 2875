@@ -1,0 +1,50 @@
+#include<iostream>
+using namespace std;
+
+int man, woman;
+int internship;
+
+void calcul(){
+	int w = woman;
+	int m = man;
+	if(w==0||m==0){
+		cout<<0;
+		return;
+	} 
+	int namojee=0;
+	int i = internship;
+	if(w>=2*m){
+		namojee = w-2*m;
+		w=w-namojee;
+	}
+	else{
+		if(w%2==0){
+			namojee = namojee+m-w/2;
+			m = w/2;
+		}
+		else{
+			w--;
+			namojee = 1;
+			namojee = namojee+m-w/2;
+			m = w/2;
+		}
+	}
+	
+	
+	i=i-namojee;
+	//cout<<w<<" "<<m<<" "<<namojee<<"\n";
+	//cout<<"이제 인턴십넣을사람 수 : "<<i<<"\n";
+	while(1){
+		if(i<=0) break;
+		w=w-2;
+		m=m-1;
+		i=i-3;
+	}
+	cout<<m;
+}
+
+int main(void)
+{
+	cin>>woman>>man>>internship;
+	calcul();
+}
