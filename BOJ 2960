@@ -1,0 +1,37 @@
+#include<iostream>
+
+using namespace std;
+
+int wholenum, goal;
+int erase[1001];
+
+int goal_soonbeon(){
+	int soonbeon=0,i,next;
+	for(i=2; i<=1000;++i){
+		erase[i]=0;
+	}
+	for(i=2; i<=wholenum;++i){
+		if(erase[i]==0){
+			//erase[i]=1;
+			//soonbeon++;
+			//if(soonbeon==goal) return i;
+			next=i;
+			while(next<=wholenum){
+				//next=next+i;
+				if(erase[next]==0){
+					//cout<<next<<" ";
+					erase[next]=1;
+					soonbeon++;
+					if(soonbeon==goal) return next;
+				}
+				next=next+i;
+			}
+		}
+	}
+}
+
+int main(void)
+{
+	cin>>wholenum>>goal;
+	cout<<goal_soonbeon();
+}
