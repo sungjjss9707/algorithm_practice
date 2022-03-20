@@ -1,0 +1,22 @@
+#include<iostream>
+
+using namespace std;
+
+long long fivonacci[46];
+int num;
+
+int fivo(){
+	fivonacci[0]=0;
+	fivonacci[1]=1;
+	int i;
+	for(i=2; i<=num; ++i){
+		fivonacci[i]=fivonacci[i-1]+fivonacci[i-2];
+	}
+	return fivonacci[num];
+}
+
+int main(void)
+{
+	cin>>num;
+	cout<<fivo();
+}
