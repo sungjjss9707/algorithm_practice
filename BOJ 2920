@@ -1,0 +1,25 @@
+#include<iostream>
+#include<string>
+using namespace std;
+
+int main(void)
+{
+	int num;
+	int i;
+	char charnum;
+	string str = "";
+	for(i=0; i<8 ;++i){
+		cin>>num;
+		charnum = num+'0';
+		str= str+charnum;
+	}
+	if(str.compare("12345678")==0){
+		cout<<"ascending\n";
+	}
+	else if(str.compare("87654321")==0){
+		cout<<"descending\n";
+	}
+	else{
+		cout<<"mixed\n";
+	}
+}
