@@ -1,0 +1,39 @@
+#include<iostream>
+#include<algorithm>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+int numofnote1,numofnote2;
+int note1[1000001];
+
+int findnum(int start, int end, int num){
+	if(start==end){
+		if(note1[start]==num) return 1;
+		return 0;
+	}
+	
+	int mid=(start+end)/2;
+	if(num<=note1[mid]){
+		return findnum(1,mid,num);
+	}
+	else return findnum(mid+1,end,num);
+}
+
+int main(void)
+{
+	fastio;
+	int t,i,testcase,num;
+	cin>>testcase;
+	for(t=0;t<testcase;++t){
+		cin>>numofnote1;
+		for(i=1; i<=numofnote1;++i){
+			cin>>note1[i];
+		}
+		sort(note1+1,note1+numofnote1+1);
+		cin>>numofnote2;
+		for(i=0; i<numofnote2;++i){
+			cin>>num;
+			cout<<findnum(1,numofnote1,num)<<"\n";
+		}
+	}
+}
