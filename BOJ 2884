@@ -1,0 +1,46 @@
+import java.util.*;
+
+class time{
+	int hour, minute;
+	
+	time(int newhour, int newminute){
+		this.hour = newhour;
+		this.minute = newminute;
+	}
+	
+	void early() {
+		if(minute<45) {
+			minute = minute+15;
+			hour = hour-1;
+			if(hour<0) {
+				hour = hour+24;
+			}
+		}
+		else {
+			minute = minute-45;
+		}
+	}
+	
+	void printtime() {
+		System.out.println(this.hour+" "+this.minute);
+	}
+}
+
+
+
+public class Main {
+
+	public static void main(String[] args) {
+		int see, bun;
+		Scanner sc = new Scanner(System.in);
+		see = sc.nextInt();
+		bun = sc.nextInt();
+		time t1 = new time(see, bun);
+		//t1.printtime();
+		t1.early();
+		t1.printtime();
+		
+
+	}
+
+}
