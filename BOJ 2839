@@ -1,0 +1,85 @@
+import java.util.*;
+
+class twopair{
+	ArrayList<Integer> myarr1 = new ArrayList<>();
+	ArrayList<Integer> myarr2 = new ArrayList<>();
+	
+	twopair(){}
+	
+	void addtopair(int a, int b) {
+		myarr1.add(a);
+		myarr2.add(b);
+	}
+	
+	int smallest() {
+		int i, hap = 5000;
+		
+		for(i=0; i<myarr1.size(); ++i) {
+			if(myarr1.get(i)+myarr2.get(i)<hap) {
+				hap = myarr1.get(i)+myarr2.get(i);
+			}
+		}
+		if(myarr1.size() == 0) {
+			return -1;
+		}
+		
+		return hap;
+	}
+	
+	void printalldata() {
+		int i;
+		for(i=0; i<myarr1.size();++i) {
+			System.out.println(myarr1.get(i)+" "+myarr2.get(i));
+		}
+	}
+}
+
+
+class muge{
+	int mymuge;
+	twopair pa = new twopair();
+	muge(int a){
+		this.mymuge = a;
+	}
+	
+	void bangjeongsik() {
+		int x=0,y=0;
+		
+		for(x=0; 5*x<=mymuge; ++x) {
+			for(y=0; 5*x+3*y<=mymuge; ++y) {
+				//System.out.println(x+" "+y);
+				
+				if(5*x+3*y==mymuge) {
+					pa.addtopair(x, y);
+					//System.out.println(x+" "+y);
+					break;
+				}
+					
+			}
+		}
+		
+		//pa.printalldata();
+	}
+	
+	int getsmallest() {
+		//System.out.println("  "+pa.smallest()+"  ");
+		return pa.smallest();
+	}
+	
+	
+}
+
+
+
+public class Main {
+
+	public static void main(String[] args) {
+		int num;
+		Scanner sc = new Scanner(System.in);
+		num = sc.nextInt();
+		muge m1 = new muge(num);
+		m1.bangjeongsik();
+		System.out.println(m1.getsmallest());
+	}
+
+}
