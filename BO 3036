@@ -1,0 +1,40 @@
+#include<iostream>
+using namespace std;
+int arr[101];
+int numofring, firstring;
+
+int gcd(int a,int b){
+	int big = a>=b? a:b;
+	int small = (a+b)-big;
+	int namojee, mok;
+	while(1){
+		namojee = big%small;
+		if(namojee==0){
+			break;
+		}
+		big=small;
+		small = namojee;	
+	}
+	return small;
+}
+
+void calcul(){
+	int i, mygcd;
+	for(i=0; i<numofring; ++i){
+		mygcd = gcd(firstring, arr[i]);
+		cout<<firstring/mygcd<<"/"<<arr[i]/mygcd<<"\n";
+	}
+}
+
+int main(void)
+{
+	int num;
+	cin>>num;
+	numofring=num-1;
+	cin>>firstring;
+	int i;
+	for(i=0; i<numofring; ++i){
+		cin>>arr[i];
+	}
+	calcul();
+}
