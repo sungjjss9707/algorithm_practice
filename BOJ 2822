@@ -1,0 +1,35 @@
+#include<iostream>
+#include<algorithm>
+#include<vector>
+using namespace std;
+
+pair<int, int> score[8];
+vector<pair<int, int>> v;
+
+bool compare(pair<int, int> p1, pair<int, int> p2){
+	return p1.first>p2.first;	
+}
+
+bool compare2(pair<int, int> p1, pair<int, int> p2){
+	return p1.second<p2.second;	
+}
+
+int main(void)
+{
+	int i, num, sum=0;
+	for(i=0; i<8; ++i){
+		cin>>num;
+		score[i].first=num;
+		score[i].second = i+1;	
+	}
+	sort(score, score+8, compare);
+	for(i=0; i<5; ++i){
+		sum=sum+score[i].first;
+		v.push_back(score[i]);	
+	}
+	cout<<sum<<"\n";
+	sort(v.begin(), v.end(), compare2);
+	for(i=0; i<5; ++i){
+		cout<<v[i].second<<" ";	
+	}
+}
