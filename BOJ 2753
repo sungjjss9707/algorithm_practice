@@ -1,0 +1,33 @@
+import java.util.*;
+
+
+class Year{
+	int number;
+	
+	Year(int new_int){
+		this.number=new_int;
+	}
+	
+	int calcul() {
+		int ans=0;
+		if(number%4==0) {
+			ans=1;
+			if(number%100==0 && number%400!=0) {
+				ans=0;
+			}
+		}
+		return ans;
+	}
+	
+}
+
+public class Main {
+		
+	public static void main(String[] args) {
+		int a;
+		Scanner sc = new Scanner(System.in);
+		a= sc.nextInt();
+		Year year1 = new Year(a);
+		System.out.println(year1.calcul());
+	}
+}
