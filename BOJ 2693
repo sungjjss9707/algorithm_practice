@@ -1,0 +1,19 @@
+#include<iostream>
+#include<algorithm>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+
+using namespace std;
+
+int main(void)
+{
+	int arr[10];
+	int i,testcase,t;
+	cin>>testcase; 
+	for(t=0; t<testcase; ++t){
+		for(i=0; i<10; ++i){
+			cin>>arr[i];
+		}
+		sort(arr, arr+10);
+		cout<<arr[7]<<endl;
+	}
+}
