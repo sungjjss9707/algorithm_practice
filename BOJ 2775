@@ -1,0 +1,57 @@
+import java.util.*;
+
+class hosu{
+	int choong,ho;
+	
+	
+	hosu(int c, int h){
+		this.choong = c;
+		this.ho = h;
+	}
+	
+	int gojuja(int f, int h) {
+		int i,person=0;
+		if(f==0) {
+			person = h;
+			
+		}
+		else {
+			for(i=1; i<=h;++i) {
+				person = person+gojuja(f-1, i);
+				//System.out.println(f+" 층"+i+"호에는"+person+" 명");
+			}
+			
+		}
+		return person;
+	}
+	
+	int getfloor() {
+		return this.choong;
+	}
+	int getho() {
+		return this.ho;
+	}
+	
+	
+}
+
+public class Main {
+
+	public static void main(String[] args) {
+		int i,testcase, floor, ho;
+		Scanner sc = new Scanner(System.in);
+		testcase = sc.nextInt();
+		hosu[] apart = new hosu[testcase];
+		
+		for(i=0; i<testcase; ++i) {
+			floor = sc.nextInt();
+			ho = sc.nextInt();
+			apart[i] = new hosu(floor, ho);
+		}
+		
+		for(i=0; i<testcase; ++i) {
+			System.out.println(apart[i].gojuja(apart[i].getfloor(), apart[i].getho()));
+		}
+	}
+
+}
