@@ -1,0 +1,55 @@
+import java.util.*;
+
+class compareto{
+	int a,b;
+	compareto(int _a, int _b){
+		a = _a;
+		b = _b;
+	}
+	
+	int bigger() {
+		int one =a, two = b, num=0;
+		if(one>=two) num = one;
+		else if(two>one) num = two;
+		return num;
+		
+	}
+}
+
+
+
+class numbe{
+	int a;
+	
+	numbe(int newnum){
+		a = newnum;
+	}
+	
+	int convert() {
+		int origin = a, hoo = 0, baek,seep, eel;
+		baek = origin/100;
+		seep = (origin%100)/10;
+		eel = origin%10;
+		
+		hoo = (eel*100 + seep*10 + baek);
+		return hoo;
+	}
+	
+}
+
+public class Main {
+
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		int firstint = sc.nextInt();
+		int secondint = sc.nextInt();
+		numbe n1 = new numbe(firstint);
+		numbe n2 = new numbe(secondint);
+		
+		compareto cp1 = new compareto(n1.convert(), n2.convert());
+		System.out.println(cp1.bigger());
+		
+		
+	}
+
+}
