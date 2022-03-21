@@ -1,0 +1,75 @@
+#include<iostream>
+#define fastio ios::sync_with_stdio(0), cin.tie(0), cout.tie(0)
+using namespace std;
+
+int garo, sero;
+int map[55][55];
+int visit[55][55];
+int numofisland;
+
+void clear(){
+	int i,k;
+	for(i=1; i<=garo; ++i){
+		for(k=1; k<=sero; ++k){
+			visit[i][k]=0;
+		}
+	}
+	for(i=0; i<=52; ++i){
+		for(k=0; k<=52; ++k){
+			map[i][k]=0;
+		}
+	}
+}
+
+void dfs(int index_i, int index_k){
+	visit[index_i][index_k]=1;
+	//numofisland++;
+	int i,k; 
+	//cout<<index_i<<","<<index_k<<"일떄 : \n";
+	
+	for(i=index_i-1; i<=index_i+1; ++i){
+		for(k=index_k-1; k<=index_k+1; ++k){
+			if(i==index_i&&k==index_k) continue;
+			if(map[i][k]==1&&visit[i][k]==0){
+				//cout<<"시발"<<i<<","<<k<<"\n";
+				dfs(i,k);
+			}
+		}
+	} 
+}
+
+int main(void)
+{
+	fastio;
+	int i,k;
+	int hap;
+	while(1){
+		cin>>sero>>garo;
+		if(garo==0&&sero==0) break;
+		clear();
+		hap=0;
+		for(i=1; i<=garo; ++i){
+			for(k=1; k<=sero; ++k){
+				cin>>map[i][k];
+			}
+		}
+		
+		
+		
+		for(i=1; i<=garo; ++i){
+			for(k=1; k<=sero; ++k){
+				if(map[i][k]==1&&visit[i][k]==0){
+					
+					//numofisland=0;
+					//cout<<i<<" "<<k<<"\n";
+					dfs(i, k);
+					hap++;
+					//cout<<numofisland<<"--\n";
+					//hap=hap+numofisland;
+				}
+			}
+		}
+		cout<<hap<<"\n";
+		
+	}
+}
