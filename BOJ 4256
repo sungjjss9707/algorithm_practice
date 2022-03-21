@@ -1,0 +1,62 @@
+#include<iostream>
+#include<vector>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+/*
+1
+8
+3 6 5 4 8 7 1 2
+5 6 8 4 3 1 2 7
+*/
+
+
+int pre[1001];	//전위  
+int in[1001];	//중위 
+int inpos[1001];
+int post[1001];	//후위  
+//vector<int> post;
+int numofnum;
+void findpostorder(int prestart, int preend, int instart, int inend, int poststart, int postend){
+	int head = pre[prestart];
+	//cout<<prestart<<" "<<preend<<" , "<<instart<<" "<<inend<<endl;
+	post[postend] = head;
+	//post.push_back(head);
+	if(prestart==preend) return;
+	if(preend-prestart==1){
+		//post.push_back(pre[preend]);
+		post[postend-1] = pre[preend];
+		return;
+	}
+	int inorderindex,i;
+	inorderindex = inpos[head];
+	int leftgetsu = inorderindex-instart;
+	//int rightgetsu = end-headindexinorder;
+	if(prestart+leftgetsu>=prestart+1&&instart+leftgetsu-1>=instart)
+	findpostorder(prestart+1, prestart+leftgetsu,instart, instart+leftgetsu-1, poststart, poststart+leftgetsu-1);
+	if(preend>=prestart+leftgetsu+1&&inend>=instart+leftgetsu+1)
+	findpostorder(prestart+leftgetsu+1, preend, instart+leftgetsu+1, inend, poststart+leftgetsu,  postend-1);
+}
+
+int main(void)
+{
+	fastio;
+	int i,testcase,t;
+	cin>>testcase;
+	for(t=0; t<testcase; ++t){
+		cin>>numofnum;
+		//post.clear();
+		for(i=1; i<=numofnum; ++i){
+			cin>>pre[i];
+		}
+		for(i=1; i<=numofnum; ++i){
+			cin>>in[i];
+			inpos[in[i]]=i;
+		}
+		findpostorder(1,numofnum,1,numofnum,1,numofnum);
+		for(i=1; i<=numofnum; i++){
+			cout<<post[i]<<" ";
+		}
+		cout<<"\n";
+	}
+}
