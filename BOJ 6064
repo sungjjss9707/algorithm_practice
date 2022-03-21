@@ -1,0 +1,70 @@
+#include<iostream>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+int visit[40001];
+
+int lastm,lastd,goalm,goald;
+
+int find_day(){
+	int d=1,m=1,day=1,joogee;
+	if(goalm>lastm||goald>lastd) return -1;
+	if(goalm==goald) return goalm;
+	if(goalm<goald){
+		day=goalm;
+		m=goalm;
+		d=goalm;
+		joogee=lastm;
+		while(1){
+			//cout<<m<<" "<<d<<endl;
+			if(visit[d]==1) return -1;
+			visit[d]=1;
+			d=(d+joogee)%lastd;
+			if(d==0) d=lastd;
+			day=day+joogee;
+			if(d==goald) return day;
+			if(m==lastm&&d==lastd) return -1;
+			//if(lastm%(lastm-m)==lastd%(lastd-d)) return -1;
+			
+		}
+	}
+	else{
+		day=goald;
+		m=goald;
+		d=goald;
+		joogee=lastd;
+		while(1){
+			//cout<<m<<" "<<d<<endl;
+			if(visit[m]==1) return -1;
+			visit[m]=1;
+			m=(m+joogee)%lastm;
+			if(m==0) m=lastm;
+			day=day+joogee;
+			if(m==goalm) return day;
+			if(m==lastm&&d==lastd) return -1;
+			//if(lastm%(lastm-m)==lastd%(lastd-d)) return -1;
+			
+		}
+	}
+	//return day;
+	
+}
+
+void clear(){
+	int i,maxindex=max(lastd,lastm);
+	for(i=0; i<=maxindex;++i){
+		visit[i]=0;
+	}
+}
+
+int main(void)
+{
+	fastio;
+	int testcase,t;
+	cin>>testcase;
+	for(t=0; t<testcase; ++t){
+		cin>>lastm>>lastd>>goalm>>goald;
+		clear();
+		cout<<find_day()<<"\n";
+	}
+}
