@@ -1,0 +1,29 @@
+#include<iostream>
+
+using namespace std;
+
+int money;
+int coin[6] = {500, 100, 50, 10, 5, 1};
+
+int getjandongetsu(int don){
+	
+	int jandon = 1000-don;
+	int i=0, nowcoin, coingetsu=0;
+	while(jandon!=0){
+		nowcoin = coin[i];
+		if(jandon<nowcoin){
+			i++;
+			continue;
+		}
+		coingetsu = coingetsu+jandon/nowcoin;
+		jandon = jandon%nowcoin;
+	}
+	return coingetsu;
+}
+
+int main(void)
+{
+	cin>>money;
+	int jandongetsu = getjandongetsu(money);
+	cout<<jandongetsu;
+}
