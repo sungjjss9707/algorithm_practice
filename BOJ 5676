@@ -1,0 +1,205 @@
+#include<iostream>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+int arr_m[100001];
+int arr_z[100001];
+int seg_tree_m[400010];
+int seg_tree_z[400010];
+int numofnum,numofround;
+
+int seg_init_m(int index, int start, int end){
+	if(start==end){
+		seg_tree_m[index]=arr_m[start];
+		return seg_tree_m[index];
+	}
+	int mid=(start+end)/2;
+	int ret1=seg_init_m(2*index, start,mid);
+	int ret2=seg_init_m(2*index+1, mid+1,end);
+	seg_tree_m[index]=ret1+ret2;
+	return seg_tree_m[index];
+}
+
+int seg_init_z(int index, int start, int end){
+	if(start==end){
+		seg_tree_z[index]=arr_z[start];
+		return seg_tree_z[index];
+	}
+	int mid=(start+end)/2;
+	int ret1=seg_init_z(2*index, start,mid);
+	int ret2=seg_init_z(2*index+1, mid+1,end);
+	seg_tree_z[index]=ret1+ret2;
+	return seg_tree_z[index];
+}
+
+int seg_get_numofm(int index, int start,int end, int left, int right){
+	
+	if(left>end||right<start){
+		return 0;
+	}
+	else if(left<=start&&right>=end){
+		return seg_tree_m[index];
+	}
+	else{
+		int mid=(start+end)/2;
+		int ret1=seg_get_numofm(2*index,start,mid,left,right);
+		int ret2=seg_get_numofm(2*index+1,mid+1,end,left,right);
+		return ret1+ret2;
+	}
+}
+int seg_get_numofz(int index, int start,int end, int left, int right){
+	
+	if(left>end||right<start){
+		return 0;
+	}
+	else if(left<=start&&right>=end){
+		return seg_tree_z[index];
+	}
+	else{
+		int mid=(start+end)/2;
+		int ret1=seg_get_numofz(2*index,start,mid,left,right);
+		int ret2=seg_get_numofz(2*index+1,mid+1,end,left,right);
+		return ret1+ret2;
+	}
+}
+
+int findleapnode_m(int index, int start, int end, int arrindex){
+	
+	if(start==end) return index;
+	int mid=(start+end)/2;
+	if(arrindex<=mid){
+		return findleapnode_m(2*index,start,mid,arrindex);
+	}
+	else{
+		return findleapnode_m(2*index+1,mid+1,end,arrindex);
+	}
+}
+
+int findleapnode_z(int index, int start, int end, int arrindex){
+	
+	if(start==end) return index;
+	int mid=(start+end)/2;
+	if(arrindex<=mid){
+		return findleapnode_z(2*index,start,mid,arrindex);
+	}
+	else{
+		return findleapnode_z(2*index+1,mid+1,end,arrindex);
+	}
+}
+
+void seg_modify_m(int index, int start, int end, int arrindex, int modifyval){
+	int leap=findleapnode_m(1,start,end,arrindex);
+	
+	if(leap==1){
+		seg_tree_m[leap]=modifyval;
+		return;
+	}
+	seg_tree_m[leap]=modifyval;
+	int parent=leap/2;
+	while(1){
+		seg_tree_m[parent]=seg_tree_m[parent*2]+seg_tree_m[parent*2+1];
+		if(parent==1) break;
+		parent=parent/2;
+	}
+	
+}
+
+void seg_modify_z(int index, int start, int end, int arrindex, int modifyval){
+	int leap=findleapnode_z(1,start,end,arrindex);
+	
+	if(leap==1){
+		seg_tree_z[leap]=modifyval;
+		return;
+	}
+	seg_tree_z[leap]=modifyval;
+	int parent=leap/2;
+	while(1){
+		seg_tree_z[parent]=seg_tree_z[parent*2]+seg_tree_z[parent*2+1];
+		if(parent==1) break;
+		parent=parent/2;
+	}
+	
+}
+
+int main(void)
+{
+	fastio;
+	int i,a,b,num;
+	char c;
+	while(cin>>numofnum>>numofround){
+		for(i=1; i<=numofnum;++i){
+			cin>>num;
+			if(num<0){
+				arr_m[i]=1;
+			}
+			else{
+				arr_m[i]=0;
+			}
+			if(num==0){
+				arr_z[i]=1;
+			}
+			else{
+				arr_z[i]=0;
+			}
+		}
+		seg_init_m(1,1,numofnum);
+		seg_init_z(1,1,numofnum);
+		for(i=0; i<numofround;++i){
+			cin>>c>>a>>b;
+			if(c=='C'){
+				if(b==0){
+					if(arr_z[a]==1){
+						continue;
+					}
+					if(arr_m[a]==1){
+						arr_z[a]++;
+						arr_m[a]--;
+						seg_modify_m(1,1,numofnum,a,0);
+						seg_modify_z(1,1,numofnum,a,1);
+					}
+					else{	//원래 plus
+						arr_z[a]++;
+						seg_modify_z(1,1,numofnum,a,1);
+					}
+					
+				}
+				else if(b<0){//바뀌는게 마이너스 
+					if(arr_m[a]==1){//원래 마이너스
+						continue;
+					}
+					if(arr_z[a]==1){//원래 0
+						arr_z[a]--;
+						arr_m[a]++;
+						seg_modify_z(1,1,numofnum,a,0);
+						seg_modify_m(1,1,numofnum,a,1);
+					}
+					else{	//원래 plus
+						arr_m[a]++;
+						seg_modify_m(1,1,numofnum,a,1);
+					}
+				}
+				else{//바뀌는게 플러스 
+					if(arr_z[a]==1){//원래 0
+						arr_z[a]--;
+						seg_modify_z(1,1,numofnum,a,0);
+					}
+					if(arr_m[a]==1){//원래마이너스
+						arr_m[a]--;
+						seg_modify_m(1,1,numofnum,a,0);
+					}
+				}
+			}
+			else{
+				if(seg_get_numofz(1,1,numofnum,a,b)>0){
+					cout<<0;
+				}
+				else{
+					int holjjak=seg_get_numofm(1,1,numofnum,a,b);
+					if(holjjak%2==0) cout<<"+";
+					else cout<<"-";
+				}
+			}
+		}
+		cout<<"\n";
+	}
+}
