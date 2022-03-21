@@ -1,0 +1,78 @@
+#include<iostream>
+
+using namespace std;
+
+int numofpanja;
+long long panja[100001];
+
+long long returnbiggest(int start, int end){
+	if(start==end){
+		return panja[start];
+	}
+	int mid = (start+end)/2;
+	
+	long long leftrect = returnbiggest(start, mid);
+	long long rightrect = returnbiggest(mid+1, end);
+	long long dap = leftrect>rightrect ? leftrect:rightrect;
+	int leftindex=mid, rightindex=mid+1;
+	int i,k;
+	long long lowest = panja[leftindex]<panja[rightindex]? panja[leftindex]:panja[rightindex];
+	long long garo = 2;
+	long long midrect = lowest*garo;
+	long long choidaenolbee = midrect;
+	leftindex--;
+	rightindex++;
+	
+	while(leftindex>=start&&rightindex<=end){
+		//cout<<leftindex<<" "<<rightindex<<"  ";
+		//cout<<midrect<<"\n";
+		if(panja[leftindex]>panja[rightindex]){
+			lowest = lowest<panja[leftindex] ? lowest:panja[leftindex];
+			leftindex--;
+			garo++;
+			midrect = garo*lowest;
+		}
+		else{
+			lowest = lowest<panja[rightindex] ? lowest:panja[rightindex];
+			rightindex++;
+			garo++;
+			midrect = garo*lowest;
+		}
+		
+		if(choidaenolbee<midrect) choidaenolbee = midrect;
+	}
+	
+	if(leftindex==start-1){
+		for(i=rightindex; i<=end; ++i){
+			lowest = lowest<panja[i] ? lowest:panja[i];
+			garo++;
+			midrect = garo*lowest;
+			if(choidaenolbee<midrect) choidaenolbee = midrect;
+		}
+	}
+	else if(rightindex==end+1){
+		for(i=leftindex; i>=start; --i){
+			lowest = lowest<panja[i] ? lowest:panja[i];
+			garo++;
+			midrect = garo*lowest;
+			if(choidaenolbee<midrect) choidaenolbee = midrect;
+		}
+	}
+	dap = dap>choidaenolbee ? dap : choidaenolbee;
+	//cout<<leftindex<<" "<<rightindex<<"\n";
+	//cout<<"최대넓이 : "<<choidaenolbee<<"\n";
+	return dap;
+}
+
+int main(void)
+{
+	int p;
+	while(1){
+		cin>>numofpanja;
+		if(numofpanja==0) return 0;
+		for(p=1; p<=numofpanja; ++p){
+			cin>>panja[p];
+		}
+		cout<<returnbiggest(1, numofpanja)<<"\n";
+	}
+}
