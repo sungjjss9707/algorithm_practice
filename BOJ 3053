@@ -1,0 +1,18 @@
+#include<iostream>
+#include<vector> 
+#define pi 3.141592653589
+#include<math.h>
+using namespace std;
+
+
+int main(void)
+{
+	//printf("%lf", math.PI);
+	int r;
+	cin >> r;
+	printf("%.6lf\n", pi*r*r);
+	printf("%.6lf", (double)(2*r*r));	
+}
+
+
+
