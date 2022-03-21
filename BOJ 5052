@@ -1,0 +1,57 @@
+#include<iostream>
+#include<string>
+#include<algorithm>
+#define fastio ios::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
+using namespace std;
+
+string phonebook[10001];
+int numofphone;
+
+bool compare2phone(int index1, int index2){ 	//두개가 일관성을 해치면 false반환 일관성있으면 true  
+	string str1 = phonebook[index1];
+	string str2 = phonebook[index2];
+	int len1 = str1.length();
+	int len2 = str2.length();
+	int i;
+	if(len1<len2){
+		for(i=0; i<len1; ++i){
+			if(str1[i]!=str2[i]) return true;
+		}
+	}
+	else{
+		for(i=0; i<len2; ++i){
+			if(str1[i]!=str2[i]) return true;
+		}
+	}
+	return false;	
+}
+
+bool thisphonebookok(){
+	int i;
+	for(i=1; i<numofphone; ++i){
+		if(!compare2phone(i,i+1)) return false; 	
+	}
+	return true;	
+}
+
+int main(void)
+{
+	fastio;
+	int testcase,i, t;
+	cin>>testcase;
+	for(t=0; t<testcase; ++t){
+		cin>>numofphone;
+		for(i=1; i<=numofphone; ++i){
+			cin>>phonebook[i];	
+		}
+		sort(phonebook+1, phonebook+numofphone+1);
+		/*
+		for(i=1; i<=numofphone; ++i){
+			cout<<phonebook[i]<<endl;	
+		}
+		cout<<endl<<"--------------------\n"; 
+		*/
+		if(thisphonebookok()) cout<<"YES\n";
+		else cout<<"NO\n";	
+	}
+}
