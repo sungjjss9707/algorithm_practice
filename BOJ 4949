@@ -1,0 +1,134 @@
+#include<iostream>
+#include<string.h>
+
+using namespace std;
+
+class stack{	//스택은 선입후출
+	//long long arr[100001];
+	char arr[101];
+	int endindex;
+public:
+	stack(){
+		endindex=0;
+	}
+	/*
+	void push(int a){
+		arr[endindex]=a;
+		endindex++;
+	}
+	*/
+	void push(char a){
+		arr[endindex]=a;
+		endindex++;
+	}
+	char pop(){
+		if(endindex==0) return 'x';
+		char temp = arr[endindex-1];
+		arr[endindex-1]=' ';
+		endindex--;
+		return temp;
+	}
+	/*
+	int pop(){
+		int temp = arr[endindex-1];
+		arr[endindex-1]=0;
+		endindex--;
+		return temp;
+	}
+	*/
+	int size(){
+		return endindex;
+	}
+	
+	int empty(){
+		if(endindex==0) return 1;
+		return 0;
+	}
+	
+	int top(){
+		if(endindex==0) return -1;
+		return arr[endindex-1];
+	}
+	
+	void pop1(){
+		arr[endindex-1]=0;
+		endindex--;
+	}
+	/*
+	void printstack(){
+		int i;
+		for(i=0; i<endindex; ++i){
+			cout<<arr[i]<<" ";
+		}
+		cout<<endl;
+	}
+	*/
+	void printstack(){
+		int i;
+		for(i=0; i<endindex; ++i){
+			cout<<arr[i]<<" ";
+		}
+		cout<<endl;
+	}
+
+	void clear(){
+		int i;
+		for(i=0; i<endindex; ++i){
+			arr[i] = ' ';
+		}
+		endindex=0;
+	}
+};
+
+
+
+int main(void)
+{
+	string sentence="";
+	char temp;
+	int num,i,k, flag;
+	stack s = stack();
+	while(1){
+		flag=1;
+		getline(cin, sentence);
+		if(sentence=="."){
+			break;
+		}
+		num++;
+		for(i=0; i<sentence.length(); ++i){
+			if(sentence[i]=='('||sentence[i]=='['){
+				s.push(sentence[i]);
+				//s.printstack();
+			}
+			else if(sentence[i]==']'){
+				temp = s.pop();
+				if(temp!='['){
+					flag=0;
+					//s.printstack();
+					break;
+				}
+			}
+			else if(sentence[i]==')'){
+				temp = s.pop();
+				if(temp!='('){
+					flag=0;
+					//s.printstack();
+					break;
+				}
+			}
+			else{
+			}
+			
+		}
+		if(flag==1&&s.empty()){
+			cout<<"yes"<<endl;
+		}
+		else{
+			cout<<"no"<<endl;
+		}
+		
+		sentence="";
+		s.clear();		
+	}
+	
+}
