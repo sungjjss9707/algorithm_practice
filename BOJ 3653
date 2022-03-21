@@ -1,0 +1,107 @@
+#include<iostream>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+int numofdvd, watchdvd, topfloor;
+//int upperdvd[100001];
+int dvd[200010];
+int dvdpos[100001];
+int seg_tree[800050];
+
+void clear(){
+	int i;
+	for(i=0; i<=watchdvd; ++i){
+		dvd[i]=0;
+	}
+	topfloor = watchdvd+1;
+	for(i=watchdvd+1; i<=watchdvd+numofdvd; ++i){
+		dvd[i]=1;
+	}
+	for(i=1; i<=numofdvd; ++i){
+		dvdpos[i] = i+watchdvd;
+	}
+}
+
+int seg_init(int index, int start, int end){
+	if(start==end){
+		seg_tree[index] = dvd[start];
+		return dvd[start];
+	}
+	int mid=(start+end)/2;
+	int left = seg_init(2*index, start, mid);
+	int right = seg_init(2*index+1, mid+1, end);
+	int ret = left+right;
+	seg_tree[index] = ret;
+	return ret;
+}
+
+int seg_hap(int index, int start, int end, int left, int right){
+	if(start>right||end<left){
+		return 0;
+	}
+	else if(start>=left&&end<=right){
+		return seg_tree[index];
+	}
+	else{
+		int mid = (start+end)/2;
+		int ret1 = seg_hap(2*index, start, mid, left, right);
+		int ret2 = seg_hap(2*index+1, mid+1, end, left, right);
+		int ret = ret1+ret2;
+		return ret;
+	}
+}
+
+int get_seg_index(int index, int start, int end, int floor){
+	if(start==end){
+		return index;
+	}
+	int mid = (start+end)/2;
+	if(mid>=floor) return get_seg_index(2*index, start, mid, floor);
+	else return get_seg_index(2*index+1, mid+1, end, floor);
+}
+
+void seg_modify(int index, int start, int end, int floor){
+	int seg_index = get_seg_index(index, start, end, floor);
+	if(seg_tree[seg_index]==0){
+		seg_tree[seg_index]=1;
+	}
+	else{
+		seg_tree[seg_index]=0;
+	}
+	int upindex;
+	while(1){
+		if(seg_index==1) break;
+		upindex = seg_index/2;
+		seg_tree[upindex] = seg_tree[upindex*2]+seg_tree[upindex*2+1];
+		seg_index=seg_index/2;
+	}
+}
+
+int main(void)
+{
+	fastio; 
+	int testcase, i,t, dvdnum, end, dvdfloor;
+	cin>>testcase;
+	for(t=0; t<testcase; ++t){
+		cin>>numofdvd>>watchdvd;
+		clear();
+		end = numofdvd+watchdvd;
+		seg_init(1,1,end);
+
+		for(i=0; i<watchdvd; ++i){
+			cin>>dvdnum;
+			dvdfloor = dvdpos[dvdnum];
+			//cout<<dvdnum<<" 은"<<dvdfloor<<"층에있음\n";
+			if(dvdfloor==1){/////////////////////
+				cout<<0<<" ";
+				continue;
+			}
+			cout<<seg_hap(1,1,end, 1, dvdfloor-1)<<" ";
+			seg_modify(1,1,end, dvdfloor);
+			topfloor--;
+			dvdpos[dvdnum] = topfloor;
+			seg_modify(1,1,end, topfloor);
+		}
+		cout<<"\n";
+	}
+}
