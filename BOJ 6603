@@ -1,0 +1,66 @@
+#include<iostream>
+#include<vector>
+#define fastio ios::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
+using namespace std;
+
+int arr[50];
+int check[50];
+int visit, numofnum;
+
+void bruteforce(vector<int>& v){
+	if(v.size()==6){
+		int i;
+		for(i=0; i<v.size(); ++i){
+			cout<<v[i]<<" ";
+		}
+		cout<<"\n";
+		return;
+	}
+	
+	int i, num, len = v.size();
+	for(i=0; i<numofnum; ++i){
+		num = arr[i];
+		if(len==0){
+			if(check[num]==0){
+				check[num]=1;
+				v.push_back(num);
+				bruteforce(v);
+				check[num]=0;
+				v.pop_back();
+			}
+		}
+		else{
+			if(check[num]==0&&v[len-1]<num){
+				check[num]=1;
+				v.push_back(num);
+				bruteforce(v);
+				check[num]=0;
+				v.pop_back();
+			}
+		}
+		
+	}
+	
+}
+
+int main(void)
+{
+	//fastio;
+	int i;
+	while(1){
+		cin>>numofnum;
+		if(numofnum==0) break;
+		for(i=0; i<numofnum; ++i){
+			cin>>arr[i];
+		}
+		vector<int>v;
+		bruteforce(v);
+		cout<<"\n";
+		/*
+		for(i=0; i<numofcase; ++i){
+			cout<<arr[i]<<" ";
+		}
+		cout<<"\n";
+		*/
+	}
+}
