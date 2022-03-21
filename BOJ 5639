@@ -1,0 +1,69 @@
+#include<iostream>
+#include<vector>
+using namespace std;;
+
+int numofnum;
+vector<int> jeon;
+int hoo[10001];
+vector<int> myhoo;
+
+void jeontohoo(int jstart, int jend){
+	//hoo.push_back()jeon[jstart];
+	//cout<<jeon[jstart]<<" ";
+	myhoo.push_back(jeon[jstart]);
+	//cout<<hoo[hend]<<" "<<jstart<<"-"<<jend<<endl;
+	if(jstart==jend) return;
+	if(jend-jstart==1){
+		myhoo.push_back(jeon[jstart+1]);
+		return;
+	}
+	int i, index=jstart+1;
+	for(i=jstart; i<=jend; ++i){
+		if(jeon[i]>jeon[jstart]){
+			index=i;
+			break;
+		}
+	}
+	int cha = jend-index;
+	if(index<=jend) jeontohoo(index, jend);
+	if(jstart+1<=index-1) jeontohoo(jstart+1, index-1);
+}
+/*
+void jeontohoo2(int jstart, int jend, int hstart, int hend){
+	hoo[hend] = jeon[jstart];
+	cout<<hoo[hend]<<" "<<jstart<<"-"<<jend<<endl;
+	if(jstart==jend) return;
+	if(jend-jstart==1){
+		hoo[hend-1] = jeon[jstart+1];
+		return;
+	}
+	int i, index=jstart+1;
+	for(i=jstart; i<=jend; ++i){
+		if(jeon[i]>jeon[jstart]){
+			index=i;
+			break;
+		}
+	}
+	int cha = jend-index;
+	if(index<=jend&&hend-1-index<=hend-1) jeontohoo(index, jend, hend-1-index,hend-1);
+	if(jstart+1<=index-1&&hstart<=hend-2-index) jeontohoo(jstart+1, index-1, hstart, hend-2-index);
+}
+*/
+int main(void)
+{
+	int num;
+	jeon.push_back(-1);
+	while(!cin.eof()){
+		cin>>num;
+		jeon.push_back(num);
+	}
+	jeontohoo(1, jeon.size()-2);
+	for(int i=myhoo.size()-1; i>=0; --i){
+		cout<<myhoo[i]<<"\n";
+	}
+	/*
+	for(int i=0; i<jeon.size(); ++i){
+		cout<<jeon[i]<<" ";
+	}
+	*/
+}
