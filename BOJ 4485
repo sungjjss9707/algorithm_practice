@@ -1,0 +1,87 @@
+#include<iostream>
+#include<vector>
+#include<queue>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+vector<pair<int,int>> v[15630];
+int dist[15630];
+int mymap[126][126];
+int side,numofver,inf=2000000000;
+int dy[4]={1,0,-1,0};
+int dx[4]={0,1,0,-1};
+
+
+int dijkstra(){
+	int i;
+	for(i=1; i<=numofver;++i){
+		dist[i]=inf;
+	}
+	priority_queue<pair<int,int>,vector<pair<int,int>>,greater<pair<int,int>>> q;
+	q.push({0,1});
+	int nowver,nowga,nextver,nextga;
+	while(!q.empty()){
+		nowver=q.top().second;
+		nowga=q.top().first;
+		q.pop();
+		if(nowga>dist[nowver]) continue;
+		//////
+		for(i=0; i<v[nowver].size(); ++i){
+			nextver=v[nowver][i].first;
+			nextga=v[nowver][i].second+nowga;
+			if(dist[nextver]>nextga){
+				dist[nextver]=nextga;
+				q.push({nextga,nextver});
+			}
+		}
+	}
+	return dist[numofver]+mymap[1][1];
+}
+
+void clear(){
+	int i;
+	for(i=1; i<=numofver; ++i){
+		v[i].clear();
+	}
+}
+
+int main(void)
+{
+	fastio;
+	int i,k,n,num,ny,nx,vertex,n_vertex, count=1;
+	while(1){
+		cin>>side;
+		numofver=side*side;
+		clear();
+		if(side==0) break;
+		for(i=1; i<=side; ++i){
+			for(k=1; k<=side;++k){
+				cin>>mymap[i][k];
+			}
+		}
+		vertex=1;
+		for(i=1; i<=side; ++i){
+			for(k=1; k<=side;++k){
+				for(n=0;n<4;++n){
+					ny=i+dy[n];
+					nx=k+dx[n];
+					if(ny>=1&&ny<=side&&nx>=1&&nx<=side){
+						n_vertex=(ny-1)*side+nx;
+						v[vertex].push_back({n_vertex,mymap[ny][nx]});
+					}
+				}
+				vertex++;
+			}
+		}
+		cout<<"Problem "<<count++<<": "<<dijkstra()<<"\n";
+		/*
+		for(i=1;i<=side*side; ++i){
+			for(k=0;k<v[i].size();++k){
+				cout<<v[i][k].first<<" "<<v[i][k].second<<"   ";
+			}
+			cout<<endl;
+			
+		}
+		*/
+	}
+}
