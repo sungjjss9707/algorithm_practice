@@ -1,0 +1,97 @@
+#include<iostream>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+/*
+5 5
+.xx..
+..x..
+.....
+...x.
+...x.
+
+6 10
+..x.......
+.....x....
+.x....x...
+...x...xx.
+..........
+....x.....
+
+*/
+
+
+
+int sero, garo;
+char map[10001][501];
+int dy[3] = {-1,0,1};
+int dx[3] = {1,1,1};
+int realdap = 0;
+int visit[10001][501];
+bool returnflag=false;
+
+
+void printmap(){
+	int i,k;
+	for(i=1; i<=sero; ++i){
+		for(k=1; k<=garo; ++k){
+			cout<<map[i][k];
+		}
+		cout<<endl;
+	}
+	cout<<endl;
+}
+
+
+void goright(int ypos, int xpos){
+	//map[ypos][xpos]=c;
+	visit[ypos][xpos] = 1;
+	if(xpos==garo){
+		returnflag=true;
+		//printmap();
+		realdap++;
+		return;
+	}
+	int i, ny, nx;
+	for(i=0; i<3; ++i){
+		ny = ypos+dy[i];
+		nx = xpos+dx[i];
+		if(ny>=1&&ny<=sero&&nx<=garo&&map[ny][nx]=='.'&&visit[ny][nx]==0){
+			//map[ny][nx]=c;
+			goright(ny, nx);
+			if(returnflag) return;
+			//map[nx][ny]='.';
+		}
+	}
+}
+
+int findnumofgasroad(){
+	int i,dap=0;
+	char c;
+	for(i=1; i<=sero; ++i){
+		c= (char)(i+'0');
+		//map[i][1]=c;
+		returnflag=false;
+		goright(i,1);
+		//printmap();
+	}
+	/*
+	for(i=1; i<=sero; ++i){
+		if(map[i][garo]!='.') dap++;
+	}
+	*/
+	return realdap;
+}
+
+int main(void)
+{
+	fastio;
+	cin>>sero>>garo;
+	int i,k;
+	for(i=1; i<=sero; ++i){
+		for(k=1; k<=garo; ++k){
+			cin>>map[i][k];
+		}
+	}
+	cout<<findnumofgasroad();
+}
