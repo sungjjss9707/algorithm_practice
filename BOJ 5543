@@ -1,0 +1,75 @@
+import java.util.*;
+
+
+class smallest{
+	int getsmall(int a, int b, int c) {
+		int ans; 
+		if(a>=b) {
+			ans=b;
+		}
+		else {
+			ans=a;
+		}
+		
+		if(ans>=c) {
+			ans = c;
+		}
+		return ans;
+	}
+	
+	int getsmall(int d, int e) {
+		int ans; 
+		if(d>=e) {
+			ans=e;
+		}
+		else {
+			ans=d;
+		}
+		return ans;
+	}
+}
+
+class sanguen{
+	int[] ham = new int[3];
+	int[] drink = new int[2];
+	
+	
+	sanguen(int a, int b, int c, int d, int e) {
+		ham[0]=a;
+		ham[1]=b;
+		ham[2]=c;
+		drink[0]=d;
+		drink[1]=e;
+	}
+	
+	int small() {
+		int smallham, smalldrink;
+		smallest sm1 = new smallest();
+		smallest sm2 = new smallest();
+		smallham = sm1.getsmall(ham[0], ham[1],ham[2]);
+		smalldrink = sm1.getsmall(drink[0], drink[1]);
+		
+		
+		return (smallham+smalldrink-50);
+		
+	}
+}
+
+public class Main {
+	
+	
+	public static void main(String[] args) {
+		int a,b,c,d,e;
+		Scanner sc = new Scanner(System.in);
+		a=sc.nextInt();
+		b=sc.nextInt();
+		c=sc.nextInt();
+		d=sc.nextInt();
+		e=sc.nextInt();
+		sanguen san = new sanguen(a,b,c,d,e);
+		System.out.println(san.small());
+	}
+	
+	
+	
+}
