@@ -1,0 +1,58 @@
+#include<iostream>
+#include<string>
+#include<deque>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+string password;
+
+void realpassword(){
+	deque<char> jeon;
+	deque<char> hoo;
+	int i;
+	char c;
+	for(i=0; i<password.length(); ++i){
+		c=password[i];
+		if(c=='<'){
+			if(!jeon.empty()){
+				hoo.push_front(jeon.back());
+				jeon.pop_back();	
+			}	
+		}
+		else if(c=='>'){
+			if(!hoo.empty()){
+				jeon.push_back(hoo.front());
+				hoo.pop_front();	
+			}
+			
+		}
+		else if(c=='-'){
+			if(!jeon.empty()){
+				jeon.pop_back();	
+			}
+		}
+		else{
+			jeon.push_back(c);
+		}	
+	}
+	while(!jeon.empty()){
+		cout<<jeon.front();
+		jeon.pop_front();	
+	}
+	while(!hoo.empty()){
+		cout<<hoo.front();
+		hoo.pop_front();	
+	}	
+}
+
+int main(void)
+{
+	fastio;
+	int testcase, t;
+	cin>>testcase;
+	for(t=0; t<testcase; ++t){
+		cin>>password;
+		realpassword();
+		cout<<"\n";	
+	}	
+	return 0;
+}
