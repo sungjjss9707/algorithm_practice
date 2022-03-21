@@ -1,0 +1,23 @@
+#include<stdio.h>
+
+int main(void)
+{
+	int  num,i, sort=0;
+	int arr[10], namojee[42];
+	for(i=0; i<10; ++i){
+		scanf("%d", &arr[i]);
+	}
+	for(i=0; i<42; ++i){
+		namojee[i]=0;	
+	}
+	for(i=0; i<10; ++i){
+		namojee[arr[i]%42]=namojee[arr[i]%42]+1;
+	}	
+
+	for(i=0; i<42; ++i){
+		if(namojee[i]!=0){
+			sort=sort+1;
+		}
+	}
+	printf("%d", sort);
+} 
