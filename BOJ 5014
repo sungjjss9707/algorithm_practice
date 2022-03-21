@@ -1,0 +1,49 @@
+#include<iostream>
+#include<queue>
+using namespace std;
+
+int highest, now, goal, up, down;
+int visit[1000001];
+
+
+void bfs(){
+	queue<pair<int, int>> q;
+	q.push({now, 0});
+	visit[now]=1;
+	int nowfloor, nowhwetsu, next_up, next_down;
+	while(!q.empty()){
+		nowfloor = (q.front()).first;
+		nowhwetsu = (q.front()).second;
+		q.pop();
+		if(nowfloor==goal){
+			cout<<nowhwetsu;
+			return;
+		}
+		
+		next_up = nowfloor+up;
+		next_down = nowfloor-down;
+		if(next_up<=highest){
+			if(visit[next_up]==0){
+				visit[next_up]=1;
+				q.push({next_up,nowhwetsu+1});
+			}
+		}
+		if(next_down>=1){
+			if(visit[next_down]==0){
+				visit[next_down]=1;
+				q.push({next_down,nowhwetsu+1});
+			}
+		}
+		
+		
+	}
+	
+	cout<<"use the stairs";
+	
+}
+
+int main(void)
+{
+	cin>>highest>>now>>goal>>up>>down;
+	bfs();
+}
