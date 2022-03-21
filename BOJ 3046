@@ -1,0 +1,11 @@
+#include<iostream>
+
+using namespace std;
+
+int main(void)
+{
+	int a, avg, cha;
+	cin>>a>>avg;
+	cha = a-avg;
+	cout<<avg-cha;
+}
