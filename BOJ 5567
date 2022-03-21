@@ -1,0 +1,67 @@
+#include<iostream>
+#include<vector>
+#include<queue>
+using namespace std;
+
+int numofpeople;
+vector<int> cheengoo[501];
+int visit[501];
+
+int bfs(){
+	int i;
+	for(i=1; i<=numofpeople; ++i){
+		visit[i]=5000;
+	}
+	
+	queue<pair<int, int>> q;
+	visit[1]=0;
+	q.push({1,0});
+	int nowfriend, nowd, nextfriend, nextd;
+	while(!q.empty()){
+		nowfriend = q.front().first;
+		nowd = q.front().second;
+		q.pop();
+		if(nowd>2) continue;
+		for(i=0; i<cheengoo[nowfriend].size(); ++i){
+			nextfriend = cheengoo[nowfriend][i];
+			nextd = nowd+1;
+			if(visit[nextfriend]==5000){
+				visit[nextfriend] = nextd;
+				q.push({nextfriend, nextd});
+			}
+		}
+	}
+	/*
+	for(i=1; i<=numofpeople; ++i){
+		cout<<visit[i]<<" ";
+	}
+	cout<<endl;
+	*/
+	int ret=0;
+	for(i=1; i<=numofpeople; ++i){
+		if(visit[i]<=2) ret++;
+	}
+	return ret-1;
+}
+
+int main(void)
+{
+	cin>>numofpeople;
+	int i, lenoflist, p1, p2;
+	cin>>lenoflist;
+	for(i=1; i<=lenoflist; ++i){
+		cin>>p1>>p2;
+		cheengoo[p1].push_back(p2);
+		cheengoo[p2].push_back(p1);
+	}
+	/*
+	for(i=1; i<=numofpeople; ++i){
+		cout<<i<<"의 친구 : ";
+		for(int k=0; k<cheengoo[i].size(); ++k){
+			cout<<cheengoo[i][k]<<" ";
+		}
+		cout<<endl;
+	}
+	*/
+	cout<<bfs();
+}
