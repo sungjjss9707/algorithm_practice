@@ -1,0 +1,76 @@
+#include<iostream>
+#include<map> 
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+int numofrel;
+int friend_size[200002];
+int parent[200002];
+map<string, int> m;
+
+void clear(){
+	int i;
+	for(i=0; i<=200001; ++i){
+		parent[i]=i;
+		friend_size[i]=1;
+	}
+}
+
+int get_parent(int x){
+	if(parent[x]==x) return x;
+	int parent_x = get_parent(parent[x]);
+	parent[x] = parent_x;
+	return parent_x;
+}
+
+int union_set(int x, int y){
+	int parent_x = get_parent(x);
+	int parent_y = get_parent(y);
+	if(parent_x==parent_y) return friend_size[parent_x];
+	else if(parent_x<parent_y){	//x의 부모님쪽으로 합쳐야함 
+		parent[parent_y] = parent_x;
+		friend_size[parent_x] = friend_size[parent_x]+friend_size[parent_y];
+		return friend_size[parent_x];
+	}
+	else{
+		parent[parent_x] = parent_y;
+		friend_size[parent_y] = friend_size[parent_x]+friend_size[parent_y];
+		return friend_size[parent_y];
+	}
+}
+
+int main(void)
+{
+	fastio;
+	int testcase;
+	string f1, f2;
+	cin>>testcase;
+	int i,t, count, n1, n2;
+	for(t=0; t<testcase; ++t){
+		m.clear();
+		clear();
+		count=1;
+		cin>>numofrel;
+		for(i=0; i<numofrel; ++i){
+			cin>>f1>>f2;
+			if(!m.count(f1)){	//f1이 처음이면 
+				m.insert({f1, count});
+				n1=count;
+				count++;
+			}
+			else{
+				n1 = m[f1];
+			}
+			if(!m.count(f2)){
+				m.insert({f2, count});
+				n2=count;
+				count++;
+			}
+			else{
+				n2=m[f2];
+			}
+			cout<<union_set(n1, n2)<<"\n";
+			//<<n1<<" "<<n2<<endl;
+		}
+	}
+}
