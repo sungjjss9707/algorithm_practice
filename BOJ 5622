@@ -1,0 +1,76 @@
+import java.util.*;
+
+class moonja{
+	String mystr;
+	String[] daier = new String[10];
+	
+	moonja(String a){
+		mystr = a;
+		daier[0] = "";
+		daier[1] = "";
+		daier[2] = "ABC";
+		daier[3] = "DEF";
+		daier[4] = "GHI";
+		daier[5] = "JKL";
+		daier[6] = "MNO";
+		daier[7] = "PQRS";
+		daier[8] = "TUV";
+		daier[9] = "WXYZ";
+	}
+	
+	
+	int showtime() {
+		int time;
+		time = gettime(alphatoint());
+		return time;
+	}
+	
+	int[] alphatoint() {
+		int i,k,t;
+		int[] phone = new int[mystr.length()];
+		for(i=0; i<mystr.length(); ++i) {
+			for(k=2; k<=9;++k) {
+				for(t=0; t<daier[k].length(); ++t) {
+					if(daier[k].charAt(t) == mystr.charAt(i)) {
+						phone[i] = k;
+					}
+				}
+			}
+		}
+		return phone;
+	}
+	
+	int gettime(int[] arr) {
+		int i, sum=0;
+		for(i=0 ;i<arr.length; ++i) {
+			sum = sum+(arr[i]+1);
+		}
+		return sum;
+	}
+	
+}
+
+
+public class Main {
+
+	public static void main(String[] args) {
+		String munja;
+		int i;
+		
+		
+		
+		
+		Scanner sc = new Scanner(System.in);
+		munja = sc.next();
+		moonja m1 = new moonja(munja);
+		/*
+		for(i=0; i<munja.length();++i) {
+			System.out.print(m1.alphatoint()[i]);
+		}
+		System.out.println();
+		*/
+		System.out.println(m1.showtime());
+
+	}
+
+}
