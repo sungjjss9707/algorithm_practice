@@ -1,0 +1,78 @@
+#include<iostream>
+#include<vector>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+int numofnum;
+int arr[101];
+long long fromleft[101][21];
+
+void clear(){
+	int i,k;
+	for(i=0; i<=numofnum; ++i){
+		for(k=0; k<=20; ++k){
+			fromleft[i][k]=0;
+		}
+	}
+}
+
+void leftgo(int num, int hap){
+	//cout<<num<<" "<<hap<<endl;
+	if(hap>20||hap<0) return;
+	if(num>numofnum-1) return;
+	fromleft[num][hap]=fromleft[num][hap]+1;
+	
+	int plus = hap+arr[num+1];
+	int minus = hap-arr[num+1];
+	leftgo(num+1, plus);
+	leftgo(num+1, minus);
+	/*
+	if(plus<=20&&plus>=0) leftgo(num+1, plus);
+	if(minus<=20&&minus>=0) leftgo(num+1, minus);
+	*/
+}
+
+long long calcul(){
+	clear();
+	//cout<<"Fuck\n";
+	
+	//leftgo(1,arr[1]);
+	//midgo(numofnum,arr[numofnum]);
+	int i,k;
+	fromleft[1][arr[1]]=1;
+	for(i=1; i<numofnum; ++i){
+		for(k=0; k<=20; ++k){
+			if(fromleft[i][k]!=0){
+				if(k+arr[i+1]>=0&&k+arr[i+1]<=20){
+					fromleft[i+1][k+arr[i+1]] = fromleft[i+1][k+arr[i+1]]+fromleft[i][k];
+				}
+				if(k-arr[i+1]>=0&&k-arr[i+1]<=20){
+					fromleft[i+1][k-arr[i+1]] = fromleft[i+1][k-arr[i+1]]+fromleft[i][k];
+				}
+			}
+		}
+	}
+	/*
+	for(i=1; i<=numofnum; ++i){
+		for(k=0; k<=20; ++k){
+			cout << fromleft[i][k]<<" ";
+		}
+		cout<<endl;
+	}
+	cout<<endl;
+	*/
+	long long dap=0;
+	dap = fromleft[numofnum-1][arr[numofnum]];
+	return dap;
+}
+
+int main(void)
+{
+	fastio;
+	cin>>numofnum;
+	int i;
+	for(i=1; i<=numofnum; ++i){
+		cin>>arr[i];
+	}
+	cout<<calcul();
+}
