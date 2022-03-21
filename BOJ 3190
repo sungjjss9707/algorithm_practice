@@ -1,0 +1,164 @@
+#include<iostream>
+#include<deque>
+using namespace std;
+
+int map[101][101];
+int originmap[101][101];
+char second[10001];
+int numofhangdong;
+int side;
+int numofapple;
+
+deque<pair<int, int>> jee;
+
+
+
+void init(){
+	int i,k;
+	for(i=1; i<=side; ++i){
+		for(k=1; k<=side; ++k){
+			map[i][k]=0;
+			originmap[i][k]=0;
+		}
+	}
+	for(i=0; i<=10000; ++i){
+		second[i]='x';
+	}
+}
+
+char banghyangjeonhwan(char nowbanghyang, char command){
+	char nextbanghyang;
+	if(command=='x') return nowbanghyang;
+	if(nowbanghyang=='U'){
+		if(command=='R'){
+			nextbanghyang = 'R';
+		}
+		else{
+			nextbanghyang = 'L';
+		}	
+		
+	}
+	else if(nowbanghyang=='D'){
+		if(command=='R'){
+			nextbanghyang = 'L';
+		}
+		else{
+			nextbanghyang = 'R';
+		}
+	}
+	else if(nowbanghyang=='R'){
+		if(command=='R'){
+			nextbanghyang = 'D';
+		}
+		else{
+			nextbanghyang = 'U';
+		}
+	}
+	else if(nowbanghyang=='L'){
+		if(command=='R'){
+			nextbanghyang = 'U';
+		}
+		else{
+			nextbanghyang = 'D';
+		}
+	}
+	return nextbanghyang;
+	
+}
+
+void printmap(){
+	int i,k;
+	for(i=1; i<=side; ++i){
+		for(k=1; k<=side; ++k){
+			cout<<map[i][k]<<" ";
+		}
+		cout<<"\n";
+	}
+}
+
+int main(void)
+{
+	cin>>side>>numofapple;
+	int i,k, y,x, cho;
+	char alpha;
+	init();
+	for(i=0; i<numofapple; ++i){
+		cin>>y>>x;
+		map[y][x]=2;
+		originmap[y][x]=2;
+	}
+	cin>>numofhangdong;
+	
+	for(i=0; i<numofhangdong; ++i){
+		cin>>cho>>alpha;
+		if(alpha=='D') alpha='R';
+		second[cho]=alpha;
+	}
+	cho=1;
+	jee.push_back({1,1});
+	map[1][1]=1;
+	/*
+	for(i=0; i<=20; ++i){
+		cout<<i<<"초 : "<<second[i]<<"\n";
+	}
+	*/
+	char nowbanghyang = 'R', nextbanghyang, command;
+	int nowheadpos_y, nowheadpos_x,nextheadpos_y, nextheadpos_x, nowtailpos_y, nowtailpos_x;
+	//cout<<"----------------------- start-------------------------\n";
+	//cout<<0<<"초 : \n";
+	//printmap();
+	//cout<<"\n";
+	while(1){
+		nowheadpos_y = jee.front().first;
+		nowheadpos_x = jee.front().second;
+		command = second[cho];
+		if(nowbanghyang=='R'){
+			nextheadpos_y= nowheadpos_y; 
+			nextheadpos_x= nowheadpos_x+1;
+		}
+		else if(nowbanghyang=='L'){
+			nextheadpos_y= nowheadpos_y; 
+			nextheadpos_x= nowheadpos_x-1;
+		}
+		else if(nowbanghyang=='U'){
+			nextheadpos_y= nowheadpos_y-1; 
+			nextheadpos_x= nowheadpos_x;
+		}
+		else{
+			nextheadpos_y= nowheadpos_y+1; 
+			nextheadpos_x= nowheadpos_x;
+		}
+		//cout<<"지금있는곳 : "<<nowheadpos_y<<","<<nowheadpos_x<<"  다음갈곳 : "<<nextheadpos_y<<","<<nextheadpos_x<<"\n\n";
+		if(nextheadpos_y>side||nextheadpos_y<1||nextheadpos_x>side||nextheadpos_x<1||map[nextheadpos_y][nextheadpos_x]==1){
+			break;
+		}
+		nowtailpos_y = jee.back().first;
+		nowtailpos_x = jee.back().second;
+		jee.push_front({nextheadpos_y, nextheadpos_x});
+		map[nextheadpos_y][nextheadpos_x]=1;
+		if(originmap[nowheadpos_y][nowheadpos_x]==0){
+			map[nowtailpos_y][nowtailpos_x]=0;
+			jee.pop_back();
+		}
+		else{
+			
+			originmap[nowheadpos_y][nowheadpos_x]=0;
+			/*cout<<"오리진맵 바뀜\n";
+			for(i=1; i<=side; ++i){
+				for(k=1; k<=side; ++k){
+					cout<<originmap[i][k]<<" ";
+				}	
+				cout<<"\n";
+			}
+			cout<<"----------\n\n";
+			*/
+		}
+		//nowbanghyang = nextbanghyang;
+		nowbanghyang = banghyangjeonhwan(nowbanghyang, command);
+		//cout<<cho<<"초 : \n";
+		//printmap();
+		//cout<<"\n";
+		cho++;
+	}
+	cout<<cho;
+}
