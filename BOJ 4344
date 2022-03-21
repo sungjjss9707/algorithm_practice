@@ -1,0 +1,76 @@
+import java.util.*;
+
+class classmat{
+	ArrayList<Integer> arr = new ArrayList<>();
+	
+	
+	void addscore(int score) {
+		arr.add(score);
+	}
+	
+	void printscore() {
+		
+		int i ;
+		for(i=0; i<arr.size(); ++i) {
+			System.out.print(arr.get(i)+" ");
+		}
+	}
+	
+	int getsum() {
+		int i, sum = 0;
+		for(i=0; i<arr.size();++i) {
+			sum=sum+arr.get(i);
+		}
+		return sum;
+	}
+	
+	double getavg() {
+		double doublesum = (double)getsum(), doublesize = (double)(arr.size());
+		return doublesum/doublesize;
+	}
+	
+	double beeyul() {
+		int i=0, num = arr.size(), good=0;
+		double avg = getavg(), answer, percent;
+		for(i=0; i<num; ++i) {
+			if((double)arr.get(i)>avg) {
+				good = good + 1;
+			}
+		}
+		answer = (double)good/(double)num;
+		percent = 100.0*answer;
+		//return Math.round(percent*1000)/1000.0;
+		return percent;
+	}
+}
+
+
+
+
+public class Main{
+
+	public static void main(String[] args) {
+		int numofcase,i,k, numofstud,score;
+		Scanner sc = new Scanner(System.in);
+		numofcase = sc.nextInt();
+		
+		classmat[] school = new classmat[numofcase];
+		
+		for(i=0; i<numofcase; ++i) {
+			numofstud = sc.nextInt();
+			school[i] = new classmat();/////////////////////
+			for(k=0; k<numofstud; ++k) {
+				score = sc.nextInt();
+				school[i].addscore(score);
+			}
+			
+		}
+		for(i=0; i<numofcase; ++i) {
+			//school[i].printscore();
+			//System.out.println(school[i].beeyul()+"%");
+			System.out.println(String.format("%.3f",school[i].beeyul())+"%");
+		}
+
+	}
+
+}
