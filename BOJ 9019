@@ -1,0 +1,88 @@
+#include<iostream>
+#include<queue>
+#include<string>
+#define fastio ios::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
+using namespace std;
+
+int visit[10000];
+
+void clear(){
+	for(int i=0; i<10000; ++i){
+		visit[i]=0;
+	}
+}
+
+int doobae(int a){
+	return (2*a)%10000;
+}
+
+int minus_1(int a){
+	if(a==0){
+		return 9999;
+	}
+	return a-1;
+}
+
+int left(int a){
+	int gorightend = a/1000;
+	int namojee = a%1000;
+	int dap = namojee*10+gorightend;
+	return dap;
+}
+
+int right(int a){
+	int goleftend = a%10;
+	int namojee = a/10;
+	int dap = goleftend*1000+namojee;
+	return dap;
+}
+
+void bfs(int start, int end){
+	queue<pair<int, string>> q;
+	q.push({start, ""});
+	visit[start]=1;
+	int nownum,d,s,l,r;
+	string nowstring;
+	while(!q.empty()){
+		nownum = q.front().first;
+		nowstring = q.front().second;
+		q.pop();
+		if(nownum==end){
+			cout<<nowstring<<"\n";
+			return;
+		}
+		d=doobae(nownum);
+		s=minus_1(nownum);
+		l=left(nownum);
+		r=right(nownum);
+		if(visit[d]==0){
+			visit[d]=1;
+			q.push({d,nowstring+"D"});
+		}
+		if(visit[s]==0){
+			visit[s]=1;
+			q.push({s,nowstring+"S"});
+		}
+		if(visit[l]==0){
+			visit[l]=1;
+			q.push({l,nowstring+"L"});
+		}
+		if(visit[r]==0){
+			visit[r]=1;
+			q.push({r,nowstring+"R"});
+		}
+	}
+}
+
+int main(void)
+{
+	fastio;
+	int testcase, start, end;
+	int t;
+	cin>>testcase;
+	for(t=0; t<testcase; ++t){
+		cin>>start>>end;
+		clear();
+		bfs(start, end);
+	}
+}
