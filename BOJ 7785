@@ -1,0 +1,53 @@
+#include<iostream>
+#include<string>
+#include<algorithm>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+string name[1000000];
+int numoflog;
+
+bool compare(string a, string b){
+	return a>b;
+}
+
+void printtasking(){
+	if(numoflog==1){
+		cout<<name[0];
+		return;
+	}
+	sort(name,name+numoflog,compare);
+	int i,count=1;
+	
+	for(i=0; i<numoflog-1;++i){
+		if(name[i]==name[i+1]){
+			count++;
+		}
+		else{
+			if(count%2!=0){
+				cout<<name[i]<<"\n";
+			}
+			count=1;
+		}
+	}
+	if(name[numoflog-2]==name[numoflog-1]){
+		if(count%2!=0){
+			cout<<name[i]<<"\n";
+		}
+	}
+	else{
+		cout<<name[numoflog-1];
+	}
+}
+
+int main(void)
+{
+	fastio;
+	cin>>numoflog;
+	int i;
+	string temp;
+	for(i=0; i<numoflog;++i){
+		cin>>name[i]>>temp;
+	}
+	printtasking();
+}
