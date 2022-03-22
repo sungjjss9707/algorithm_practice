@@ -1,0 +1,253 @@
+#include<iostream>
+#include<vector>
+#include<queue>
+#include<algorithm>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+int numofver,numofedge,numofgoal;
+int start, g,h,inf=2000000000,gh;
+vector<pair<int,int>> mylink[2001];
+int dist[2001];
+vector<int> v;
+//int dist_gh[2001];
+//int dist_hg[2001];
+int dist_start_g[2001];
+int dist_start_h[2001];
+int dist_h_goal[2001];
+int dist_g_goal[2001];
+
+int goalarr[101];
+
+void clear_mylink(){
+	int i,k;
+	for(i=1; i<=numofver; ++i){
+		mylink[i].clear();
+	}
+}
+
+void dijkstra(){
+	int i;
+	for(i=1; i<=numofver; ++i){
+		dist[i]=inf;
+	}
+	dist[start]=0;
+	priority_queue<pair<int,int>,vector<pair<int,int>>, greater<pair<int,int>>> pq;
+	pq.push({0, start});
+	int nowv, nowd, nextv, nextd;
+	while(!pq.empty()){
+		nowv=pq.top().second;
+		nowd=pq.top().first;
+		pq.pop();
+		if(nowd>dist[nowv]) continue;
+		for(i=0; i<mylink[nowv].size(); ++i){
+			nextv=mylink[nowv][i].first;
+			nextd=mylink[nowv][i].second+nowd;
+			if(dist[nextv]>nextd){
+				dist[nextv]=nextd;
+				pq.push({nextd, nextv});
+			}
+		}
+	}
+}
+
+int dijkstra_start_g(){
+	int i;
+	for(i=1; i<=numofver; ++i){
+		dist_start_g[i]=inf;
+	}
+	dist_start_g[start]=0;
+	priority_queue<pair<int,int>,vector<pair<int,int>>, greater<pair<int,int>>> pq;
+	pq.push({0, start});
+	int nowv, nowd, nextv, nextd;
+	while(!pq.empty()){
+		nowv=pq.top().second;
+		nowd=pq.top().first;
+		pq.pop();
+		if(nowd>dist_start_g[nowv]) continue;
+		for(i=0; i<mylink[nowv].size(); ++i){
+			nextv=mylink[nowv][i].first;
+			nextd=mylink[nowv][i].second+nowd;
+			if(dist_start_g[nextv]>nextd){
+				dist_start_g[nextv]=nextd;
+				pq.push({nextd, nextv});
+			}
+		}
+	}
+	return dist_start_g[g];
+}
+void dijkstra_h_goal(){
+	int i;
+	for(i=1; i<=numofver; ++i){
+		dist_h_goal[i]=inf;
+	}
+	dist_h_goal[h]=0;
+	priority_queue<pair<int,int>,vector<pair<int,int>>, greater<pair<int,int>>> pq;
+	pq.push({0, h});
+	int nowv, nowd, nextv, nextd;
+	while(!pq.empty()){
+		nowv=pq.top().second;
+		nowd=pq.top().first;
+		pq.pop();
+		if(nowd>dist_h_goal[nowv]) continue;
+		for(i=0; i<mylink[nowv].size(); ++i){
+			nextv=mylink[nowv][i].first;
+			nextd=mylink[nowv][i].second+nowd;
+			if(dist_h_goal[nextv]>nextd){
+				dist_h_goal[nextv]=nextd;
+				pq.push({nextd, nextv});
+			}
+		}
+	}
+	/*
+	cout<<"----+++----\n";
+	for(i=1; i<=numofver; ++i){
+		cout<<dist_h_goal[i]<<" ";
+	}
+	cout<<endl;
+	*/
+	//return dist_h_goal[goal];
+}
+int dijkstra_start_h(){
+	int i;
+	for(i=1; i<=numofver; ++i){
+		dist_start_h[i]=inf;
+	}
+	dist_start_h[start]=0;
+	priority_queue<pair<int,int>,vector<pair<int,int>>, greater<pair<int,int>>> pq;
+	pq.push({0, start});
+	int nowv, nowd, nextv, nextd;
+	while(!pq.empty()){
+		nowv=pq.top().second;
+		nowd=pq.top().first;
+		pq.pop();
+		if(nowd>dist_start_h[nowv]) continue;
+		for(i=0; i<mylink[nowv].size(); ++i){
+			nextv=mylink[nowv][i].first;
+			nextd=mylink[nowv][i].second+nowd;
+			if(dist_start_h[nextv]>nextd){
+				dist_start_h[nextv]=nextd;
+				pq.push({nextd, nextv});
+			}
+		}
+	}
+	return dist_start_h[h];
+}
+void dijkstra_g_goal(){
+	int i;
+	for(i=1; i<=numofver; ++i){
+		dist_g_goal[i]=inf;
+	}
+	dist_g_goal[g]=0;
+	priority_queue<pair<int,int>,vector<pair<int,int>>, greater<pair<int,int>>> pq;
+	pq.push({0, g});
+	int nowv, nowd, nextv, nextd;
+	while(!pq.empty()){
+		nowv=pq.top().second;
+		nowd=pq.top().first;
+		pq.pop();
+		if(nowd>dist_g_goal[nowv]) continue;
+		for(i=0; i<mylink[nowv].size(); ++i){
+			nextv=mylink[nowv][i].first;
+			nextd=mylink[nowv][i].second+nowd;
+			if(dist_g_goal[nextv]>nextd){
+				dist_g_goal[nextv]=nextd;
+				pq.push({nextd, nextv});
+			}
+		}
+	}
+	//return dist_h_goal[goal];
+}
+
+
+void dijkstra_gh(){
+	int start_g=dijkstra_start_g();
+	dijkstra_h_goal();
+	//cout<<"start_g : "<<start_g<<endl;
+	int i;
+	for(i=1; i<=numofver; ++i){
+		dist_h_goal[i]=dist_h_goal[i]+(start_g+gh);
+	}
+}
+
+void dijkstra_hg(){
+	int start_h=dijkstra_start_h();
+	dijkstra_g_goal();
+	//cout<<"start_h : "<<start_h<<endl;
+	//cout<<start_h<<endl;
+	int i;
+	for(i=1; i<=numofver; ++i){
+		dist_g_goal[i]+=(start_h+gh);
+	}
+}
+
+void find_choiso_dist(){
+	dijkstra();
+	dijkstra_gh();
+	dijkstra_hg();
+	int i;
+	/*
+	cout<<"just do it :\n";
+	for(i=1; i<=numofver; ++i){
+		cout<<dist[i]<<" ";
+	}
+	cout<<endl;
+	cout<<"g - h :\n";
+	for(i=1; i<=numofver; ++i){
+		cout<<dist_h_goal[i]<<" ";
+	}
+	cout<<endl;
+	cout<<"h - g :\n";
+	for(i=1; i<=numofver; ++i){
+		cout<<dist_g_goal[i]<<" ";
+	}
+	cout<<endl;
+	*/
+	int node;
+	v.clear();
+	for(i=0; i<numofgoal;++i){
+		node=goalarr[i];
+		if(dist[node]==dist_g_goal[node]||dist[node]==dist_h_goal[node]){
+			v.push_back(node);
+			//cout<<node<<" ";
+		}
+	}
+	sort(v.begin(), v.end());
+	for(i=0; i<v.size();++i){
+		cout<<v[i]<<" ";
+	}
+}
+
+int main(void)
+{
+	fastio;
+	int testcase,t,i,j,k,v1,v2,distance;
+	cin>>testcase;
+	for(t=0; t<testcase; ++t){
+		cin>>numofver>>numofedge>>numofgoal;
+		cin>>start>>g>>h;
+		clear_mylink();
+		for(i=0; i<numofedge; ++i){
+			cin>>v1>>v2>>distance;
+			if((v1==g&&v2==h)||(v1==h&&v2==g)){
+				gh=distance;
+			}
+			mylink[v1].push_back({v2,distance});
+			mylink[v2].push_back({v1,distance});
+		}
+		for(i=0; i<numofgoal;++i){
+			cin>>goalarr[i];
+		}
+		/*
+		for(i=1; i<=numofver; ++i){
+			cout<<i<<" : ";
+			for(k=0; k<mylink[i].size();++k){
+				cout<<mylink[i][k].first<<"("<<mylink[i][k].second<<")  ";
+			}
+			cout<<endl;
+		}
+		*/
+		find_choiso_dist();
+		cout<<"\n";
+	}
+}
