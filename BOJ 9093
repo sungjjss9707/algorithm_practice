@@ -1,0 +1,45 @@
+#include<iostream>
+#include<string>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+void sub_swap(string sub){
+	//string s="";
+	int i;
+	for(i=sub.length()-1; i>=0; --i){
+		cout<<sub[i];
+	}
+}
+
+void change_string(string s){
+	int start=0, end=0, i;
+	string ret = "", substring;
+	for(i=0; i<s.length(); ++i){
+		if(s[i]==' '){
+			//substring= "";
+			end=i;
+			substring = s.substr(start, end-start);
+			sub_swap(substring);
+			cout<<" ";
+			start = i+1;
+		}
+	}
+	substring = s.substr(start, s.length()-start);
+	//out<<substring<<" / ";
+	sub_swap(substring);
+	cout<<"\n";
+}
+
+int main(void)
+{
+	fastio;
+	int i, testcase;
+	string s;
+	cin>>testcase;
+	cin.ignore();
+	for(i=0; i<testcase; ++i){
+		getline(cin, s);
+		//cout<<s<<endl;
+		change_string(s);
+	}
+}
