@@ -1,0 +1,59 @@
+#include<iostream>
+#include<algorithm>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+int numofhunter, numofanimal, sageoree;
+int hunterpos[100001];
+vector<pair<int, int>> animalpos;
+
+int findnearestx(int index, int xpos){
+	if(index==0){
+		if(numofhunter==1) return index;
+		if(abs(hunterpos[index]-xpos)>abs(hunterpos[index+1]-xpos)) return index+1;
+		else return index;
+	}
+	else if(index==numofhunter-1){
+		if(abs(hunterpos[index]-xpos)>abs(hunterpos[index-1]-xpos)) return index-1;
+		else return index;
+	}
+	else{
+		int tempindex;
+		if(abs(hunterpos[index]-xpos)>abs(hunterpos[index+1]-xpos)) tempindex = index+1;
+		else tempindex =  index;
+		if(abs(hunterpos[tempindex]-xpos)>abs(hunterpos[index-1]-xpos)) return index-1;
+		else return tempindex;
+	}
+}
+
+int findnumofcanhuntanimal(){
+	sort(hunterpos, hunterpos+numofhunter);
+	int i, animal_x,georee, nearestindex,hap=0, nearesthunter;
+	for(i=0; i<numofanimal; ++i){
+		georee = sageoree-animalpos[i].first;
+		if(georee<0) continue;
+		animal_x = animalpos[i].second;
+		nearestindex = lower_bound(hunterpos, hunterpos+numofhunter, animal_x)-hunterpos;
+		//cout<<animal_x<<" "<<hunterpos[nearestindex]<<endl;
+		nearesthunter = hunterpos[findnearestx(nearestindex, animal_x)];
+		//cout<<animal_x<<" "<<<<endl;
+		if(abs(animal_x-nearesthunter)<=georee) hap++;
+		
+	}
+	return hap;
+}
+
+int main(void)
+{
+	fastio;
+	cin>>numofhunter>>numofanimal>>sageoree;
+	int i, x,y;
+	for(i=0; i<numofhunter; ++i){
+		cin>>hunterpos[i];
+	}
+	for(i=0; i<numofanimal; ++i){
+		cin>>x>>y;
+		animalpos.push_back({y,x});
+	}
+	cout<<findnumofcanhuntanimal();
+}
