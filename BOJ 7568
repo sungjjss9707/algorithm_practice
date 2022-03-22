@@ -1,0 +1,25 @@
+numofpeople = int(input());
+#print(numofpeople);
+weight = [];
+height=[];
+rank = [];
+for i in range(0, numofpeople):
+    a,b = input().split();
+    weight.append(int(a));
+    height.append(int(b));
+    
+
+#print(weight);
+#print(height);
+
+
+for i in range(0, numofpeople):
+    sum=1;
+    for k in range(0, numofpeople):
+        if(weight[k]>weight[i] and height[k]>height[i]):
+            sum=sum+1;
+    rank.append(sum);
+    
+#print(rank);
+for i in range(0, numofpeople):
+    print(rank[i], end=" ");    
