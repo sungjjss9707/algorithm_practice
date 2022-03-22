@@ -1,0 +1,136 @@
+#include<iostream>
+#include<vector>
+#include<math.h>
+#include<queue>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+/*
+2
+2
+0 0
+1000 0
+1000 1000
+2000 1000
+2
+0 0
+1000 0
+2000 1000
+2000 2000
+*/
+using namespace std;
+
+int numofpyeon, numofspot;
+vector<pair<int, int>> v;///첫점은 집, 마지막점은 goal  
+vector<int> cango[105];	/////
+vector<int> homecango;
+vector<int> goalcango;
+int homey, homex, goaly, goalx;
+int visit[105];
+bool bfs(){
+	int i,nowver, nextver,nowy, nowx, nexty, nextx;
+	queue<int> q;
+	q.push(0);
+	while(!q.empty()){
+		//nowy = v[q.front()].first;
+		//nowx = v[q.front()].second;
+		nowver = q.front();
+		visit[nowver]=1;
+		q.pop();
+		if(nowver==numofspot-1) return true;
+		for(i=0; i<cango[nowver].size(); ++i){
+			nextver = cango[nowver][i];
+			if(!visit[nextver]){
+				q.push(nextver);
+			}		
+		}
+	}
+	return false;
+} 
+
+void checkcango(){
+	int i,k, pyeony1, pyeonx1, pyeony2, pyeonx2;
+	/*
+	for(i=0; i<numofpyeon; ++i){
+		pyeony1 = v[i].first;
+		pyeonx1 = v[i].second;
+		if(abs(homey-pyeony1)+abs(homex-pyeonx1)<=1000){
+			homecango.push_back(i); 
+		}
+	}
+	for(i=0; i<numofpyeon; ++i){
+		pyeony1 = v[i].first;
+		pyeonx1 = v[i].second;
+		if(abs(goaly-pyeony1)+abs(goalx-pyeonx1)<=1000){
+			goalcango.push_back(i); 
+		}
+	}
+	*/
+	for(i=0; i<numofspot; ++i){
+		pyeony1 = v[i].first;
+		pyeonx1 = v[i].second; 
+		for(k=0; k<numofspot; ++k){
+			if(i==k) continue;
+			pyeony2 = v[k].first;
+			pyeonx2 = v[k].second;
+			if(abs(pyeony2-pyeony1)+abs(pyeonx2-pyeonx1)<=1000){
+				cango[i].push_back(k);
+			}
+		}
+	}
+	/*
+	cout<<"집에서 갈 수 있는곳 : \n";
+	for(i=0; i<homecango.size(); ++i){
+		cout<<homecango[i]<<" ";
+	}
+	cout<<"\n\n";
+	cout<<"목적지에서 갈 수 있는곳 : \n";
+	for(i=0; i<goalcango.size(); ++i){
+		cout<<goalcango[i]<<" ";
+	}
+	cout<<"\n\n";
+	*/
+	/*
+	for(i=0; i<numofspot ;++i){
+		cout<<i<<"에서 갈 수 있는 곳 : ";
+		for(k=0; k<cango[i].size(); ++k){
+			cout<<cango[i][k]<<" ";
+		}
+		cout<<"\n";
+	}
+	*/
+} 
+
+void vecclear(){
+	v.clear();
+	homecango.clear();
+	goalcango.clear();
+	for(int i=0; i<numofspot; ++i){
+		cango[i].clear();
+		visit[i]=0;
+	}
+	
+}
+
+int main(void)
+{
+	fastio;
+	int t, i,testcase,y,x; 
+	cin>>testcase;
+	for(t=0; t<testcase; ++t){
+		cin>>numofpyeon;
+		cin>>homey>>homex;
+		vecclear();
+		v.push_back({homey, homex});
+		for(i=0; i<numofpyeon; ++i){
+			cin>>y>>x;
+			v.push_back({y,x}); 
+		}
+		cin>>goaly>>goalx;
+		v.push_back({goaly, goalx});
+		numofspot = numofpyeon+2;
+		checkcango();	//각점에서 맥주20병으로 갈수 있는 지점을 다 찾는다  
+		if(bfs()) cout<<"happy\n";
+		else cout<<"sad\n";
+		
+	}
+	
+}
