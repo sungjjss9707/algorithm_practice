@@ -1,0 +1,62 @@
+import java.util.*;
+
+
+class oxprob{
+	String ox = new String();
+	
+	oxprob(String new_ox){
+		this.ox = new_ox;
+	}
+	
+	void printox() {
+		System.out.println(this.ox);
+	}
+	
+	int chejom(){
+		int i, score=0, sum=0; 
+		for(i=0; i<ox.length(); ++i) {
+			if(ox.charAt(i)=='O') {
+				score = score+1;
+				
+			}
+			else {
+				score = 0;
+			}
+			sum=sum+score;
+		}
+		return sum;
+	}
+	
+	
+}
+
+
+public class Main {
+
+	public static void main(String[] args) {
+		int i, testcase;
+		Scanner sc = new Scanner(System.in);
+		String ox1 = new String();
+		
+		testcase = sc.nextInt();
+		oxprob[] arrprob = new oxprob[testcase];
+		for(i=0; i<testcase; ++i) {
+			ox1 = sc.next(); 
+			arrprob[i] = new oxprob(ox1); 
+		}
+		
+		for(i=0; i<testcase; ++i) {
+			//arrprob[i].printox();
+			System.out.println(arrprob[i].chejom());
+		}
+		/*
+		for(i=0; i<ox1.length(); ++i) {
+			if(ox1.charAt(i)=='!') {
+				System.out.println("fuck");
+			}
+			System.out.print(ox1.charAt(i)+" ");
+		}
+		*/
+	}
+
+}
