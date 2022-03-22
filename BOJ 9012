@@ -1,0 +1,113 @@
+#include<iostream>
+#include<string.h>
+
+using namespace std;
+
+class stack{	//스택은 선입후출
+	//long long arr[100001];
+	char arr[51];
+	int endindex;
+public:
+	stack(){
+		endindex=0;
+	}
+	/*
+	void push(int a){
+		arr[endindex]=a;
+		endindex++;
+	}
+	*/
+	void push(char a){
+		arr[endindex]=a;
+		endindex++;
+	}
+	char pop(){
+		if(endindex==0) return ' ';
+		char temp = arr[endindex-1];
+		arr[endindex-1]=' ';
+		endindex--;
+		return temp;
+	}
+	/*
+	int pop(){
+		int temp = arr[endindex-1];
+		arr[endindex-1]=0;
+		endindex--;
+		return temp;
+	}
+	*/
+	int size(){
+		return endindex;
+	}
+	
+	int empty(){
+		if(endindex==0) return 1;
+		return 0;
+	}
+	
+	int top(){
+		if(endindex==0) return -1;
+		return arr[endindex-1];
+	}
+	
+	void pop1(){
+		arr[endindex-1]=0;
+		endindex--;
+	}
+	
+	void printstack(){
+		int i;
+		for(i=0; i<endindex; ++i){
+			cout<<arr[i]<<" ";
+		}
+		cout<<endl;
+	}
+	
+	void printhap(){
+		int i;
+		long long sum=0;
+		for(i=0; i<endindex; ++i){
+			sum=sum+arr[i];
+		}
+		cout<<sum;
+	}
+	void clear(){
+		int i;
+		for(i=0; i<endindex; ++i){
+			arr[i] = ' ';
+		}
+		endindex=0;
+	}
+};
+
+
+
+int main(void)
+{
+	string gwalho;
+	int num,i,k, flag;
+	cin>>num;
+	stack s = stack();
+	for(i=0; i<num; ++i){
+		flag=1;
+		cin>>gwalho;
+		for(k=0; k<gwalho.length(); ++k){
+			if(gwalho[k]=='(') s.push(gwalho[k]);
+			else{
+				if(s.pop()==' '){
+					flag=0;
+					break;
+				}
+			}
+		}
+		if(flag==1&&s.empty()){
+			cout<<"YES"<<endl;
+		}
+		else{
+			cout<<"NO"<<endl;
+		}
+		
+		s.clear();	
+	}
+	
+}
