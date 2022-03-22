@@ -1,0 +1,65 @@
+#include<iostream>
+#include<queue>;
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+struct chess{
+	int y,x,hwetsu;
+};
+
+int side,fy,fx,gy,gx;
+int use[302][302];
+int dy[8]={-2,-2,-1,1,2,2,1,-1};
+int dx[8]={-1,1,2,2,1,-1,-2,-2};
+
+void clear(){
+	for(int i=1; i<=side;++i){
+		for(int j=1; j<=side; ++j){
+			use[i][j]=0;
+		}
+	}
+}
+
+bool isyxinmap(int y, int x){
+	if(y>=1&&y<=side&&x>=1&&x<=side) return true;
+	return false;
+}
+
+int bfs(){
+	int i,nowy,nowx,count,nexty,nextx;
+	queue<chess> q;
+	q.push({fy,fx,0 });
+	while(!q.empty()){
+		nowy=(q.front()).y;
+		nowx=(q.front()).x;
+		count=(q.front()).hwetsu;
+		q.pop();
+		if(nowy==gy&&nowx==gx) return count;
+		for(i=0;i<8;++i){
+			nexty=nowy+dy[i];
+			nextx=nowx+dx[i];
+			if(isyxinmap(nexty,nextx)){
+				if(use[nexty][nextx]==0){
+					q.push({nexty,nextx,count+1});
+					use[nexty][nextx]=1;
+				}
+			}
+		}
+	}
+	return 0;
+}
+
+int main(void)
+{
+	fastio;
+	int testcase,t;
+	cin>>testcase;
+	for(t=0;t<testcase;++t){
+		cin>>side;
+		cin>>fy>>fx;
+		cin>>gy>>gx;
+		fy++;fx++;gy++;gx++;
+		clear();
+		cout<<bfs()<<"\n";
+	}
+}
