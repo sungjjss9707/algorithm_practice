@@ -1,0 +1,25 @@
+#include<iostream>
+using namespace std;
+
+int arr[12];
+
+void calcul(){
+	int i;
+	for(i=4; i<=11; ++i){
+		arr[i] = arr[i-1]+arr[i-2]+arr[i-3];
+	}
+}
+
+int main(void)
+{
+	int temp,i,num;
+	arr[1] = 1;
+	arr[2] = 2;
+	arr[3] = 4;
+	cin>>num;
+	calcul();
+	for(i=0; i<num; ++i){
+		cin>>temp;
+		cout<<arr[temp]<<"\n";
+	}
+}
