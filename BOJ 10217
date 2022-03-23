@@ -1,0 +1,117 @@
+#include<iostream>
+#include<vector>
+#include<string>
+#include<queue>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+struct triple{
+	int e,c,t;
+};
+
+int numofairport, maxcost, numofairline, inf=2000000000;
+
+vector<triple> ticket[101];
+//int dist_time[101], dist_money[101], visit[101];
+int dist[101][10001];	//dist[i][k] k원을써서 i번째공항까지갔을때 걸리는 최소시간  
+//vector<pair<int, int>> ticket[101];
+
+
+void clear(){
+	int i;
+	for(i=1; i<=numofairport; ++i){
+		ticket[i].clear();
+		//dist_time[i]=inf;
+		//dist_money[i]=inf;
+		for(int k=0; k<=10000; ++k){
+			dist[i][k]=inf;
+		}
+		//visit[i]=0;
+	}
+}
+/*
+int get_nextver(){
+	int i, minver=-1, mindist=inf;
+	for(i=1; i<=numofairport; ++i){
+		if(visit[i]!=1&&mindist>dist_time[i]){
+			mindist = dist_time[i];
+			minver=i;
+		}
+	}
+	return minver;
+}
+*/
+int dijkstra_with_choidae_money(){
+	int i;
+	//visit[1]=1;
+	dist[1][0]=0;
+	//dist_money[1]=0;
+	int nowmoney,nowver, nowtime,nextver,nexttime,nextmoney,k;
+	priority_queue<pair<int, pair<int, int>>, vector<pair<int, pair<int, int>>>, greater<pair<int, pair<int, int>>>> pq;
+// {시간,{공항, 돈}} 
+//dist[i][k] k원을써서 i번째공항까지갔을때 걸리는 최소시간
+//dist[공항][돈] = 시간  
+	pq.push({0,{1,0}});
+	while(!pq.empty()){
+		nowtime = (pq.top()).first;
+		//cout<<nowver<<endl;
+		nowver = ((pq.top()).second).first;
+		nowmoney = ((pq.top()).second).second;
+		pq.pop();
+		if(dist[nowver][nowmoney]<nowtime) continue;
+		//visit[nowver]=1;
+		//if(nowver==-1) break;
+		for(k=0; k<ticket[nowver].size(); ++k){
+			nextver = ticket[nowver][k].e;
+			nextmoney = nowmoney+ticket[nowver][k].c;
+			if(nextmoney>maxcost) continue;
+			nexttime = nowtime+ticket[nowver][k].t;
+			//if(visit[nextver]) continue;
+			if(dist[nextver][nextmoney]>nexttime){
+				dist[nextver][nextmoney]=nexttime;
+				pq.push({nexttime, {nextver, nextmoney}});
+			}
+		}
+	}
+	int minist = inf;
+	for(i=0; i<=maxcost; ++i){
+		minist = min(minist, dist[numofairport][i]);
+		//cout<<dist[numofairport][i]<<"\n";
+	}
+	return minist;
+}
+
+void get_choisotime(){
+	int choisotime = dijkstra_with_choidae_money();
+	if(choisotime>=inf){
+		cout<<"Poor KCM\n";
+	}
+	else{
+		cout<<choisotime<<"\n";
+	}
+}
+
+int main(void)
+{
+	fastio;
+	int testcase, t, i,k, start, end, cost, time;
+	cin>>testcase; 
+	for(t=0; t<testcase; ++t){
+		cin>>numofairport>>maxcost>>numofairline;
+		clear();
+		for(i=0; i<numofairline; ++i){
+			cin>>start>>end>>cost>>time;
+			ticket[start].push_back({end, cost, time});
+		}
+		/*
+		for(i=1; i<=numofairport; ++i){
+			cout<<i<<"번 공항 :"<<endl;
+			for(k=0; k<ticket[i].size(); ++k){
+				cout<<ticket[i][k].e<<" "<<ticket[i][k].c<<" "<<ticket[i][k].t<<endl;
+			}
+			cout<<"----------------------\n";
+		}
+		*/
+		get_choisotime();
+	}
+}
