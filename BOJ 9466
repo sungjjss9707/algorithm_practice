@@ -1,0 +1,61 @@
+#include<iostream>
+
+using namespace std;
+
+int len;
+int arr[100001];
+int visit[100001];
+int done[100001];
+int numofcyclemember;
+
+void clear(){
+	for(int i=0; i<=len; ++i){
+		visit[i]=0;
+		done[i]=0;
+	}
+	numofcyclemember=0;
+}
+
+void dfs(int index){
+	visit[index] = 1;
+	int next = arr[index];
+	if(visit[next]==0){
+		dfs(next);
+	}
+	else if(done[next]==0){
+		while(1){
+			if(index==next) break;
+			numofcyclemember++;
+			next=arr[next];
+		}
+		/*
+		for(int i=next; i!=index; i=arr[next]){
+			numofcyclemember++;		
+		}
+		*/
+		numofcyclemember++;	//자기자신더하기 
+	}
+	
+	done[index]=1;
+	
+}
+
+int main(void)
+{
+	int testcase;
+	int t,i;
+	cin>>testcase;
+	for(t=0 ;t<testcase; ++t){
+		cin>>len;
+		clear();
+		for(i=1; i<=len; ++i){
+			cin>>arr[i];
+		}
+		for(i=1; i<=len; ++i){
+			if(visit[i]==0){
+				dfs(i);
+			}
+		}
+		cout<<len-numofcyclemember<<"\n";
+	}
+}
