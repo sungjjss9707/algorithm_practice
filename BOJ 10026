@@ -1,0 +1,75 @@
+#include<iostream>
+
+using namespace std;
+
+int side;
+char mymap[101][101];
+
+char originmap[101][101];
+int dy[4] = {1,0,-1,0};
+int dx[4] = {0,1,0,-1};
+
+
+void mapcopy1(){
+	int i,k;
+	for(i=1; i<=side; ++i){
+		for(k=1; k<=side; ++k){
+			mymap[i][k]=originmap[i][k];	
+		}	
+	}
+}
+
+void mapcopy2(){
+	int i,k;
+	for(i=1; i<=side; ++i){
+		for(k=1; k<=side; ++k){
+			mymap[i][k]=originmap[i][k];
+			if(mymap[i][k]=='R') mymap[i][k]='G';	
+		}	
+	}
+}
+
+void dfs(int y, int x, char color){
+	mymap[y][x]='x';
+	int nexty, nextx;
+	for(int i=0; i<4; ++i){
+		nexty=y+dy[i];
+		nextx=x+dx[i];
+		if(nexty>=1&&nexty<=side&&nextx>=1&&nextx<=side){
+			if(mymap[nexty][nextx]==color){
+				dfs(nexty, nextx, color);	
+			}	
+		}	
+	}	
+}
+
+int main(void)
+{
+	cin>>side;
+	int i,k;
+	for(i=1; i<=side; ++i){
+		for(k=1; k<=side; ++k){
+			cin>>originmap[i][k];	
+		}	
+	}
+	int count1=0, count2=0;
+	mapcopy1();
+	for(i=1; i<=side; ++i){
+		for(k=1; k<=side; ++k){
+			if(mymap[i][k]!='x'){
+				dfs(i,k, mymap[i][k]);
+				count1++;	
+			}
+		}	
+	}
+	mapcopy2();
+	for(i=1; i<=side; ++i){
+		for(k=1; k<=side; ++k){
+			if(mymap[i][k]!='x'){
+				dfs(i,k,mymap[i][k]);
+				count2++;	
+			}
+		}	
+	}
+	cout<<count1<<" "<<count2;
+}
