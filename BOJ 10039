@@ -1,0 +1,45 @@
+import java.util.*;
+
+class classmate{
+	ArrayList<Integer> student = new ArrayList<>();
+	
+	classmate(){}
+	
+	void addscore(int score) {
+		int myscore=score;
+		if(score<40) {
+			myscore = 40;
+		}
+		student.add(myscore);
+	}
+	
+	int gethap() {
+		int i, sum = 0;
+		for(i=0; i<student.size(); ++i) {
+			sum=sum+student.get(i);
+		}
+		return sum;
+	}
+	
+	int getavg() {
+		return (gethap()/student.size());
+	}
+	
+}
+
+
+public class Main {
+
+	public static void main(String[] args) {
+		int i=0,score;
+		classmate cl1 = new classmate();
+		Scanner sc = new Scanner(System.in);
+		for(i=0; i<5; ++i) {
+			score = sc.nextInt();
+			cl1.addscore(score);
+		}
+		
+		System.out.println(cl1.getavg());
+	}
+
+}
