@@ -1,0 +1,10 @@
+#include<iostream>
+
+using namespace std;
+int numofrock;
+int main(void)
+{
+	cin>>numofrock;
+	if(numofrock%2==0) cout<<"CY";
+	else cout<<"SK";
+}
