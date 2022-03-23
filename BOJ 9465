@@ -1,0 +1,40 @@
+#include<iostream>
+
+using namespace std;
+
+long long arr[2][100002];
+long long hap[2][100002];
+
+long long max_value(long long a, long long b){
+	return a>b?a:b;
+}
+
+int main(void)
+{	
+	long long num,i, k,c,numofcase;
+	cin>>numofcase;
+	for(c=0; c<numofcase; ++c){
+		cin>>num;
+		for(i=0; i<2; ++i){
+			for(k=1; k<=num; ++k){
+				cin>>arr[i][k];
+			}
+		}
+		
+		for(i=1; i<=num; ++i){
+			for(k=0; k<2; ++k){
+				if(i==0){
+					hap[k][i] = arr[k][i];
+				}
+				else if(i==1){
+					hap[k][i] = hap[1-k][i-1]+arr[k][i];
+				}
+				else{
+					hap[k][i] = max_value(hap[1-k][i-2]+arr[k][i], hap[1-k][i-1]+arr[k][i]);
+				}
+			}
+		}
+		cout<<max_value(hap[0][num], hap[1][num])<<"\n";
+			
+	}
+}
