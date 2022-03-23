@@ -1,0 +1,16 @@
+#include<iostream>
+
+using namespace std;
+
+int main(void)
+{
+	int price, getsu, jesan;
+	cin>>price>>getsu>>jesan;
+	int chonghap=price*getsu;
+	if(chonghap>jesan){
+		cout<<chonghap-jesan;
+	}
+	else{
+		cout<<0;
+	}	
+}
