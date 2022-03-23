@@ -1,0 +1,61 @@
+#include<iostream>
+#include<string.h> 
+using namespace std;
+
+string arr[31];
+int numarr[31];
+int numofcase, num;
+int casearr[101];
+
+int main(void)	//한종류만 있으면 다 더하고 끝, 두종류이상있으면 다더한거에서 다른종류서로곱하고 더하기 
+{
+	cin>>numofcase;
+	int i,j,k, numindex, flag, hap, gop;
+	string temp, tempstr;
+	
+	for(j=0; j<numofcase; ++j){
+		cin>>num;
+		if(num==0){
+			casearr[j]=0;
+			continue;
+		} 
+		numindex=0;
+		cin>>temp;
+		cin>>arr[0];
+		numarr[0] = 1;
+		numindex=1;
+		for(i=1; i<num; ++i){
+			cin>>temp;
+			cin>>tempstr;
+			flag=0;
+			for(k=0; k<numindex; ++k){
+				if(tempstr==arr[k]){
+					flag=1;
+					numarr[k]++;
+					break;
+				}
+			}
+			if(flag==0){
+				arr[numindex] = tempstr;
+				numarr[numindex]++;
+				numindex++;
+			}
+		
+		} 
+		hap=0, gop=1;
+		for(i=0; i<numindex; ++i){
+			gop = gop*(numarr[i]+1);
+		}
+		casearr[j] = gop-1;
+		for(i=0; i<numindex; ++i){
+			numarr[i]=0;
+			arr[i]="";
+		}
+	}
+	for(i=0; i<numofcase; ++i){
+		cout<<casearr[i]<<"\n";
+	}
+	
+	
+	
+}
