@@ -1,0 +1,17 @@
+#include<iostream>
+
+using namespace std;
+
+int main(void)
+{
+	int testcase,t,ver, edge,i,a,b;
+	
+	cin>>testcase;
+	for(t=0; t<testcase;++t){
+		cin>>ver>>edge;
+		for(i=0; i<edge;++i){
+			cin>>a>>b;
+		}
+		cout<<ver-1<<endl;
+	}
+}
