@@ -1,0 +1,33 @@
+#include<iostream>
+#include<stdlib.h>
+using namespace std;
+
+long long* valuearr;
+
+void calcul(int max){
+	int i;
+	valuearr[1]=1;
+	valuearr[2]=1;
+	valuearr[3]=1;
+	valuearr[4]=2;
+	valuearr[5]=2;
+	for(i=6; i<=max; ++i){
+		valuearr[i]=valuearr[i-5]+valuearr[i-1];
+	}
+}
+
+int main(void)
+{
+	int i,N, max=1;
+	cin>>N;
+	int* arr = (int*)malloc(sizeof(int)*N);
+	for(i=0; i<N; ++i){
+		cin>>arr[i];
+		if(arr[i]>max) max = arr[i];
+	}	//max = getbiggest(arr,N);
+	valuearr = (long long*)malloc(sizeof(long long)*(max+1));
+	calcul(max);
+	for(i=0;i<N; ++i){
+		cout<<valuearr[arr[i]]<<"\n";
+	}
+}
