@@ -1,0 +1,28 @@
+#include<iostream>
+using namespace std;
+int mytime;
+
+void counthwetsu(){
+	if(mytime%10!=0){
+		cout<<-1;
+		return;
+	}
+	int namojee,mok;
+	mok=mytime/300;
+	namojee=mytime%300;
+	cout<<mok<<" ";
+	mytime=namojee;
+	mok=mytime/60;
+	namojee=mytime%60;
+	cout<<mok<<" ";
+	mytime=namojee;
+	mok=mytime/10;
+	cout<<mok<<" ";
+}
+
+int main(void)
+{
+	cin>>mytime;
+	counthwetsu();
+	return 0;
+}
