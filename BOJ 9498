@@ -1,0 +1,40 @@
+import java.util.*;
+
+class Score{
+	int jeomsu;
+	
+	Score(int new_int){
+		jeomsu = new_int;
+	}
+	
+	void compare() {
+		if(jeomsu<=100 && jeomsu>=90) {
+			System.out.println("A");
+		}
+		else if(jeomsu<90 && jeomsu>=80) {
+			System.out.println("B");
+		}
+		else if(jeomsu<80 && jeomsu>=70) {
+			System.out.println("C");
+		}
+		else if(jeomsu<70 && jeomsu>=60) {
+			System.out.println("D");
+		}
+		else{
+			System.out.println("F");
+		}
+	}
+}
+
+public class Main {
+
+	public static void main(String[] args) {
+	
+		int jeomsu;
+		Scanner sc = new Scanner(System.in);
+		jeomsu = sc.nextInt();
+		Score score1 = new Score(jeomsu);
+		score1.compare();
+	}
+
+}
