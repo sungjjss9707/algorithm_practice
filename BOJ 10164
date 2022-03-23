@@ -1,0 +1,118 @@
+#include<iostream>
+
+using namespace std;
+
+int sero, garo, mustnum;
+int starty = 1, startx = 1, musty, mustx;
+int start_dp[16][16];
+int start_must_dp[16][16];
+int must_end_dp[16][16];
+int dy[2] = {0,-1};
+int dx[2] = {-1,0};
+//3 5
+
+void clear(){
+	int i,k;
+	for(i=1; i<=sero; ++i){
+		for(k=1; k<=garo; ++k){
+			start_dp[i][k] = -1;
+			start_must_dp[i][k] = -1;
+			must_end_dp[i][k] = -1;
+		}
+	}
+}
+
+void findmustpos(){
+	musty = mustnum/garo;
+	mustx = mustnum%garo;
+	if(mustx==0){
+		if(mustx==0) mustx = garo;
+	}
+	else{
+		musty++;
+	}
+	
+	
+	//cout<<musty<<" "<<mustx;
+}
+
+int findroutewithdp_start_must(int y, int x){
+	int ret = start_must_dp[y][x];
+	if(ret!=-1) return ret;
+	if(y==1&&x==1){
+		start_must_dp[y][x]=1;	//////
+		return 1;
+	}
+	int pre_y, pre_x;
+	int i, dap=0;
+	for(i=0; i<2; ++i){
+		pre_y = y+dy[i];
+		pre_x = x+dx[i];
+		if(pre_y>=1&&pre_y<=musty&&pre_x>=1&&pre_x<=mustx){
+			dap+=findroutewithdp_start_must(pre_y, pre_x);
+		}
+	}
+	start_must_dp[y][x] = dap;
+	return dap;
+}
+
+int findroutewithdp_must_end(int y, int x){
+	int ret = must_end_dp[y][x];
+	if(ret!=-1) return ret;
+	if(y==musty&&x==mustx){
+		must_end_dp[y][x]=1;	//////
+		return 1;
+	}
+	int pre_y, pre_x;
+	int i, dap=0;
+	for(i=0; i<2; ++i){
+		pre_y = y+dy[i];
+		pre_x = x+dx[i];
+		if(pre_y>=musty&&pre_y<=sero&&pre_x>=mustx&&pre_x<=garo){
+			dap+=findroutewithdp_must_end(pre_y, pre_x);
+		}
+	}
+	must_end_dp[y][x] = dap;
+	return dap;
+}
+
+int findroutewithdp_start(int y, int x){
+	int ret = start_dp[y][x];
+	if(ret!=-1) return ret;
+	if(y==1&&x==1){
+		start_dp[y][x]=1;	//////
+		return 1;
+	}
+	int pre_y, pre_x;
+	int i, dap=0;
+	for(i=0; i<2; ++i){
+		pre_y = y+dy[i];
+		pre_x = x+dx[i];
+		if(pre_y>=1&&pre_y<=sero&&pre_x>=1&&pre_x<=garo){
+			dap+=findroutewithdp_start(pre_y, pre_x);
+		}
+	}
+	start_dp[y][x] = dap;
+	return dap;
+}
+
+
+
+int main(void)
+{
+	cin>>sero>>garo>>mustnum;
+	clear();
+	if(mustnum==0){
+		cout<<findroutewithdp_start(sero, garo);
+	}
+	else{
+		findmustpos();
+		
+		//cout<<musty<<" "<<mustx<<endl;
+		int start_must = findroutewithdp_start_must(musty, mustx);
+		int must_end = findroutewithdp_must_end(sero, garo);
+		//cout<<start_must<<" "<<must_end<<endl;
+		cout<<start_must*must_end;
+	}
+	return 0;
+}
