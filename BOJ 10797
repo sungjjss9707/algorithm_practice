@@ -1,0 +1,13 @@
+#include<iostream>
+using namespace std;
+
+int main(void)
+{
+	int num,a, sum=0;
+	cin>>num;
+	for(int i=0; i<5; ++i){
+		cin>>a;
+		if(a==num) sum++;	
+	}	
+	cout<<sum;
+}
