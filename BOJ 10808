@@ -1,0 +1,21 @@
+#include<iostream>
+#include<string>
+using namespace std;
+
+string str;
+int arr[27];
+//a는 97 
+int main(void)
+{
+	cin>>str;
+	int i;
+	char temp;
+	for(i=0; i<str.length(); ++i){
+		temp = str[i];
+		//printf("%d ", temp-96);
+		arr[temp-96]++;
+	}
+	for(i=1; i<=26; ++i){
+		cout<<arr[i]<<" ";
+	}
+}
