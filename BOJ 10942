@@ -1,0 +1,52 @@
+#include<iostream>
+#define fastio ios::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
+using namespace std;
+
+int numofnum;
+int arr[2001];
+int dap[2001][2001];
+
+void do_all(int len){
+	int i;
+	if(len==1){
+		for(i=1; i<=numofnum; ++i){
+			dap[i][i]=1;	
+		}
+		return;
+	}
+	if(len==2){
+		for(i=1; i<numofnum; ++i){
+			if(arr[i]==arr[i+1]) dap[i][i+1]=1;
+			else dap[i][i+1]=0;	
+		}
+		return;
+	}
+	int start =1;
+	int end =len;
+	while(end<=numofnum){
+		if(dap[start+1][end-1]==1&&(arr[start]==arr[end])) dap[start][end]=1;
+		else dap[start][end]=0;
+		start++;
+		end++;	
+	}
+}
+
+int main(void)
+{
+	fastio;
+	cin>>numofnum;
+	int i, numofquest, start, end;
+	for(i=1; i<=numofnum; ++i){
+		cin>>arr[i];
+	}
+	for(i=1; i<=numofnum; ++i){
+		do_all(i);	
+	}
+	cin>>numofquest;
+	for(i=0; i<numofquest; ++i){
+		cin>>start>>end;
+		if(dap[start][end]==1) cout<<1<<"\n";
+		else cout<<0<<"\n";
+	}
+	
+}
