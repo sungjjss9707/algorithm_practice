@@ -1,0 +1,50 @@
+import java.util.*;
+
+class numberthree{
+	int one, two,three;
+	
+	numberthree(int a, int b, int c){
+		this.one = a;
+		this.two = b;
+		this.three = c;
+	}
+	
+	int gettwo() {
+		int imsi, first=one, second=two, third = three;
+		if(second>first) {
+			imsi = second;
+			second = first;
+			first = imsi;
+		}
+		if(third>second) {
+			imsi = third;
+			third = second;
+			second = imsi;
+		}
+		if(second>first) {
+			imsi = second;
+			second = first;
+			first = imsi;
+		}
+		//System.out.println(first+" "+second+" "+third);
+		return second;
+	}
+	
+}
+
+
+
+public class Main {
+
+	public static void main(String[] args) {
+		int a,b,c;
+		Scanner sc = new Scanner(System.in);
+		a=sc.nextInt();
+		b=sc.nextInt();
+		c=sc.nextInt();
+		numberthree num = new numberthree(a,b,c);
+		System.out.println(num.gettwo());
+
+	}
+
+}
