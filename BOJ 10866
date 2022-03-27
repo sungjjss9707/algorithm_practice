@@ -1,0 +1,127 @@
+#include<iostream>
+#include<string.h>
+
+using namespace std;
+
+class deque{	//큐는 선입선출  
+	int arr[30001];
+	int startindex;
+	int endindex;
+public:
+	deque(){
+		startindex=15000;
+		endindex=15000;
+	}
+	void push_front(int a){
+		arr[startindex-1]=a;
+		startindex--;
+	}
+	void push_back(int a){
+		arr[endindex]=a;
+		endindex++;
+	}
+	void pop_front(){
+		if(endindex-startindex==0){
+			cout<<-1<<"\n";
+			return ;
+		}
+		int i;
+		int temp = arr[startindex];
+		startindex++;
+		cout<<temp<<"\n";
+	}
+	void pop_back(){
+		if(endindex-startindex==0){
+			cout<<-1<<"\n";
+			return ;
+		}
+		int i;
+		int temp = arr[endindex-1];
+		endindex--;
+		cout<<temp<<"\n";
+	}
+	void size(){
+		cout<<endindex-startindex<<"\n";
+	}
+	void empty(){
+		if(endindex-startindex==0){
+			cout<<1<<"\n";
+			return;
+		} 
+		cout<<0<<"\n";
+	}
+	void front(){
+		if(endindex-startindex==0){
+			cout<<-1<<"\n";
+			return;
+		}
+		cout<<arr[startindex]<<"\n";
+	}
+	void back(){
+		if(endindex-startindex==0){
+			cout<<-1<<"\n";
+			return;
+		}
+		cout<<arr[endindex-1]<<"\n";
+	}
+	void printdeque(){
+		int i;
+		for(i=startindex; i<endindex; ++i){
+			cout<<arr[i]<<" ";
+		}
+		cout<<"\n";
+	}
+
+};
+
+int main(void)
+{
+	//cout<<"fuck\n";
+	ios::sync_with_stdio(false);
+	cin.tie(NULL);
+	cout.tie(NULL);
+	int numofoper,i, numofpush;
+	//string oper;
+	char oper[11];
+	cin>>numofoper;
+	deque q = deque();
+	//stack s = stack();
+	for(i=0; i<numofoper; ++i){
+		cin>>oper;
+		//if(oper=="push"){
+		if(!strcmp(oper, "push_front")){
+			cin>>numofpush;
+			q.push_front(numofpush);
+		}
+		else if(!strcmp(oper, "push_back")){
+			cin>>numofpush;
+			q.push_back(numofpush);
+		}
+		else if(!strcmp(oper, "pop_front")){
+			q.pop_front();
+			//cout<<"\n";
+		}
+		else if(!strcmp(oper, "pop_back")){
+			q.pop_back();
+			//cout<<"\n";
+		}
+		else if(!strcmp(oper, "size")){
+			q.size();
+			//cout<<"\n";
+		}
+		else if(!strcmp(oper, "empty")){
+			q.empty();
+			//cout<<"\n";
+		}
+		else if(!strcmp(oper, "front")){
+			q.front();
+			//cout<<"\n";
+		}
+		else if(!strcmp(oper, "back")){
+			q.back();
+		}
+		//q.printdeque();
+		//cout<<"\n";
+	}
+	
+}
