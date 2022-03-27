@@ -1,0 +1,27 @@
+#include<iostream>
+#include<string>
+using namespace std;
+
+string sarr[5];
+
+void printserosoon(int len){
+	int i,k;
+	for(i=0; i<len; ++i){
+		for(k=0; k<5; ++k){
+			if(i<=sarr[k].length()-1){
+				cout<<sarr[k][i];
+			}
+		}	
+	}	
+}
+
+int main(void)
+{
+	int i, maxlen=0, templen;
+	for(i=0;i<5; ++i){
+		cin>>sarr[i];
+		templen = sarr[i].length();
+		maxlen = max(maxlen, templen);	
+	}
+	printserosoon(maxlen);
+}
