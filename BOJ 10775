@@ -1,0 +1,72 @@
+#include<iostream>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+int numofgate, numofplane;
+int airport[100001];
+int airplanelist[100001];
+
+void init(){
+	int i;
+	for(i=0; i<=numofgate; ++i){
+		airport[i]=i;
+	}	
+}
+
+void printparent(){
+	int i;
+	for(i=1; i<=numofgate; ++i){
+		cout<<airport[i]<<" ";
+	}
+	cout<<endl;
+}
+
+int getparent(int x){
+	if(airport[x]==x||airport[x]==-1) return airport[x];
+	int parent = getparent(airport[x]);
+	airport[x] = parent;
+	return parent;
+}
+
+void union_set(int x, int y){
+	/*
+	if(x==1){
+		airport[x]=-1;
+		return;
+	}
+	*/
+	int parent_x = getparent(x);
+	int parent_y = getparent(y);
+	if(parent_x<parent_y){
+		airport[parent_y]=parent_x;
+	}
+	else{
+		airport[parent_x]=parent_y;
+	}
+}
+
+int getcanairplane(){
+	int i,dap=0, parent;
+	//printparent();
+	for(i=0; i<numofplane; ++i){
+		parent=getparent(airplanelist[i]);
+		if(parent==0) return dap;
+		union_set(parent, parent-1);
+		//printparent();
+		dap++;
+	}
+	return dap;
+}
+
+int main(void)
+{
+	fastio;
+	cin>>numofgate>>numofplane;
+	int i, airplane;
+	init();
+	for(i=0; i<numofplane; ++i){
+		cin>>airplanelist[i];
+	}
+	cout<<getcanairplane();
+	return 0;
+}
