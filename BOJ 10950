@@ -1,0 +1,43 @@
+import java.util.*;
+
+class plusint{
+	int a,b;
+	
+	plusint(int _a, int _b){
+		this.a = _a;
+		this.b = _b;
+	}
+	
+	
+	int dohagi() {
+		int sum = 0;
+		
+		sum = this.a + this.b;
+		return sum;
+	}
+}
+
+
+
+public class Main {
+
+	public static void main(String[] args) {
+		int numofcase,i, firstnum, secnum;
+		Scanner sc = new Scanner(System.in);
+		numofcase = sc.nextInt();
+
+		plusint[] pls = new plusint[numofcase];
+		
+		for(i=0; i<numofcase; ++i) {
+			firstnum = sc.nextInt();
+			secnum = sc.nextInt();
+			pls[i]=new plusint(firstnum,secnum);
+		}
+		
+		for(i=0; i<numofcase; ++i) {
+			System.out.println(pls[i].dohagi());
+		}
+
+	}
+
+}
