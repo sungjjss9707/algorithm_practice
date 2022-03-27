@@ -1,0 +1,35 @@
+#include<iostream>
+#include<stack>
+#include<string>
+using namespace std;
+
+string gwalho;
+stack<char> s;
+
+void calcul(){
+	char temp;
+	int i, num=0, stacksize;
+	for(i=0; i<gwalho.length(); ++i){
+		if(gwalho[i]=='('){
+			s.push('(');
+		}
+		else{
+			s.pop();
+			if(gwalho[i-1]=='('){	//바로전깨 ( 이면 == 레이저다  
+				stacksize = s.size();
+				num=num+stacksize;
+			}
+			else{
+				num++;
+			}
+		}
+	}
+	cout<<num;
+}
+
+int main(void)
+{
+	
+	cin>>gwalho;
+	calcul();
+}
