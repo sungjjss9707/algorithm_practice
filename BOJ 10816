@@ -1,0 +1,24 @@
+#include<iostream>
+#include<algorithm>
+#define fastio ios::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
+using namespace std;
+
+int arr[500001];
+int num, numoffind, goal;
+
+
+int main(void)
+{
+	fastio;
+	cin>>num;
+	int i;
+	for(i=1; i<=num; ++i){
+		cin>>arr[i];
+	}
+	sort(arr+1, arr+num+1);
+	cin>>numoffind;
+	for(i=0; i<numoffind; ++i){
+		cin>>goal;
+		cout<<upper_bound(arr+1, arr+num+1, goal)-lower_bound(arr+1, arr+num+1, goal)<<" ";	
+	}
+}
