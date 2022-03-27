@@ -1,0 +1,96 @@
+#include<iostream>
+#include<vector>
+#include<queue>
+using namespace std;
+
+int numofcity;
+int visit[11];
+int arr[11][11];
+vector<pair<int,int>> cango[11];
+queue<int> q;
+int smallest=10000009;
+/*
+void bfs(){
+	
+	int nowcity;
+	while(!q.empty()){
+		nowcity = q.front();
+		q.pop();
+		for(i=0; k<cango[nowcity].size(); ++i){
+			
+		}
+	}
+}
+*/
+void bruteforce(int startindex, int index, int nowcity, int beeyong){
+	if(index==numofcity){
+		int gohome = arr[nowcity][startindex];
+		if(gohome==0) return;
+		
+		//cout<<beeyong+gohome<<"\n";
+		if(beeyong+gohome<smallest) smallest = beeyong+gohome;
+		return;
+	}
+	
+	if(index==0){
+		for(int i=1; i<=numofcity; ++i){
+			if(visit[i]==0){
+				visit[i]=1;
+				//cout<<i<<" ";
+				bruteforce(i,1,i,0);
+				visit[i]=0;
+			}
+			
+			
+		}
+		return;
+	}
+	int i, nextcity, nextbeeyong;
+	for(i=0; i<cango[nowcity].size(); ++i){
+		nextcity = cango[nowcity][i].first;
+		if(visit[nextcity]==0){
+			//cout<<nowcity<<"에서 "<<nextcity<<"방문\n";
+			visit[nextcity]=1;
+			//cout<<nextcity<<" ";
+			nextbeeyong = cango[nowcity][i].second;
+			//cout<<index<<"일떄 "<<i<<" "; 
+			bruteforce(startindex, index+1, nextcity, beeyong+nextbeeyong);
+			visit[nextcity]=0;
+		}
+		/*
+		else{
+			cout<<nowcity<<"에서"<<nextcity<<"로는 방문했던곳이라 안감\n"; 
+		}
+		*/
+	}
+}
+
+int main(void)
+{
+	cin>>numofcity;
+	int i,k,dist;
+	for(i=1; i<=numofcity; ++i){
+		q.push(i);
+		for(k=1; k<=numofcity; ++k){
+			cin>>dist;
+			arr[i][k]=dist;
+			if(dist!=0){
+				cango[i].push_back({k,dist});
+			}
+		}
+	}
+	/*
+	for(i=1; i<=numofcity; ++i){
+		cout<<i<<"에서 갈수 있는곳 : ";
+		for(k=0; k<cango[i].size(); ++k){
+			cout<<cango[i][k].first<<"(거리:"<<cango[i][k].second<<") "; 
+		}
+		cout<<"\n";
+	}
+	*/
+	bruteforce(0,0,0,0);
+	cout<<smallest;
+	
+
+		
+}
