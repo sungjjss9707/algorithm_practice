@@ -1,0 +1,25 @@
+#include<stdio.h>
+#include<stdlib.h> 
+void bigsmall(int* arr, int sz){
+	int i,temp1 = -1000001, temp2 = 1000001;
+	for(i=0; i<sz; ++i){
+		if(arr[i]>temp1)
+			temp1 = arr[i];
+		if(arr[i]<temp2)
+			temp2 = arr[i];
+	}
+	printf("%d %d", temp2, temp1);
+}
+
+int main(void)
+{
+	int i,a,getsu;
+	scanf("%d", &getsu);
+	int* arr = (int*)malloc(sizeof(int)*getsu);
+	for(i=0; i<getsu; ++i){
+		scanf("%d", &a);
+		arr[i] = a;
+	}
+	bigsmall(arr, getsu);
+	
+}
