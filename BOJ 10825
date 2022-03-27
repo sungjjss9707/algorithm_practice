@@ -1,0 +1,147 @@
+#include<iostream>
+#include<string>
+
+using namespace std;
+
+int korean[100001];
+int english[100001];
+int math[100001];
+string name[100001];
+int tempkorean[100001];
+int tempenglish[100001];
+int tempmath[100001];
+string tempname[100001];
+int num;
+
+void merge(int start, int end){
+	int mid = (start+end)/2;
+	int i=start,j=mid+1,k=start,l;
+	while(i<=mid&&j<=end){
+		if(korean[i]<korean[j]){	//왼쪽행렬의 제일앞에있는게 더 작으면  
+			tempkorean[k] = korean[j];
+			tempenglish[k] = english[j];
+			tempmath[k] = math[j];
+			tempname[k] = name[j];
+			k++;
+			j++;
+			 
+		}
+		else if(korean[i]>korean[j]){ //오른쪽행렬의 제일앞에있는게 더 작으면
+			tempkorean[k] = korean[i];
+			tempenglish[k] = english[i];
+			tempmath[k] = math[i];
+			tempname[k] = name[i];
+			k++;
+			i++;
+		} 
+		else{	//같으면  
+			if(english[i]>english[j]){
+				tempkorean[k] = korean[j];
+				tempenglish[k] = english[j];
+				tempmath[k] = math[j];
+				tempname[k] = name[j];
+				k++;
+				j++;	
+			}
+			else if(english[i]<english[j]){
+				tempkorean[k] = korean[i];
+				tempenglish[k] = english[i];
+				tempmath[k] = math[i];
+				tempname[k] = name[i];
+				k++;
+				i++;	
+			} 
+			else{	//둘디 같으면 
+				if(math[i]>math[j]){
+					tempkorean[k] = korean[i];
+					tempenglish[k] = english[i];
+					tempmath[k] = math[i];
+					tempname[k] = name[i];
+					k++;
+					i++;
+				}
+				else if(math[i]<math[j]){
+					tempkorean[k] = korean[j];
+					tempenglish[k] = english[j];
+					tempmath[k] = math[j];
+					tempname[k] = name[j];
+					k++;
+					j++;	
+				}
+				else{	//사전식 순서 구현하고 밑에는 값 복사까지 하기  
+					if(name[i]<name[j]){
+						tempkorean[k] = korean[i];
+						tempenglish[k] = english[i];
+						tempmath[k] = math[i];
+						tempname[k] = name[i];
+						k++;
+						i++;
+					}
+					else{
+						tempkorean[k] = korean[j];
+						tempenglish[k] = english[j];
+						tempmath[k] = math[j];
+						tempname[k] = name[j];
+						k++;
+						j++;
+					}
+				}
+			}
+		}	
+	}
+	
+	if(i>mid){	//왼쪽에 있는 i가 먼저 미드에 도달한거면 
+		for(l=j; l<=end; ++l){
+			tempkorean[k] = korean[l];
+			tempenglish[k] = english[l];
+			tempmath[k] = math[l];
+			tempname[k] = name[l];
+			k++;
+		}
+	}
+	else{
+		for(l=i; l<=mid; ++l){
+			tempkorean[k] = korean[l];
+			tempenglish[k] = english[l];
+			tempmath[k] = math[l];
+			tempname[k] = name[l];
+			k++;
+		}
+	}
+	//cout<<"whkat\n";
+	for(l=start; l<=end; ++l){
+		korean[l] = tempkorean[l];
+		english[l] = tempenglish[l];
+		math[l] = tempmath[l];
+		name[l] = tempname[l];
+	} 
+	
+	
+}
+
+void merge_sort(int start, int end){
+	if(start<end){
+		int mid = (start+end)/2;
+		merge_sort(start, mid);
+		merge_sort(mid+1, end);
+		merge(start, end);
+	}
+}
+
+int main(void)
+{
+	ios::sync_with_stdio(false);
+	cin.tie(NULL);
+	cout.tie(NULL);
+	cin>>num;
+	int i;
+	for(i=1; i<=num; ++i){
+		cin>>name[i]>>korean[i]>>english[i]>>math[i];
+	}
+	merge_sort(1, num);
+	for(i=1; i<=num; ++i){
+		cout<<name[i]<<"\n";
+	}
+	
+	
+}
