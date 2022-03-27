@@ -1,0 +1,51 @@
+#include<iostream>
+#include<algorithm>
+#define fastio ios::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
+using namespace std;
+
+int arr[500001];
+int num, numoffind, goal;
+
+int findnum(int start, int end){
+	if(start==end){
+		if(arr[start]==goal) return 1;
+		return 0;	
+	}
+	else if(start==end-1){
+		if(arr[start]==goal||arr[end]==goal) return 1;
+		return 0;
+	}
+	int mid = (start+end)/2;
+	if(arr[mid]==goal) return 1;
+	if(goal>arr[mid]){
+		return findnum(mid+1, end);
+	}
+	else{
+		return findnum(start, mid-1);
+	}
+	
+}
+
+int main(void)
+{
+	fastio;
+	cin>>num;
+	int i;
+	for(i=1; i<=num; ++i){
+		cin>>arr[i];
+	}
+	sort(arr+1, arr+num+1);
+	/*
+	for(i=1; i<=num; ++i){
+		cout<<arr[i]<<" ";
+	}
+	*/
+	cin>>numoffind;
+	for(i=0; i<numoffind; ++i){
+		cin>>goal;
+		cout<<findnum(1, num)<<" ";
+		
+	}
+	
+	
+}
