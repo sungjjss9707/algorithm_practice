@@ -1,0 +1,51 @@
+import java.util.*;
+
+class pairvector{
+	ArrayList<Integer> num1 = new ArrayList<>();
+	ArrayList<Integer> num2 = new ArrayList<>();
+	
+	pairvector(){}
+	
+	
+	void addvalue(int _num1, int _num2) {
+		num1.add(_num1);
+		num2.add(_num2);
+	}
+	
+	void printvalue() {
+		int i;
+		for(i=0; i<num1.size(); ++i) {
+			System.out.println(num1.get(i)+" "+num2.get(i));
+		}
+	}
+	
+	void pairadd() {
+		int i;
+		for(i=0; i<num1.size(); ++i) {
+			System.out.println(num1.get(i)+num2.get(i));
+		}
+	}
+}
+
+
+
+
+public class Main {
+
+	public static void main(String[] args) {
+		int num1, num2;
+		Scanner sc = new Scanner(System.in);
+		pairvector pa = new pairvector();
+		num1 = sc.nextInt();
+		num2 = sc.nextInt();
+		pa.addvalue(num1, num2);
+		while(sc.hasNextInt()) {
+			num1 = sc.nextInt();
+			num2 = sc.nextInt();
+			pa.addvalue(num1, num2);
+		}
+		//pa.printvalue();
+		pa.pairadd();
+	}
+
+}
