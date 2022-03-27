@@ -1,0 +1,47 @@
+#include<iostream>
+#include<math.h>
+#include<vector>
+using namespace std;
+int arr[9];
+int check[9];
+int num;
+int biggest=0;
+vector<int> v;
+
+void calcul(){
+	if(v.size()==num){	////
+		int i;
+		int sum=0;
+		for(i=1; i<num; ++i){
+			//cout<<v[i]<<" ";
+			sum = sum+abs(v[i]-v[i-1]);
+		}
+		if(sum>biggest) biggest = sum;
+		//cout<<"\n";
+		return;
+	}
+	//cout<<"시발\n";
+	int i;
+	for(i=1; i<=num; ++i){
+		if(check[i]!=1){	
+			check[i]=1;
+			//cout<<arr[i]<<"넣음\n";
+			v.push_back(arr[i]);
+			calcul();
+			v.pop_back();	
+			check[i]=0;
+		}
+	}
+}
+
+int main(void){
+	cin>>num;
+	int i;
+	for(i=1; i<=num; ++i){
+		cin>>arr[i];
+	}
+	
+	calcul();
+	//cout<<"\n";
+	cout<<biggest;
+}
