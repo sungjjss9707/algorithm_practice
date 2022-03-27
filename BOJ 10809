@@ -1,0 +1,53 @@
+import java.util.*;
+
+class Alphabet{
+	String mystr, i;
+	int[] atoz = new int[27];
+	
+	
+	Alphabet(String a){
+		this.mystr = a;
+		int i=0;
+		for(i=0; i<27; ++i) {
+			atoz[i] = -1;
+		}
+	}
+	
+	int convertoint(char a) {
+		int ans = ((int)a)-97;
+		return ans;
+	}
+	
+	void yumu() {
+		int i;
+		for(i=mystr.length()-1; i>=0;--i) {
+			atoz[convertoint(mystr.charAt(i))]=i;
+		}
+	}
+	
+	void printarr() {
+		int i;
+		for(i=0; i<26; ++i) {
+			System.out.print(atoz[i]+" ");
+		}
+	}
+	
+	
+}
+
+public class Main {
+
+	public static void main(String[] args) {
+		String str;
+		Scanner sc = new Scanner(System.in);
+		str= sc.next();
+		Alphabet al = new Alphabet(str);
+		/*
+		char a = 'c';
+		System.out.println((int)a-96);
+		*/
+		al.yumu();
+		al.printarr();
+	}
+
+}
