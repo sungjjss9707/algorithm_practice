@@ -1,0 +1,69 @@
+#include<iostream>
+#include<vector>
+#include<queue>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+int numofcom, numoflink, startcom, inf = 2000000000;
+int numofinfestedcom, infestingtime; 
+int dist[10001];
+vector<pair<int, int>> v[10001];
+
+void dijkstra(){
+	int i;
+	for(i=1; i<=numofcom; ++i){
+		dist[i] = inf;
+	}
+	priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
+	pq.push({0,startcom});
+	dist[startcom]=0;
+	int nowv, nowt, nextv, nextt;
+	while(!pq.empty()){
+		nowv = pq.top().second;
+		nowt = pq.top(). first;
+		pq.pop();
+		if(dist[nowv]<nowt) continue;
+		for(i=0; i<v[nowv].size(); ++i){
+			nextv = v[nowv][i].first;
+			nextt = v[nowv][i].second+nowt;
+			if(dist[nextv]>nextt){
+				dist[nextv] = nextt;
+				pq.push({nextt, nextv});
+			}
+		}
+	}
+	for(i=1; i<=numofcom; ++i){
+		//cout<<dist[i]<<" ";
+		if(dist[i]!=inf){
+			numofinfestedcom++;
+			infestingtime = max(infestingtime, dist[i]);
+		}
+	}
+	//cout<<endl;
+}
+
+void clear(){
+	int i;
+	for(i=1; i<=numofcom; ++i){
+		v[i].clear();
+	}
+	numofinfestedcom=0;
+	infestingtime=-1;
+}
+
+int main(void)
+{
+	fastio;
+	int testcase, i,t, s,e,time;
+	cin>>testcase; 
+	for(t=0; t<testcase; ++t){
+		cin>>numofcom>>numoflink>>startcom;
+		clear();
+		for(i=0; i<numoflink; ++i){
+			cin>>e>>s>>time;
+			v[s].push_back({e,time});
+		}
+		dijkstra();
+		cout<<numofinfestedcom<<" "<<infestingtime<<endl;
+	}
+}
