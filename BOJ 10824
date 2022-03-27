@@ -1,0 +1,33 @@
+#include<iostream>
+#include<math.h>
+using namespace std;
+
+long long jaree(long long a){
+	long long temp=a;
+	long long zaritsu=0;
+	while(1){
+		temp=temp/10;
+		zaritsu++;
+		if(temp==0) break;
+	}
+	return zaritsu;
+}
+
+long long zegop(long long zeesu){
+	int i;
+	long long num = 1;
+	for(i=0; i<zeesu; ++i){
+		num=num*10;
+	}
+	return num;
+}
+
+int main(void)
+{
+	long long a,b,c,d;
+	cin>>a>>b>>c>>d;
+	//cout<<a*zegop(jaree(b))+b<<"\n";
+	//cout<<c*zegop(jaree(d))+d;
+	//cout<<endl<<endl;
+	cout<<a*zegop(jaree(b))+b+c*zegop(jaree(d))+d;
+}
