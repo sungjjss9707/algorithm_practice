@@ -1,0 +1,39 @@
+#include<stdio.h>
+#include<stdlib.h>
+int bangbeonho(int floor, int bang, int nsonnim){
+	int i,k, index=0, beonho;
+	for(i=1; i<=bang; ++i){
+		for(k=1; k<=floor; ++k){
+			index = index+1;
+			if(index == nsonnim){
+				//printf("%d %d\n", k, i);
+				beonho = k*100+i;
+				break;				
+			}
+				
+		}
+	}
+	return beonho;
+	
+	
+}
+
+
+
+
+int main(void)
+{
+	
+	int testcase, nsonnim,bangsu, chungsu,i;
+	int* arr = (int*)malloc(sizeof(int)*testcase);
+	scanf("%d", &testcase);
+	for(i=0; i<testcase; ++i){
+		scanf("%d %d %d", &chungsu, &bangsu ,&nsonnim);
+		arr[i] = bangbeonho(chungsu, bangsu ,nsonnim);
+		//printf("%d\n",bangbeonho(chungsu, bangsu ,nsonnim));
+	}
+	for(i=0; i<testcase; ++i){
+		printf("%d\n",arr[i]);
+		//printf("%d\n",bangbeonho(chungsu, bangsu ,nsonnim));
+	}
+}
