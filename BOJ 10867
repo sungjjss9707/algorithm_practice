@@ -1,0 +1,24 @@
+#include<iostream>
+
+using namespace std;
+
+int numofnum;
+int arr[2002];
+
+int main(void)
+{
+	cin>>numofnum; 
+	int i,num;
+	for(i=0; i<=2001; ++i){
+		arr[i]=0;	
+	}
+	for(i=0; i<numofnum; ++i){
+		cin>>num;
+		arr[num+1000]=1;	
+	}
+	for(i=0; i<=2001; ++i){
+		if(arr[i]==1){
+			cout<<i-1000<<" ";	
+		}	
+	}
+}
