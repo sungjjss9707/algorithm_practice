@@ -1,0 +1,17 @@
+#include<iostream>
+
+using namespace std;
+
+int main(void)
+{
+	int numofpeople;
+	cin>>numofpeople;
+	int i,chan=0,ban=0,num;
+	for(i=0;i<numofpeople;++i){
+		cin>>num;
+		if(num==1) chan++;
+		else ban++;
+	}
+	if(chan>ban) cout<<"Junhee is cute!";
+	else cout<<"Junhee is not cute!";
+}
