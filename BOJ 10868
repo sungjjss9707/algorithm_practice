@@ -1,0 +1,50 @@
+#include<iostream>
+#define fastio ios::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
+using namespace std;
+
+int arr[100001];
+int seg_tree[400010];
+int numofnum;
+int inf = 1000000001;
+
+int getminimum(int index, int start, int end, int left, int right){
+	if(start>right || end<left){
+		return inf;
+	}
+	else if(start>=left&&end<=right){
+		return seg_tree[index];
+	}
+	else{
+		int mid = (start+end)/2;
+		int ret =  min(getminimum(2*index, start, mid, left, right), getminimum(2*index+1, mid+1, end, left, right));
+		return ret;
+		
+	}
+}
+
+int init(int index, int start, int end){
+	if(start==end){
+		seg_tree[index]=arr[start];
+		return arr[start];
+	}
+	int mid = (start+end)/2;
+	int ret = min(init(2*index, start, mid), init(2*index+1, mid+1, end));
+	seg_tree[index]=ret;
+	return ret;
+}
+
+int main(void)
+{
+	int numofoper,i, left, right;
+	cin>>numofnum>>numofoper;
+	for(i=1; i<=numofnum; ++i){
+		cin>>arr[i];
+	}
+	init(1,1,numofnum);
+
+	for(i=0; i<numofoper; ++i){
+		fastio;
+		cin>>left>>right;
+		cout<<getminimum(1,1,numofnum, left, right)<<"\n";
+	}
+}
