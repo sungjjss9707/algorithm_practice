@@ -1,0 +1,88 @@
+#include<iostream>
+#include<string.h>
+
+using namespace std;
+
+class stack{	//스택은 선입후출
+	int arr[10001];
+	int endindex;
+public:
+	stack(){
+		endindex=0;
+	}
+	void push(int a){
+		arr[endindex]=a;
+		endindex++;
+	}
+	void pop(){
+		if(endindex==0){
+			cout<<-1;
+			return ;
+		} 
+		int temp = arr[endindex-1];
+		arr[endindex-1]=0;
+		endindex--;
+		cout<<temp;
+	}
+	void size(){
+		cout<<endindex;
+	}
+	
+	void empty(){
+		if(endindex==0){
+			cout<<1;
+			return;
+		} 
+		cout<<0;
+	}
+	
+	void top(){
+		if(endindex==0){
+			cout<<-1;
+			return;
+		}
+		cout<<arr[endindex-1];
+	}
+	
+	void printstack(){
+		int i;
+		for(i=0; i<endindex; ++i){
+			cout<<arr[i]<<" ";
+		}
+		cout<<endl;
+	}
+};
+
+int main(void)
+{
+	int numofoper,i, numofpush;
+	string oper;
+	cin>>numofoper;
+	stack s = stack();
+	for(i=0; i<numofoper; ++i){
+		cin>>oper;
+		if(oper=="push"){
+			cin>>numofpush;
+			s.push(numofpush);
+		}
+		else if(oper=="pop"){
+			s.pop();
+			cout<<"\n";
+		}
+		else if(oper=="size"){
+			s.size();
+			cout<<"\n";
+		}
+		else if(oper=="empty"){
+			s.empty();
+			cout<<"\n";
+		}
+		else if(oper=="top"){
+			s.top();
+			cout<<"\n";
+		}
+		//s.printstack();
+		//cout<<"\n";
+	}
+	
+}
