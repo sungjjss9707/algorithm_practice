@@ -1,0 +1,12 @@
+#include<stdio.h>
+
+int main(void)
+{
+	int i,a,b;
+	int case_num;
+	scanf("%d", &case_num);
+	for(i=0; i<case_num; ++i){
+		scanf("%d,%d", &a,&b);
+		printf("%d\n", a+b);
+	}
+}
