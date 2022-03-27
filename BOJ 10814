@@ -1,0 +1,154 @@
+import java.util.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+
+class Hwewon{
+	int numofhwewon;
+	int[] age;
+	String[] name;
+	int[] tempage;
+	String[] tempname;
+	int[] soonseo;
+	int[] tempsoonseo;
+	int index=0;
+	
+	Hwewon(int a){
+		int i;
+		numofhwewon = a;
+		age = new int[a];
+		name = new String[a];
+		tempage = new int[a];
+		tempname = new String[a];
+		soonseo = new int[a];
+		tempsoonseo = new int[a];
+		for(i=0; i<a; ++i) {
+			soonseo[i] = i;
+		}
+	}
+	
+	void add(int newage, String newname) {
+		age[index] = newage;
+		name[index] = newname;
+		index=index+1;
+	}
+	
+	void merge(int left, int mid, int right){
+		  int i, j, k, l;
+		  i = left;
+		  j = mid+1;
+		  k = left;
+
+		  
+		  while(i<=mid && j<=right){
+		    if(age[i]<=age[j]) {
+		    	if(age[i]==age[j]) {
+		    		if(soonseo[i]>soonseo[j]) {
+		    			tempage[k] = age[j];
+			    		tempname[k] = name[j];
+			    		tempsoonseo[k] = soonseo[j];
+			    		k++;
+			    		j++;
+		    		}
+		    		else {
+		    			tempage[k] = age[i];
+			    		tempname[k] = name[i];
+			    		tempsoonseo[k] = soonseo[i];
+			    		k++;
+			    		i++;
+		    		}
+		    	}
+		    	else {
+		    		tempage[k] = age[i];
+		    		tempname[k] = name[i];
+		    		tempsoonseo[k] = soonseo[i];
+		    		k++;
+		    		i++;
+		    	}
+		    	
+		    }
+		      
+		    else {
+		    	tempage[k] = age[j];
+	    		tempname[k] = name[j];
+	    		tempsoonseo[k] = soonseo[j];
+	    		k++;
+	    		j++;
+		    }
+		      
+		  }
+
+		  // 남아 있는 값들을 일괄 복사
+		  if(i>mid){
+		    for(l=j; l<=right; l++) {
+		    	tempage[k] = age[l];
+			    tempname[k] = name[l];
+			    tempsoonseo[k] = soonseo[l];
+			    k++;
+		    }
+		      
+		  }
+		  // 남아 있는 값들을 일괄 복사
+		  else{
+		    for(l=i; l<=mid; l++) {
+		    	tempage[k] = age[l];
+			    tempname[k] = name[l];
+			    tempsoonseo[k] = soonseo[l];
+			    k++;
+		    }
+		      
+		  }
+
+		  // 배열 sorted[](임시 배열)의 리스트를 배열 list[]로 재복사
+		  for(l=left; l<=right; l++){
+		    age[l] = tempage[l];
+		    name[l] = tempname[l];
+		    soonseo[l] = tempsoonseo[l];
+		  }
+	}
+	
+	void merge_sort(int left, int right) {
+		int mid;
+		  if(left<right){
+		    mid = (left+right)/2; // 중간 위치를 계산하여 리스트를 균등 분할 -분할(Divide)
+		    merge_sort(left, mid); // 앞쪽 부분 리스트 정렬 -정복(Conquer)
+		    merge_sort(mid+1, right); // 뒤쪽 부분 리스트 정렬 -정복(Conquer)
+		    merge(left, mid, right); // 정렬된 2개의 부분 배열을 합병하는 과정 -결합(Combine)
+		  }
+		
+	}
+	
+	void printhwewon() {
+		int i;
+		for(i=0; i<numofhwewon; ++i) {
+			System.out.println(age[i]+" "+name[i]);
+		}
+	}
+}
+
+public class Main {
+
+	public static void main(String[] args) throws NumberFormatException, IOException {
+		// TODO Auto-generated method stub
+		int i,numofhwewon, age;
+		String name;
+		BufferedReader bf = new BufferedReader(new InputStreamReader(System.in)); //선언
+		numofhwewon = Integer.parseInt(bf.readLine());
+		Hwewon hw = new Hwewon(numofhwewon);
+		//StringTokenizer st = null;
+		StringTokenizer st;
+		for(i=0; i<numofhwewon; ++i) {
+			st = new StringTokenizer(bf.readLine());
+			age = Integer.parseInt(st.nextToken());
+			name = st.nextToken();
+			hw.add(age, name);
+		}
+		//hw.printhwewon();
+		hw.merge_sort(0, numofhwewon-1);
+		hw.printhwewon();
+	}
+	
+
+}
