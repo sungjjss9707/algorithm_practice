@@ -1,0 +1,116 @@
+#include<iostream>
+#include<vector>
+using namespace std;
+
+int mymap[21][21];
+int sero,garo,numofoper,firstx,firsty;
+int up=0,down=0,dong=0,seo=0,nam=0,book=0;
+int tempdong,tempseo;
+int tempnamm,tempbook,tempup,tempdown;
+vector<int> oper;
+
+void temptask(){
+	tempdong=dong;
+	tempseo=seo;
+	tempup=up;
+	tempdown=down;
+	tempnamm=nam;
+	tempbook=book;
+}
+
+void goeast(){
+	temptask();
+	up=tempdong;
+	seo=tempup;
+	down=tempseo;
+	dong=tempdown;
+}
+void gowest(){
+	temptask();
+	up=tempseo;
+	seo=tempdown;
+	down=tempdong;
+	dong=tempup;
+}
+
+void gonorth(){
+	temptask();
+	up=tempbook;
+	book=tempdown;
+	down=tempnamm;
+	nam=tempup;
+}
+void gosouth(){
+	temptask();
+	up=tempnamm;
+	book=tempup;
+	down=tempbook;
+	nam=tempdown;
+}
+
+void copyorcopied(int y, int x){
+	if(mymap[y][x]==0){
+		mymap[y][x]=down;
+	}
+	else{
+		down=mymap[y][x];
+		mymap[y][x]=0;
+	}
+}
+
+void do_oper(){
+	int i,ny=firsty+1,nx=firstx+1;
+	for(i=0;i<numofoper;++i){
+		if(oper[i]==1){
+			if(nx+1<=garo){
+				goeast();
+				nx++;
+				copyorcopied(ny,nx);
+				cout<<up<<"\n";
+			}
+		}
+		else if(oper[i]==2){
+			if(nx-1>=1){
+				gowest();
+				nx--;
+				copyorcopied(ny,nx);
+				cout<<up<<"\n";
+			}
+			
+		}
+		else if(oper[i]==3){
+			if(ny-1>=1){
+				gonorth();
+				ny--;
+				copyorcopied(ny,nx);
+				cout<<up<<"\n";
+			}
+		}
+		else{
+			if(ny+1<=sero){
+				gosouth();
+				ny++;
+				copyorcopied(ny,nx);
+				cout<<up<<"\n";
+			}	
+		}
+	}
+	
+	
+}
+
+int main(void)
+{
+	cin>>sero>>garo>>firsty>>firstx>>numofoper;
+	int i,k;
+	for(i=1; i<=sero; ++i){
+		for(k=1; k<=garo; ++k){
+			cin>>mymap[i][k];
+		}
+	}
+	for(i=0;i<numofoper;++i){
+		cin>>k;
+		oper.push_back(k);
+	}
+	do_oper();
+}
