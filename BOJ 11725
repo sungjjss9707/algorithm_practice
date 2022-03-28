@@ -1,0 +1,77 @@
+#include<iostream>
+#include<vector>
+using namespace std;
+
+int num;
+vector<int> tree[100001];
+int visit[100001];
+/*
+void dfs1(int root, int index){
+	visit[root] = index;
+	//cout<<"visit["<<root<<"] = "<<index<<"\n";
+	int i, temp,nextindex = index*2;
+	
+	if(tree[root].size()!=1){
+		for(i=0; i<tree[root].size(); ++i){
+			if(visit[tree[root][i]]!=0){
+				temp = tree[root][i];
+				tree[root][i] = tree[root][0];
+				tree[root][0] = temp;	
+			}
+		}		
+	}
+	
+	
+	for(i=0; i<tree[root].size(); ++i){
+		if(visit[tree[root][i]]==0){
+			visit[tree[root][i]] = nextindex;
+			dfs(tree[root][i], nextindex);
+			nextindex++;
+		}	
+	}
+}
+*/
+void dfs(int root){
+	visit[root] = 1;
+	int i, temp;
+	if(tree[root].size()!=1){
+		for(i=0; i<tree[root].size(); ++i){
+			if(visit[tree[root][i]]!=0){
+				temp = tree[root][i];
+				tree[root][i] = tree[root][0];
+				tree[root][0] = temp;	
+			}
+		}		
+	}
+	
+	
+	for(i=0; i<tree[root].size(); ++i){
+		if(visit[tree[root][i]]==0){
+			dfs(tree[root][i]);
+		}	
+	}
+}
+
+int main(void)
+{
+	cin>>num;
+	int i, k,node1, node2;
+	for(i=1; i<num; ++i){
+		cin>>node1>>node2;
+		tree[node1].push_back(node2);
+		tree[node2].push_back(node1);
+	}
+	/*
+	for(i=1; i<=num; ++i){
+		cout<<i<<"번째노드 : ";
+		for(k=0; k<tree[i].size(); ++k){
+			cout<<tree[i][k]<<" ";
+		}
+		cout<<"\n";
+	}
+	*/
+	dfs(1);
+	for(i=2; i<=num; ++i){
+		cout<<tree[i][0]<<"\n";
+	}
+}
