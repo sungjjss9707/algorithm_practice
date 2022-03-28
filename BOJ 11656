@@ -1,0 +1,64 @@
+#include<iostream>
+#include<string>
+
+using namespace std;
+
+string arr[1010];
+string temparr[1010];
+string str;
+int len;
+
+
+void merge(int start, int end){
+	int mid = (start+end)/2;
+	int i=start,j=mid+1,k=start,l;
+	while(i<=mid&&j<=end){
+		if(arr[i]>=arr[j]){
+			temparr[k++] = arr[j++];	
+		}
+		else{
+			temparr[k++] = arr[i++];
+		}
+	}
+	if(i==mid+1){
+		for(l=j; l<=end; ++l){
+			temparr[k++] = arr[l];
+		}
+	}
+	else{
+		for(l=i; l<=mid; ++l){
+			temparr[k++] = arr[l];
+		}
+	}
+	for(l=start; l<=end; ++l){
+		arr[l] = temparr[l];
+	}
+}
+
+void merge_sort(int start, int end){
+	if(start<end){
+		int mid = (start+end)/2;
+		merge_sort(start, mid);
+		merge_sort(mid+1, end);
+		merge(start, end);
+	}
+}
+
+int main(void)
+{
+	cin>>str;
+	int i;
+	string temp;
+	len = str.length();
+	for(i=0; i<len; ++i){
+		temp = str.substr(i, len-i);
+		arr[i+1] = temp;
+	}
+	merge_sort(1, len);
+		
+	
+	for(i=1; i<=len; ++i){
+		cout<<arr[i]<<"\n";
+	}
+	
+}
