@@ -1,0 +1,68 @@
+#include<iostream>
+#include<vector>
+#define fastio ios::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
+using namespace std;
+
+int numofvertex;
+int map[101][101];
+int icangotok[101][101];
+int visit[101];
+vector<int> cango[101];
+
+void clear(){
+	int i;
+	for(i=1; i<=numofvertex; ++i){
+		visit[i]=0;
+	}
+}
+
+void dfs(int nowspot){
+	int i, nextspot;
+	for(i=0; i<cango[nowspot].size(); ++i){
+		nextspot = cango[nowspot][i];
+		if(visit[nextspot]==0){
+			visit[nextspot]=1;
+			dfs(nextspot);
+		}
+	}
+}
+
+
+int main(void)
+{
+	fastio;
+	int i,k;
+	cin>>numofvertex;
+	for(i=1; i<=numofvertex; ++i){
+		for(k=1 ;k<=numofvertex; ++k){
+			cin>>map[i][k];
+			if(map[i][k]==1){
+				cango[i].push_back(k);
+			}
+		}
+	}
+	for(i=1; i<=numofvertex; ++i){
+		clear();
+		dfs(i);
+		for(k=1; k<=numofvertex; ++k){
+			if(visit[k]==1){
+				icangotok[i][k]=1;
+			}
+		}	
+	}
+	for(i=1; i<=numofvertex; ++i){
+		for(k=1 ;k<=numofvertex; ++k){
+			cout<<icangotok[i][k]<<" ";
+		}
+		cout<<"\n";
+	}
+	/*
+	for(i=1; i<=numofvertex; ++i){
+		cout<<i<<"점과 인접한점 : ";
+		for(k=0; k<cango[i].size(); ++k){
+			cout<<cango[i][k]<<" ";
+		}
+		cout<<"\n";
+	}
+	*/
+}
