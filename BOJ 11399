@@ -1,0 +1,80 @@
+#include<stdio.h>
+#include<stdlib.h>
+# define MAX_SIZE 1001
+int sorted[MAX_SIZE]; // 추가적인 공간이 필요
+
+void printarr(int* arr, int numofnum){
+	int i;
+	printf("%d", arr[0]);
+	for(i=1; i<numofnum; ++i){
+		printf("\n%d", arr[i]);
+	}
+	printf("\n");
+}
+
+void merge(int* arr, int left, int right){
+	int i,j,k, l, mid = (left+right)/2;
+	i=left;
+	j = mid+1;
+	k = left;
+	while(i<=mid&&j<=right){
+		if(arr[i]<arr[j]){	//중복되면 등호 붙이면됨  
+			sorted[k]=arr[i];
+			k++;
+			i++;
+		}
+		else{
+			sorted[k]=arr[j];
+			k++;
+			j++;
+		}
+	}
+	if(i>mid){
+		for(l=j; l<=right; ++l){
+			sorted[k] = arr[l];
+			k++;
+		}
+	}
+	else{
+		for(l=i; l<=mid; ++l){
+			sorted[k] = arr[l];
+			k++;
+		}
+	}
+	for(l=left; l<=right; ++l){
+		arr[l] = sorted[l];
+	}
+}
+
+void merge_sort(int* arr, int left, int right){
+	int mid;
+	if(right>left){
+		mid = (right+left)/2;
+		merge_sort(arr, left, mid);
+		merge_sort(arr, mid+1, right);
+		merge(arr,left, right);
+	}
+}
+
+void printhap(int numofnum, int* arr){
+	int sum=0, jeonsum=0;
+	int i;
+	for(i=0; i<numofnum; ++i){
+		jeonsum=jeonsum+arr[i];
+		sum=sum+jeonsum;
+	}
+	printf("%d", sum);
+}
+
+int main(void){
+	int i,numofnum;
+	scanf("%d", &numofnum);
+	int* arr = (int*)malloc(sizeof(int)*numofnum);
+	for(i=0; i<numofnum; ++i){
+		scanf("%d", &(arr[i]));
+	}
+	//printarr(arr, numofnum);
+	merge_sort(arr, 0, numofnum-1);
+	//printarr(arr, numofnum);
+	printhap(numofnum, arr);
+}
