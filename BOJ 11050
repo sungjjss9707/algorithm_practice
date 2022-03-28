@@ -1,0 +1,39 @@
+#include<stdio.h>
+
+int N,K;
+
+int factorial(int num){
+	if(num==1||num==0){
+		return 1;
+	}
+	int dap=1;
+	int i;
+	for(i=1; i<=num; ++i){
+		dap=dap*i;
+	}
+	return dap;
+}
+
+int getyeehang(){
+	if(N==1||K==0){
+		return 1;
+	}
+	int i,bunja=1, bunmo=1, temp;
+	temp = N;
+	for(i=1; i<=K; ++i){
+		bunja = bunja*temp;
+		temp--;
+	}
+	bunmo = factorial(K);
+	//printf("%d %d\n", bunja, bunmo);
+	return bunja/bunmo;
+}
+
+int main(void)
+{
+	scanf("%d %d", &N, &K);
+	//int bunja, bunmo;
+	//bunja = factorial(N);
+	//bunmo = factorial(K)*factorial(N-K);
+	printf("%d", getyeehang());	
+}
