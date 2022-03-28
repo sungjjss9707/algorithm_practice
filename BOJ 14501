@@ -1,0 +1,48 @@
+#include<iostream>
+using namespace std;
+int geegan[16];
+int don[16];
+int check[16];
+int day;
+
+int bruteforce(int startday){
+	if(check[startday]!=-1){
+		return check[startday];
+	}
+	if(startday+geegan[startday]-1>day){
+		check[startday]=0;
+		return 0;
+	}
+	int endday = startday+geegan[startday]-1;
+	int nextday = endday+1;
+	int todaymoney = don[startday];
+	int money,biggest=0,i;
+	for(i=nextday; i<=day; ++i){
+		money = bruteforce(i);
+		biggest = biggest>money ? biggest:money;
+	}
+	
+	check[i] = todaymoney+biggest;
+	return check[i];
+}
+
+
+
+int main(void)
+{
+	cin>>day;
+	int i;
+	
+	for(i=1; i<=day; ++i){
+		cin>>geegan[i];
+		cin>>don[i];
+		check[i]=-1;
+	}
+	int biggest = 0, money;
+	for(i=1; i<=day; ++i){
+		money =  bruteforce(i);
+		biggest = biggest>money ? biggest:money;		
+	}
+	cout<<biggest;
+	//cout<<brute();
+}
