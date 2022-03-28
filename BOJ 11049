@@ -1,0 +1,44 @@
+#include<iostream>
+
+using namespace std;
+
+int numofmat;
+int mats[501][2];
+int dp[501][501];
+
+void clear(){
+	for(int i=1; i<=numofmat;++i){
+		for(int k=1; k<=numofmat; ++k){
+			dp[i][k]=-1;
+		}
+	}
+}
+
+int choisogop(int start, int end){
+	int ret=dp[start][end];
+	if(ret!=-1) return ret;
+	if(start==end) return 0;
+	if(start==end-1){
+		 ret= mats[start][0]*mats[start][1]*mats[end][1];
+		 return ret;
+	}
+	int i,temp,choiso=2147483646;
+	for(i=start; i<end; ++i){
+		temp=choisogop(start,i)+choisogop(i+1,end);
+		temp=temp+(mats[start][0]*mats[i][1]*mats[end][1]);
+		choiso=min(choiso,temp);
+	}
+	dp[start][end]=choiso;
+	return choiso;
+}
+
+int main(void)
+{
+	cin>>numofmat;
+	int i;
+	for(i=1; i<=numofmat; ++i){
+		cin>>mats[i][0]>>mats[i][1];
+	}
+	clear();
+	cout<<choisogop(1,numofmat);
+}
