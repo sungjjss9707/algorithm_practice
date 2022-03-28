@@ -1,0 +1,72 @@
+#include<iostream>
+using namespace std;
+
+
+class heap{
+	int arr[100001];
+	int heapcount;
+public:
+	heap(){
+		heapcount=0;
+	}
+	void swap(int *a, int *b){
+		int tmp = *a;
+		*a = *b;
+		*b = tmp;
+	}
+
+	void push(int x){
+		arr[++heapcount] = x;
+		int child = heapcount;
+		int parent = child/2;
+		while(child>1 && arr[child]>arr[parent]){
+			swap(&arr[child], &arr[parent]);
+   	    	child = parent;
+   		    parent = child/2;
+		}
+	}
+
+	int pop(){
+		if(heapcount==0){		//힙에 들어가있는 원소가 0개인데 뺄려고 했을때 
+			return 0;
+		}
+		int ret = arr[1];
+   		swap(&arr[1], &arr[heapcount]);
+   	    heapcount--;
+   	    if(heapcount==0||heapcount==1) return ret;	
+    	else if(heapcount==2){
+	    	if(arr[1]<arr[2]) swap(&arr[1], &arr[2]);
+   		 	return ret;
+		}										//힙에있는 원소가 2개이하면 여기서 함수가 종료됨 
+		int parent = 1;							
+	    int child = arr[2]>arr[3]?2:3;
+   	    while(child<=heapcount && arr[child]>arr[parent]){
+   	        swap(&arr[child], &arr[parent]);
+   	        parent = child;
+   	        child = parent*2;
+            if(child+1 <= heapcount){
+                child = (arr[child]>arr[child+1])? child : child+1;
+        	}
+    	}
+    	return ret;
+	}
+};
+
+int main(void)
+{
+	ios::sync_with_stdio(false);
+	cin.tie(NULL);
+	cout.tie(NULL);
+	int i,num, temp;
+	heap h = heap();
+	cin>>num;
+	for(i=0; i<num; ++i){
+		cin>>temp;
+		if(temp==0){
+			cout<<h.pop()<<"\n";
+		}
+		else{
+			h.push(temp);
+		}
+	}
+}
