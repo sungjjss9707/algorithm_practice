@@ -1,0 +1,43 @@
+#include<iostream>
+#define fastio ios::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
+using namespace std;
+
+int a[1000001];
+int b[1000001];
+int sizea, sizeb;
+
+void merge(){
+	int i,index_a=1, index_b=1;
+	while(index_a<=sizea&&index_b<=sizeb){
+		if(a[index_a]<b[index_b]){
+			cout<<a[index_a++]<<" ";
+		}
+		else{
+			cout<<b[index_b++]<<" ";
+		}
+	}
+	if(index_a>sizea){
+		for(i=index_b; i<=sizeb; ++i){
+			cout<<b[i]<<" ";
+		}
+	}
+	else{
+		for(i=index_a; i<=sizea; ++i){
+			cout<<a[i]<<" ";
+		}
+	}
+}
+
+int main(void)
+{
+	fastio;
+	int i;
+	cin>>sizea>>sizeb;
+	for(i=1; i<=sizea; ++i){
+		cin>>a[i];
+	}
+	for(i=1; i<=sizeb; ++i){
+		cin>>b[i];
+	}
+	merge();
+}
