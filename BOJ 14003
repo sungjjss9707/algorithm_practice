@@ -1,0 +1,71 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+using namespace std;
+
+int numofnum, lenoflis;
+int arr[1000001];
+int indexarr[1000001];
+
+int lis_len(){
+	int i, last, lastindex, swapindex;
+	vector<int> indexvec;
+	for(i=1; i<=numofnum; ++i){
+		if(indexvec.empty()){
+			indexvec.push_back(arr[i]);
+			indexarr[i] = indexvec.size()-1;
+		}
+		else{
+			lastindex = indexvec.size()-1;
+			last = indexvec[lastindex];
+			if(last<arr[i]){
+				indexvec.push_back(arr[i]);
+				indexarr[i] = indexvec.size()-1;
+			}
+			else{
+				swapindex = lower_bound(indexvec.begin(), indexvec.end(), arr[i])-indexvec.begin();
+				indexvec[swapindex] = arr[i];
+				indexarr[i] = swapindex;
+			}
+		}
+	}
+	/*
+	for(i=0; i<indexvec.size(); ++i){
+		cout<<indexvec[i]<<" ";
+	}
+	cout<<endl;
+	for(i=1; i<=numofnum; ++i){
+		cout<<indexarr[i]<<" ";
+	}
+	cout<<endl;
+	*/
+	lenoflis = indexvec.size();
+	return indexvec.size();
+}
+
+void printlis(){
+	int i, maxnum = lenoflis-1;
+	vector<int> lis;
+	for(i=numofnum; i>=1; --i){
+		if(indexarr[i]==maxnum){
+			//cout<<arr[i]<<" ";
+			lis.push_back(arr[i]);
+			maxnum--;
+		}
+	}
+	//cout<<endl;
+	for(i=lis.size()-1; i>=0; --i){
+		cout<<lis[i]<<" ";
+	}
+}
+
+int main(void)
+{
+	cin>>numofnum;
+	int i;
+	for(i=1; i<=numofnum; ++i){
+		cin>>arr[i];
+	}
+	cout<<lis_len()<<endl;
+	printlis();
+}
