@@ -1,0 +1,81 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+int numofjeon;
+int arr[1001];
+int dp[1001];
+int lastindex[1001];
+
+void clear(){
+	int i;
+	for(i=1; i<=numofjeon; ++i){
+		dp[i] = -1;
+	}
+}
+
+
+int makedp_3(int end){
+	int ret = dp[end];
+	if(ret!=-1) return ret;
+	if(end==1){
+		lastindex[end] = 1;
+		dp[end] = 1;
+		return 1;
+	}
+	int i, maxnum=-1, tempnum, mylastindex = end;
+	for(i=end-1; i>=1; --i){
+		if(arr[end]>arr[i]){
+			//maxnum = max(maxnum, makedp(i));
+			tempnum = makedp_3(i);
+			if(maxnum<tempnum){
+				maxnum = tempnum;
+				mylastindex = i;	
+			}	
+		}  
+	}
+	if(maxnum==-1) ret = 1;
+	else ret = maxnum+1;
+	dp[end] = ret;
+	lastindex[end] = mylastindex;
+	return ret;
+}
+
+void finddap(){
+	clear();
+	//int maxnum = -1,lis = makedp(numofjeon);
+	int i, maxnum = -1, longestlen, maxnumindex;
+	for(i=numofjeon; i>=1; --i){
+		dp[i] = makedp_3(i);
+		if(maxnum<dp[i]){
+			maxnum = dp[i];
+			maxnumindex = i;	
+		}
+	}
+	vector<int> indexvec;
+	int nextindex = maxnumindex;
+	while(1){
+		//cout<<nextindex<<" ";
+		indexvec.push_back(nextindex);
+		if(dp[nextindex]==1) break;
+		nextindex = lastindex[nextindex];
+	}
+	cout<<maxnum<<"\n";
+	for(i=indexvec.size()-1; i>=0; --i){
+		cout<<arr[indexvec[i]]<<" ";
+	}
+	//return numofjeon-maxnum;
+}
+
+int main(void)
+{
+	fastio;
+	cin>>numofjeon;
+	int i;
+	for(i=1; i<=numofjeon; ++i){
+		cin>>arr[i];
+	}
+	finddap();
+}
