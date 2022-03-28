@@ -1,0 +1,27 @@
+#include<iostream>
+using namespace std;
+int testcase;
+string sen;
+int g,s;
+void calcul(){
+	int i, num;
+	char al;
+	int len = sen.length();
+	for(i=0; i<len; ++i){
+		num = sen[i]-'A';
+		al = char((g*num+s)%26+'A');
+		cout<<al;
+	}
+	cout<<"\n";
+}
+
+int main(void)
+{
+	cin>>testcase;
+	int i;
+	for(i=0; i<testcase; ++i){
+		cin>>g>>s;
+		cin>>sen;
+		calcul();
+	}
+}
