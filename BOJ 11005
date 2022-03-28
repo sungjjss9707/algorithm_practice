@@ -28,6 +28,7 @@ void calcul(){
 			break;	
 		} 	
 	}
+	
 }
 
 int main(void)
