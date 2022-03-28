@@ -1,0 +1,54 @@
+#include<iostream>
+
+using namespace std;
+
+int numofjeon;
+int arr[1001];
+int dp[1001];
+
+void clear(){
+	int i;
+	for(i=1; i<=numofjeon; ++i){
+		dp[i] = -1;
+	}
+}
+
+int makedp(int end){
+	int ret = dp[end];
+	if(ret!=-1) return ret;
+	if(end==1){
+		dp[end] = 1;
+		return 1;
+	}
+	int i, maxnum=-1;
+	for(i=end-1; i>=1; --i){
+		if(arr[end]>arr[i])  maxnum = max(maxnum, makedp(i));
+	}
+	if(maxnum==-1) ret = 1;
+	else ret = maxnum+1;
+	dp[end] = ret;
+	return ret;
+}
+
+int findcut(){
+	clear();
+	//int maxnum = -1,lis = makedp(numofjeon);
+	int maxnum = -1;
+	for(int i=numofjeon; i>=1; --i){
+		dp[i] = makedp(i);
+		//cout<<dp[i]<<" ";
+		maxnum = max(maxnum, dp[i]);
+	}
+	//cout<<endl;
+	return maxnum;
+}
+
+int main(void)
+{
+	cin>>numofjeon;
+	int i;
+	for(i=1; i<=numofjeon; ++i){
+		cin>>arr[i];
+	}
+	cout<<findcut();
+}
