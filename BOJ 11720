@@ -1,0 +1,49 @@
+import java.util.*;
+
+class streeng{
+	String mystring;
+	streeng(String _a){
+		mystring = _a;
+	}
+	
+	int splithap() {
+		int i,sum = 0;
+		for(i=0; i<mystring.length(); ++i) {
+			sum = sum+byeonhwan(mystring.charAt(i));
+		}
+		
+		return sum;
+	}
+	
+	
+	int byeonhwan(char a) {
+		int ans=0;
+		switch(a) {
+			case '1' : ans = 1; break;
+			case '2' : ans = 2; break;
+			case '3' : ans = 3; break;
+			case '4' : ans = 4; break;
+			case '5' : ans = 5; break;
+			case '6' : ans = 6; break;
+			case '7' : ans = 7; break;
+			case '8' : ans = 8; break;
+			case '9' : ans = 9; break;
+		}
+		return ans;
+	}
+	
+}
+
+public class Main {
+
+	public static void main(String[] args) {
+		String a;
+		int getsu;
+		Scanner sc = new Scanner(System.in);
+		getsu = sc.nextInt();
+		a = sc.next();
+		streeng st  = new streeng(a);
+		System.out.println(st.splithap());
+	}
+
+}
