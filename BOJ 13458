@@ -1,0 +1,38 @@
+#include<iostream>
+
+using namespace std;
+
+int numofclass, chong, boo;
+int student[1000001];
+
+long long calcul(){
+	long long mok, numofgam, hap=0;
+	int i, numofstud; 
+	for(i=1; i<=numofclass; ++i){
+		numofstud = student[i];
+		numofgam=1;	//총감독 무조건 넣기  
+		numofstud = numofstud-chong<0 ? 0 : numofstud-chong; 
+		mok = numofstud/boo;
+		if(numofstud%boo==0){
+			if(numofstud!=0){
+				numofgam = numofgam+mok;
+			}
+		}
+		else{
+			numofgam = numofgam+mok+1;
+		}
+		hap = hap+numofgam;
+	}
+	return hap;
+}
+
+int main(void)
+{
+	cin>>numofclass;
+	int i;
+	for(i=1; i<=numofclass; ++i){
+		cin>>student[i];
+	}
+	cin>>chong>>boo;
+	cout<<calcul();
+}
