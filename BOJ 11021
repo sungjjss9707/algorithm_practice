@@ -1,0 +1,35 @@
+import java.util.*;
+
+class pair{
+	int num1, num2;
+	
+	pair(int _num1, int _num2){
+		this.num1 = _num1;
+		this.num2 = _num2;
+	}
+	
+	int sumofpair() {
+		return this.num1 + this.num2;
+	}
+}
+
+public class Main {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		int numofcase,i,a,b;
+		Scanner sc = new Scanner(System.in);
+		numofcase = sc.nextInt();
+		pair[] pa = new pair[numofcase];
+		for(i=0; i<numofcase; i++) {
+			a=sc.nextInt();
+			b=sc.nextInt();
+			pa[i] = new pair(a,b);
+		}
+		
+		for(i=0; i<numofcase; i++) {
+			System.out.println("Case #"+(i+1)+": "+pa[i].sumofpair());
+		}
+	}
+
+}
