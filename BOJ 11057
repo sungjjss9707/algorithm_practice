@@ -1,0 +1,26 @@
+#include<iostream>
+
+using namespace std;
+
+int arr[1001][10];
+
+int main(void)
+{
+	int num,i,k, sum=0;
+	cin>>num;
+	for(i=0; i<10; ++i){
+		arr[1][i]=1;
+	}
+	for(i=1; i<=num; ++i){
+		arr[i][0]=1;
+	}
+	for(i=2; i<=num; ++i){
+		for(k=1; k<10; ++k){
+			arr[i][k] = (arr[i-1][k]%10007+arr[i][k-1]%10007)%10007;
+		}
+	}
+	for(i=0; i<10; ++i){
+		sum = (sum+arr[num][i])%10007;
+	}
+	cout<<sum;
+}
