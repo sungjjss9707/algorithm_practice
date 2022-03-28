@@ -1,0 +1,62 @@
+#include<iostream>
+#include<stdlib.h>
+using namespace std;
+int* arr;
+int n, k;
+
+void printarr(){
+	int i;
+	for(i=1; i<=n; ++i){
+		cout<<arr[i]<<" ";		
+	}
+	cout<<"\n";
+}
+
+int main(void)
+{
+	
+	int i,j,realindex, index=0;
+	cin>>n>>k;
+	arr = (int*)malloc(sizeof(int)*(n+1));
+	for(i=1; i<=n; ++i){
+		arr[i] = 1;
+	}
+	j=k;
+	//printarr();
+	cout<<"<";
+	while(1){
+		cout<<j;
+		index++;
+		if(index>=n) break;
+		cout<<", ";
+		arr[j]=0;
+		//now = j;
+		//printarr();
+		realindex=0;
+		while(1){
+			j=j+1;
+			if(j>n){
+				j=1;
+			}
+			if(arr[j]!=0){
+				realindex++;
+			}
+			if(realindex==k){
+				//arr[j]=0;
+				break;	
+			} 	
+		}
+		//next=j;
+		//cout<<now<<" "<<next<<"\n";
+		//if(now==next) return 0;
+		//index++;
+		//printarr();
+	}
+	cout<<">";
+}
+
+
+
+
+
+
