@@ -1,0 +1,77 @@
+#include<iostream>
+#include<queue>
+#include<vector>
+using namespace std;
+
+
+vector<int> v;
+int spos, bpos;
+int yeejeon[100001];
+
+void get_hwetsu_bfs(){
+	queue<pair<int, int>> q;
+	q.push({spos,0});
+	int nowpos, nowhwetsu,nextpos, hwetsu;
+	while(!q.empty()){
+		nowpos=q.front().first;
+		nowhwetsu=q.front().second;
+		q.pop();
+		if(nowpos==bpos){
+			hwetsu=nowhwetsu;
+			break;
+		}
+		nextpos=2*nowpos;
+		if(nowpos!=0){
+			if(nextpos<=100000){
+				if(yeejeon[nextpos]==-1){
+					yeejeon[nextpos]=nowpos;
+					q.push({nextpos,nowhwetsu+1});
+				}
+			}
+		}		
+		nextpos=nowpos+1;
+		if(nextpos<=100000){
+			if(yeejeon[nextpos]==-1){
+				yeejeon[nextpos]=nowpos;
+				q.push({nextpos,nowhwetsu+1});
+			}
+		}
+		nextpos=nowpos-1;
+		if(nextpos>=0){
+			if(yeejeon[nextpos]==-1){
+				yeejeon[nextpos]=nowpos;
+				q.push({nextpos,nowhwetsu+1});
+			}
+		}
+	}
+	cout<<hwetsu<<"\n";
+	//return;
+	//cout<<bpos<" ";
+	while(1){	
+		//cout<<bpos<<" ";
+		v.push_back(bpos);
+		if(bpos==spos) break;
+		bpos=yeejeon[bpos];
+	}
+	for(int i=v.size()-1; i>=0;--i){
+		cout<<v[i]<<" ";
+	}
+}
+
+void clear(){
+	for(int i=0; i<=100000;++i){
+		yeejeon[i]=-1;
+	}
+}
+
+void calcul_dap(){
+	clear();
+	get_hwetsu_bfs();
+	
+}
+
+int main(void)
+{
+	cin>>spos>>bpos;
+	calcul_dap();
+}
