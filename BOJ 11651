@@ -1,0 +1,80 @@
+import sys
+
+numofnum = int(sys.stdin.readline());
+#temparrx = [];
+#temparry = [];
+arrx = [];
+arry = [];
+for i in range(0, numofnum):
+    a,b = (sys.stdin.readline()).split(' ');
+    #a,b = (input()).split(' ');
+    arrx.append(int(a));
+    arry.append(int(b));
+
+temparrx = [0 for i in range(numofnum)];
+temparry = [0 for i in range(numofnum)];
+
+
+def printarr():
+    for i in range(0, numofnum):
+        print(arrx[i], end=" ");
+        print(arry[i]);
+
+def merge(left, right):
+    mid = int((left+right)/2);
+    i=left;
+    j=mid+1;
+    k=left;
+    while(i<=mid and j<=right):
+        if(arry[i]<=arry[j]):
+            if(arry[i]==arry[j]):
+                if(arrx[i]<arrx[j]):
+                    temparrx[k] = arrx[i];
+                    temparry[k] = arry[i];
+                    k=k+1;
+                    i=i+1;
+                else:
+                    temparrx[k] = arrx[j];
+                    temparry[k] = arry[j];
+                    k=k+1;
+                    j=j+1;
+            else:
+                temparrx[k] = arrx[i];
+                temparry[k] = arry[i];
+                k=k+1;
+                i=i+1;
+        else:
+            temparrx[k] = arrx[j];
+            temparry[k] = arry[j];
+            k=k+1;
+            j=j+1;
+    if(i<=mid):
+        for t in range(i, mid+1):
+            temparrx[k] = arrx[i];
+            temparry[k] = arry[i];
+            k=k+1;
+            i=i+1;
+    else:
+        for t in range(j, right+1):
+            temparrx[k] = arrx[j];
+            temparry[k] = arry[j];
+            k=k+1;
+            j=j+1;
+    for t in range(left, right+1):
+        arrx[t] = temparrx[t];
+        arry[t] = temparry[t];
+                
+        
+        
+
+def merge_sort(left, right):
+    if left<right:
+        mid = int((left+right)/2);
+        merge_sort(left, mid);
+        merge_sort(mid+1, right);
+        merge(left, right);
+
+#printarr();
+merge_sort(0, numofnum-1);
+printarr();
+
