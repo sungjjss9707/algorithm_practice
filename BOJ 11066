@@ -1,0 +1,79 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+using namespace std;
+
+
+int numofnum;
+int check[501][501];
+vector<int> booboonhap;
+vector<int> v;
+//int hap;
+bool compare(int i, int j){
+	return j<i;
+}
+
+void clear(){
+	int i,k;
+	for(i=0; i<numofnum; ++i){
+		for(k=0; k<numofnum; ++k){
+			check[i][k] = -1;
+		}
+	}
+}
+
+int choisobeeyong(int lo, int hi){
+	int ret = check[lo][hi];
+	if(ret!=-1){
+		return ret;
+	}
+	if(lo==hi){
+		check[lo][hi] = 0;
+		return 0;
+	}
+	if(lo==hi-1){
+		check[lo][hi] = v[lo]+v[hi];
+		return v[lo]+v[hi];
+	}
+	int i, temp, left, right;
+	ret = 2000000000;
+	for(i=lo; i<hi; ++i){
+		left = choisobeeyong(lo, i);
+		right = choisobeeyong(i+1, hi);
+		temp = left+right; 
+		ret = ret<temp ? ret : temp; 
+	}
+	//hap = hap+ret;
+	int hap=booboonhap[hi]-booboonhap[lo]+v[lo];
+	ret = ret+hap;
+	check[lo][hi] = ret;
+	return ret;
+	
+}
+
+int main(void)
+{
+	int testcase,t,i, temp, sum;
+	cin>>testcase;
+	for(t=0; t<testcase; ++t){
+		cin>>numofnum;
+		sum=0;
+		v.clear();
+		booboonhap.clear();
+		for(i=0; i<numofnum; ++i){
+			cin>>temp;
+			sum=sum+temp;
+			booboonhap.push_back(sum);
+			v.push_back(temp);
+		}
+		/*
+		for(i=0; i<numofnum; ++i){
+			cout<<v[i]<<" ";
+		}
+		cout<<"\n";
+		*/
+		clear();
+		int choiso = choisobeeyong(0, numofnum-1);
+		cout<<choiso<<"\n";
+	}
+}
