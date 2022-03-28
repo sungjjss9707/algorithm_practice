@@ -1,0 +1,24 @@
+#include<iostream>
+#include<string>
+using namespace std;
+
+int main(void)
+{
+	string a;
+	getline(cin,a);
+	//cout<<a;
+	int i;
+	char temp;
+	for(i=0; i<a.length(); ++i){
+		if(a[i]>='a'&&a[i]<='m'||a[i]>='A'&&a[i]<='M'){
+			temp = a[i]+13;
+		}
+		else if(a[i]>='n'&&a[i]<='z'||a[i]>='N'&&a[i]<='Z'){
+			temp = a[i]-13;
+		}
+		else{
+			temp = a[i];	
+		}
+		cout<<temp;
+	}
+}
