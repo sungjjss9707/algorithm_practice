@@ -1,0 +1,271 @@
+#include<iostream>
+
+using namespace std;
+
+int m[21][21];
+int originm[21][21];
+int side,choidae=0;
+int ewsn[5];
+void mapcopy(){
+	for(int i=1; i<=side;++i){
+		for(int k=1; k<=side; ++k){
+			m[i][k]=originm[i][k];
+		}
+	}
+}
+void printallcase(){
+	for(int i=0;i<5;++i){
+		cout<<ewsn[i]<<" ";
+	}
+	cout<<endl;
+}
+
+void printmap(){
+	for(int i=1; i<=side; ++i){
+		for(int k=1; k<=side; ++k){
+			cout<<m[i][k]<<" ";
+		}
+		cout<<"\n";
+	}
+	cout<<"-----\n";
+}
+
+int findbiggest(){
+	int biggest=0;
+	for(int i=1; i<=side;++i){
+		for(int k=1; k<=side; ++k){
+			biggest=max(biggest,m[i][k]);
+		}
+	}
+	return biggest;
+}
+
+bool linepanstar(int flag, int line){
+	int i, startindex=-1;
+	if(flag==1){
+		for(i=1;i<=side;++i){
+			if(m[line][i]!=0){
+				startindex=i;
+				break;
+			}
+		}
+		if(startindex==-1||startindex==side) 
+			return true;
+		for(i=startindex;i<side;++i){
+			if(m[line][i]==m[line][i+1]||m[line][i]==0) return false;
+		}	
+	}
+	else if(flag==2){
+		for(i=side;i>=0;--i){
+			if(m[line][i]!=0){
+				startindex=i;
+				break;
+			}
+		}
+		if(startindex==-1||startindex==1) 
+			return true;
+		for(i=startindex;i>1;--i){
+			if(m[line][i]==m[line][i-1]||m[line][i]==0) return false;
+		}
+	}
+	else if(flag==3){
+		for(i=1;i<=side;++i){
+			if(m[i][line]!=0){
+				startindex=i;
+				break;
+			}
+		}
+		if(startindex==-1||startindex==side) 
+			return true;
+		for(i=startindex;i<side;++i){
+			if(m[i][line]==m[i+1][line]||m[i][line]==0) return false;
+		}
+	}
+	else{
+		for(i=side;i>=1;--i){
+			if(m[i][line]!=0){
+				startindex=i;
+				break;
+			}
+		}
+		if(startindex==-1||startindex==1) 
+			return true;
+		for(i=startindex;i>1;--i){
+			if(m[i][line]==m[i-1][line]||m[i][line]==0) return false;
+		}
+	}
+	return true;
+}
+
+void calculeast(){
+	int i,j,k,startindex,temp;
+	for(i=1;i<=side;++i){
+		//if(linepanstar(1,i)) continue;
+		for(j=side; j>1; --j){
+			if(m[i][j]==0){
+				for(k=j-1; k>=1; --k){
+					if(m[i][k]!=0){
+						m[i][j]=m[i][k];
+						m[i][k]=0;
+						break;
+					}
+				}
+			}
+		}
+		for(j=side; j>1;--j){
+			if(m[i][j]==m[i][j-1]){
+				m[i][j]=m[i][j]*2;
+				for(k=j-1;k>=1;--k){
+					if(k==1||m[i][k-1]==0){
+						m[i][k]=0;
+						break;
+					}
+					m[i][k]=m[i][k-1];
+				}
+			}
+		}
+	}
+}
+
+void calculwest(){
+	int i,j,k,startindex,temp;
+	for(i=side;i>=1;--i){
+		//if(linepanstar(2,i)) continue;
+		for(j=1; j<side; ++j){
+			if(m[i][j]==0){
+				for(k=j+1; k<=side; ++k){
+					if(m[i][k]!=0){
+						m[i][j]=m[i][k];
+						m[i][k]=0;
+						break;
+					}
+				}
+			}
+		}
+		for(j=1; j<side;++j){
+			if(m[i][j]==m[i][j+1]){
+				m[i][j]=m[i][j]*2;
+				for(k=j+1;k<=side;++k){
+					if(k==side||m[i][k+1]==0){
+						m[i][k]=0;
+						break;
+					}
+					m[i][k]=m[i][k+1];
+				}
+			}
+		}
+	}
+}
+
+void calculsouth(){
+	int i,j,k,startindex,temp;
+	for(i=1;i<=side;++i){
+		//if(linepanstar(1,i)) continue;
+		for(j=side; j>1; --j){
+			if(m[j][i]==0){
+				for(k=j-1; k>=1; --k){
+					if(m[k][i]!=0){
+						m[j][i]=m[k][i];
+						m[k][i]=0;
+						break;
+					}
+				}
+			}
+		}
+		for(j=side; j>1;--j){
+			if(m[j][i]==m[j-1][i]){
+				m[j][i]=m[j][i]*2;
+				for(k=j-1;k>=1;--k){
+					if(k==1||m[k-1][i]==0){
+						m[k][i]=0;
+						break;
+					}
+					m[k][i]=m[k-1][i];
+				}
+			}
+		}
+	}
+}
+
+void calculnorth(){
+	int i,j,k,startindex,temp;
+	for(i=side;i>=1;--i){
+		//if(linepanstar(1,i)) continue;
+		for(j=1; j<side; ++j){
+			if(m[j][i]==0){
+				for(k=j+1; k<=side; ++k){
+					if(m[k][i]!=0){
+						m[j][i]=m[k][i];
+						m[k][i]=0;
+						break;
+					}
+				}
+			}
+		}
+		for(j=1; j<side;++j){
+			if(m[j][i]==m[j+1][i]){
+				m[j][i]=m[j][i]*2;
+				for(k=j+1;k<=side;++k){
+					if(k==1||m[k+1][i]==0){
+						m[k][i]=0;
+						break;
+					}
+					m[k][i]=m[k+1][i];
+				}
+			}
+		}
+	}
+}
+
+
+void calcul2048(){
+	int i;
+	for(i=0;i<5;++i){
+		if(ewsn[i]==1){//east
+			calculeast();
+		}
+		else if(ewsn[i]==2){//west
+			calculwest();
+		}
+		else if(ewsn[i]==3){//south
+			calculsouth();
+		}
+		else{//north
+			calculnorth();
+		}
+	}
+}
+
+void bruteforce(int used){
+	if(used==5){
+		//printallcase();
+		mapcopy();
+		calcul2048();
+		choidae=max(choidae,findbiggest());
+		//printmap();
+		return;
+	}
+	
+	int i;
+	
+	for(i=1; i<=4; ++i){
+		ewsn[used]=i;
+		bruteforce(used+1);
+	}
+}
+
+int main(void)
+{
+	cin>>side;
+	int i,k;
+	for(i=1;i<=side;++i){
+		for(k=1;k<=side;++k){
+			cin>>originm[i][k];
+		}
+	}
+	
+	bruteforce(0);
+	cout<<choidae;
+	
+	return 0;
+}
