@@ -1,0 +1,46 @@
+#include<iostream>
+
+using namespace std;
+
+int numofcity;
+long long dist[100000];
+long long oilprice[100001];
+
+long long getcheapest(){
+	
+	int i,k;
+	int nowcity = 0;
+	int nextcity;
+	long long distance;
+	long long oil=0;
+	while(nowcity<numofcity){
+		nextcity = nowcity+1;
+		distance=dist[nextcity-1];	
+		while(1){
+			if(oilprice[nowcity]>oilprice[nextcity]||nextcity==numofcity) break;
+			distance = distance+dist[nextcity];
+			nextcity++;
+		}		
+		
+		oil = oil+distance*oilprice[nowcity];
+		nowcity = nextcity;
+		if(nowcity==numofcity-1) break;
+	}
+	return oil;
+}
+
+int main(void)
+{
+	cin>>numofcity;
+	int i;
+	for(i=0; i<numofcity-1; ++i){
+		cin>>dist[i];
+	}
+	for(i=0; i<numofcity; ++i){
+		cin>>oilprice[i];
+	}
+	oilprice[numofcity-1] = 2000000000;
+	
+	long long choiso_beeyong = getcheapest();
+	cout<<choiso_beeyong; 
+}
