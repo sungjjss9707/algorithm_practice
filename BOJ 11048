@@ -1,0 +1,51 @@
+#include<iostream>
+
+using namespace std;
+
+int sero, garo;
+int map[1001][1001];
+int check[1001][1001];
+int dy[3] = {0,-1,-1};
+int dx[3] = {-1, 0, -1};
+
+
+int choidaecandy(int nowy, int nowx){
+	if(nowy==1&&nowx==1){
+		check[nowy][nowx] = map[nowy][nowx];
+		return check[nowy][nowx];
+	}
+	int ret = check[nowy][nowx];
+	if(ret!=-1) return ret;
+	int i, nextx, nexty, biggest=0, nextcandy;
+	for(i=0; i<3; ++i){
+		nexty = nowy+dy[i];
+		nextx = nowx+dx[i];
+		if(nexty>=1&&nexty<=sero&&nextx>=1&&nextx<=garo){
+			nextcandy = choidaecandy(nexty, nextx)+map[nowy][nowx];
+			biggest = biggest>nextcandy ? biggest : nextcandy; 
+		}
+	}
+	check[nowy][nowx] = biggest;
+	return biggest;
+}
+
+int main(void)
+{
+	cin>>sero>>garo;
+	int i,k;
+	for(i=1; i<=sero; ++i){
+		for(k=1; k<=garo; ++k){
+			cin>>map[i][k];
+			check[i][k]=-1;
+		}
+	}
+	cout<<choidaecandy(sero, garo);
+	/*
+	for(i=1; i<=sero; ++i){
+		for(k=1; k<=garo; ++k){
+			cout<<map[i][k]<<" ";
+		}
+		cout<<"\n";
+	}
+	*/
+}
