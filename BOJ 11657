@@ -1,0 +1,70 @@
+#include<iostream>
+#include<vector>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+struct triple{
+	long long s,e,cost;
+};
+
+long long numofver, numofedge;
+long long dist[501];
+vector<triple> edge_v;
+long long inf = 100000000000000;
+
+void dist_clear(){
+	long long i,k;
+	for(i=1; i<=numofver; ++i){
+		dist[i] = inf;
+	}
+}
+
+
+void bellman_ford(){
+	dist_clear();
+	long long i, k,now_v,start,end,cost;
+	dist[1]=0;
+	for(i=1; i<=numofver-1; ++i){
+		for(k=0; k<edge_v.size(); ++k){
+			start= edge_v[k].s;
+			if(dist[start]>=inf) continue;
+			end= edge_v[k].e;
+			cost= edge_v[k].cost;
+			if(dist[start]+cost<dist[end]){
+				dist[end] = dist[start]+cost;
+			}
+		}
+	}
+	for(i=1; i<=numofver-1; ++i){
+		for(k=0; k<edge_v.size(); ++k){
+			start= edge_v[k].s;
+			if(dist[start]>=inf) continue;
+			end= edge_v[k].e;
+			cost= edge_v[k].cost;
+			if(dist[start]+cost<dist[end]){
+				cout<<-1<<"\n";
+				exit(0);
+			}
+		}
+	}
+	for(i=2; i<=numofver; ++i){
+		if(dist[i]>=inf){
+			cout<<-1<<"\n";
+		}
+		else{
+			cout<<dist[i]<<"\n";
+		}
+	}
+}
+
+int main(void)
+{
+	fastio;
+	cin>>numofver>>numofedge;
+	long long i,a,b,c;
+	for(i=0; i<numofedge; ++i){
+		cin>>a>>b>>c;
+		edge_v.push_back({a,b,c});
+	}
+	bellman_ford();
+}
