@@ -1,0 +1,72 @@
+#include<iostream>
+#include<string>
+#define fastio ios::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
+using namespace std;
+
+int myset[21];
+
+void add(int x){
+	myset[x]=1;
+}
+
+void remove(int x){
+	myset[x]=0;
+}
+
+void check(int x){
+	if(myset[x]) cout<<1<<"\n";
+	else cout<<0<<"\n";
+}
+
+void toggle(int x){
+	if(myset[x]) myset[x]=0;
+	else myset[x]=1;
+}
+
+void all(){
+	for(int i=1; i<=20; ++i){
+		myset[i]=1;
+	}
+}
+
+void empty(){
+	for(int i=1; i<=20; ++i){
+		myset[i]=0;
+	}
+}
+
+int main(void)
+{
+	fastio;
+	int numofprob, num,i;
+	cin>>numofprob;
+	string problem;
+	empty();
+	for(i=0; i<numofprob; ++i){
+		cin>>problem;
+		if(problem=="add"){
+			cin>>num;
+			add(num);
+		}
+		else if(problem=="remove"){
+			cin>>num;
+			remove(num);
+		}
+		else if(problem=="check"){
+			cin>>num;
+			check(num);
+		}
+		else if(problem=="toggle"){
+			cin>>num;
+			toggle(num);
+		}
+		else if(problem=="all"){
+			all();
+		}
+		else{	//empty
+			empty();
+		}
+		
+	}
+	
+}
