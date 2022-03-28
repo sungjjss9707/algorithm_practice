@@ -1,0 +1,53 @@
+#include<iostream>
+#include<vector>
+using namespace std;
+
+long long n;
+long long mod = 1000000007;
+
+void printmatrix(const vector<vector<long long>>& matrix){
+	long long i,k;
+	for(i=0; i<matrix.size(); ++i){
+		for(k=0; k<matrix[i].size(); ++k){
+			cout<<matrix[i][k]<<" ";
+		}
+		cout<<"\n";
+	}
+}
+
+vector<vector<long long>> matrixgop(const vector<vector<long long>>& a, const vector<vector<long long>>& b){
+	long long oneone, onetwo, twoone, twotwo;
+	oneone = ((a[0][0]*b[0][0])%mod+(a[0][1]*b[1][0])%mod)%mod;
+	onetwo = ((a[0][0]*b[0][1])%mod+(a[0][1]*b[1][1])%mod)%mod;
+	twoone = ((a[1][0]*b[0][0])%mod+(a[1][1]*b[1][0])%mod)%mod;
+	twotwo = ((a[1][0]*b[0][1])%mod+(a[1][1]*b[1][1])%mod)%mod;
+	vector<vector<long long>> matrix = {{oneone, onetwo},{twoone, twotwo}};
+	return matrix;
+}
+
+vector<vector<long long>> matrixjegop(const vector<vector<long long>> matrix, long long jisoo){
+	if(jisoo==1) return matrix;
+	vector<vector<long long>> ban= matrixjegop(matrix, jisoo/2);
+	vector<vector<long long>> clone;
+	if(jisoo%2==0){
+		clone = ban;
+	}
+	else{
+		clone = matrixgop(ban, matrix);
+	}
+	vector<vector<long long>> returnmatrix = matrixgop(ban, clone);
+	return returnmatrix;
+}
+
+int main(void)
+{
+	cin>>n;
+	if(n==1){
+		cout<<1;
+		return 0;	
+	}
+	vector<vector<long long>> matrix = {{1,1},{1,0}};
+	vector<vector<long long>> returnmatrix = matrixjegop(matrix, n-1);
+	long long dap = ((returnmatrix[1][0])%mod+(returnmatrix[1][1])%mod)%mod;
+	cout<<dap;
+}
