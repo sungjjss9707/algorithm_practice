@@ -1,0 +1,99 @@
+#include<iostream>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+int arr[100001];
+int seg_tree[400010];
+int numofnum;
+
+int seg_init(int index, int start, int end){	//인덱스를 반환해야함 
+	if(start==end){
+		seg_tree[index] = start;
+		return start;
+	}
+	int mid = (start+end)/2;
+	int left = seg_init(2*index, start, mid);
+	int right = seg_init(2*index+1, mid+1, end);
+	int ret;
+	if(arr[left]<arr[right]){
+		ret = left;
+	}
+	else{
+		ret = right;
+	}
+	seg_tree[index] = ret;
+	return ret;
+}
+
+int seg_smallest(int index, int start, int end, int left, int right){
+	if(start>=left&&end<=right){
+		return seg_tree[index];
+	}
+	else if(start>right||end<left){
+		return 0;
+	}
+	else{
+		int mid = (start+end)/2;
+		int ret1 = seg_smallest(2*index, start, mid, left, right);
+		int ret2 = seg_smallest(2*index+1, mid+1, end, left, right);
+		int ret = arr[ret1]<arr[ret2]?ret1:ret2;
+		return ret;
+	}
+}
+
+long long findbiggestyeedook(int start, int end){
+	if(start==end){
+		return (long long)(arr[start]);
+	}
+	//int mid = (start+end)/2;
+	int smallestindex = seg_smallest(1,1,numofnum, start, end);
+	int smallest = arr[smallestindex];
+	long long big_rec = (long long)(end-start+1)*(long long)(smallest);
+	long long left, right;
+	if(smallestindex==start){
+		left = 0;	
+	}
+	else{
+		left = findbiggestyeedook(start, smallestindex-1);	
+	}
+	if(smallestindex==end){
+		right=0;
+	}
+	else{
+		right = findbiggestyeedook(smallestindex+1, end);	
+	}
+	long long biggest = max(big_rec, left);
+	biggest = max(biggest, right);
+	return biggest;
+}
+
+int main(void)
+{
+	fastio;
+	cin>>numofnum;
+	int i;
+	for(i=1; i<=numofnum; ++i){
+		cin>>arr[i];
+	}
+	arr[0]=2100000000;
+	seg_init(1,1,numofnum);
+	/*
+	for(i=1; seg_tree[i]!=0; ++i){
+		cout<<seg_tree[i]<<" ";
+	}
+	*/
+	int a,b;
+	cout<<findbiggestyeedook(1, numofnum);
+	/*
+	while(1){
+		cin>>a>>b;
+		if(a==0&&b==0) break;
+		cout<<arr[seg_smallest(1,1,5,a,b)]<<endl;
+	}
+	*/
+	/*
+	for(i=1; seg_tree[i]!=0; ++i){
+		cout<<seg_tree[i]<<" ";
+	}
+	*/
+}
