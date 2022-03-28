@@ -1,0 +1,70 @@
+#include<iostream>
+#include<vector>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+int numofpeople, numoftask;
+vector<int> v[1001];
+int task_master[1001];
+bool task_done[1001];
+
+void clear(){
+	int i;
+	for(i=1; i<=numoftask; ++i){
+		task_master[i]=-1;
+	}
+}
+
+void done_clear(){
+	int i;
+	for(i=1; i<=numoftask; ++i){
+		task_done[i] = false;
+	}
+}
+
+bool dfs(int person){
+	int i, task;
+	for(i=0; i<v[person].size(); ++i){
+		task = v[person][i];
+		if(task_done[task]) continue;
+		task_done[task] = true;
+		if(task_master[task]==-1){
+			task_master[task] = person;
+			return true;
+		}
+		if(dfs(task_master[task])){
+			task_master[task] = person;
+			return true;
+		}
+		
+	}
+	return false;
+}
+
+int solve(){
+	int i, dap=0;
+	clear();
+	for(i=1; i<=numofpeople; ++i){
+		done_clear();
+		if(dfs(i)){
+			dap++;
+		}
+	}
+	return dap;
+}
+
+int main(void)
+{
+	fastio;
+	cin>>numofpeople>>numoftask;
+	int i, k,task_num, task;
+	for(i=1; i<=numofpeople; ++i){
+		cin>>task_num;
+		for(k=0; k<task_num; ++k){
+			cin>>task;
+			v[i].push_back(task);
+		}
+	}
+	cout<<solve();
+	return 0;
+}
