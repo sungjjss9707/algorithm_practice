@@ -1,0 +1,124 @@
+#include<iostream>
+using namespace std;
+
+int  numofdotwithjoongbok;
+int arr_x[100001];
+int arr_y[100001];
+int temparr_x[100001];
+int temparr_y[100001];
+
+
+void merge(int startindex, int endindex, int mid){
+	int i=startindex ,j = startindex,k=mid+1, l;
+	while(j<=mid && k<=endindex){
+		if(arr_x[j]>arr_x[k]){
+			temparr_x[i] = arr_x[k];
+			temparr_y[i] = arr_y[k];
+			i++;
+			k++;
+		}
+		else if(arr_x[j]==arr_x[k]){
+			if(arr_y[j]>=arr_y[k]){
+				temparr_x[i] = arr_x[k];
+				temparr_y[i] = arr_y[k];
+				i++;
+				k++;
+			}
+			else{
+				temparr_x[i] = arr_x[j];
+				temparr_y[i] = arr_y[j];
+				i++;
+				j++;
+			}	
+		}
+		else{
+			temparr_x[i] = arr_x[j];
+			temparr_y[i] = arr_y[j];
+			i++;
+			j++;
+		}
+	}
+	if(j>mid){	//왼쪽(j)을 먼저 다 소모함  
+		for(l=k; l<=endindex; ++l){
+			temparr_x[i] = arr_x[l];
+			temparr_y[i] = arr_y[l];
+			i++;
+		}
+	}
+	else{			//오른쪽(k)을 모두 다 소모함  
+		for(l=j; l<=mid; ++l){
+			temparr_x[i] = arr_x[l];
+			temparr_y[i] = arr_y[l];
+			i++;
+		}
+	}
+	for(l=startindex; l<=endindex; ++l){
+		arr_x[l] = temparr_x[l];
+		arr_y[l] = temparr_y[l];
+	}
+}
+
+void merge_sort(int startindex, int endindex){
+	
+	if(startindex==endindex){
+		return ;
+	}
+	
+	else if(endindex-startindex==1){
+		if(arr_x[startindex]>arr_x[endindex]){
+			int temp_x, temp_y;
+			temp_x = arr_x[endindex];
+			temp_y = arr_y[endindex];
+			arr_x[endindex] = arr_x[startindex];
+			arr_x[startindex] = temp_x;
+			temp_y = arr_y[endindex];
+			arr_y[endindex] = arr_y[startindex];
+			arr_y[startindex] = temp_y;	
+		}
+		else if(arr_x[startindex]==arr_x[endindex]){
+			if(arr_y[startindex]>arr_y[endindex]){
+				int temp_x, temp_y;
+				temp_x = arr_x[endindex];
+				temp_y = arr_y[endindex];
+				arr_x[endindex] = arr_x[startindex];
+				arr_x[startindex] = temp_x;
+				temp_y = arr_y[endindex];
+				arr_y[endindex] = arr_y[startindex];
+				arr_y[startindex] = temp_y;	
+			}
+		}
+		return ;
+	}
+	
+	
+	int mid = (startindex+endindex)/2;
+	//if(startindex<endindex){
+		merge_sort(startindex, mid);
+		merge_sort(mid+1, endindex);
+		merge(startindex, endindex, mid);	
+	//}
+	
+	
+}
+
+
+int main(void)
+{
+	ios::sync_with_stdio(false);
+	cin.tie(NULL);
+	cout.tie(NULL);
+	cin>>numofdotwithjoongbok;
+	int i, tempx, tempy, j=0;
+	for(i=1; i<=numofdotwithjoongbok; ++i){
+		cin>>tempx>>tempy;
+		arr_x[i] = tempx;
+		arr_y[i] = tempy;
+	}
+	merge_sort(1, numofdotwithjoongbok);
+	for(i=1; i<=numofdotwithjoongbok; ++i){
+		cout<<arr_x[i]<<" "<<arr_y[i]<<"\n";
+	}
+	
+	
+	
+}
