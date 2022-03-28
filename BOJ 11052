@@ -1,0 +1,44 @@
+#include<iostream>
+using namespace std;
+
+int num;
+long long arr[10001];
+long long hap[10001];
+
+void calcul(){
+	if(num==1){
+		cout<<arr[1];
+		return ;
+	}
+	int i,k;
+	long long biggest, temp;
+	hap[1] = arr[1];
+	for(i=2; i<=num; ++i){
+		biggest = arr[i];
+		k=i;
+		while(1){
+			k--;
+			temp = arr[i-k]+hap[k];
+			if(temp>biggest) biggest = temp;
+			if(k==1) break;	
+		}
+		hap[i] = biggest;
+		//cout<<hap[i]<<" ";
+	}
+	/*
+	for(i=1; i<=num; ++i){
+		cout<<hap[i]<<" ";
+	}
+	*/
+	cout<<hap[num];
+}
+
+int main(void)
+{
+	cin>>num;
+	int i;
+	for(i=1; i<=num; ++i){
+		cin>>arr[i];
+	}
+	calcul();
+}
