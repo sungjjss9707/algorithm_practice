@@ -1,0 +1,82 @@
+#include<iostream>
+
+using namespace std;
+
+int garo,sero;
+int tetmap[501][501];
+int use[501][501];
+int dy[4]={1,0,-1,0};
+int dx[4]={0,1,0,-1};
+	
+void use_clear(){
+	for(int i=1; i<=sero; ++i){
+		for(int k=1; k<=garo; ++k){
+			use[i][k]=0;
+		}
+	}
+}
+
+int biggest_tet(int y, int x,int usednum){
+	if(usednum==3){
+		return tetmap[y][x];
+	}
+	int ny,nx,i,nextdap,biggest=0,num;
+	for(i=0;i<4;++i){
+		ny=y+dy[i];
+		nx=x+dx[i];
+		if(ny>=1&&ny<=sero&&nx>=1&&nx<=garo){
+			if(use[ny][nx]==0){
+				use[ny][nx]=1;
+				nextdap=tetmap[y][x]+biggest_tet(ny,nx,usednum+1);
+				
+				biggest=max(biggest,nextdap);
+				use[ny][nx]=0;
+			}
+		}
+	}
+	return biggest;
+}
+
+int puckyou(int y, int x){
+	int biggest=0,area;
+	if(y>=2&&y<=sero&&x>=1&&x+2<=garo){
+		area=tetmap[y][x]+tetmap[y][x+1]+tetmap[y][x+2]+tetmap[y-1][x+1];
+		biggest=max(biggest,area);
+	}
+	if(y>=1&&y+1<=sero&&x>=1&&x+2<=garo){
+		area=tetmap[y][x]+tetmap[y][x+1]+tetmap[y][x+2]+tetmap[y+1][x+1];
+		biggest=max(biggest,area);
+	}
+	if(y>=1&&y+2<=sero&&x>=1&&x+1<=garo){
+		area=tetmap[y][x]+tetmap[y+1][x]+tetmap[y+2][x]+tetmap[y+1][x+1];
+		biggest=max(biggest,area);
+	}
+	if(y>=1&&y+2<=sero&&x>=2&&x<=garo){
+		area=tetmap[y][x]+tetmap[y+1][x]+tetmap[y+2][x]+tetmap[y+1][x-1];
+		biggest=max(biggest,area);
+	}
+	return biggest;
+}
+
+int main(void)
+{
+	cin>>sero>>garo;
+	int i,k,biggest=0,num,temp;
+	for(i=1; i<=sero; ++i){
+		for(k=1; k<=garo; ++k){
+			cin>>tetmap[i][k];
+		}
+	}
+	for(i=1; i<=sero; ++i){
+		for(k=1; k<=garo; ++k){
+			use[i][k]=1;
+			num=biggest_tet(i,k,0);
+			//cout<<num<<endl;
+			temp=max(puckyou(i,k),num);
+			biggest=max(biggest,temp);
+		
+			use[i][k]=0;
+		}
+	}
+	cout<<biggest;
+}
