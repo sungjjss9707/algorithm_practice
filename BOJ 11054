@@ -1,0 +1,76 @@
+#include<iostream>
+using namespace std;
+
+int num;
+int arr[1001];
+int increase[1001];
+int decrease[1001];
+int biggest;
+void calcul(){
+	if(num==1){
+		cout<<1;
+		return;
+	}
+	if(num==2){
+		if(arr[1]==arr[2]){
+			cout<<1;
+		}
+		else{
+			cout<<2;
+		}
+		return;
+	}
+	increase[1] = 1;
+	decrease[num] = 1;
+	if(arr[1]<arr[2]){
+		increase[2] = 2;
+	}
+	else{
+		increase[2] = 1;
+	}
+	if(arr[num]<arr[num-1]){
+		decrease[num-1] = 2;
+	}
+	else{
+		decrease[num-1] = 1;
+	}
+	
+	int i,k;
+	int big;
+	for(i=num-2; i>=1; --i){
+		big = 0;
+		for(k=i+1; k<=num; ++k){
+			if(arr[i]>arr[k]){
+				if(decrease[k]>big) big = decrease[k]; 
+			}
+		}
+		decrease[i] = big+1;
+	}
+	
+	for(i=2; i<=num; ++i){
+		big = 0;
+		for(k=i-1; k>=0; --k){
+			if(arr[i]>arr[k]){
+				if(increase[k]>big) big = increase[k]; 
+			}
+		}
+		increase[i] = big+1;
+	}
+	for(i=1; i<=num; ++i){
+		if(increase[i]+decrease[i]>biggest) biggest=increase[i]+decrease[i]-1;
+	}
+
+	cout<<biggest;
+}
+
+int main(void)
+{
+	int i;
+	cin>>num;
+	for(i=1; i<=num; ++i){
+		cin>>arr[i];
+	}
+	biggest=0;
+	calcul();
+	
+}
