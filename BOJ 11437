@@ -1,0 +1,101 @@
+#include<iostream>
+#include<vector>
+#include<queue>
+#include<string>
+//#include<sstream>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+vector<int> link[100001];
+int parent[100001];
+vector<int> children[100001];
+int numofnode, numoflink;
+bool visit[100001];
+int floor[100001];
+
+void dfs(int upper, int dot, int dep){
+	parent[dot] = upper;
+	visit[dot]=true;
+	floor[dot] = dep;
+	int i, nextdot;
+	for(i=0; i<link[dot].size(); ++i){
+		nextdot = link[dot][i];
+		if(!visit[nextdot]&&nextdot!=upper){
+			children[dot].push_back(nextdot);
+			dfs(dot, nextdot, dep+1);
+		}
+	}
+}
+
+void fill_tree(){
+	int i,k;
+	for(i=1; i<=numofnode; ++i){
+		visit[i] = false;
+	}
+	for(i=1; i<=numofnode; ++i){
+		for(k=0; k<link[i].size(); ++k){
+			visit[1]=true;
+			floor[1] = 1;
+			if(!visit[link[i][k]]){
+				children[i].push_back(link[i][k]);
+				dfs(1,link[i][k],2);	
+			}
+		}
+		break;
+	}
+	/*
+	for(i=1; i<=numofnode; ++i){
+		//cout<<i<<"의 층 : "<<floor[i]<<", 부모 : "<<parent[i]<<", 자식 : "; 
+		for(k=0; k<children[i].size(); ++k){
+			cout<<children[i][k]<<" ";
+		}
+		//cout<<endl;
+	}
+	//cout<<endl;
+	*/
+}
+
+int shortest_parent(int a, int b){
+	int my_a = a, my_b = b;
+	int a_floor = floor[my_a], b_floor = floor[my_b];
+	if(a_floor>b_floor){
+		while(1){
+			my_a = parent[my_a];
+			if(floor[my_a]==floor[my_b]) break;
+		}
+	}
+	else if(a_floor<b_floor){
+		while(1){
+			my_b = parent[my_b];
+			if(floor[my_a]==floor[my_b]) break;
+		}
+	}
+	while(1){
+		if(my_a==my_b){
+			return my_a;
+		}
+		my_a = parent[my_a];
+		my_b = parent[my_b];
+ 	}
+	
+}
+
+int main(void)
+{
+	fastio;
+	int numofrel,i,a,b;
+	cin>>numofnode;
+	numoflink = numofnode-1;
+	for(i=0; i<numoflink; ++i){
+		cin>>a>>b;
+		link[a].push_back(b);
+		link[b].push_back(a);
+	}
+	fill_tree();
+	cin>>numofrel;
+	for(i=0; i<numofrel; ++i){
+		cin>>a>>b;
+		cout<<shortest_parent(a,b)<<"\n";
+	}
+	
+}
