@@ -1,0 +1,24 @@
+#include<iostream>
+using namespace std;
+
+int main(void)
+{
+	int n,i,k, chong,star, gong;
+	cin>>n;
+	for(i=1; i<=n; ++i){
+		for(k=1; k<=n-i; ++k){
+			cout<<" ";
+		}
+		chong = 2*i-1;
+		for(k=1; k<=chong; ++k){
+			if(k%2==1){
+				cout<<"*";
+			}
+			else{
+				cout<<" ";
+			}
+		}
+		cout<<"\n";
+	}
+	
+}
