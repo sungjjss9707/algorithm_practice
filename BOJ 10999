@@ -1,0 +1,118 @@
+#include<iostream>
+#define fastio  ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+int numofnum;
+long long arr[1000001];
+
+long long seg_tree[4000010];
+long long slow[4000010];
+
+long long seg_init(int index, int start, int end){
+	long long ret;
+	if(start==end){
+		ret=arr[start];
+	}
+	else{
+		int mid=(start+end)/2;
+		long long left=seg_init(2*index, start,mid);
+		long long right=seg_init(2*index+1,mid+1,end);
+		ret=left+right;
+	}
+	seg_tree[index]=ret;
+	slow[index]=0;
+	return ret;
+}
+
+void slow_update(int index, int start, int end){
+	
+	long long plus=(end-start+1)*slow[index];
+	seg_tree[index]+=plus;
+	if(start!=end){
+		///////////////
+		slow[2*index]+=slow[index];
+		slow[2*index+1]+=slow[index];
+	}
+	slow[index]=0;
+	
+}
+
+long long seg_hap(int index, int start, int end,int left, int right){
+	if(slow[index]!=0){
+		slow_update(index, start,end);
+	}
+	if(end<left||start>right){
+		return 0;
+	}
+	else if(start>=left&&end<=right){
+		return seg_tree[index];
+	}
+	else{
+		
+		int mid=(start+end)/2;
+		long long ret1=seg_hap(2*index,start,mid,left,right);
+		long long ret2=seg_hap(2*index+1,mid+1,end,left,right);
+		return ret1+ret2;
+	}
+}
+
+void seg_modify(int index, int start, int end, int left, int right, long long mod){
+	if(slow[index]!=0){
+		slow_update(index, start,end);
+	}
+	
+	if(end<left||start>right){
+		return ;
+	}
+	
+	 if(start>=left&&end<=right){
+		slow[index]+=mod;
+		slow_update(index,start,end);
+		return ;
+	}
+	else{
+		//slow[index]+=mod;
+		int mid=(start+end)/2;
+		seg_modify(2*index,start,mid,left,right,mod);
+		seg_modify(2*index+1,mid+1,end,left,right,mod);
+		seg_tree[index]=seg_tree[2*index]+seg_tree[2*index+1];
+		return;
+	}
+}
+
+int main(void)
+{
+	fastio;
+	int numofmod, numofhap,i,a,b,c;
+	long long d;
+	cin>>numofnum>>numofmod>>numofhap;
+	for(i=1; i<=numofnum;++i){
+		cin>>arr[i];
+	}
+	seg_init(1,1,numofnum);
+	/*
+	for(i=1; i<=4*numofnum;++i){
+		cout<<seg_tree[i]<<" ";
+	}
+	*/
+	for(i=0; i<numofmod+numofhap;++i){
+		cin>>a>>b>>c;
+		if(a==1){//modify
+			cin>>d;
+			seg_modify(1,1,numofnum,b,c,d);
+			/*
+			for(int k=1; k<=4*numofnum;++k){
+				cout<<seg_tree[k]<<" ";
+			}
+			cout<<endl;
+			for(int k=1; k<=4*numofnum;++k){
+				cout<<slow[k]<<" ";
+			}
+			cout<<endl<<endl;
+			*/
+		}
+		else{
+			cout<<seg_hap(1,1,numofnum,b,c)<<"\n";
+		}
+	}
+}
