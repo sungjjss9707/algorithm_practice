@@ -1,0 +1,35 @@
+#include<iostream>
+
+using namespace std;
+int N,K;
+long long arr[4000001];
+long long max_num = 1000000007;
+
+long long jegop(long long tempA, long long tempB){
+	long long a,b;
+	if(tempB==1) return tempA%max_num;
+	if(tempB%2==0){
+		a=jegop(tempA%max_num, tempB/2)%max_num;
+		return (a*a)%max_num;	
+	}
+	else{
+		a=jegop(tempA%max_num, tempB/2)%max_num;
+		b=(a*tempA%max_num)%max_num;
+		return (a*b)%max_num;
+	}
+}
+
+int main(void)
+{
+	cin>>N>>K;
+	int i;
+	arr[0]=1;
+	arr[1] = 1;
+	for(i=2; i<=N; ++i){
+		arr[i] = (arr[i-1]*i)%max_num;
+	}
+	long long temp = (arr[K]*arr[N-K])%max_num;
+	long long fuck = (jegop(temp, max_num-2) * arr[N])%max_num; 
+	cout<<fuck;
+	
+}
