@@ -1,0 +1,87 @@
+#include<iostream>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+int side;
+long long arr[1025][1025];
+long long hap_sero[1025][1025];
+long long hap_garo[1025][1025];
+long long hap[1025][1025];
+
+long long getgooganhap(int sy, int sx, int ey, int ex){
+	int i, sum=0, temp;
+	if(sy==1&&sx==1){
+		sum=hap[ey][ex];
+	}
+	else if(sy==1&&sx!=1){
+		sum = hap[ey][ex]-hap[ey][sx-1];
+	}
+	else if(sy!=1&&sx==1){
+		sum = (hap[ey][ex]-hap[sy-1][ex]);
+	}
+	else{
+		sum=(hap[ey][ex]-hap[ey][sx-1]-hap[sy-1][ex]+hap[sy-1][sx-1]);
+	}
+	return sum;
+}
+
+int main(void)
+{
+	fastio;
+	int i,k,numofprob, sy, sx, ey, ex;
+	long long sum;
+	cin>>side>>numofprob;
+	for(i=1; i<=side; ++i){
+		sum=0;
+		for(k=1; k<=side; ++k){
+			cin>>arr[i][k];
+			sum=sum+arr[i][k];
+			hap_garo[i][k] = sum;
+		}
+	}
+	for(i=1; i<=side; ++i){
+		sum=0;
+		for(k=1; k<=side; ++k){
+			sum=sum+arr[k][i];
+			hap_sero[k][i] = sum;
+		}
+	}
+	
+	for(i=1; i<=side; ++i){
+		sum=0;
+		for(k=1; k<=side; ++k){
+			sum=sum+hap_sero[i][k];
+			hap[i][k] = sum;
+		}
+	}
+	/*
+	cout<<endl;
+	for(i=1; i<=side; ++i){
+		for(k=1; k<=side; ++k){
+			cout<<hap_garo[i][k]<<" ";
+		}
+		cout<<endl;
+	}
+	cout<<endl;
+	for(i=1; i<=side; ++i){
+		for(k=1; k<=side; ++k){
+			cout<<hap_sero[i][k]<<" ";
+		}
+		cout<<endl;
+	}
+	
+	cout<<endl;
+	for(i=1; i<=side; ++i){
+		for(k=1; k<=side; ++k){
+			cout<<hap[i][k]<<" ";
+		}
+		cout<<endl;
+	}
+	*/
+	
+	for(i=0; i<numofprob; ++i){
+		cin>>sy>>sx>>ey>>ex;
+		cout<<getgooganhap(sy, sx, ey, ex)<<"\n";
+	}
+
+}
