@@ -1,0 +1,32 @@
+#include<iostream>
+#include<vector>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+int m,n;
+vector<int> whole, jiphap;
+
+void johap(){
+	if(jiphap.size()==m){
+		for(int i=0; i<jiphap.size(); ++i){
+			cout<<jiphap[i]<<" ";
+		}
+		cout<<"\n";
+		return;
+	}
+	int i;
+	for(i=1; i<=n;++i){
+		jiphap.push_back(i);
+		johap();
+		jiphap.pop_back();
+	}
+}
+
+int main(void)
+{
+	fastio;
+	cin>>n>>m;
+	for(int i=0; i<=n;++i){
+		whole.push_back(i);	
+	}
+	johap();
+}
