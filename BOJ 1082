@@ -1,0 +1,115 @@
+#include<iostream>
+
+using namespace std;
+
+//arr[k] = t : k원으로 만들수 있는 최대 번호가 t다 
+//arr[k] = t : 길이가 k 인거를 만들수있는 최소 돈이 t이다 
+ 
+int price[10], minimum=100000; 
+string dp[100];
+int numofnum, money;
+
+string str_compare(string a, string b){
+	if(a.length()>b.length()) return a;
+	else if(a.length()<b.length()) return b;
+	else{
+		if(a>b) return a;
+		else return b;
+	}
+}
+
+string fill_dp(int don){
+	if(don<minimum) return "";
+	string ret = dp[don];
+	if(ret!="X"){
+		return ret;	
+	}
+	int i;
+	ret = "";
+	string temp;
+	for(i=0; i<numofnum; ++i){
+		if(don>=price[i]){
+			temp = fill_dp(don-price[i]);
+			if(temp!="0"){
+				temp+=to_string(i);
+				ret = str_compare(ret, temp);	
+			}
+		}	
+	}
+	dp[don] = ret;
+	return ret;
+	
+}
+
+void clear(){
+	int i;
+	for(i=0; i<100; ++i){
+		dp[i] = "X";
+	}
+}
+
+void solve(){
+	int i,k, choiso=1000000, choiso_num, hap=0;
+	string init_str="";
+	for(i=numofnum-1; i>=0; --i){
+		if(choiso>price[i]){
+			choiso = price[i];
+			choiso_num = i;
+		}
+	}
+	if(choiso_num==0){
+		int bigger=1000000, bigger_num;
+		for(i=numofnum-1; i>=1; --i){
+			if(bigger>price[i]){
+				bigger = price[i];
+				bigger_num = i;
+			}
+		}
+		if(bigger>money){
+			cout<<0;
+			exit(0);
+		}
+		init_str+=to_string(bigger_num);
+		hap+=bigger;
+	}
+	else{
+		init_str+=to_string(choiso_num);
+		hap+=choiso;
+	}
+	while(1){
+		hap+=choiso;
+		if(hap>money){
+			hap-=choiso;
+			break;	
+		} 
+		init_str+=to_string(choiso_num);
+	}
+	//cout<<hap<<" "<<init_str<<endl;
+	int temp_hap;
+	for(i=0; i<init_str.length(); ++i){
+		temp_hap = hap-price[(int)(init_str[i]-'0')];
+		//cout<<temp_hap<<" -> ";
+		for(k=numofnum-1; k>=0; --k){
+			if(temp_hap+price[k]<=money){
+				hap = temp_hap+price[k];
+				init_str[i] = (char)(k+'0');
+				break;
+			}		
+		}
+		//cout<<init_str<<" "<<hap<<endl;
+	}
+	cout<<init_str;
+}
+
+int main(void)
+{
+	cin>>numofnum; 
+	int i;
+	for(i=0; i<numofnum; ++i){
+		cin>>price[i];
+		minimum = min(minimum, price[i]);
+	}
+	cin>>money;
+	solve();
+	return 0; 
+}
