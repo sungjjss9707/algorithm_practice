@@ -1,0 +1,154 @@
+#include<iostream>
+#include<vector>
+using namespace std;
+
+int numofbox, numofcolor, jokerbox;
+vector<int> color_in_box[51];
+vector<int> color_pos[51];
+int origin_box[52][52];
+int boxes[52][52];
+//int color_pos[52];
+
+void color_count(){
+	int i,k, count, choice, maximum=-1, size;
+	for(i=1; i<=numofbox; ++i){
+		for(k=1; k<=numofcolor; ++k){
+			if(boxes[i][k]!=0){
+				color_in_box[i].push_back(k);
+				color_pos[k].push_back(i);	
+			}
+		}
+		size = color_in_box[i].size();
+	}
+	/*
+	cout<<"jokerbox : "<<jokerbox<<endl;
+	for(i=1; i<=numofbox; ++i){
+		cout<<i<<"박스 : ";
+		for(k=0; k<color_in_box[i].size(); ++k){
+			cout<<color_in_box[i][k]<<" ";
+		}
+		cout<<endl;
+	}
+	cout<<endl;
+	for(i=1; i<=numofcolor; ++i){
+		cout<<i<<"색깔 : ";
+		for(k=0; k<color_pos[i].size(); ++k){
+			cout<<color_pos[i][k]<<" ";
+		}
+		cout<<endl;
+	}
+	*/
+}
+
+bool panstar(){
+	int i,k, size, count, num;
+	for(i=1; i<=numofbox; ++i){
+		if(i==jokerbox) continue;
+		for(k=0; k<color_in_box[i].size(); ++k){
+			if(color_in_box[i].size()!=0&&color_in_box[i].size()!=1) return false;
+		}
+	}
+	for(i=1; i<=numofcolor; ++i){
+		count=0;
+		for(k=0; k<color_pos[i].size(); ++k){
+			if(color_pos[i][k]!=jokerbox){
+				count++;	
+			}
+		}
+		if(count!=0&&count!=1) return false;
+	}
+	return true;
+}
+
+int solve(){
+	int i, k,count=0, floor=1, num;
+	for(i=1; i<=numofbox; ++i){
+		if(i==jokerbox) continue;
+		if(color_in_box[i].size()==1||color_in_box[i].size()==0){
+			
+		}
+		else{
+			color_in_box[i].clear();
+			for(k=1; k<=numofcolor; ++k){
+				boxes[i][k] = 0;
+			}
+			count++;
+		}
+	}
+	
+	for(i=1; i<=numofcolor; ++i){
+		color_pos[i].clear();
+	}
+	
+	for(i=1; i<=numofbox; ++i){
+		for(k=1; k<=numofcolor; ++k){
+			if(boxes[i][k]!=0){
+				color_pos[k].push_back(i);	
+			}
+		}
+	}
+	/*
+	cout<<endl;
+	for(i=1; i<=numofbox; ++i){
+		cout<<i<<"박스 : ";
+		for(k=0; k<color_in_box[i].size(); ++k){
+			cout<<color_in_box[i][k]<<" ";
+		}
+		cout<<endl;
+	}
+	cout<<endl;
+	for(i=1; i<=numofcolor; ++i){
+		cout<<i<<"색깔 : ";
+		for(k=0; k<color_pos[i].size(); ++k){
+			cout<<color_pos[i][k]<<" ";
+		}
+		cout<<endl;
+	}
+	*/
+	for(i=1; i<=numofcolor; ++i){
+		num=0;
+		for(k=0; k<color_pos[i].size(); ++k){
+			if(color_pos[i][k]!=jokerbox){
+				num++;	
+			}
+		}
+		if(num!=0&&num!=1){
+			count=count+(num-1);
+		}
+	}
+	return count;
+}
+
+int main(void)
+{
+	cin>>numofbox>>numofcolor;
+	int i,k;
+	for(i=1; i<=numofbox; ++i){
+		for(k=1; k<=numofcolor; ++k){
+			cin>>origin_box[i][k]; 
+		}
+	}
+	
+	int minimum = 100000, temp;
+	for(i=1; i<=numofbox; ++i){
+		for(k=1; k<=numofbox; ++k){
+			color_in_box[k].clear();
+		}
+		for(k=1; k<=numofcolor; ++k){
+			color_pos[k].clear();
+		}
+		jokerbox=i;
+		for(int j=1; j<=numofbox; j++){
+			for(int l=1; l<=numofcolor; ++l){
+				boxes[j][l] = origin_box[j][l];
+			}
+		}
+		color_count();
+		temp = solve();
+		//cout<<temp<<"\n";
+		//cout<<"-------------------------\n";
+		minimum = min(minimum, temp);
+	}
+	cout<<minimum;
+	return 0;
+}
