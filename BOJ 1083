@@ -1,0 +1,76 @@
+#include<iostream>
+
+using namespace std;
+
+int arr[51];
+int numofnum, numofchange;
+
+int biggest_index(int start, int end){
+	int choidae = -1, index;
+	int i;
+	for(i=start; i<=end; ++i){
+		if(choidae<arr[i]){
+			choidae = arr[i];
+			index = i;
+		}
+	}
+	return index;
+}
+
+void swap(int goal_index, int biggest_index){
+	int i, temp;
+	while(1){
+		if(goal_index==biggest_index) break;
+		temp = arr[biggest_index];
+		arr[biggest_index] = arr[biggest_index-1];
+		arr[biggest_index-1] = temp;
+		biggest_index--;
+	}
+}
+
+void print(){
+	int i;
+	for(i=1; i<=numofnum; ++i){
+		cout<<arr[i]<<" ";
+	}
+	cout<<endl;
+}
+
+void solve(){
+	int i, num, choidae, choidae_index;
+	int hwetsu = numofchange;
+	//cout<<"-------------------\n";
+	for(i=1; i<=numofnum; ++i){
+		num = arr[i];
+		choidae_index = biggest_index(i, numofnum);
+		choidae = arr[choidae_index];
+		//cout<<num<<" "<<choidae<<endl;
+		if(hwetsu>=choidae_index-i){	//제일큰거를 지금위치까지 끌고옴 
+			swap(i, choidae_index);
+			hwetsu-=(choidae_index-i);
+		}
+		else{
+			if(hwetsu==0) break;
+			choidae_index = biggest_index(i, i+hwetsu);
+			choidae = arr[choidae_index];
+			swap(i, choidae_index);
+			hwetsu-=(choidae_index-i);
+			if(hwetsu==0) break;
+			//break;
+		}
+		//print();
+		//cout<<"남은횟수 : "<<hwetsu<<endl<<"-------------------\n";
+	}
+	print();
+}
+
+int main(void)
+{
+	cin>>numofnum;
+	int i;
+	for(i=1; i<=numofnum; ++i){
+		cin>>arr[i];
+	}
+	cin>>numofchange;
+	solve();
+}
