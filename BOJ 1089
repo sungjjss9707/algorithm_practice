@@ -1,0 +1,311 @@
+#include<iostream>
+#include<vector>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+char num_arr[10][5][3];
+char led[10][5][3];
+char num_pan[5][50];
+vector<long long> v[10];
+long long numofnum, hap=0, getsu=0;
+
+void fill_vec(){
+	long long i,k=0,j,m,n, index=0;
+	char temp[5][3];
+	//cout<<endl;
+	while(k<(3*numofnum+numofnum-1)){
+		for(i=0; i<5; ++i){
+			temp[i][0] = num_pan[i][k];
+		}
+		k++;
+		for(i=0; i<5; ++i){
+			temp[i][1] = num_pan[i][k];
+		}
+		k++;
+		for(i=0; i<5; ++i){
+			temp[i][2] = num_pan[i][k];
+		}
+		for(m=0; m<5; ++m){
+			for(n=0; n<3; ++n){
+				num_arr[index][m][n]=temp[m][n];
+			}
+		}
+		if(k==(3*numofnum+numofnum-2)) break;
+		k+=2;
+		index++;
+	}
+	/*
+	for(i=0; i<numofnum; ++i){
+		for(j=0; j<5; ++j){
+			for(k=0; k<3; ++k){
+				cout<<num_arr[i][j][k];
+			}
+			cout<<endl;
+		}
+		cout<<endl;
+	}
+	*/
+}
+
+void clear_led(){
+	long long i,j,k;
+	for(i=0; i<10; ++i){
+		for(j=0; j<5; ++j){
+			for(k=0; k<3; ++k){
+				led[i][j][k] = '.';
+			}
+		}
+	}
+}
+
+void print_led(){
+	long long i,j,k;
+	for(i=0; i<10; ++i){
+		for(j=0; j<5; ++j){
+			for(k=0; k<3; ++k){
+				cout<<led[i][j][k];
+			}
+			cout<<endl;
+		}
+		cout<<endl;
+	}
+}
+
+
+void fill_led(){
+	long long index=0;
+	clear_led();
+	led[index][0][0]='#';
+	led[index][0][1]='#';
+	led[index][0][2]='#';
+	led[index][1][2]='#';
+	led[index][2][2]='#';
+	led[index][3][2]='#';
+	led[index][4][2]='#';
+	led[index][4][1]='#';
+	led[index][4][0]='#';
+	led[index][1][0]='#';
+	led[index][2][0]='#';
+	led[index][3][0]='#';
+	index++;
+	led[index][0][2]='#';
+	led[index][1][2]='#';
+	led[index][2][2]='#';
+	led[index][3][2]='#';
+	led[index][4][2]='#';
+	index++;
+	led[index][0][0]='#';
+	led[index][0][1]='#';
+	led[index][0][2]='#';
+	led[index][1][2]='#';
+	led[index][2][0]='#';
+	led[index][2][1]='#';
+	led[index][2][2]='#';
+	led[index][3][0]='#';
+	led[index][4][0]='#';
+	led[index][4][1]='#';
+	led[index][4][2]='#';
+	index++;
+	led[index][0][0]='#';
+	led[index][0][1]='#';
+	led[index][0][2]='#';
+	led[index][1][2]='#';
+	led[index][2][0]='#';
+	led[index][2][1]='#';
+	led[index][2][2]='#';
+	led[index][3][2]='#';
+	led[index][4][0]='#';
+	led[index][4][1]='#';
+	led[index][4][2]='#';
+	index++;
+	led[index][0][0]='#';
+	led[index][0][2]='#';
+	led[index][1][0]='#';
+	led[index][1][2]='#';
+	led[index][2][0]='#';
+	led[index][2][1]='#';
+	led[index][2][2]='#';
+	led[index][3][2]='#';
+	led[index][4][2]='#';
+	index++;
+	led[index][0][0]='#';
+	led[index][0][1]='#';
+	led[index][0][2]='#';
+	led[index][1][0]='#';
+	led[index][2][0]='#';
+	led[index][2][1]='#';
+	led[index][2][2]='#';
+	led[index][3][2]='#';
+	led[index][4][0]='#';
+	led[index][4][1]='#';
+	led[index][4][2]='#';
+	index++;
+	led[index][0][0]='#';
+	led[index][0][1]='#';
+	led[index][0][2]='#';
+	led[index][1][0]='#';
+	led[index][2][0]='#';
+	led[index][2][1]='#';
+	led[index][2][2]='#';
+	led[index][3][0]='#';
+	led[index][3][2]='#';
+	led[index][4][0]='#';
+	led[index][4][1]='#';
+	led[index][4][2]='#';
+	index++;
+	led[index][0][0]='#';
+	led[index][0][1]='#';
+	led[index][0][2]='#';
+	led[index][1][2]='#';
+	led[index][2][2]='#';
+	led[index][3][2]='#';
+	led[index][4][2]='#';
+	index++;
+	led[index][0][0]='#';
+	led[index][0][1]='#';
+	led[index][0][2]='#';
+	led[index][1][0]='#';
+	led[index][1][2]='#';
+	led[index][2][0]='#';
+	led[index][2][1]='#';
+	led[index][2][2]='#';
+	led[index][3][0]='#';
+	led[index][3][2]='#';
+	led[index][4][0]='#';
+	led[index][4][1]='#';
+	led[index][4][2]='#';
+	index++;
+	led[index][0][0]='#';
+	led[index][0][1]='#';
+	led[index][0][2]='#';
+	led[index][1][0]='#';
+	led[index][1][2]='#';
+	led[index][2][0]='#';
+	led[index][2][1]='#';
+	led[index][2][2]='#';
+	led[index][3][2]='#';
+	led[index][4][0]='#';
+	led[index][4][1]='#';
+	led[index][4][2]='#';
+	
+}
+
+bool panstar(char a, char b){	//a가 led, b가 num_arr 
+	if(b=='.') return true;
+	if(a=='#') return true;
+	return false;
+	
+}
+
+void brute_force(long long num, long long floor){
+	if(floor==numofnum){
+		//cout<<num<<endl;
+		hap+=num;
+		getsu++;
+		return;
+	}
+	long long i;
+	for(i=0; i<v[floor].size(); ++i){
+		brute_force(num*10+v[floor][i], floor+1);
+	}
+}
+
+void solve(){
+	long long i,j,k,l,m,n, flag;
+	
+	
+	for(i=0; i<numofnum; ++i){
+		for(j=0; j<10; ++j){
+			///
+			flag=0;
+			for(k=0; k<5; ++k){
+				for(l=0; l<3; ++l){
+					if(!panstar(led[j][k][l],num_arr[i][k][l])){
+						flag=1;
+						break;
+					}
+				}
+				if(flag==1) break;
+			}
+			if(flag==0){
+				v[i].push_back(j);
+			}
+			///
+		}
+	}
+	/*
+	for(i=0; i<numofnum; ++i){
+		
+		for(j=0; j<5; ++j){
+			for(k=0; k<3; ++k){
+				cout<<num_arr[i][j][k];
+			}
+			cout<<endl;
+		}
+		cout<<endl;
+		
+		for(k=0; k<v[i].size(); ++k){
+			cout<<v[i][k]<<" ";
+		}
+		cout<<endl;
+	}
+	*/
+	for(i=0; i<numofnum; ++i){
+		if(v[i].size()==0){
+			cout<<-1;
+			exit(0);
+		}
+	}
+	double avg=0.0, temp_avg;
+	for(i=0; i<numofnum; ++i){
+		hap=0;
+		for(k=0; k<v[i].size(); ++k){
+			hap+=v[i][k];
+		}
+		temp_avg = (double)(hap)/(double)(v[i].size());
+		avg = 10*avg+temp_avg;
+	}
+	//brute_force(0,0);
+	/*
+	if(getsu==0){
+		cout<<-1;
+		return;
+	}
+	*/
+	/*
+	double d_hap = (double)(hap);
+	double d_getsu = (double)(getsu);
+	double avg = d_hap/d_getsu;
+	*/
+	cout<<avg;
+}
+
+
+
+int main(void)
+{
+	fastio;
+	cout<<fixed;
+	cout.precision(7);
+	cin>>numofnum;
+	long long i,k;
+	for(i=0; i<5; ++i){
+		for(k=0; k<(3*numofnum+numofnum-1); ++k){
+			cin>>num_pan[i][k];
+		}
+	}
+	/*
+	cout<<endl;
+	for(i=0; i<5; ++i){
+		for(k=0; k<(3*numofnum+numofnum-1); ++k){
+			cout<<num_pan[i][k];
+		}
+		cout<<endl;
+	}
+	*/
+	fill_led();
+	//prlong long_led();
+	fill_vec();
+	solve();
+	return 0;
+}
