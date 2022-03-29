@@ -1,0 +1,134 @@
+#include<iostream>
+#include<vector>
+using namespace std;
+
+int numofcurve;
+
+int pan[21][101][101];
+int hap_pan[101][101];
+vector<pair<int, int>> v;
+
+
+pair<int, int> rotate(pair<int, int> p, pair<int, int> gee){
+	int x_cha = gee.first;
+	int y_cha = gee.second;
+	int temp_x = p.first-x_cha;
+	int temp_y = p.second-y_cha;
+	int rotate_x = (-1)*temp_y, rotate_y = temp_x;
+	int real_x = rotate_x+x_cha;
+	int real_y = rotate_y+y_cha;
+	//cout<<p.first<<" "<<p.second<<" -> "<<gee.first<<" "<<gee.second<<endl;
+	return {real_x, real_y};
+}
+
+void go_to_clock(){
+	int geejoon_x = v[v.size()-1].first;
+	int geejoon_y = v[v.size()-1].second;
+	//cout<<"기준 : "<<geejoon_y<<" "<<geejoon_x<<endl;
+	int i,nowy, nowx, newy, newx;
+	pair<int, int> p;
+	vector<pair<int, int>> temp;
+	for(i=0; i<v.size()-1; ++i){
+		nowx = v[i].first;
+		nowy = v[i].second;
+		
+		temp.push_back(rotate({nowx, nowy}, {geejoon_x, geejoon_y}));
+	}
+	for(i=temp.size()-1; i>=0; --i){
+		v.push_back(temp[i]);
+	}
+}
+
+void fill_dragon(int index, int x, int y, int bang, int age){
+	int i;
+	v.clear();
+	v.push_back({x,y});
+	if(bang==0){	//오른쪽 	
+		v.push_back({x+1,y});
+	}
+	else if(bang==1){//위 
+		v.push_back({x,y-1});
+	}
+	else if(bang==2){//왼쪽 
+		v.push_back({x-1,y});
+	}
+	else{			 //아래 
+		v.push_back({x,y+1});
+	}
+	
+	for(i=1; i<=age; ++i){
+		go_to_clock();
+	}
+	for(i=0; i<v.size(); ++i){
+		//cout<<v[i].first<<" "<<v[i].second<<endl;
+		if(v[i].first>=0&&v[i].first<=100&&v[i].second>=0&&v[i].second<=100){
+			hap_pan[v[i].first][v[i].second]++;	
+			pan[index][v[i].first][v[i].second]++;	
+		}
+	}
+	/*
+	for(int j=0; j<=10; ++j){
+		for(int k=0; k<=10; ++k){
+			cout<<pan[index][j][k]<<" ";
+		}
+		cout<<endl;
+	}
+	*/
+}
+
+void clear(){
+	int i,j,k;
+	for(i=0; i<=20; ++i){
+		for(j=0; j<=100; ++j){
+			for(k=0; k<=100; ++k){
+				pan[i][j][k]=0;
+			}
+		}
+	}
+	for(j=0; j<=100; ++j){
+		for(k=0; k<=100; ++k){
+			hap_pan[j][k]=0;
+		}
+	}	
+}
+
+int find_square(){
+	int i,j ,k, dap=0;
+	/*
+	for(i=1; i<=numofcurve; ++i){
+		for(j=0; j<100; ++j){
+			for(k=0; k<100; ++k){
+				//cout<<pan[i][j][k]<<" ";
+				if(pan[i][j][k]==1&&pan[i][j+1][k]==1&&pan[i][j][k+1]==1&&pan[i][j+1][k+1]==1){
+					dap++;
+				}
+			}
+			//cout<<endl;
+		}
+	}
+	*/
+	//cout<<endl;
+	for(j=0; j<100; ++j){
+		for(k=0; k<100; ++k){
+			//cout<<hap_pan[j][k]<<" ";
+			if(hap_pan[j][k]!=0&&hap_pan[j+1][k]!=0&&hap_pan[j][k+1]!=0&&hap_pan[j+1][k+1]!=0){
+				dap++;
+			}
+		}
+		//cout<<endl;
+	}
+	return dap;
+}
+
+int main(void)
+{
+	cin>>numofcurve;
+	int i, x,y, bang, age;
+	clear();
+	for(i=0; i<numofcurve; ++i){
+		cin>>x>>y>>bang>>age;
+		fill_dragon(i+1, x,y,bang, age);
+	}
+	cout<<find_square();
+	return 0;
+}
