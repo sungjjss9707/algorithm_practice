@@ -1,0 +1,324 @@
+#include<iostream>
+#include<vector>
+using namespace std;
+
+struct cctv{
+	int ypos;
+	int xpos;
+	int type;
+};
+
+int sero,garo,numofcctv=0,dap=2000000000;
+int bang[9][9];
+int originbang[9][9];
+vector<cctv> c;
+vector<int> ewsn;
+
+void printallcase(){
+	for(int i=0; i<numofcctv;++i){
+		cout<<ewsn[i]<<" ";
+	}
+	cout<<endl;
+}
+
+void bangcopy(){
+	for(int i=1; i<=sero; ++i){
+		for(int j=1;j<=garo;++j){
+			bang[i][j]=originbang[i][j];
+		}
+	}
+}
+
+void printbang(){
+	for(int i=1; i<=sero; ++i){
+		for(int j=1;j<=garo;++j){
+			cout<<bang[i][j]<<" ";
+		}
+		cout<<endl;
+	}
+	cout<<endl;
+}
+
+void type1(int y,int x,int banghyang){
+	int i;
+	if(banghyang==1){
+		for(i=y-1;i>=1;i--){
+			if(bang[i][x]==6) break;
+			if(bang[i][x]==0) bang[i][x]=-1;
+			else continue;
+		}
+	}
+	else if(banghyang==2){
+		for(i=x+1;i<=garo;i++){
+			if(bang[y][i]==6) break;
+			if(bang[y][i]==0) bang[y][i]=-1;
+			else continue;
+		}
+	}
+	else if(banghyang==3){
+		for(i=y+1;i<=sero;i++){
+			if(bang[i][x]==6) break;
+			if(bang[i][x]==0) bang[i][x]=-1;
+			else continue;
+		}
+	}
+	else{
+		for(i=x-1;i>=1;i--){
+			if(bang[y][i]==6) break;
+			if(bang[y][i]==0) bang[y][i]=-1;
+			else continue;
+		}
+	}
+}
+
+void type2(int y,int x,int banghyang){
+	int i;
+	if(banghyang==1){
+		for(i=y-1;i>=1;i--){
+			if(bang[i][x]==6) break;
+			if(bang[i][x]==0) bang[i][x]=-1;
+			else continue;
+		}
+		for(i=y+1;i<=sero;i++){
+			if(bang[i][x]==6) break;
+			if(bang[i][x]==0) bang[i][x]=-1;
+			else continue;
+		}
+	}
+	else{
+		for(i=x+1;i<=garo;i++){
+			if(bang[y][i]==6) break;
+			if(bang[y][i]==0) bang[y][i]=-1;
+			else continue;
+		}
+		for(i=x-1;i>=1;i--){
+			if(bang[y][i]==6) break;
+			if(bang[y][i]==0) bang[y][i]=-1;
+			else continue;
+		}
+	}
+}
+
+void type3(int y,int x,int banghyang){
+	int i;
+	if(banghyang==1){
+		for(i=y-1;i>=1;i--){
+			if(bang[i][x]==6) break;
+			if(bang[i][x]==0) bang[i][x]=-1;
+			else continue;
+		}
+		for(i=x+1;i<=garo;i++){
+			if(bang[y][i]==6) break;
+			if(bang[y][i]==0) bang[y][i]=-1;
+			else continue;
+		}
+	}
+	else if(banghyang==2){
+		for(i=x+1;i<=garo;i++){
+			if(bang[y][i]==6) break;
+			if(bang[y][i]==0) bang[y][i]=-1;
+			else continue;
+		}
+		for(i=y+1;i<=sero;i++){
+			if(bang[i][x]==6) break;
+			if(bang[i][x]==0) bang[i][x]=-1;
+			else continue;
+		}
+	}
+	else if(banghyang==3){
+		for(i=y+1;i<=sero;i++){
+			if(bang[i][x]==6) break;
+			if(bang[i][x]==0) bang[i][x]=-1;
+			else continue;
+		}
+		for(i=x-1;i>=1;i--){
+			if(bang[y][i]==6) break;
+			if(bang[y][i]==0) bang[y][i]=-1;
+			else continue;
+		}
+	}
+	else{
+		for(i=x-1;i>=1;i--){
+			if(bang[y][i]==6) break;
+			if(bang[y][i]==0) bang[y][i]=-1;
+			else continue;	
+		}
+		for(i=y-1;i>=1;i--){
+			if(bang[i][x]==6) break;
+			if(bang[i][x]==0) bang[i][x]=-1;
+			else continue;
+		}
+	}
+}
+
+void type4(int y,int x,int banghyang){
+	int i;
+	if(banghyang==1){
+		for(i=y-1;i>=1;i--){
+			if(bang[i][x]==6) break;
+			if(bang[i][x]==0) bang[i][x]=-1;
+			else continue;
+		}
+		for(i=x+1;i<=garo;i++){
+			if(bang[y][i]==6) break;
+			if(bang[y][i]==0) bang[y][i]=-1;
+			else continue;
+		}
+		for(i=x-1;i>=1;i--){
+			if(bang[y][i]==6) break;
+			if(bang[y][i]==0) bang[y][i]=-1;
+			else continue;
+		}
+	}
+	else if(banghyang==2){
+		for(i=x+1;i<=garo;i++){
+			if(bang[y][i]==6) break;
+			if(bang[y][i]==0) bang[y][i]=-1;
+			else continue;
+		}
+		for(i=y+1;i<=sero;i++){
+			if(bang[i][x]==6) break;
+			if(bang[i][x]==0) bang[i][x]=-1;
+			else continue;
+		}
+		for(i=y-1;i>=1;i--){
+			if(bang[i][x]==6) break;
+			if(bang[i][x]==0) bang[i][x]=-1;
+			else continue;
+		}
+	}
+	else if(banghyang==3){
+		for(i=y+1;i<=sero;i++){
+			if(bang[i][x]==6) break;
+			if(bang[i][x]==0) bang[i][x]=-1;
+			else continue;
+		}
+		for(i=x-1;i>=1;i--){
+			if(bang[y][i]==6) break;
+			if(bang[y][i]==0) bang[y][i]=-1;
+			else continue;
+		}
+		for(i=x+1;i<=garo;i++){
+			if(bang[y][i]==6) break;
+			if(bang[y][i]==0) bang[y][i]=-1;
+			else continue;
+		}
+	}
+	else{
+		for(i=x-1;i>=1;i--){
+			if(bang[y][i]==6) break;
+			if(bang[y][i]==0) bang[y][i]=-1;
+			else continue;	
+		}
+		for(i=y-1;i>=1;i--){
+			if(bang[i][x]==6) break;
+			if(bang[i][x]==0) bang[i][x]=-1;
+			else continue;
+		}
+		for(i=y+1;i<=sero;i++){
+			if(bang[i][x]==6) break;
+			if(bang[i][x]==0) bang[i][x]=-1;
+			else continue;
+		}
+	}
+}
+
+void type5(int y,int x){
+	int i;	
+	for(i=y-1;i>=1;i--){
+		if(bang[i][x]==6) break;
+		if(bang[i][x]==0) bang[i][x]=-1;
+		else continue;
+	}
+	for(i=y+1;i<=sero;i++){
+		if(bang[i][x]==6) break;
+		if(bang[i][x]==0) bang[i][x]=-1;
+		else continue;
+	}
+	for(i=x+1;i<=garo;i++){
+		if(bang[y][i]==6) break;
+		if(bang[y][i]==0) bang[y][i]=-1;
+		else continue;
+	}
+	for(i=x-1;i>=1;i--){
+		if(bang[y][i]==6) break;
+		if(bang[y][i]==0) bang[y][i]=-1;
+		else continue;
+	}
+}
+
+
+
+int getblank(){
+	int i,k,cnt=0;
+	for(i=0; i<numofcctv;++i){
+		if(c[i].type==1){
+			type1(c[i].ypos,c[i].xpos,ewsn[i]);
+		}
+		else if(c[i].type==2){
+			type2(c[i].ypos,c[i].xpos,ewsn[i]);
+		}
+		else if(c[i].type==3){
+			type3(c[i].ypos,c[i].xpos,ewsn[i]);
+		}
+		else if(c[i].type==4){
+			type4(c[i].ypos,c[i].xpos,ewsn[i]);
+		}
+		else{
+			type5(c[i].ypos,c[i].xpos);
+		}
+	}
+	//printbang();
+	for(i=1;i<=sero;++i){
+		for(k=1;k<=garo;++k){
+			if(bang[i][k]==0){
+				cnt++;
+			}
+		}
+	}
+	return cnt;
+}
+
+void bruteforce(int cctvindex){
+	if(ewsn.size()==numofcctv){
+		bangcopy();
+		//printallcase();
+		int blank=getblank();
+		dap=min(dap,blank);
+		//bangcopy();
+		//printallcase();
+		return;
+	}
+	
+	int i,getsu;
+	if(c[cctvindex].type==1||c[cctvindex].type==3||c[cctvindex].type==4){
+		getsu=4;
+	}
+	else if(c[cctvindex].type==2) getsu=2;
+	else getsu=1;
+	
+	for(i=1; i<=getsu; ++i){
+		ewsn.push_back(i);
+		bruteforce(cctvindex+1);
+		ewsn.pop_back();
+	}
+	
+}
+
+int main(void)
+{
+	cin>>sero>>garo;
+	int i,k,num;
+	for(i=1;i<=sero;++i){
+		for(k=1;k<=garo;++k){
+			cin>>num;
+			originbang[i][k]=num;
+			if(num>=1&&num<=5){
+				numofcctv++;
+				c.push_back({i,k,num});
+			}
+		}
+	}
+	bruteforce(0);
+	cout<<dap;
+}
