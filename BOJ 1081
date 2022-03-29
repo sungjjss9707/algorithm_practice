@@ -1,0 +1,182 @@
+#include<iostream>
+#include<string>
+#include<math.h>
+using namespace std;
+
+long long upper, lower;
+long long upper_getsu[10], lower_getsu[10], getsu[10];
+
+void clear(){
+	long long i;
+	for(i=0; i<10; ++i){
+		upper_getsu[i]=0;
+		lower_getsu[i]=0;
+	}
+}
+
+void print_getsu(){
+	long long i;
+	for(i=0; i<10; ++i){
+		cout<<i<<" : "<<upper_getsu[i]<<endl;
+	}
+	cout<<endl;
+}
+
+void upper_all_plus_one(long long getsu){
+	long long i;
+	for(i=1; i<10; ++i){
+		upper_getsu[i]+=getsu;
+	}
+}
+
+void lower_all_plus_one(long long getsu){
+	long long i;
+	for(i=1; i<10; ++i){
+		lower_getsu[i]+=getsu;
+	}
+}
+
+void lower_under_hap(long long num){
+	long long i;
+	for(i=num; i>0; --i){
+		lower_getsu[i]++;
+	}
+}
+
+void upper_under_hap(long long num){
+	long long i;
+	for(i=num; i>0; --i){
+		upper_getsu[i]++;
+	}
+}
+
+void get_upper_getsu(){	//그대로 복붙해서 upper -> lower 로 바꿔야 함  
+	string str_upper = to_string(upper);
+	string substring;
+	long long i, k,num, rightnum, lastnum, leftnum, jaritsu, getsu;
+	for(i=0; i<str_upper.length(); ++i){
+		num = (long long)(str_upper[i]-'0');
+		if(i==str_upper.length()-1){
+			rightnum=0;
+		}
+		else{
+			substring = "";	
+			for(k=i+1; k<str_upper.length(); ++k){
+				substring+=str_upper[k];
+			}
+			rightnum = stoi(substring);
+		}
+		//cout<<rightnum;
+		if(i==0){
+			leftnum=0;
+		}
+		else{
+			substring = "";
+			for(k=0; k<i; ++k){
+				substring+=str_upper[k];
+			}
+			leftnum = stoi(substring);
+		}
+		getsu = str_upper.length()-1-i;
+		jaritsu = pow(10, getsu);
+		//cout<<leftnum<<" "<<num<<" "<<rightnum<<" "<<jaritsu<<endl;
+		//////////////////////////////////////////////////////
+		upper_getsu[num]+=(rightnum+1);
+		//print_getsu();
+		if(num!=0){
+			for(k=num-1; k>=0; --k){
+				upper_getsu[k]+=jaritsu;
+			}
+			//print_getsu();
+		}
+		upper_all_plus_one(leftnum*jaritsu);
+		//print_getsu();
+	}
+	//prlong longgetsu();
+	//print_getsu();
+	
+}
+
+void get_lower_getsu(){	//그대로 복붙해서 lower -> lower 로 바꿔야 함 
+	//if(lower!=0) lower--; 
+	string str_lower = to_string(lower);
+	string substring;
+	long long i, k,num, rightnum, lastnum, leftnum, jaritsu, getsu;
+	for(i=0; i<str_lower.length(); ++i){
+		num = (long long)(str_lower[i]-'0');
+		if(i==str_lower.length()-1){
+			rightnum=0;
+		}
+		else{
+			substring = "";	
+			for(k=i+1; k<str_lower.length(); ++k){
+				substring+=str_lower[k];
+			}
+			rightnum = stoi(substring);
+		}
+		//cout<<rightnum;
+		if(i==0){
+			leftnum=0;
+		}
+		else{
+			substring = "";
+			for(k=0; k<i; ++k){
+				substring+=str_lower[k];
+			}
+			leftnum = stoi(substring);
+		}
+		getsu = str_lower.length()-1-i;
+		jaritsu = pow(10, getsu);
+		//cout<<leftnum<<" "<<num<<" "<<rightnum<<" "<<jaritsu<<endl;
+		//////////////////////////////////////////////////////
+		lower_getsu[num]+=(rightnum+1);
+		if(num!=0){
+			for(k=num-1; k>=0; --k){
+				lower_getsu[k]+=jaritsu;
+			}
+		}
+		lower_all_plus_one(leftnum*jaritsu);
+		
+	}
+	//prlong longgetsu();
+}
+
+void get_dap(){
+	long long i;
+	long long dap = 0;
+	/*
+	for(i=0; i<10; ++i){
+		cout<<i<<" : "<<upper_getsu[i]<<" - "<<lower_getsu[i]<<endl;
+	}
+	*/
+	for(i=0; i<10; ++i){
+		getsu[i] = upper_getsu[i]-lower_getsu[i];
+	}
+	string str_lower = to_string(lower);
+	long long num;
+	for(i=0; i<str_lower.length(); ++i){
+		num = (long long)(str_lower[i]-'0');
+		getsu[num]++;
+	}
+	/*
+	for(i=0; i<10; ++i){
+		cout<<i<<" : "<<getsu[i]<<endl;
+	}
+	*/
+	for(i=1; i<10; ++i){
+		dap+=(getsu[i]*i);
+	}
+	cout<<dap;
+}
+
+int main(void)
+{
+	cin>>lower>>upper;
+	clear();
+	//get_lower_getsu();
+	get_upper_getsu();
+	get_lower_getsu();
+	
+	get_dap();
+	return 0;
+} 
