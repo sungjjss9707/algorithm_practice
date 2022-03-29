@@ -1,0 +1,32 @@
+#include<iostream>
+
+using namespace std;
+
+int num, mod = 1000000009;
+int dp[1000001];
+
+void init(){
+	dp[1]=1;
+	dp[2]=2;
+	dp[3]=4;
+	int i, temp;
+	
+	for(i=4; i<=1000000; ++i){
+		temp = (dp[i-1]+dp[i-2])%mod;
+		temp = (temp+dp[i-3])%mod;
+		dp[i] = temp;
+	}
+}
+
+int main(void)
+{
+	int t,testcase;
+	cin>>testcase;
+	init();
+	for(t=0; t<testcase; ++t){
+		cin>>num;
+		cout<<dp[num]<<"\n";
+	}
+
+	
+} 
