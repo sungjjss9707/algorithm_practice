@@ -1,0 +1,170 @@
+#include<iostream>
+#include<vector>
+#include<queue>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+struct virus{
+	int y,x,day;	
+};
+
+int side, numofvirus, dap=2000000000, viruswichigetsu=0,blank=0;
+int mymap[51][51];
+int originmap[51][51];
+vector<int> viruslist;
+vector<pair<int, int>> viruswichi;
+int use[12];
+int dy[4] = {1,0,-1,0};
+int dx[4] = {0,1,0,-1};
+
+bool isitfill(){
+	for(int i=1; i<=side; ++i){
+		for(int k=1; k<=side; ++k){
+			if(mymap[i][k]==-2) return false;
+		}	
+	}
+	return true;
+}
+
+void mapcopy(){
+	for(int i=1; i<=side; ++i){
+		for(int k=1; k<=side; ++k){
+			mymap[i][k]=originmap[i][k];	
+		}	
+	}	
+}
+
+int findbiggest(){
+	int big=0;
+	for(int i=1; i<=side; ++i){
+		for(int k=1; k<=side; ++k){
+			big = max(big, mymap[i][k]);	
+		}	
+	}
+	return big;	
+}
+
+void printmap(){
+	for(int i=1; i<=side; ++i){
+		for(int k=1; k<=side; ++k){
+			cout<<mymap[i][k]<<" ";	
+		}	
+		cout<<endl;
+	}
+	cout<<endl;	
+}
+
+int getchoisotime(){
+	int i, biggest=0,nowy, nowx, today, nexty, nextx, numofblank=blank;
+	queue<virus> q;
+	for(i=0; i<viruslist.size(); ++i){
+		nowy = viruswichi[viruslist[i]].first;
+		nowx = viruswichi[viruslist[i]].second;
+		//cout<<nowy<<" "<<nowx<<"fuck\n";
+		mymap[nowy][nowx]=0;
+		q.push({nowy, nowx, 0});	
+	}
+	if(isitfill()){
+		return 0;	
+	}
+	//cout<<"------\n";
+	//printmap();
+	while(!q.empty()){
+		nowy = q.front().y;
+		nowx = q.front().x;
+		today = q.front().day;
+		//cout<<nowy<<" "<<nowx<<" "<<today<<endl;
+		//biggest = max(biggest, today);
+		q.pop();
+		/*
+		if(numofblank==0){
+			//return findbiggest();	
+			return today;
+		}
+		*/
+		for(i=0; i<4; ++i){
+			nexty = nowy+dy[i];
+			nextx = nowx+dx[i];
+			if(nexty>=1&&nexty<=side&&nextx>=1&&nextx<=side){
+				if(mymap[nexty][nextx]==200||mymap[nexty][nextx]==-2){
+					
+					if(mymap[nexty][nextx]==-2){
+						numofblank--;	
+					}
+					mymap[nexty][nextx]=today+1;
+					if(numofblank==0){
+			//return findbiggest();	
+						return today+1;
+					}
+					
+					q.push({nexty, nextx, today+1});
+				}
+			}	
+		}
+	}
+	//biggest = findbiggest();
+	//printmap();
+	return 1000;
+}
+
+void bruteforce(int lastindex){
+	if(viruslist.size()==numofvirus){
+		mapcopy();
+		int tempdap = getchoisotime();
+		//cout<<tempdap<<endl;
+		//if(tempdap<dap){
+			 //printmap();
+		//	 dap = tempdap;
+		//}
+		dap = min(dap, tempdap);
+		/*
+		for(int i=0; i<viruslist.size(); ++i){
+			cout<<viruslist[i]<<" ";
+		}
+		cout<<endl;
+		*/
+		//exit(0);
+		return;
+	}
+	int i;
+	
+	for(i=lastindex+1; i<viruswichigetsu; ++i){
+		viruslist.push_back(i);
+		bruteforce(i);
+		viruslist.pop_back();	
+	}
+}
+
+int main(void)
+{
+	cin>>side>>numofvirus;
+	fastio;
+	int i,k, num;
+	for(i=1; i<=side; ++i){
+		for(k=1; k<=side; ++k){
+			cin>>num;
+			if(num==2){
+				originmap[i][k]=200;
+				viruswichi.push_back({i,k});
+					
+			}
+			else if(num==1){
+				originmap[i][k]=-1;
+				//viruswichi.push_back({i,k});	
+			}
+			else{
+				originmap[i][k]=-2;
+				blank++;
+				//viruswichi.push_back({i,k});	
+			}
+		}	
+	}
+	viruswichigetsu=viruswichi.size();
+	for(i=1; i<=numofvirus; ++i){
+		use[i]=0;	
+	}
+	bruteforce(-1);
+	dap = dap==1000? -1 : dap;
+	cout<<dap;
+	
+}
