@@ -1,0 +1,42 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#define fastio ios::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
+using namespace std;
+
+int numofnum;
+vector<int> v;
+vector<int> originv;
+
+void makesortanddistinct(){	//이거좀 생각하자 ///////////////////// 
+	sort(v.begin(), v.end());
+	v.erase(unique(v.begin(),v.end()),v.end());
+	/*
+	int i;
+	for(i=0; i<v.size(); ++i){
+		cout<<v[i]<<" ";
+	}
+	*/
+}
+
+void findindex(){
+	int i, num;
+	for(i=0; i<numofnum; ++i){
+		num = originv[i];
+		cout<<lower_bound(v.begin(), v.end(), num) - v.begin()<<" ";
+	}
+}
+
+int main(void)
+{
+	fastio;
+	cin>>numofnum;
+	int i, num;
+	for(i=0; i<numofnum; ++i){
+		cin>>num;
+		v.push_back(num);
+		originv.push_back(num);
+	}
+	makesortanddistinct();
+	findindex();
+}
