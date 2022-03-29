@@ -1,0 +1,150 @@
+#include<iostream>
+#include<vector>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+int sero, garo, time;
+int room[51][51];
+int spread[51][51];
+int cleaner_y[2];
+int dy[4] = {1,0,-1,0};
+int dx[4] = {0,1,0,-1};
+vector<pair<int, int>> v;
+
+void print_room(){
+	int i,k;
+	for(i=1; i<=sero; ++i){
+		for(k=1; k<=garo; ++k){
+			cout<<room[i][k]<<" ";
+		}
+		cout<<endl;
+	}
+	cout<<endl;
+}
+void dust_spread(){
+	int i,k, d, ny,nx, y,x,sum, give;
+	v.clear();
+	
+	for(i=1; i<=sero; ++i){
+		for(k=1; k<=garo; ++k){
+			spread[i][k]=0;
+			if(room[i][k]!=0&&room[i][k]>=5){	//5보다작으면 확산이 안일어남  
+				v.push_back({i,k});
+			}
+		}
+	}
+	for(i=0; i<v.size(); ++i){
+		y=v[i].first;
+		x=v[i].second;
+		sum=0;
+		for(d=0; d<4; ++d){
+			ny = y+dy[d];
+			nx = x+dx[d];
+			if(ny>=1&&ny<=sero&&nx>=1&&nx<=garo){
+				if(room[ny][nx]!=-1){	//이제 사방으로 퍼짐
+					give = room[y][x]/5;
+					spread[ny][nx]+=give;
+					sum+=give; 
+				}
+			}
+		}
+		room[y][x]-=sum;
+	}
+	for(i=1; i<=sero; ++i){
+		for(k=1; k<=garo; ++k){
+			room[i][k]+=spread[i][k];
+		}
+	}
+}
+
+void air_condition(){
+	int up_end_y = cleaner_y[0];
+	int down_start_y = cleaner_y[1];
+	int i,k, sum;
+	//////////////////////////////
+	//sum=0;
+	for(i=up_end_y-1; i>1; --i){
+		//sum+=room[i][1];
+		room[i][1]=room[i-1][1];
+	}
+	room[1][1] = room[1][2];
+	for(k=2; k<garo; ++k){
+		//sum+=room[1][k];
+		room[1][k]=room[1][k+1];
+	}
+	room[1][garo] = room[2][garo];
+	for(i=2; i<up_end_y; ++i){
+		//sum+=room[i][garo];
+		room[i][garo]=room[i+1][garo];
+	}
+	room[up_end_y][garo] = room[up_end_y][garo-1];
+	for(k=garo-1; k>2; --k){
+		//sum+=room[up_end_y][k];
+		room[up_end_y][k]=room[up_end_y][k-1];
+	}
+	room[up_end_y][2]=0;
+	
+	/////////////////////////////
+	for(i=down_start_y+1; i<sero; ++i){
+		//sum+=room[i][1];
+		room[i][1]=room[i+1][1];
+	}
+	room[sero][1] = room[sero][2];
+	for(k=2; k<garo; ++k){
+		//sum+=room[1][k];
+		room[sero][k]=room[sero][k+1];
+	}
+	room[sero][garo] = room[sero-1][garo];
+	for(i=sero-1; i>down_start_y; --i){
+		//sum+=room[i][garo];
+		room[i][garo]=room[i-1][garo];
+	}
+	room[down_start_y][garo] = room[down_start_y][garo-1];
+	for(k=garo-1; k>2; --k){
+		//sum+=room[up_end_y][k];
+		room[down_start_y][k]=room[down_start_y][k-1];
+	}
+	room[down_start_y][2]=0;
+}
+
+int get_numofdust(){
+	int i,k, dap=0;
+	for(i=1; i<=sero; ++i){
+		for(k=1; k<=garo; ++k){
+			dap+=room[i][k];
+		}
+	}
+	dap+=2;	//공기청정기 두개 더해줌  
+	return dap;
+}
+
+int solve(){
+	int i,k, t=0, dap;
+	//print_room();
+	for(t=0; t<time; ++t){
+		dust_spread();
+		//print_room();
+		air_condition();
+		//print_room();
+	}
+	dap = get_numofdust();
+	return dap; 
+}
+
+int main(void)
+{
+	fastio;
+	cin>>sero>>garo>>time;	
+	int i,k, index=0;
+	for(i=1; i<=sero; ++i){
+		for(k=1; k<=garo; ++k){
+			cin>>room[i][k];
+			if(room[i][k]==-1){
+				cleaner_y[index++] = i;	
+			}
+		}
+	}
+	
+	cout<<solve();
+	return 0;
+} 
