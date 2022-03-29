@@ -1,0 +1,104 @@
+#include<iostream>
+
+using namespace std;
+
+int map[51][51];
+int sero, garo;
+int nowy, nowx, direction;
+
+
+void printmap(){
+	int i,j;
+	for(i=0; i<sero; ++i){
+		for(j=0; j<garo; ++j){
+			cout<<map[i][j]<<" ";
+		}
+		cout<<"\n";
+	}
+}
+
+int panstar(){	//a,b,c,d 경우에따라 1,2,3,4 를 리턴한다 
+	int type;
+	int nexty, nextx, imsidirection, yeejeony, yeejeonx;
+	if(direction==0){	//현재 바라보고 있는 방향이 북쪽이면 
+		nexty = nowy;
+		nextx = nowx-1;
+		yeejeony = nowy+1;
+		yeejeonx = nowx;
+		imsidirection = 3;
+	}
+	else if(direction==1){	//현재 바라보고 있는 방향이 동쪽이면
+		nexty = nowy-1;
+		nextx = nowx;
+		yeejeony = nowy;
+		yeejeonx = nowx-1;
+		imsidirection = 0;
+	}
+	else if(direction==2){	//현재 바라보고 있는 방향이 남쪽이면
+		nexty = nowy;
+		nextx = nowx+1;
+		yeejeony = nowy-1;
+		yeejeonx = nowx;
+		imsidirection = 1;
+	}
+	else{	//현재 바라보고 있는 방향이 서쪽이면
+		nexty = nowy+1;
+		nextx = nowx;
+		yeejeony = nowy;
+		yeejeonx = nowx+1;
+		imsidirection = 2;
+	}
+	
+	
+	if(map[nexty][nextx]==0){	//1번경우 
+		nowy = nexty;
+		nowx = nextx;
+		direction = imsidirection;
+		return 1;
+	}
+	
+	if(map[nowy-1][nowx]!=0&&map[nowy+1][nowx]!=0&&map[nowy][nowx-1]!=0&&map[nowy][nowx+1]!=0){
+		if(map[yeejeony][yeejeonx]==1){
+			return 4;
+		}
+		else{
+			nowy = yeejeony;
+			nowx = yeejeonx;
+			return 3;
+		}
+	}
+	else{
+		direction = imsidirection;
+		return 2;
+	}
+}
+
+int calcul(){
+	int numofclear=1, type;
+	map[nowy][nowx]=2;
+	while(1){
+		type = panstar();
+		if(type==1){
+			map[nowy][nowx] = 2;
+			numofclear++;
+		}
+		else if(type==4){
+			break;
+		} 
+	}
+	return numofclear;
+}
+
+int main(void)
+{
+	cin>>sero>>garo;
+	int i,j,k;
+	cin>>nowy>>nowx>>direction;
+	for(i=0; i<sero; ++i){
+		for(j=0; j<garo; ++j){
+			cin>>map[i][j];
+		}
+	}
+	cout<<calcul();
+	
+}
