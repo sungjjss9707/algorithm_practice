@@ -1,0 +1,207 @@
+#include<iostream>
+#include<vector>
+#include<queue>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+struct triple{
+	int y, x, old;
+};
+
+int side, numoftree, year;
+int yangboon[11][11];
+int farm[11][11];
+int dy[8]={-1,-1,-1,0,1,1,1,0};
+int dx[8]={-1,0,1,1,1,0,-1,-1};
+deque<int> tree_year[11][11];
+vector<triple> v;
+//vector<int> temp_v;
+
+/*
+void print_tree_years(){
+	int i,k,y, size, nowtree_year;
+	for(i=1; i<=side; ++i){
+		for(k=1; k<=side; ++k){
+			temp_v.clear();
+			size = tree_year[i][k].size();
+			cout<<"("<<i<<" "<<k<<" : ";
+			for(y=0; y<size; ++y){
+				nowtree_year = tree_year[i][k].top();
+				cout<<nowtree_year<<" ";
+				tree_year[i][k].pop();
+				temp_v.push_back(nowtree_year);
+			}
+			for(y=0; y<temp_v.size(); ++y){
+				tree_year[i][k].push(temp_v[y]);
+			}
+			cout<<") ";
+		}
+		cout<<endl;
+	}
+	cout<<endl;
+}
+
+void print_farm(){
+	int i,k;
+	for(i=1; i<=side; ++i){
+		for(k=1; k<=side; ++k){
+			cout<<farm[i][k]<<" ";
+		}
+		cout<<endl;
+	}
+	cout<<endl;
+}
+*/
+/*
+void all_tree_plus1(){
+	int i,k, y, nowtree_year, size;
+	
+	for(i=1; i<=side; ++i){
+		for(k=1; k<=side; ++k){
+			size = tree_year[i][k].size();
+			temp_v.clear();
+			for(y=0; y<size; ++y){
+				nowtree_year = tree_year[i][k].top();
+				tree_year[i][k].pop();
+				temp_v.push_back(nowtree_year+1);
+			}
+			for(y=0; y<temp_v.size(); ++y){
+				tree_year[i][k].push(temp_v[y]);
+			}
+		}
+	}
+}
+*/
+
+void eat_farm(){
+	int i,k, y, nowtree_year, size, index, now_yangboon;
+	for(i=1; i<=side; ++i){
+		for(k=1; k<=side; ++k){
+			size = tree_year[i][k].size();
+			//temp_v.clear();
+			if(tree_year[i][k].size()==0) continue;
+			now_yangboon = 0;
+			for(y=0; y<size; ++y){
+				nowtree_year = tree_year[i][k].front();
+				tree_year[i][k].pop_front();
+				if(nowtree_year>farm[i][k]){
+					now_yangboon += (nowtree_year/2);
+				}
+				else{
+					farm[i][k]-=nowtree_year;
+					tree_year[i][k].push_back(nowtree_year+1);
+				}
+			}
+			farm[i][k] += now_yangboon;
+		}
+	}
+}
+
+void beonsik(){
+	int i,k,j,y, size, nowtree_year, beonsiknum, nexty, nextx;
+	for(i=1; i<=side; ++i){
+		for(k=1; k<=side; ++k){
+			size = tree_year[i][k].size();
+			//temp_v.clear();
+			beonsiknum=0;
+			for(y=0; y<size; ++y){
+				nowtree_year = tree_year[i][k].front();
+				tree_year[i][k].pop_front();
+				
+				if(nowtree_year%5==0&&nowtree_year!=0) beonsiknum++;
+				tree_year[i][k].push_back(nowtree_year);
+				//temp_v.push_back(nowtree_year);
+			}
+			for(y=0; y<8; ++y){
+				nexty = i+dy[y];
+				nextx = k+dx[y];
+				if(nexty>=1&&nexty<=side&&nextx>=1&&nextx<=side){
+					for(j=0; j<beonsiknum; ++j){
+						tree_year[nexty][nextx].push_front(1);
+					}
+						
+				}
+			}
+		}
+	}
+} 
+
+void plus_farm(){
+	int i,k;
+	for(i=1; i<=side; ++i){
+		for(k=1; k<=side; ++k){
+			farm[i][k] += yangboon[i][k];
+		}
+	}
+}
+
+int get_living_tree(){
+	int i,k,y, dap=0;
+	for(i=1; i<=side; ++i){
+		for(k=1; k<=side; ++k){
+			dap+=tree_year[i][k].size();
+		}
+	}
+	return dap;
+}
+
+int solve(){
+	
+	//queue<triple> q;
+	int my_year=0;
+	int i,y,x,hae;
+	for(i=0; i<v.size(); ++i){
+		y = v[i].y;
+		x = v[i].x;
+		hae = v[i].old;
+		tree_year[y][x].push_back(hae);
+	}
+	
+	//print_tree_years();
+	//cout<<"year : "<<year<<endl; 
+	//cout<<"----------------시작----------------\n";
+	//print_tree_years();
+		//print_farm();
+	for(my_year=0; my_year<year; ++my_year){
+		//cout<<"======봄, 여름 =====\n"; 
+		eat_farm();
+		//print_tree_years();
+		//print_farm();
+		////////////////////////////
+
+		////////////가을////////////
+		//cout<<"======가을=====\n";
+		beonsik();
+		////////////////////////////
+		//print_tree_years();
+		//print_farm();
+		/////////////겨울///////////
+		//cout<<"======겨을=====\n";
+		plus_farm();
+		//print_tree_years();
+		//print_farm();
+		//cout<<"----------------"<<my_year<<"년끝----------------\n";
+		//////////////////////////// 
+	}
+	int living_tree = get_living_tree();
+	return living_tree;
+}
+
+int main(void)
+{
+	fastio;
+	cin>>side>>numoftree>>year;
+	int i,k, a,b,c;
+	for(i=1; i<=side; ++i){
+		for(k=1; k<=side; ++k){
+			cin>>yangboon[i][k];
+			farm[i][k]=5;
+		}
+	}
+	for(i=0; i<numoftree; ++i){
+		cin>>a>>b>>c;
+		v.push_back({a,b,c});
+	}
+	cout<<solve();
+	return 0;
+}
