@@ -1,0 +1,80 @@
+#include<iostream>
+
+using namespace std;
+
+int wholepaper[11][11];
+int onenum=0;
+int minimum = 20000000;
+int usedpaper[6] = {0,0,0,0,0,0};
+
+
+bool cannum(int sy, int sx, int side){
+	if(sy+side>11||sx+side>11||usedpaper[side]>=5) return false;
+	int i,k;
+	for(i=sy; i<sy+side; ++i){
+		for(k=sx; k<sx+side; ++k){
+			if(!wholepaper[i][k]) return false;
+		}
+	}
+	return true;
+}
+
+void covernum(int sy, int sx, int side){
+	int i,k;
+	usedpaper[side]++;
+	for(i=sy; i<sy+side; ++i){
+		for(k=sx; k<sx+side; ++k){
+			wholepaper[i][k] = 0;
+		}
+	}
+}
+
+void recoverynum(int sy, int sx, int side){
+	int i,k;
+	usedpaper[side]--;
+	for(i=sy; i<sy+side; ++i){
+		for(k=sx; k<sx+side; ++k){
+			wholepaper[i][k] = 1;
+		}
+	}
+}
+
+void getnumofpaper(int sy, int sx, int papernum){
+	if(onenum==0){
+		minimum = min(minimum, papernum);
+		return;
+	}
+	int i,k,t;
+	for(i=sy; i<=10; ++i){
+		for(k=sx; k<=10; ++k){
+			if(wholepaper[i][k]){
+				for(t=1; t<=5; ++t){
+					if(cannum(i,k,t)){
+						onenum = 
+						onenum-t*t;
+						covernum(i,k,t);
+						getnumofpaper(i,k+t, papernum+1);
+						onenum=onenum+t*t;
+						recoverynum(i,k,t);
+					}
+				}
+				return;
+			}	
+		}
+		sx=1;
+	}
+}
+
+int main(void)
+{
+	int i,k;
+	for(i=1; i<=10; ++i){
+		for(k=1; k<=10; ++k){
+			cin>>wholepaper[i][k];
+			if(wholepaper[i][k]) onenum++;
+		}
+	}
+	getnumofpaper(1,1,0);
+	if(minimum>25) minimum=-1;
+	cout<<minimum;
+}
