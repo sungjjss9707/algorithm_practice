@@ -1,0 +1,154 @@
+#include<iostream>
+#include<vector>
+#include<math.h>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+//6 15 20 = 41
+using namespace std;
+int minimum = 2000000000;
+int hap=0;
+int numofcity;
+int city[11];
+int index[11];
+int pyeon[11];
+int visit[11];
+vector<int> team_a;
+vector<int> team_b;
+vector<int> citylink[11];
+//1 2 3 4 5 6 7 8 9 10
+
+void clear(){
+	int i;
+	for(i=1; i<=10; ++i){
+		pyeon[i]=0;
+	}
+}
+
+void dfs(int num, int side){
+	visit[num]=side;
+	int i, nextcity;
+	for(i=0; i<citylink[num].size(); ++i){
+		nextcity = citylink[num][i];
+		if(visit[nextcity]==0&&pyeon[nextcity]==side){
+			visit[nextcity] = side;
+			dfs(nextcity, side);
+		}
+	}
+}
+
+bool same_pyeon_visit(){
+	int i;
+	for(i=1; i<=numofcity; ++i){
+		if(visit[i]!=pyeon[i]) return false;
+	}
+	return true;
+}
+
+void printpyeon(){
+	int i;
+	for(i=0; i<team_a.size();++i){
+				cout<<team_a[i]<<" ";
+			}
+			cout<<"/ ";
+			for(i=0; i<team_b.size();++i){
+				cout<<team_b[i]<<" ";
+			}
+			cout<<endl;
+}
+
+void maketheotherteam(){
+	int i;
+	team_b.clear();
+	for(i=1; i<=numofcity; ++i){
+		if(pyeon[i]==0){
+			team_b.push_back(i);
+			pyeon[i]=2;
+		}
+	}
+	
+	for(i=1; i<=numofcity; ++i){
+		visit[i]=0;
+	}
+	dfs(team_a[0],1);
+	dfs(team_b[0],2);
+	/*
+	for(i=1; i<=numofcity; ++i){
+		cout<<pyeon[i]<<" ";
+	}
+	cout<<"/ ";
+	for(i=1; i<=numofcity; ++i){
+		cout<<visit[i]<<" ";
+	}
+	cout<<endl;
+	*/
+	if(same_pyeon_visit()){
+		//printpyeon();
+		
+		int sum_a=0, sum_b=0;
+		for(i=0; i<team_a.size(); ++i){
+			sum_a+=city[team_a[i]];
+		}
+		for(i=0; i<team_b.size(); ++i){
+			sum_b+=city[team_b[i]];
+		}
+		if(minimum>abs(sum_a-sum_b)){
+			minimum=abs(sum_a-sum_b);
+			/*
+			for(i=0; i<team_a.size();++i){
+				cout<<team_a[i]<<" ";
+			}
+			cout<<"/ ";
+			for(i=0; i<team_b.size();++i){
+				cout<<team_b[i]<<" ";
+			}
+			cout<<endl;
+			*/
+		}
+		//minimum = min(abs(sum_a-sum_b), minimum);
+	}
+}
+
+void makeoneteam(int yeejeonindex){
+	int i;
+	if(team_a.size()>0){
+		if(team_a[0]!=1) return;
+	}
+	if(team_a.size()!=0&&team_a.size()!=numofcity){
+		for(i=1; i<=numofcity; ++i){
+			pyeon[i]=0;
+		}
+		for(i=0; i<team_a.size(); ++i){
+			pyeon[team_a[i]]=1;
+		}
+		maketheotherteam();
+		hap++;	
+	}
+	
+	int nowindex = yeejeonindex+1;
+	for(i=nowindex; i<=numofcity; ++i){
+		team_a.push_back(i);
+		makeoneteam(i);
+		team_a.pop_back();
+	}
+}
+
+int main(void)
+{
+	fastio;
+	cin>>numofcity;
+	int i, num,k, eenjeop;
+	for(i=1; i<=numofcity; ++i){
+		cin>>city[i];
+		index[i]=i;
+	}
+	for(i=1; i<=numofcity; ++i){
+		cin>>num;
+		for(k=0; k<num; ++k){
+			cin>>eenjeop;
+			citylink[i].push_back(eenjeop);
+		}
+	}
+	makeoneteam(0);
+	//cout<<hap<<endl;
+	if(minimum==2000000000) minimum=-1;
+	cout<<minimum;
+}
