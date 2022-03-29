@@ -1,0 +1,45 @@
+#include<iostream>
+#include<algorithm>
+#define fastio ios::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
+using namespace std;
+
+int mymap[1025][1025];
+
+int side;
+
+int findsecondnum(int y, int x, int hanbyeon){
+	int twotwo[4];
+	if(hanbyeon==2){
+		twotwo[0]=mymap[y][x];
+		twotwo[1]=mymap[y][x+1];
+		twotwo[2]=mymap[y+1][x];
+		twotwo[3]=mymap[y+1][x+1];
+		sort(twotwo, twotwo+4);
+		return twotwo[2];
+	}
+	int nextbyeon = hanbyeon/2;
+	int upleft = findsecondnum(y,x,nextbyeon);
+	int upright = findsecondnum(y,x+nextbyeon,nextbyeon);
+	int downleft = findsecondnum(y+nextbyeon,x,nextbyeon);
+	int downright = findsecondnum(y+nextbyeon,x+nextbyeon,nextbyeon);
+	twotwo[0]=upleft;
+	twotwo[1]=upright;
+	twotwo[2]=downleft;
+	twotwo[3]=downright;
+	sort(twotwo, twotwo+4);
+	return twotwo[2];
+}
+
+int main(void)
+{
+	fastio; 
+	cin>>side;
+	int i,k;
+	for(i=1; i<=side; ++i){
+		for(k=1; k<=side; ++k){
+			cin>>mymap[i][k];
+		}
+	}
+	
+	cout<<findsecondnum(1,1,side);
+}
