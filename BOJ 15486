@@ -1,0 +1,30 @@
+#include<iostream>
+#define fastio ios::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
+using namespace std;
+int geegan[1500002];
+int don[1500002];
+int check[1500002];
+int day;
+
+
+int main(void)
+{
+	fastio;
+	cin>>day;
+	int i;
+	
+	for(i=1; i<=day; ++i){
+		cin>>geegan[i];
+		cin>>don[i];
+	}
+	int biggest = 0, money;
+	int nextday;
+	for(i=1; i<=day+1; ++i){
+		biggest = max(biggest, check[i]);
+		nextday = i+geegan[i];
+		if(nextday<=day+1){
+			check[nextday]= max(check[nextday], biggest+don[i]);	
+		}	
+	}
+	cout<<biggest;
+}
