@@ -1,0 +1,59 @@
+#include<iostream>
+#include<vector>
+#include<queue>
+#include<algorithm>
+using namespace std;
+
+
+int numofver, numofedge, startv, dist;
+
+vector<int> connect[300001];
+
+void bfs(){
+	bool visit[300001];
+	queue<pair<int, int>> q;
+	vector<int> v;
+	int i;
+	for(i=1; i<=numofver; ++i){
+		visit[i] = false;
+	}
+	visit[startv] = true;
+	q.push({startv, 0});
+	int nowv, nowd, nextv, count=0; 
+	while(!q.empty()){
+		nowv = q.front().first;
+		nowd = q.front().second;
+		q.pop();
+		if(nowd==dist){
+			v.push_back(nowv);
+			continue;
+		}
+		for(i=0; i<connect[nowv].size(); ++i){
+			nextv = connect[nowv][i];
+			if(!visit[nextv]){
+				visit[nextv] = true;
+				q.push({nextv, nowd+1});
+			}
+		}
+	}
+	if(v.size()==0){
+		cout<<-1;
+		return;
+	}
+	sort(v.begin(), v.end());
+	for(i=0; i<v.size(); ++i){
+		cout<<v[i]<<"\n";
+	}
+}
+
+int main(void)
+{
+	cin>>numofver>>numofedge>>dist>>startv;
+	int i, start, end;
+	for(i=0; i<numofedge; ++i){
+		cin>>start>>end;
+		connect[start].push_back(end);
+	}
+	bfs();
+	return 0;
+}
