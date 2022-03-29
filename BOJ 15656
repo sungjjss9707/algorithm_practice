@@ -1,0 +1,91 @@
+#include<iostream>
+#include<vector>
+#include<math.h>
+using namespace std;
+
+int town[51][51];
+int side,choidaechicken,numofhouse=0,numofchicken=0;
+int dap=2000000000;
+
+vector<pair<int,int>> housearr,chickenarr,v;
+vector<int> use;
+
+int calculchickenstreet(){
+	int i,k,choisodist,dist,x1,x2,y1,y2,sum=0;
+	//for(i=0;i<v.size();++i){
+	//	cout<<v[i].first<<" "<<v[i].second<<"\n";
+	//}
+	//cout<<"-------\n";
+	for(i=0;i<numofhouse;++i){
+		choisodist=2000000000;
+		y1=housearr[i].first;
+		x1=housearr[i].second;
+		//cout<<y1<<","<<x1<<" : ";
+		for(k=0;k<v.size(); ++k){
+			y2=v[k].first;
+			x2=v[k].second;
+			dist=abs(y1-y2)+abs(x1-x2);
+			choisodist=min(choisodist,dist);
+			if(choisodist==1) break; ///////
+		}
+		//cout<<choisodist<<endl;
+		
+		sum=sum+choisodist;
+	}
+	return sum;
+}
+
+void printtown(){
+	for(int i=0;i<v.size();++i){
+		cout<<v[i].first<<" "<<v[i].second<<"\n";
+	}
+	cout<<"-------\n";
+}
+
+void findchoisochicken(int usedchicken){
+	if(usedchicken==choidaechicken){
+		//printtown();
+		int tempdap=calculchickenstreet();
+		dap=min(dap,tempdap);
+		return;
+	}
+	int i,lastindex=-1;
+	for(i=numofchicken-1; i>=0; --i){
+		if(use[i]==1){
+			lastindex=i;
+			break;
+		}
+	}
+	for(i=lastindex+1; i<numofchicken;++i){
+		use[i]=1;
+		v.push_back({chickenarr[i].first,chickenarr[i].second});
+		findchoisochicken(usedchicken+1);
+		use[i]=0;
+		v.pop_back();
+	}
+	
+}
+
+int main(void)
+{
+	cin>>side>>choidaechicken;
+	int i,k,num;
+	for(i=1;i<=side;++i){
+		for(k=1;k<=side;++k){
+			cin>>num;
+			town[i][k]=num;
+			if(num==1){
+				housearr.push_back({i,k});
+				numofhouse++;
+			}
+			else if(num==2){
+				chickenarr.push_back({i,k});
+				numofchicken++;
+				use.push_back(0);
+			}
+		}
+	}
+	findchoisochicken(0);
+	cout<<dap;
+	return 0;
+}
