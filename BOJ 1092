@@ -1,0 +1,64 @@
+#include<iostream>
+#include<algorithm>
+using namespace std;
+
+int numofcrain, numofbox;
+int crain_power[51], box_weight[10001];
+bool visit[10001];
+
+bool compare(int a, int b){
+	return a>b;
+}
+
+
+int solve(){
+	sort(crain_power, crain_power+numofcrain, compare);
+	sort(box_weight, box_weight+numofbox, compare);
+	int i;
+	/*
+	for(i=0; i<numofcrain; ++i){
+		cout<<crain_power[i]<<" ";
+	}
+	cout<<endl;
+	for(i=0; i<numofbox; ++i){
+		cout<<box_weight[i]<<" ";
+	}
+	cout<<endl<<endl;
+	*/
+	int index=0,k, dap=0, myindex;
+	bool flag;
+	while(1){
+		k=0;
+		flag=true;
+		for(i=0; i<numofbox; ++i){
+			flag=flag&&visit[i];
+			if(!visit[i]){
+				if(box_weight[i]<=crain_power[k]){
+					visit[i] = true;
+					k++;
+					if(k==numofcrain) break;
+				}
+			}
+		}
+		if(flag) break;
+		if(k==0) return -1;
+		dap++;
+	}
+	return dap;
+}
+
+int main(void)
+{
+	cin>>numofcrain;
+	int i;
+	for(i=0; i<numofcrain; ++i){
+		cin>>crain_power[i];
+	}
+	cin>>numofbox;
+	for(i=0; i<numofbox; ++i){
+		cin>>box_weight[i];
+	}
+	
+	cout<<solve();
+	return 0;
+}
