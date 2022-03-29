@@ -1,0 +1,46 @@
+#include<iostream>
+#include<vector>
+using namespace std;
+
+int n,m;
+int visit[9];
+vector<int> v;
+
+void clear(){
+	int i;
+	for(i=1; i<=n; ++i){
+		visit[i] = -1;
+	}
+}
+
+void print_vec(){
+	int i;
+	for(i=0; i<v.size(); ++i){
+		cout<<v[i]<<" ";
+	}
+	cout<<"\n";
+}
+
+void brute_force(){
+	if(v.size()==m){
+		print_vec();
+		return;
+	}
+	int i;
+	for(i=1; i<=n; ++i){
+		if(visit[i]==-1){
+			visit[i] = 1;
+			v.push_back(i);
+			brute_force();
+			visit[i] = -1;
+			v.pop_back();
+		}
+	}
+}
+
+int main(void)
+{
+	cin>>n>>m;
+	clear();
+	brute_force();
+}
