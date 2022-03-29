@@ -1,0 +1,192 @@
+#include<iostream>
+
+using namespace std;
+
+int side,len;
+int sero_road[101][101];
+int garo_road[101][101];  
+int sero_stair[101][101];
+int garo_stair[101][101]; 
+
+void print_garo(){
+	int i,k;
+	cout<<endl;
+	for(i=1; i<=side; ++i){
+		for(k=1; k<=side; ++k){
+			cout<<garo_road[i][k]<<" ";
+		}
+		cout<<endl;
+	}
+}
+
+void print_sero(){
+	int i,k;
+	cout<<endl;
+	for(i=1; i<=side; ++i){
+		for(k=1; k<=side; ++k){
+			cout<<sero_road[i][k]<<" ";
+		}
+		cout<<endl;
+	}
+}
+
+bool sero_mit(int y, int x, int low_len){
+	if(y+len>side) return false;
+	int i,k;
+	for(i=y+1; i<=y+len; ++i){
+		if(sero_road[i][x]!=low_len) return false;
+	}
+	return true;
+}
+
+bool sero_we(int y, int x, int low_len){
+	if(y-len<1) return false;
+	int i,k;
+	for(i=y-1; i>=y-len; --i){
+		if(sero_road[i][x]!=low_len) return false;
+	}
+	return true;
+}
+
+bool garo_right(int y, int x, int low_len){
+	if(x+len>side) return false;
+	int i,k;
+	for(i=x+1; i<=x+len; ++i){
+		if(garo_road[y][i]!=low_len) return false;
+	}
+	return true;
+}
+
+bool garo_left(int y, int x, int low_len){
+	if(x-len<1) return false;
+	int i,k;
+	for(i=x-1; i>=x-len; --i){
+		if(garo_road[y][i]!=low_len) return false;
+	}
+	return true;
+}
+
+int get_sero_road(){
+	int i,k,l, sum=0, high,low, dap=0, flag;
+	for(k=1; k<=side; ++k){
+		for(i=1; i<side; ++i){
+			if(sero_road[i][k]==sero_road[i+1][k]+len){
+				high = sero_road[i][k];
+				low = sero_road[i+1][k];
+				if(sero_mit(i,k,low)){
+					high--;
+					for(l=i+1; l<=(i+len); ++l){
+						sero_stair[l][k]++;
+						sero_road[l][k] = high--;
+					}	
+				}
+			}
+		}
+		
+		for(i=side; i>1; --i){
+			if(sero_road[i][k]==sero_road[i-1][k]+len){
+				low = sero_road[i-1][k];
+				high = sero_road[i][k];
+				if(sero_we(i,k,low)){
+					high--;
+					for(l=i-1; l>=(i-len); --l){
+						sero_stair[l][k]++;
+						sero_road[l][k] = high--;
+					}
+				}
+			}
+		}
+	}
+	dap=0; 
+	for(k=1; k<=side; ++k){
+		flag=0;
+		for(i=1; i<side; ++i){
+			if(abs(sero_road[i][k]-sero_road[i+1][k])>1||sero_stair[i][k]>1){
+				flag=1;
+				break;
+			}
+		}
+		if(i==side) dap++; 
+	}
+	/*
+	for(k=1; k<=side; ++k){
+		for(i=1; i<=side; ++i){
+			cout<<sero_stair[i][k]<<" ";
+		}
+		cout<<endl;
+	}
+	cout<<endl;
+	*/
+	//print_sero();
+	return dap;
+}
+
+int get_garo_road(){
+	//print_garo();
+	int i,k,l, sum=0, high,low, dap=0;
+	for(i=1; i<=side; ++i){
+		for(k=1; k<side; ++k){
+			if(garo_road[i][k]==garo_road[i][k+1]+len){
+				high = garo_road[i][k];
+				low = garo_road[i][k+1];
+				if(garo_right(i,k,low)){
+					high--;
+					for(l=k+1; l<=(k+len); ++l){
+						garo_stair[i][l]++;
+						garo_road[i][l] = high--;
+					}	
+				}
+			}
+		}
+		//print_garo();
+		for(k=side; k>1; --k){
+			if(garo_road[i][k]==garo_road[i][k-1]+len){
+				low = garo_road[i][k-1];
+				high = garo_road[i][k];
+				if(garo_left(i,k,low)){
+					high--;
+					for(l=k-1; l>=(k-len); --l){
+						garo_stair[i][l]++;
+						garo_road[i][l] = high--;
+					}
+				}
+			}
+		}
+	}
+	dap=0; 
+	for(i=1; i<=side; ++i){
+		for(k=1; k<side; ++k){
+			if(abs(garo_road[i][k]-garo_road[i][k+1])>1||garo_stair[i][k]>1){
+				break;
+			}
+		}
+		if(k==side) dap++; 
+	}
+	
+	//print_garo();
+	return dap;
+}
+
+int solve(){
+	int sero = get_sero_road();
+	int garo = get_garo_road();
+	return sero+garo;
+	
+}
+
+int main(void)
+{
+	cin>>side>>len;
+	int i,k, num;
+	for(i=1; i<=side; ++i){
+		for(k=1; k<=side; ++k){
+			cin>>num;
+			sero_stair[i][k] = 0;
+			garo_stair[i][k] = 0;
+			garo_road[i][k]=len*num;
+			sero_road[i][k] = garo_road[i][k];
+		}
+	}
+	cout<<solve();
+	return 0;
+}
