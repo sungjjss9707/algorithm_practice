@@ -1,0 +1,11 @@
+public class Test {
+	
+	long sum(int[] a) {
+		long  sum = 0;
+		int i, length = a.length;
+		for(i=0; i<length; i++) {
+			sum = sum+a[i];
+		}
+		return sum;
+	}
+}
