@@ -1,0 +1,98 @@
+#include<iostream>
+#include<string.h>
+
+using namespace std;
+
+class queue{	//큐는 선입선출  
+	int arr[20000001];
+	int startindex;
+	int endindex;
+public:
+	queue(){
+		startindex=0;
+		endindex=0;
+	}
+	void push(int a){
+		arr[endindex]=a;
+		endindex++;
+	}
+	void pop(){
+		if(endindex-startindex==0){
+			cout<<-1<<"\n";
+			return ;
+		}
+		int i;
+		int temp = arr[startindex];
+		startindex++;
+		cout<<temp<<"\n";
+	}
+	void size(){
+		cout<<endindex-startindex<<"\n";
+	}
+	void empty(){
+		if(endindex-startindex==0){
+			cout<<1<<"\n";
+			return;
+		} 
+		cout<<0<<"\n";
+	}
+	void front(){
+		if(endindex-startindex==0){
+			cout<<-1<<"\n";
+			return;
+		}
+		cout<<arr[startindex]<<"\n";
+	}
+	void back(){
+		if(endindex-startindex==0){
+			cout<<-1<<"\n";
+			return;
+		}
+		cout<<arr[endindex-1]<<"\n";
+	}
+
+};
+
+int main(void)
+{
+	//cout<<"fuck\n";
+	ios::sync_with_stdio(false);
+	cin.tie(NULL);
+	cout.tie(NULL);
+	int numofoper,i, numofpush;
+	//string oper;
+	char oper[6];
+	cin>>numofoper;
+	queue q = queue();
+	//stack s = stack();
+	for(i=0; i<numofoper; ++i){
+		cin>>oper;
+		//if(oper=="push"){
+		if(!strcmp(oper, "push")){
+			cin>>numofpush;
+			q.push(numofpush);
+		}
+		else if(!strcmp(oper, "pop")){
+			q.pop();
+			//cout<<"\n";
+		}
+		else if(!strcmp(oper, "size")){
+			q.size();
+			//cout<<"\n";
+		}
+		else if(!strcmp(oper, "empty")){
+			q.empty();
+			//cout<<"\n";
+		}
+		else if(!strcmp(oper, "front")){
+			q.front();
+			//cout<<"\n";
+		}
+		else if(!strcmp(oper, "back")){
+			q.back();
+		}
+		//s.printstack();
+		//cout<<"\n";
+	}
+	
+}
