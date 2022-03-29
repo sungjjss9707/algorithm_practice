@@ -1,0 +1,139 @@
+#include<iostream>
+
+using namespace std;
+
+int topnee[4][8];
+int numofrotation;
+
+void rotate(int num,int c){
+	int temp,i;
+	if(c==0) return;
+	if(c==1){//시계방향 
+		temp=topnee[num][7];
+		for(i=7; i>=1; --i){
+			topnee[num][i]=topnee[num][i-1];
+		}
+		topnee[num][0]=temp;
+	}
+	else{
+		temp=topnee[num][0];
+		for(i=0; i<7; ++i){
+			topnee[num][i]=topnee[num][i+1];
+		}
+		topnee[num][7]=temp;
+	}
+}
+
+void totatealltopnee(int num,int clock){
+	int arr[4];
+	arr[0]=0;
+	arr[1]=0;
+	arr[2]=0;
+	arr[3]=0;
+	arr[num]=clock;
+	if(num==0){
+		if(topnee[0][2]!=topnee[1][6]){
+			arr[1]=arr[0]*(-1);
+			if(topnee[1][2]!=topnee[2][6]){
+				arr[2]=arr[1]*(-1);
+				if(topnee[2][2]!=topnee[3][6]){
+					arr[3]=arr[2]*(-1);
+				}
+			}
+		}
+	}
+	else if(num==1){
+		if(topnee[1][6]!=topnee[0][2]){
+			arr[0]=arr[1]*(-1);
+		}	
+		if(topnee[1][2]!=topnee[2][6]){
+			arr[2]=arr[1]*(-1);
+			if(topnee[2][2]!=topnee[3][6]){
+				arr[3]=arr[2]*(-1);
+			}
+		}
+	}
+	else if(num==2){
+		if(topnee[2][6]!=topnee[1][2]){
+			arr[1]=arr[2]*(-1);
+			if(topnee[1][6]!=topnee[0][2]){
+				arr[0]=arr[1]*(-1);
+			}	
+		}	
+		if(topnee[2][2]!=topnee[3][6]){
+			arr[3]=arr[2]*(-1);
+		}
+	}
+	else{
+		if(topnee[3][6]!=topnee[2][2]){
+			arr[2]=arr[3]*(-1);
+			if(topnee[2][6]!=topnee[1][2]){
+				arr[1]=arr[2]*(-1);
+				if(topnee[1][6]!=topnee[0][2]){
+					arr[0]=arr[1]*(-1);
+				}	
+			}
+		}	
+	}
+	for(int i=0; i<4;++i){
+		rotate(i,arr[i]);
+	}
+	/*
+	for(int i=0; i<4 ;++i){
+		for(int k=0; k<8; ++k){
+			cout<<topnee[i][k];
+			
+		}
+		cout<<endl;
+	}
+	cout<<endl;
+	*/
+}
+
+int calcul(){
+	int sum=0;
+	for(int i=0; i<4;++i){
+		if(topnee[i][0]){
+			if(i==0){
+				sum=sum+1;
+			}
+			else if(i==1){
+				sum=sum+2;
+			}
+			else if(i==2){
+				sum=sum+4;	
+			}
+			else{
+				sum=sum+8;
+			}
+		}
+	}
+	return sum;
+}
+
+int main(void)
+{
+	int i,k,topneenum,clock;
+	char num;
+	for(i=0; i<4 ;++i){
+		for(k=0; k<8; ++k){
+			cin>>num;
+			topnee[i][k]=num-'0';
+		}
+	}
+	/*
+	for(i=0; i<4 ;++i){
+		for(k=0; k<8; ++k){
+			cout<<topnee[i][k];
+			
+		}
+		cout<<endl;
+	}
+	*/
+	cin>>numofrotation;
+	for(i=0; i<numofrotation;++i){
+		cin>>topneenum>>clock;
+		totatealltopnee(topneenum-1,clock);
+	}
+	cout<<calcul();
+}
