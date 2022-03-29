@@ -1,0 +1,23 @@
+a, b = (input()).split(' ');
+biggest=int(a);
+hwetsu=int(b);
+#print(biggest);
+#print(hwetsu);
+arr = [0 for i in range(9)];
+visit = [0 for i in range(9)];
+
+def backtracking(floor):
+    if(floor==hwetsu+1):
+        for i in range(1, hwetsu+1):
+            print(arr[i],end=" ");
+        print();
+    else:
+        for i in range(1, biggest+1):
+            arr[floor] = i;
+            if(arr[floor]<arr[floor-1]):
+                continue;
+            backtracking(floor+1);
+            
+
+backtracking(1);
+
