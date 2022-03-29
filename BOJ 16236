@@ -1,0 +1,110 @@
+#include<iostream>
+#include<queue>
+#include<vector>
+#include<algorithm>
+using namespace std;
+
+struct pos{
+	int y, x, dist;
+};
+
+
+
+int side, sharksize=2, sharky, sharkx;
+int mymap[21][21];
+int visit[21][21];
+int dy[4] = {1,0,-1,0};
+int dx[4] = {0,1,0,-1};
+
+void clear(){
+	int i,k;
+	for(i=1; i<=side; ++i){
+		for(k=1; k<=side; ++k){
+			visit[i][k]=0;
+		}
+	}
+}
+
+bool compare(pos p1, pos p2){
+	if(p1.y==p2.y){
+		return p1.x<p2.x;
+	}
+	return p1.y<p2.y;
+}
+
+
+
+pos getnextpos(){
+	int nowy, nowx, nexty, nextx,nowd, nextd, i;
+	queue<pos> q;
+	nowy = sharky;
+	nowx = sharkx;
+	q.push({nowy, nowx, 0});
+	vector<pos>v;
+	int choisodist=-1;
+	clear();
+	visit[nowy][nowx]=1;
+	while(!q.empty()){
+		nowy = q.front().y;
+		nowx = q.front().x;
+		nowd = q.front().dist;
+		//cout<<nowy<<","<<nowx<<"="<<nowd<<endl;
+		q.pop();
+		if(mymap[nowy][nowx]!=0&&mymap[nowy][nowx]<sharksize){
+			if(choisodist!=-1&&nowd>choisodist) break;
+			v.push_back({nowy, nowx, nowd});
+			choisodist=nowd;
+		}
+		for(i=0; i<4; ++i){
+			nexty = nowy+dy[i];
+			nextx = nowx+dx[i];
+			if(nexty>=1&&nexty<=side&&nextx>=1&&nextx<=side){
+				if(!visit[nexty][nextx]&&(mymap[nexty][nextx]==0||mymap[nexty][nextx]<=sharksize)){
+					visit[nexty][nextx]=1;
+					q.push({nexty, nextx, nowd+1});
+				}
+			}
+		}
+	}
+	if(v.size()==0) return {-1,-1,-1};
+	if(v.size()==1) return v[0];
+	sort(v.begin(), v.end(), compare);
+	return v[0];
+}
+
+int finddap(){
+	int dap=0, count=0;
+	pos nextgoal;
+	while(1){
+		nextgoal = getnextpos();
+		if(nextgoal.y==-1) return dap;
+		dap=dap+nextgoal.dist;
+		mymap[nextgoal.y][nextgoal.x]=0;
+		sharky=nextgoal.y;
+		sharkx = nextgoal.x;
+		count++;
+		if(count==sharksize){
+			sharksize++;
+			count=0;
+		}
+	}
+	//cout<<nextgoal.y<<" "<<nextgoal.x<<" "<<nextgoal.dist<<endl;
+	return dap;
+}
+
+int main(void)
+{
+	cin>>side;
+	int i,k;
+	for(i=1; i<=side; ++i){
+		for(k=1; k<=side; ++k){
+			cin>>mymap[i][k];
+			if(mymap[i][k]==9){
+				sharky = i;
+				sharkx = k;
+				mymap[i][k]=0;
+			}
+		}
+	}
+	cout<<finddap();
+}
