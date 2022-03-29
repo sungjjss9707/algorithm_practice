@@ -1,0 +1,125 @@
+#include<iostream>
+
+using namespace std;
+
+int pan[101][101];
+int temp[101][101];
+bool visit[101][101];
+int sero, garo;
+int dy[4] = {1,0,-1,0};
+int dx[4] = {0,1,0,-1};
+
+void clear_visit(){
+	int i,k;
+	for(i=1 ;i<=sero; ++i){
+		for(k=1; k<=garo;++k){
+			visit[i][k] = false;
+		}
+	}
+}
+
+void print_pan(){
+	cout<<endl;
+	int i,k;
+	for(i=1 ;i<=sero; ++i){
+		for(k=1; k<=garo;++k){
+			cout<<pan[i][k]<<" ";
+		}
+		cout<<endl;
+	}
+	cout<<endl;
+}
+
+void dfs_init(int y, int x){
+	visit[y][x] = true;
+	pan[y][x] = 2;
+	int i, ny, nx;
+	for(i=0; i<4; ++i){
+		ny = y+dy[i];
+		nx = x+dx[i];
+		if(ny>=1&&ny<=sero&&nx>=1&&nx<=garo){
+			if(!visit[ny][nx]&&pan[ny][nx]==0){
+				dfs_init(ny, nx);
+			}
+		}
+	}
+}
+
+void dfs(int y, int x){
+	visit[y][x] = true;
+	pan[y][x] = 2;
+	int i, ny, nx;
+	for(i=0; i<4; ++i){
+		ny = y+dy[i];
+		nx = x+dx[i];
+		if(ny>=1&&ny<=sero&&nx>=1&&nx<=garo){
+			if(!visit[ny][nx]&&(pan[ny][nx]==0||pan[ny][nx]==2)){
+				dfs(ny, nx);
+			}
+		}
+	}
+}
+
+void solve(){
+	int i,k,n, yeenjeop_y, yeenjeop_x, hour=0, numofcheese, last_cheese;
+	dfs_init(1,1);
+	//print_pan();
+	while(1){
+		
+		clear_visit();
+		dfs(1,1);
+		//print_pan();
+		numofcheese=0;
+		for(i=1 ;i<=sero; ++i){
+			for(k=1; k<=garo;++k){
+				if(pan[i][k]==1){
+					numofcheese++;
+					for(n=0; n<4; ++n){
+						yeenjeop_y = i+dy[n];
+						yeenjeop_x = k+dx[n];
+						if(yeenjeop_y>=1&&yeenjeop_y<=sero&&yeenjeop_x>=1&&yeenjeop_x<=garo){
+							if(pan[yeenjeop_y][yeenjeop_x]==2){
+								break;
+							}
+						}
+					}
+					if(n==4){	//하나도 공기주에 닿은 면이 없으면  
+						temp[i][k] = 1;
+					}
+					else{
+						temp[i][k] = 2;
+					}
+				}
+				else{
+					temp[i][k] = pan[i][k];
+				}
+			}
+		}
+		if(numofcheese==0){
+			cout<<hour<<"\n";
+			cout<<last_cheese;
+			break;
+		}
+		last_cheese = numofcheese;
+		for(i=1; i<=sero; ++i){
+			for(k=1; k<=garo; ++k){
+				pan[i][k] = temp[i][k];
+			}
+		}
+		hour++;
+	}
+	
+}
+
+int main(void)
+{
+	cin>>sero>>garo;
+	int i,k;
+	for(i=1 ;i<=sero; ++i){
+		for(k=1; k<=garo;++k){
+			cin>>pan[i][k];
+		}
+	}
+	solve();
+	return 0;
+} 
