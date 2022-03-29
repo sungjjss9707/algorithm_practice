@@ -1,0 +1,132 @@
+#include<iostream>
+#include<string>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+int numofwords, smallest = 2100000000;
+int dp[51];
+string sen;
+string words[51];
+int alpha[51][26];
+
+int can_change(int index, int word_index){	//바꿀수있다면 비용을 반환, 없다면 -1 반환  
+	string dan = words[word_index];
+	
+	if(sen.length()-index<dan.length()) return -1;
+	int alphabet[26];
+	int i;
+	char c;
+	//cout<<dan<<endl;
+	for(i=0; i<26; ++i){
+		alphabet[i]=0;
+	}
+	for(i=index; i<index+dan.length(); ++i){
+		c = sen[i];
+		alphabet[(int)(c-'a')]++;
+	}
+	
+	for(i=0; i<26; ++i){
+		if(alphabet[i]!=alpha[word_index][i]) return -1;
+	}
+	int count=0;
+	char sen_c, dan_c;
+	for(i=index; i<index+dan.length(); ++i){
+		sen_c = sen[i];
+		dan_c = dan[i-index];
+		if(sen_c!=dan_c){
+			count++;
+		}
+	}
+	return count;
+}
+
+/*
+void brute_force(int index, int price){
+	if(index==sen.length()){
+		smallest = min(smallest, price);
+		return;
+	}
+	int i, beeyong;
+	string dan;
+	for(i=0; i<numofwords; ++i){
+		dan = words[i];
+		
+		beeyong = can_change(index, i);
+		if(beeyong!=-1){
+			brute_force(index+dan.length(), price+beeyong); 
+		}
+	}
+}
+*/
+
+int brute_force(int index){
+	if(index==-1){
+		//smallest = min(smallest, price);
+		return 0;
+	}
+	if(index<-1) return 2100000000;
+	if(dp[index]!=-1){
+		return dp[index];
+	}
+	int i, beeyong, my_index, ret = 2100000000;
+	string dan;
+	for(i=0; i<numofwords; ++i){
+		dan = words[i];
+		my_index = index-dan.length()+1;
+		beeyong = can_change(my_index, i);
+		if(beeyong!=-1){
+			ret = min(ret, beeyong+brute_force(index-dan.length())); 
+		}
+	}
+	dp[index] = ret;
+	return ret;
+}
+
+void count_alpha(){
+	int i,k;
+	char c;
+	for(i=0; i<numofwords; ++i){
+		for(k=0; k<words[i].length(); ++k){
+			c = words[i][k];
+			alpha[i][(int)(c-'a')]++;	
+		}
+	}
+	/*
+	for(k=0; k<26; ++k){
+		cout<<(char)(k+'a')<<" ";	
+	}
+	cout<<endl;
+
+	for(i=0; i<numofwords; ++i){
+		for(k=0; k<26; ++k){
+			cout<<alpha[i][k]<<" ";	
+		}
+		cout<<endl;
+	}
+	*/
+}
+
+int main(void)
+{	
+	fastio;
+	cin>>sen;
+	cin>>numofwords;
+	int i;
+	for(i=0; i<sen.length(); ++i){
+		dp[i]=-1;
+	}
+	for(i=0; i<numofwords; ++i){
+		cin>>words[i];
+	}
+	count_alpha();
+	int ret = brute_force(sen.length()-1);
+	if(ret==2100000000){
+		cout<<-1;
+	}
+	else{
+		cout<<ret;
+	}
+	
+	
+	return 0;
+}
