@@ -1,0 +1,123 @@
+#include<iostream>
+using namespace std;
+int side;
+int bang[17][17];
+
+int dp[17][17][17][17];
+
+void clear(){
+	int i,j,k,t,l;
+	for(t=1; t<=side;++t){
+		for(i=1; i<=side; ++i){
+			for(j=1; j<=side;++j){
+				for(k=1; k<=side; ++k){
+					dp[t][i][j][k]=-1;
+				}
+			}
+		}
+	}
+	
+}
+
+bool isthispipegood(int starty, int startx){
+	if(starty>=1&&startx>=1){
+		return true;
+	}
+	return false;
+}
+int get_numofcase(int sy,int sx,int ey,int ex){
+	int ret=dp[sy][sx][ey][ex];
+	if(ret!=-1) return ret;
+	
+	ret=0;
+	if(sy==ey){//가로
+		if(sx==1){
+			if(sy==1){
+				dp[sy][sx][ey][ex]=1;
+				return 1;
+			} 
+			dp[sy][sx][ey][ex]=0;
+			return 0;
+		}
+		if(sx-1>=1){
+			if(bang[sy][sx-1]==0){
+				ret=ret+get_numofcase(sy,sx-1,sy,sx);
+			}
+			if(sy-1>=1){
+				if(bang[sy-1][sx-1]==0&&bang[sy][sx-1]==0&&bang[sy-1][sx]==0){
+					ret=ret+get_numofcase(sy-1,sx-1,sy,sx);
+				}
+			}
+		} 	
+	}
+	else if(sx==ex){//세로 
+		if(sy==1){
+			dp[sy][sx][ey][ex]=0;
+			return 0;
+		}
+		if(sy-1>=1){
+			if(bang[sy-1][sx]==0){
+				ret=ret+get_numofcase(sy-1,sx,sy,sx);
+			}
+			if(sx-1>=1){
+				if(bang[sy-1][sx-1]==0&&bang[sy][sx-1]==0&&bang[sy-1][sx]==0){
+					ret=ret+get_numofcase(sy-1,sx-1,sy,sx);
+				}
+			}
+		} 
+	}
+	else{//대각선 
+		if(sy==1&&sx==1){
+			dp[sy][sx][ey][ex]=0;
+			return 0;
+		}
+		if(sx-1>=1){
+			if(bang[sy][sx-1]==0){
+				ret=ret+get_numofcase(sy,sx-1,sy,sx);
+			}
+		}
+		if(sy-1>=1&&sx-1>=1){
+			if(bang[sy-1][sx-1]==0&&bang[sy][sx-1]==0&&bang[sy-1][sx]==0){
+				ret=ret+get_numofcase(sy-1,sx-1,sy,sx);
+			}
+		}
+		if(sy-1>=1){
+			if(bang[sy-1][sx]==0){
+				ret=ret+get_numofcase(sy-1,sx,sy,sx);
+			}
+		}
+	}
+	dp[sy][sx][ey][ex]=ret;
+	return ret;
+}
+int main(void)
+{
+	cin>>side;
+	int i,k;
+	for(i=1; i<=side; ++i){
+		for(k=1; k<=side; ++k){
+			cin>>bang[i][k];
+		}
+	}
+	clear();
+
+	int ret1=0,ret2=0,ret3=0;
+	
+
+	if(bang[side][side]==1){
+		cout<<0;
+		return 0;
+	}
+	if(bang[side][side-1]==0){
+		ret1=get_numofcase(side,side-1,side,side);
+	}
+	if(bang[side-1][side-1]==0&&bang[side][side-1]==0&&bang[side-1][side]==0){
+		ret2=get_numofcase(side-1,side-1,side,side);
+	}
+	if(bang[side-1][side]==0){
+		ret3=get_numofcase(side-1,side,side,side);
+	}
+	
+	cout<<ret1+ret2+ret3;
+	return 0;
+}
