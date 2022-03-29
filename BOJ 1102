@@ -1,0 +1,62 @@
+#include<iostream>
+#include<string>
+#include<vector>
+using namespace std;
+
+int price[17][17];
+int dp[1<<16];
+int numofnode, choiso_on;
+
+int solve(int state, int count){
+	
+	int ret = dp[state];
+	if(ret!=-1){
+		return ret;
+	}
+	if(count>=choiso_on) return 0;
+	int i, j, index=1, n, next_state;
+	ret = 2100000000;
+	for(i=0; i<numofnode; ++i){
+		if((state&(1<<i))==0) continue;;
+		for(j=0; j<numofnode; ++j){
+			if((state&(1<<j))==0){
+				next_state = state|(1<<j);
+				ret = min(ret, solve(next_state, count+1)+price[i][j]);
+			}
+		}
+	}
+	dp[state] = ret;
+	return ret;
+}
+
+int main(void)
+{
+	cin>>numofnode; 
+	int i,k, state=0, count=0;
+	char c;
+	string s;
+	for(i=0; i<numofnode; ++i){
+		for(k=0; k<numofnode; ++k){
+			cin>>price[i][k];
+		}
+	}
+	cin>>s;
+	cin>>choiso_on; 
+	for(i=0; i<numofnode; ++i){
+		if(s[i]=='Y'){
+			state = state|(1<<i);
+			count++;
+		}
+	}
+	for(i=0; i<(1<<16); ++i){
+		dp[i] = -1;
+	}
+	int dap = solve(state, count);
+	if(dap == 2100000000){
+		cout<<-1;
+	}
+	else{
+		cout<<dap;
+	}
+	return 0;
+}
