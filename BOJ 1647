@@ -1,0 +1,77 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+struct triple{
+	int s,e,price;
+};
+
+int numofver, numofedge;
+
+vector<triple> v;
+//vector<int> dap;
+int parent[100001];
+bool compare(triple t1, triple t2){
+	return t1.price<t2.price;
+}
+
+int get_parent(int x){
+	if(x==parent[x]) return x;
+	int x_parent = get_parent(parent[x]);
+	parent[x] = x_parent;
+	return x_parent;
+}
+
+void union_set(int x_parent, int y_parent){
+	if(x_parent<y_parent){
+		parent[y_parent] = x_parent;
+	}
+	else{
+		parent[x_parent] = y_parent;
+	}
+}
+
+int solve(){
+	sort(v.begin(), v.end(), compare);
+	int i, hap=0, maximum = -1, s_parent, e_parent, start, end, don;
+	for(i=1; i<=numofver; ++i){
+		parent[i] = i;
+	}
+	/*
+	cout<<endl;
+	for(i=0; i<numofedge; ++i){
+		cout<<v[i].s<<" "<<v[i].e<<" "<<v[i].price<<endl;
+	}
+	cout<<endl;
+	*/
+	for(i=0; i<numofedge; ++i){
+		start = v[i].s;
+		end = v[i].e;
+		don = v[i].price;
+		s_parent = get_parent(start);
+		e_parent = get_parent(end);
+		if(s_parent==e_parent) continue;
+		union_set(s_parent, e_parent);
+		//cout<<start<<" "<<end<<endl;
+		hap+=don;
+		maximum = max(maximum, don);
+		//hap.push_back(don);
+	
+	}
+	return hap-maximum;
+}
+
+int main(void)
+{
+	fastio;
+	cin>>numofver>>numofedge;
+	int i, start, end, p;
+	for(i=0; i<numofedge; ++i){
+		cin>>start>>end>>p;
+		v.push_back({start, end, p});
+	}
+	cout<<solve();
+	return 0;
+}
