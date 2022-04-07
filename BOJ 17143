@@ -1,0 +1,172 @@
+#include<iostream>
+#include<vector>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+struct triple{	//속도, 방향, 크기  
+	int s,d,b;
+};
+
+int sero, garo, numofshark;
+vector<triple> sea[101][101];
+vector<triple> temp[101][101];
+int get_shark(int x){
+	int i, big;
+	for(i=1; i<=sero; ++i){
+		if(!sea[i][x].empty()){
+			big = sea[i][x][0].b;
+			sea[i][x].clear();
+			return big;
+		}
+	}
+	return 0;
+}
+//1이 위    2가 아래, 3이 오른쪽, 4가 왼쪽
+void shark_moving(int y, int x){
+	int real_y=y, real_x=x;
+	int cango = sea[y][x][0].s;
+	int sok = sea[y][x][0].s;
+	int bang =  sea[y][x][0].d;
+	int big =  sea[y][x][0].b;
+	int blank;
+	
+	while(1){
+		//cout<<y<<" "<<x<<" "<<cango<<endl;
+		if(bang==1){	//위  
+			if(y-cango>=1){	//한번만에 가고 끝 
+				temp[y-cango][x].push_back({sok, bang, big});
+				sea[real_y][real_x].clear();
+				break;
+			} 
+			else{
+				bang = 2;
+				cango=cango-(y-1);
+				y=1;
+			} 
+		}
+		else if(bang==2){	//아 래
+			if(y+cango<=sero){	//한번만에 가고 끝 
+				temp[y+cango][x].push_back({sok, bang, big});
+				sea[real_y][real_x].clear();
+				break;
+			} 
+			else{
+				cango=cango-(sero-y);
+				bang=1;
+				y=sero;
+			}
+		}
+		else if(bang==3){	//오른쪽  
+			if(x+cango<=garo){	//한번만에 가고 끝 
+				temp[y][x+cango].push_back({sok, bang, big});
+				sea[real_y][real_x].clear();
+				break;
+			} 
+			else{
+				cango=cango-(garo-x);
+				bang = 4;
+				x=garo;
+			}
+		}
+		else{	//왼쪽  
+			if(x-cango>=1){	//한번만에 가고 끝 
+				temp[y][x-cango].push_back({sok, bang, big});
+				sea[real_y][real_x].clear();
+				break;
+			} 
+			else{
+				cango=cango-(x-1);
+				x=1;
+				bang = 3;
+			}
+		}
+	}	
+} 
+
+void temp_clear(){
+	int i,k;
+	for(i=1; i<=sero; ++i){
+		for(k=1; k<=garo; ++k){
+			temp[i][k].clear();
+		}
+	}
+}
+
+void one_second_later(){
+	int i,k,s, biggest, lasts, lastb, lastd;
+	temp_clear();
+	for(i=1; i<=sero; ++i){
+		for(k=1; k<=garo; ++k){
+			if(sea[i][k].empty()){
+				continue;
+			}
+			//cout<<i<<" "<<k<<"에서 시작\n";
+			shark_moving(i,k); 
+		}
+	}
+	for(i=1; i<=sero; ++i){
+		for(k=1; k<=garo; ++k){
+			if(temp[i][k].empty()){
+				continue;
+			}
+			else if(temp[i][k].size()==1){
+				sea[i][k] = temp[i][k];	
+			}
+			else{
+				biggest = -1;
+				for(s=0; s<temp[i][k].size(); ++s){
+					if(biggest<temp[i][k][s].b){
+						lasts = temp[i][k][s].s;
+						lastd = temp[i][k][s].d;
+						lastb = temp[i][k][s].b;
+						biggest = temp[i][k][s].b;
+					}	
+				}
+				sea[i][k].push_back({lasts, lastd, lastb});
+				
+			}
+		
+		}
+	}
+}
+
+void print_sea(){
+	int i,k;
+	cout<<endl;
+	for(i=1; i<=sero; ++i){
+		for(k=1; k<=garo; ++k){
+			if(sea[i][k].empty()) cout<<0<<" ";
+			else{
+				cout<<sea[i][k][0].b<<" ";
+			}
+		}
+		cout<<endl;
+	}
+	cout<<endl;
+}
+
+int solve(){
+	int i,k, dap=0;
+	//print_sea();
+	//one_second_later();
+	//print_sea();
+	for(k=1; k<=garo; ++k){
+		dap+=get_shark(k);
+		one_second_later();
+		//print_sea();
+	}
+	return dap;
+}
+
+int main(void)
+{
+	fastio;
+	cin>>sero>>garo>>numofshark;
+	int i, y,x,sok, bang, big;
+	for(i=0; i<numofshark; ++i){
+		cin>>y>>x>>sok>>bang>>big;
+		sea[y][x].push_back({sok, bang, big});
+	}
+	cout<<solve();
+	return 0;
+}
