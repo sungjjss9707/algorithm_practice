@@ -1,0 +1,92 @@
+#include<iostream>
+#include<queue>
+#include<string>
+#include<vector>
+using namespace std;
+
+int goal;
+int dp[1000001];
+
+void dp_clear(){
+	int i;
+	for(i=0; i<=goal; ++i){
+		dp[i] = -1;
+	}
+}
+
+void solve(){
+	queue<pair<int, string>> q;
+	q.push({goal, ""});
+	dp_clear();
+	//dp[goal] = 0;
+	int nownum, nextnum,i;
+	string nowstr, laststr;
+	//cout<<"ssibal\n";
+	while(!q.empty()){
+		nownum = q.front().first;
+		nowstr = q.front().second;
+		//cout<<nownum<<" "<<nowstr<<endl;
+		q.pop();
+		if(nownum==1){
+			laststr = nowstr;
+			//cout<<nownum<<"\n";
+			cout<<laststr.length()<<endl;
+			break;
+		}
+		if(dp[nownum]!=-1) continue;
+		dp[nownum] = nownum;
+		if(nownum%2==0){
+			nextnum = nownum/2;
+			nowstr.push_back('2');
+			//cout<<"1 : "<<nowstr<<endl;
+			q.push({nextnum, nowstr});
+			nowstr.pop_back();
+		}
+		//cout<<"2 : "<<nowstr<<endl;
+		//cout<<"이까지 괜찬\n";
+		
+		//cout<<"이까지 괜찬\n";
+		//cout<<"3 : "<<nowstr<<endl;	
+		if(nownum%3==0){
+			//cout<<"4 : "<<nowstr<<endl;
+			//cout<<"이까지 괜찬\n";
+			nextnum = nownum/3;
+			
+			nowstr.push_back('3');
+			
+			//cout<<nowstr<<" ";
+			q.push({nextnum, nowstr});
+			nowstr.pop_back();
+		}
+		nowstr.push_back('1');
+		//cout<<nowstr<<" ";
+		//cout<<endl;
+		nextnum = nownum-1;
+		q.push({nextnum, nowstr});
+	}
+	vector<int> v;
+	int num = 1;
+	v.push_back(num);
+	for(i=laststr.length()-1; i>=0; --i){
+		if(laststr[i]=='1'){
+			num++;
+		}
+		else if(laststr[i]=='2'){
+			num*=2;
+		}
+		else{
+			num*=3;
+		}
+		v.push_back(num);
+	}
+	//cout<<goal<<" ";
+	for(i=v.size()-1; i>=0; --i){
+		cout<<v[i]<<" ";
+	}
+}
+
+int main(void)
+{
+	cin>>goal;
+	solve();
+}
