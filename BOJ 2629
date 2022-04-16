@@ -1,0 +1,66 @@
+#include<iostream>
+
+using namespace std;
+
+int numofchoo, numofgoo, choo_hap=0;
+int nowgoo;
+int choo[31];
+int goo[8];
+int dp[31][16000];
+
+void clear_dp(){
+	int i,k;
+	for(i=0; i<31; ++i){
+		for(k=0; k<=choo_hap; ++k){
+			dp[i][k] = -1;
+		}
+	}
+}
+
+void fill_dp(int index, int weight_hap){
+	if(weight_hap>choo_hap) return;
+	int ret = dp[index][weight_hap];
+	if(ret!=-1) return;
+	dp[index][weight_hap] = 1;	
+	if(index==numofchoo) return;
+	if(index+1<=numofchoo){
+		fill_dp(index+1, weight_hap+choo[index+1]);
+		fill_dp(index+1, abs(weight_hap-choo[index+1]));
+		fill_dp(index+1, weight_hap);
+	}
+	
+}
+
+void solve(){
+	clear_dp();
+	fill_dp(0,0);
+}
+
+int main(void)
+{
+	cin>>numofchoo;
+	int i,k,j;
+	for(i=1; i<=numofchoo; ++i){
+		cin>>choo[i];
+		choo_hap+=choo[i];
+	}
+	cin>>numofgoo; 
+	for(i=0; i<numofgoo; ++i){
+		cin>>goo[i];
+	}
+	solve();
+	for(k=0; k<numofgoo; ++k){
+		if(goo[k]>choo_hap){
+			cout<<"N ";
+			continue;
+		}
+		for(i=1; i<=numofchoo; ++i){
+			if(dp[i][goo[k]]==1){
+				cout<<"Y ";
+				break;
+			}
+		}
+		if(i==numofchoo+1) cout<<"N ";
+	}
+	
+}
