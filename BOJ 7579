@@ -1,0 +1,54 @@
+#include<iostream>
+
+using namespace std;
+
+int numofprocess, sanghan, hap=0;
+
+int dp[101][10001];
+int yong[101];
+int see[101];
+
+int solve(){
+	int i,k;
+	for(k=0; k<=hap; ++k){
+		dp[0][k]=0;
+	}
+	for(i=1; i<=numofprocess; ++i){
+		for(k=0; k<=hap; ++k){
+			if(see[i]>k) dp[i][k] = dp[i-1][k];
+			else{
+				dp[i][k] = max(dp[i-1][k], dp[i-1][k-see[i]]+yong[i]);
+			}
+		}
+	}
+	/*
+	cout<<endl;
+	for(i=1; i<=numofprocess; ++i){
+		for(k=0; k<=hap; ++k){
+			cout<<dp[i][k]<<" ";
+		}
+		cout<<endl;
+	}
+	cout<<endl;
+	*/
+	for(k=0; k<=hap; ++k){
+		for(i=1; i<=numofprocess; ++i){
+			if(dp[i][k]>=sanghan) return k;
+		}
+	}
+}
+
+int main(void)
+{
+	cin>>numofprocess>>sanghan;
+	int i;
+	for(i=1; i<=numofprocess; ++i){
+		cin>>yong[i];
+		
+	}
+	for(i=1; i<=numofprocess; ++i){
+		cin>>see[i];
+		hap+=see[i];
+	}	
+	cout<<solve();
+}
