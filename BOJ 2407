@@ -1,0 +1,95 @@
+#include<iostream>
+#include<string>
+using namespace std;
+
+long long dp[101][101];
+string str_dp[101][101];
+int n, m;
+
+string str_hap(string a, string b){
+	string longer, shorter;
+	if(a.length()>b.length()){
+		longer = a;
+		shorter = b;
+	}
+	else{
+		longer = b;
+		shorter = a;
+	}
+	int i, li=longer.length()-1, si = shorter.length()-1,oleem=0, hap, short_num, long_num;
+	string ret = "";
+	while(li>=0){
+		long_num = (int)(longer[li]-'0');
+		if(si<0){
+			short_num=0;
+		}
+		else{
+			short_num = (int)(shorter[si]-'0');
+		}
+		hap = oleem+long_num+short_num;
+		oleem = hap/10;
+		hap = hap%10;
+		ret.push_back(char(hap+'0'));
+		if(li==0&&oleem!=0){
+			ret.push_back(char(oleem+'0'));
+			
+			break;	
+		}
+		li--;
+		si--;  
+	}
+	char temp;
+	for(i=0; i<ret.length()/2; ++i){
+		temp = ret[i];
+		ret[i] = ret[ret.length()-1-i];
+		ret[ret.length()-1-i] = temp;
+	}
+	return ret;
+}
+
+string solve(){
+	int i,k;
+	for(i=1; i<=n; ++i){
+		for(k=0; k<=i; ++k){
+			if(k==0||k==i){
+				str_dp[i][k] = "1";
+			}
+			else{
+				str_dp[i][k] = str_hap(str_dp[i-1][k-1], str_dp[i-1][k]);
+			}
+			//cout<<str_dp[i][k]<<" ";
+		}
+		//cout<<endl;
+	}
+	return str_dp[n][m];
+}
+
+/*
+long long solve(){
+	int i,k;
+	for(i=1; i<=n; ++i){
+		for(k=0; k<=i; ++k){
+			if(k==0||k==i){
+				dp[i][k] = 1;
+			}
+			else{
+				dp[i][k] = dp[i-1][k-1]+dp[i-1][k];
+			}
+		}
+	}
+	for(i=1; i<=n; ++i){
+		for(k=0; k<=i; ++k){
+			cout<<dp[i][k]<<" ";
+		}
+		cout<<endl;
+	}
+	return dp[n][m];
+}
+*/
+int main(void)
+{
+	cin>>n>>m;
+	solve();
+	cout<<solve();
+	return 0;
+}
