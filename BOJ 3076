@@ -1,0 +1,43 @@
+#include<iostream>
+
+using namespace std;
+
+int numofcoin, goal;
+int coins[21];
+int dp[100001];
+
+void coin_clear(){
+	int k;
+	for(k=0; k<=goal; ++k){
+		dp[k] = 0;
+	}
+	dp[0] = 1;
+}
+
+int solve(){
+	int i,k, nowcoin;
+	coin_clear();
+	for(i=0; i<numofcoin; ++i){
+		nowcoin = coins[i];
+		for(k=nowcoin; k<=goal; ++k){
+			dp[k] = dp[k]+dp[k-nowcoin];
+		}
+	}
+	return dp[goal];
+	
+}
+
+int main(void)
+{
+	int testcase, t,i;
+	cin>>testcase;
+	for(t=0; t<testcase; ++t){
+		cin>>numofcoin;
+		for(i=0; i<numofcoin; ++i){
+			cin>>coins[i];
+		}
+		cin>>goal;
+		cout<<solve()<<"\n";	
+	}	
+	return 0;
+}
