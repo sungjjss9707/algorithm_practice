@@ -1,0 +1,62 @@
+#include<iostream>
+#include<queue>
+using namespace std;
+
+struct triple{
+	int hwa, clip, hwetsu;
+};
+
+int goal;
+bool visit[50000][1001];
+
+
+void visit_clear(){
+	int i,k;
+	for(i=0; i<50000; ++i){
+		for(k=0; k<1001; ++k){
+			visit[i][k] = false;
+		}
+	}
+}
+
+int solve(){	
+	queue<triple> q;
+	visit_clear();
+	q.push({1,0,0});
+	visit[1][0] = true;
+	int nowhwa, nowclip,nowhwetsu, nexthwa, nextclip, dap;
+	while(!q.empty()){
+		nowhwa = q.front().hwa;
+		nowclip = q.front().clip;
+		nowhwetsu = q.front().hwetsu;
+		q.pop();
+		if(nowhwa==goal){
+			dap = nowhwetsu;
+			break;
+		}
+		if(!visit[nowhwa][nowhwa]){	//지금 화면을 클립보드로 복사  
+			visit[nowhwa][nowhwa] = true;
+			q.push({nowhwa, nowhwa, nowhwetsu+1});
+		}
+		if(nowclip!=0){
+			if(!visit[nowhwa+nowclip][nowclip]){	//지금 화면을 클립보드로 복사 클립보드 삭제된다고 가정 
+				visit[nowhwa+nowclip][nowclip] = true;
+				q.push({nowhwa+nowclip, nowclip, nowhwetsu+1});
+			}
+		}
+		if(nowhwa>0){
+			if(!visit[nowhwa-1][nowclip]){	//지금 화면을 클립보드로 복사 클립보드 삭제된다고 가정 
+				visit[nowhwa-1][nowclip] = true;
+				q.push({nowhwa-1, nowclip, nowhwetsu+1});
+			}
+		} 
+	}
+	return dap;
+}
+
+int main(void)
+{
+	cin>>goal;
+	cout<<solve();
+	return 0;
+}
