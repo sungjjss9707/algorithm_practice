@@ -1,0 +1,180 @@
+#include<iostream>
+#include<map>
+#include<vector>
+#include<algorithm>
+using namespace std;
+
+int arr[101][101];
+int goal_y, goal_x, goal;
+int sero, garo;
+
+bool compare(pair<int, int> p1, pair<int, int> p2){
+	if(p1.second==p2.second){
+		return p1.first<p2.first;
+	}
+	return p1.second<p2.second;
+}
+
+void garo_sort(){
+	int i,k, num, getsu, index, end, maximum_garo = -1, size;
+	map<int, int> m;
+	map<int, int>:: iterator iter;
+	vector<pair<int, int>> v;
+	int len[101];
+	//cout<<sero<<" "<<garo<<endl;
+	for(i=1; i<=sero; ++i){
+		m.clear();
+		v.clear();
+		//cout<<"ssiball  "; 
+		for(k=1; k<=garo; ++k){
+			//cout<<arr[i][k]<<" ";
+			if(arr[i][k]==0) continue;
+			else{
+				if(m.count(arr[i][k])==0){
+					//cout<<arr[i][k]<<" 가 없어서 추가함\n";
+					m.insert({arr[i][k], 1});
+				}
+				else{
+					//cout<<arr[i][k]<<" 가 있어서 1 추가함\n";
+					m[arr[i][k]]++;
+				}
+			}
+		}
+		for(iter = m.begin(); iter!=m.end(); ++iter){
+			num = iter->first;
+			getsu = iter->second;
+			//cout<<num<<" "<<getsu<<endl;
+			v.push_back({num, getsu});
+		}
+		sort(v.begin(), v.end(), compare);
+		index=1;
+		size = v.size();
+		end = min(size, 50);
+		for(k=0; k<end; ++k){
+			//cout<<num<<" : "<<getsu<<endl;
+			num = v[k].first;
+			getsu = v[k].second;
+			arr[i][index++] = num;
+			arr[i][index++] = getsu;
+		}
+		len[i] = index-1;
+		maximum_garo = max(len[i], maximum_garo);
+	}
+	for(i=1; i<=sero; ++i){
+		if(len[i]<maximum_garo){
+			for(k=len[i]+1; k<=maximum_garo; ++k){
+				arr[i][k] = 0;
+			}
+		}
+	}
+	garo = maximum_garo;
+}
+
+void sero_sort(){
+	int i,k, num, getsu, index, end, maximum_sero = -1, size;
+	map<int, int> m;
+	map<int, int>:: iterator iter;
+	vector<pair<int, int>> v;
+	int len[101];
+	//cout<<sero<<" "<<garo<<endl;
+	for(k=1; k<=garo; ++k){
+		m.clear();
+		v.clear();
+		//cout<<"ssiball  "; 
+		for(i=1; i<=sero; ++i){
+			//cout<<arr[i][k]<<" ";
+			if(arr[i][k]==0) continue;
+			else{
+				if(m.count(arr[i][k])==0){
+					//cout<<arr[i][k]<<" 가 없어서 추가함\n";
+					m.insert({arr[i][k], 1});
+				}
+				else{
+					//cout<<arr[i][k]<<" 가 있어서 1 추가함\n";
+					m[arr[i][k]]++;
+				}
+			}
+		}
+		for(iter = m.begin(); iter!=m.end(); ++iter){
+			num = iter->first;
+			getsu = iter->second;
+			//cout<<num<<" "<<getsu<<endl;
+			v.push_back({num, getsu});
+		}
+		sort(v.begin(), v.end(), compare);
+		index=1;
+		size = v.size();
+		end = min(size, 50);
+		for(i=0; i<end; ++i){
+			//cout<<num<<" : "<<getsu<<endl;
+			num = v[i].first;
+			getsu = v[i].second;
+			arr[index++][k] = num;
+			arr[index++][k] = getsu;
+		}
+		len[k] = index-1;
+		maximum_sero = max(len[k], maximum_sero);
+	}
+	for(k=1; k<=garo; ++k){
+		if(len[k]<maximum_sero){
+			for(i=len[k]+1; i<=maximum_sero; ++i){
+				arr[i][k] = 0;
+			}
+		}
+	}
+	sero = maximum_sero;
+}
+
+void print_arr(){
+	//cout<<"print";
+	//cout<<"garo"<<" : "<<garo<<endl;
+	
+	int i,k;
+	for(i=1; i<=sero; ++i){
+		for(k=1; k<=garo; ++k){
+			cout<<arr[i][k]<<" ";
+		}
+		cout<<endl;
+	}
+	cout<<endl;
+}
+
+int solve(){
+	int time=0;
+	sero = 3, garo = 3;
+	//cout<<endl;
+	//print_arr();
+	while(time<=100){
+		if(arr[goal_y][goal_x]==goal) return time;
+		//cout<<"가로 : 세로 => "<<garo<<" : "<<sero<<"\n";
+		//sero_sort();
+		//print_arr();
+		
+		if(sero>=garo){	//행에대해서 정렬 
+			//cout<<"가로연산: \n";
+			garo_sort();
+		}
+		else{			//열에대해서 정렬 
+			//cout<<"세로연산: \n"; 
+			sero_sort();
+		}
+		//cout<<"가로 : 세로 => "<<garo<<" : "<<sero<<"\n";
+		//print_arr();
+		
+		time++;
+	}
+	return -1;
+}
+
+int main(void)
+{
+	cin>>goal_y>>goal_x>>goal;
+	int i,k;
+	for(i=1; i<=3; ++i){
+		for(k=1; k<=3; ++k){
+			cin>>arr[i][k];
+		}
+	}
+	cout<<solve();
+	return 0;
+}
