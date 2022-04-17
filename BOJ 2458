@@ -1,0 +1,80 @@
+#include<iostream>
+#include<vector>
+using namespace std;
+
+struct family{
+	vector<int> parents;
+	vector<int> children;
+};
+
+int numofstud,numofcompare;
+bool visit[501];
+family arr[501];
+vector<pair<int, int>> compare_v;
+
+void visit_clear(){
+	int i;
+	for(i=1; i<=numofstud; ++i){
+		visit[i]=false;
+	}
+}
+
+int get_p(int nowv){
+	visit[nowv] = true;
+	//cout<<nowv<<" ";
+	int i, parent, ret=1;
+	for(i=0; i<arr[nowv].parents.size(); ++i){
+		parent = arr[nowv].parents[i];
+		if(!visit[parent]){
+			ret+=get_p(parent);
+		}
+	}
+	return ret;
+}
+
+int get_c(int nowv){
+	visit[nowv] = true;
+	//cout<<nowv<<" ";
+	int i, child, ret=1;
+	for(i=0; i<arr[nowv].children.size(); ++i){
+		child = arr[nowv].children[i];
+		if(!visit[child]){
+			ret+=get_c(child);
+		}
+	}
+	return ret;
+}
+
+int solve(){
+	int i, smaller, bigger, numofparents,numofchildren, dap=0;
+	for(i=0; i<numofcompare; ++i){
+		smaller = compare_v[i].first;
+		bigger = compare_v[i].second;
+		arr[smaller].parents.push_back(bigger);
+		arr[bigger].children.push_back(smaller);	
+	}
+	for(i=1; i<=numofstud; ++i){
+		visit_clear();
+		numofparents = get_p(i)-1;
+		//cout<<endl;
+		visit[i] = false;
+		numofchildren = get_c(i)-1;
+		//exit(0);
+		//cout<<i<<" : "<<numofparents<<" "<<numofchildren<<endl;
+		
+		if(numofparents+numofchildren+1==numofstud) dap++;
+	}
+	return dap;
+}
+
+int main(void)
+{
+	int i, smaller, bigger;
+	cin>>numofstud>>numofcompare;
+	for(i=0; i<numofcompare; ++i){
+		cin>>smaller>>bigger;
+		compare_v.push_back({smaller, bigger});
+	}
+	cout<<solve();
+	return 0;
+}
