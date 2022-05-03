@@ -1,0 +1,58 @@
+#include<iostream>
+#include<vector>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+int numofpeople, numofrel;
+vector<int> v[2001];
+bool visit[2001];
+
+void visit_clear(){
+	int i;
+	for(i=0; i<numofpeople; ++i){
+		visit[i] = false;
+	}
+}
+
+bool brute_force(int node, int num){
+	if(num==5) return true;
+	int i, nextnode;
+	for(i=0; i<v[node].size(); ++i){
+		nextnode = v[node][i];
+		if(!visit[nextnode]){
+			visit[nextnode] = true;
+			if(brute_force(nextnode, num+1)) return true;
+			visit[nextnode] = false; 
+		}
+	}
+	return false;
+}
+
+bool five_chain(){
+	int i;
+	for(i=0; i<numofpeople; ++i){
+		visit_clear();
+		visit[i] = true;
+		if(brute_force(i, 1)) return true;
+	}
+	return false;
+}
+
+int solve(){
+	if(five_chain()) return 1;
+	else return 0;
+}
+
+int main(void)
+{
+	fastio;
+	cin>>numofpeople>>numofrel;
+	int i,a,b;
+	for(i=0; i<numofrel; ++i){
+		cin>>a>>b;
+		v[a].push_back(b);
+		v[b].push_back(a);
+	}
+	cout<<solve();
+	return 0;
+}
