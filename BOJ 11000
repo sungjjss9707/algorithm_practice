@@ -1,0 +1,54 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#include<queue>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+////////////////////
+struct pair_second_increase{
+	bool operator()(pair<int, int> p1, pair<int, int> p2){
+		return p1.second>p2.second;
+	}
+};
+///////////////////
+vector<pair<int, int>> lec;
+
+int numoflec;
+
+bool compare(pair<int, int> p1, pair<int, int> p2){
+	if(p1.first==p2.first) return p1.second<p2.second;
+	return p1.first<p2.first;
+}
+
+int solve(){
+	if(numoflec==1) return 1;
+	sort(lec.begin(), lec.end(), compare);
+	priority_queue<pair<int, int>, vector<pair<int, int>>, pair_second_increase> pq;
+	int i, start_time, fast_end_time;
+	pq.push({lec[0].first, lec[0].second});
+	for(i=1; i<lec.size(); ++i){
+		start_time = lec[i].first;
+		fast_end_time = pq.top().second;
+		if(start_time>=fast_end_time){
+			pq.pop();
+			pq.push({lec[i].first, lec[i].second});
+		}
+		else{
+			pq.push({lec[i].first, lec[i].second});
+		}
+	}
+	return pq.size();
+}
+
+int main(void)
+{
+	fastio;
+	cin>>numoflec;
+	int i,s,e;
+	for(i=0; i<numoflec; ++i){
+		cin>>s>>e;
+		lec.push_back({s,e});
+	}
+	cout<<solve();
+	return 0;
+}
