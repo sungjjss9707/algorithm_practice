@@ -1,0 +1,67 @@
+#include<iostream>
+#include<vector>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+int numoftask;
+int time[10001];
+vector<int> child[10001];
+vector<int> head;
+int dp[10001];
+
+void dp_clear(){
+	int i;
+	for(i=1; i<=numoftask; ++i){
+		dp[i] = -1;
+	}
+}
+
+int get_choiso_time(int now){
+	int ret = dp[now];
+	if(ret!=-1) return ret;
+	int i, mychild, maximum=0;
+	for(i=0; i<child[now].size(); ++i){
+		mychild = child[now][i];
+		maximum = max(maximum, get_choiso_time(mychild));
+	}
+	ret = maximum+time[now];
+	dp[now] = ret;
+	return ret;
+}
+
+int solve(){
+	dp_clear();
+	int dap,i, maximum = -1, myhead;
+	for(i=0; i<head.size(); ++i){
+		myhead = head[i];
+		maximum = max(maximum, get_choiso_time(myhead));
+	}
+	return maximum;
+}
+
+int main(void)
+{
+	fastio;
+	cin>>numoftask;
+	int i,k, numofparents, parent;
+	for(i=1; i<=numoftask; ++i){
+		cin>>time[i];
+		cin>>numofparents;
+		if(numofparents==0) head.push_back(i);
+		for(k=0; k<numofparents; ++k){
+			cin>>parent;
+			child[parent].push_back(i);
+		}
+	}
+	/*
+	for(i=1; i<=numoftask; ++i){
+		cout<<i<<" : "; 
+		for(k=0; k<child[i].size(); ++k){
+			cout<<child[i][k]<<" ";
+		}
+		cout<<endl;
+	}
+	*/
+	cout<<solve();
+	return 0;
+} 
