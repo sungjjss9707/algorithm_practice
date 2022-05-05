@@ -1,0 +1,82 @@
+#include<iostream>
+#include<queue>
+#include<vector>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+int numofsinger, numofpd;
+int indegree[1001];
+vector<int> child[1001];
+
+void indegree_clear(){
+	int i;
+	for(i=1; i<=numofsinger; ++i){
+		indegree[i] = 0;
+	}
+}
+
+void solve(){
+	int i, now, mychild;
+	queue<int> q;
+	vector<int> v;
+	for(i=1; i<=numofsinger; ++i){
+		if(indegree[i]==0) q.push(i);
+	}
+	while(!q.empty()){
+		now = q.front();
+		q.pop();
+		v.push_back(now);
+		for(i=0; i<child[now].size(); ++i){
+			mychild = child[now][i];
+			indegree[mychild]--;
+			if(indegree[mychild]==0){
+				q.push(mychild);
+			}
+		}
+	}
+	if(v.size()!=numofsinger){
+		cout<<0;
+		return;
+	}
+	for(i=0; i<v.size(); ++i){
+		cout<<v[i]<<"\n";
+	}
+}
+
+int main(void)
+{
+	fastio;
+	cin>>numofsinger>>numofpd;
+	int i,k, num, singer, yeejeon;
+	indegree_clear();
+	for(i=0; i<numofpd; ++i){
+		cin>>num;
+		for(k=0; k<num; ++k){
+			cin>>singer;
+			if(k!=0){
+				indegree[singer]++;
+				child[yeejeon].push_back(singer);
+			}
+			yeejeon = singer;
+		}
+	}
+	/*
+	for(i=1; i<=numofsinger; ++i){
+		cout<<i<<" ";
+	}
+	cout<<endl;
+	for(i=1; i<=numofsinger; ++i){
+		cout<<indegree[i]<<" ";
+	}
+	cout<<endl;
+	for(i=1; i<=numofsinger; ++i){
+		cout<<i<<" : ";
+		for(k=0; k<child[i].size(); ++k){
+			cout<<child[i][k]<<" ";
+		}
+		cout<<endl;
+	}
+	*/
+	solve();
+	return 0;
+}
