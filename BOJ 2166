@@ -1,0 +1,38 @@
+#include<iostream>
+#include<vector>
+#include<math.h>
+using namespace std;
+
+long long numofdot;
+vector<pair<long long, long long>> v;
+
+double solve(){
+	long long front=0, back=0;
+	int i;
+	double dap;
+	for(i=0; i<v.size()-1; ++i){
+		front+=(v[i].first*v[i+1].second);
+	}
+	for(i=0; i<v.size()-1; ++i){
+		back+=(v[i].second*v[i+1].first);
+	}
+	dap = ((double)(abs(front-back)))/2.0;
+	//dap = 0.0;
+	return dap;
+}
+
+int main(void)
+{
+	cout<<fixed;
+	cout.precision(1);
+	cin>>numofdot;
+	int i;
+	long long x,y;
+	for(i=0; i<numofdot; ++i){
+		cin>>x>>y;
+		v.push_back({x,y});
+	}
+	v.push_back({v[0].first, v[0].second});
+	cout<<solve();
+	return 0;
+}
