@@ -1,0 +1,51 @@
+#include<iostream>
+#include<string>
+#include<queue>
+using namespace std;
+
+int jaritsu;
+
+bool panstar(string str){
+	if(str.length()==1) return true;
+	int i,j,k, ban = str.length()/2;
+	if(str.length()%2==1){
+		ban++;
+	}
+	int left_start, right_start, len;
+	for(i=str.length()-1; i>=ban; --i){
+		right_start = i;
+		len = str.length()-1-right_start;
+		left_start = right_start-1-len;
+		for(k=0; k<=len; ++k){
+			if(str[right_start]!=str[left_start]){
+				break;
+			}
+			right_start++;
+			left_start++;
+		}
+		if(k==len+1) return false;
+	}
+	return true;
+}
+
+void backtracking(string num){
+	if(num.length()==jaritsu){
+		cout<<num;
+		exit(0);
+	}
+	int k;
+	char c;
+	for(k=1; k<=3; ++k){
+		c = (char)(k+'0');
+		num.push_back(c);
+		if(panstar(num)) backtracking(num);
+		num.pop_back();
+	}
+}
+
+int main(void)
+{
+	cin>>jaritsu;
+	backtracking("");
+	return 0;
+}
