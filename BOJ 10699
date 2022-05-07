@@ -1,0 +1,30 @@
+#include<iostream>
+#define _CRT_SECURE_NO_WARNINGS
+#include<time.h>
+using namespace std;
+
+int main(void)
+{
+	struct tm* t;
+	time_t timer;
+	timer = time(NULL);
+	t = localtime(&timer);
+	int mon = t->tm_mon+1;
+	int day = t->tm_mday;
+	if(mon)
+	cout<<t->tm_year+1900<<"-";
+	if(mon<10){
+		cout<<0<<mon;	
+	}
+	else{
+		cout<<mon;
+	}
+	cout<<"-";
+	if(day<10){
+		cout<<0<<day;	
+	}
+	else{
+		cout<<day;
+	}
+	return 0;
+}
