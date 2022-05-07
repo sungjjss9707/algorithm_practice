@@ -1,0 +1,119 @@
+#include<iostream>
+#include<vector>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+int numofver,numofedge, numofworm;
+int arr[501][501];
+int dist[501];
+vector<pair<pair<int, int>, int>> edge;
+
+void arr_clear(){
+	int i,k;
+	for(i=1; i<=numofver; ++i){
+		for(k=1; k<=numofver; ++k){
+			arr[i][k] = 2000000000;
+		}
+	}
+}
+
+void print_arr(){
+	int i,k;
+	cout<<endl;
+	for(i=1; i<=numofver; ++i){
+		for(k=1; k<=numofver; ++k){
+			cout<<arr[i][k]<<" ";
+		}
+		cout<<endl;
+	}
+	cout<<endl;
+}
+
+void fill_edge(){
+	edge.clear();
+	int i,k;
+	for(i=1; i<=numofver; ++i){
+		for(k=1; k<=numofver; ++k){
+			if(arr[i][k]!=2000000000) edge.push_back({{i,k},arr[i][k]});
+		}
+	}
+}
+
+void dist_clear(){
+	int i;
+	for(i=1; i<=numofver; ++i){
+		dist[i] = 2000000000;
+	}
+}
+
+void print_dist(){
+	int i;
+	for(i=1; i<=numofver; ++i){
+		cout<<dist[i]<<" ";
+	}
+	cout<<endl;
+}
+
+void solve(){
+	
+	int i,j,k, start_v, s,e,g;
+	fill_edge();
+	for(i=1; i<=numofver; ++i){
+		start_v = i;
+		dist_clear();
+		dist[start_v] = 0;
+		for(j=0; j<numofver-1; ++j){
+			for(k=0; k<edge.size(); ++k){	//정점의수-1 만큼 해란다  
+				s = edge[k].first.first;
+				e = edge[k].first.second;
+				g = edge[k].second;
+				if(dist[s]+g<dist[e]) dist[e] = dist[s]+g;
+				if(dist[start_v]<0){
+					cout<<"YES";
+					return;
+				}
+			}
+			//print_dist();
+		}
+		//cout<<"\n----\n";
+		for(k=0; k<edge.size(); ++k){	//한번더 해란다.  
+			s = edge[k].first.first;
+			e = edge[k].first.second;
+			g = edge[k].second;
+			if(dist[s]+g<dist[e]){	//한번더했는데 또 줄어들면 사이클 존재한다는 말임 
+				//print_dist();
+				//cout<<start_v<<"시작일떄 : \n";
+				cout<<"YES";
+				return;	
+			}
+		}
+		cout<<"NO";
+		return;
+	}
+	cout<<"NO";
+}
+
+int main(void)
+{
+	fastio;
+	int testcase,t,i,s,e,g;
+	cin>>testcase;
+	for(t=0; t<testcase; ++t){
+		cin>>numofver>>numofedge>>numofworm;
+		arr_clear();
+		for(i=0; i<numofedge; ++i){
+			cin>>s>>e>>g;
+			arr[s][e] = min(arr[s][e], g);
+			arr[e][s] = min(arr[e][s], g);
+		}
+		for(i=0; i<numofworm; ++i){
+			cin>>s>>e>>g;
+			g=0-g;
+			arr[s][e] = min(arr[s][e], g);
+		}
+		//print_arr();
+		solve();
+		cout<<"\n";
+	}
+	return 0;
+}
