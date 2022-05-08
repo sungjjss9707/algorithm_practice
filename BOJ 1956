@@ -1,0 +1,56 @@
+#include<iostream>
+#include<vector>
+using namespace std;
+
+int numofver, numofedge;
+int v[401][401];
+int inf = 2000000000;
+
+void v_clear(){
+	int i,k;
+	for(i=1; i<=numofver; ++i){
+		for(k=1; k<=numofver; ++k){
+			v[i][k] = inf;
+		}
+	}
+}
+
+int solve(){
+	
+	int i,j,k;
+	for(i=1; i<=numofver; ++i){
+		for(j=1; j<=numofver; ++j){
+			for(k=1; k<=numofver;++k){	//j->k를 가는데 i를 거쳐서 감 
+				if(v[j][i]==inf||v[i][k]==inf) continue; 
+				if(v[j][k]>v[j][i]+v[i][k]){
+					v[j][k]=v[j][i]+v[i][k];
+				}
+			}
+		}
+	}
+	int minimum = inf;
+	for(i=1; i<=numofver; ++i){
+		for(j=1; j<=numofver; ++j){	//i에서 j들렀다 i갈건데 그 가중치가 inf가아니면
+									//사이클이 있다는 뜻임 
+			if(v[i][j]==inf||v[j][i]==inf) continue;
+			minimum = min(minimum, v[i][j]+v[j][i]);
+		}
+	}
+	if(minimum==inf) return -1;
+	return minimum;
+}
+
+
+
+int main(void)
+{
+	cin>>numofver>>numofedge;
+	int i,s,e,g;
+	v_clear();
+	for(i=0; i<numofedge; ++i){
+		cin>>s>>e>>g;
+		v[s][e] = g;
+	}
+	cout<<solve();
+	return 0;
+}
