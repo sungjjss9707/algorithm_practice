@@ -1,0 +1,80 @@
+#include<iostream>
+
+using namespace std;
+
+int num;
+int arr[101];
+bool visit[101];
+bool dap[101];
+/*
+bool panstar(int start, int now){
+	if(visit[now]){
+		if(now==start) return true;
+		return false;
+	}
+	visit[now] = true;
+	return panstar(start, arr[now]);
+}
+*/
+void visit_clear(){
+	int i;
+	for(i=1; i<=num; ++i){
+		visit[i] = false;
+	}
+}
+
+void dap_clear(){
+	int i;
+	for(i=1; i<=num; ++i){
+		dap[i] = false;
+	}
+}
+
+void solve(){
+	int i,k, getsu=0, now,start;
+	bool flag;
+	dap_clear();
+	for(i=1; i<=num; ++i){
+		visit_clear();
+		start = i;
+		visit[start] = true;
+		now = arr[start];
+		while(1){
+			if(visit[now]){
+				if(now==start){
+					flag = true;
+				}
+				else{
+					flag = false;
+				}
+				break;
+			}
+			visit[now] = true;
+			now = arr[now];
+			
+		}
+		if(flag){
+			for(k=1; k<=num; ++k){
+				if(visit[k]) dap[k] = true;
+			}
+		}
+	}
+	for(i=1; i<=num; ++i){
+		if(dap[i]) getsu++;
+	}
+	cout<<getsu<<"\n";
+	for(i=1; i<=num; ++i){
+		if(dap[i]) cout<<i<<"\n";
+	}
+}
+
+int main(void)
+{
+	cin>>num;
+	int i;
+	for(i=1; i<=num; ++i){
+		cin>>arr[i];
+	}
+	solve();
+	return 0;
+} 
