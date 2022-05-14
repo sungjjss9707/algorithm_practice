@@ -1,0 +1,74 @@
+#include<iostream>
+#include<queue>
+using namespace std;
+
+struct triple{
+	int y, x, time,flag;	//flag 가 0이면 사람, 1이면 불   
+};
+
+char miro[1001][1001];
+int dy[4] = {1,0,-1,0};
+int dx[4] = {0,1,0,-1};
+int sero, garo;
+
+queue<triple> q;
+
+void solve(){
+	int i,k;
+	for(i=1; i<=sero; ++i){
+		for(k=1; k<=garo; ++k){
+			if(miro[i][k]=='J') q.push({i,k,0,0});
+		}
+	}
+	int nowy, nowx, nowtime, jorf, nexty, nextx;
+	while(!q.empty()){
+		nowy = q.front().y;
+		nowx = q.front().x;
+		nowtime = q.front().time;
+		jorf = q.front().flag;
+		q.pop();
+		if(jorf==0){	//사람일떄
+		 	if(nowy==1||nowy==sero||nowx==1||nowx==garo){
+				cout<<nowtime+1;
+				return;
+			}
+			for(i=0; i<4; ++i){
+				nexty = nowy+dy[i];
+				nextx = nowx+dx[i];
+				if(nexty>=1&&nexty<=sero&&nextx>=1&&nextx<=garo){
+					if(miro[nexty][nextx]=='.'){
+						miro[nexty][nextx]='J';
+						q.push({nexty, nextx, nowtime+1, jorf});
+					}
+				}
+			}
+		}
+		else{			//불일때 
+			for(i=0; i<4; ++i){
+				nexty = nowy+dy[i];
+				nextx = nowx+dx[i];
+				if(nexty>=1&&nexty<=sero&&nextx>=1&&nextx<=garo){
+					if(miro[nexty][nextx]=='.'||miro[nexty][nextx]=='J'){
+						miro[nexty][nextx]='F';
+						q.push({nexty, nextx, nowtime+1, jorf});
+					}
+				}
+			}
+		}
+	} 
+	cout<<"IMPOSSIBLE";
+}
+
+int main(void)
+{
+	cin>>sero>>garo;
+	int i,k;
+	for(i=1; i<=sero; ++i){
+		for(k=1; k<=garo; ++k){
+			cin>>miro[i][k];
+			if(miro[i][k]=='F') q.push({i,k,0,1});
+		}
+	}
+	solve();
+	return 0;
+}
