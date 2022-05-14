@@ -1,0 +1,57 @@
+#include<iostream>
+#include<string>
+#include<vector>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+vector<int> sosu;
+bool check[1000001];
+bool isthissosu[1000001];
+
+void solve(int num){
+	int index = 0, mysosu;
+	string ret;
+	while(1){
+		mysosu = sosu[index];
+		if(mysosu>num/2) break;
+		if(isthissosu[num-mysosu]){
+			cout<<num<<" = "<<mysosu<<" + "<<num-mysosu;
+			return;
+		}
+		index++;
+	}	
+	cout<< "Goldbach's conjecture is wrong.";
+}
+
+void fill_sosu(){
+	int i,k;	
+	for(i=2; i<=1000000; ++i){
+		check[i] = false;
+		isthissosu[i] = false;
+	}
+	for(i=2; i<=1000000; ++i){
+		if(!check[i]){
+			sosu.push_back(i);
+			for(k=i; k<=1000000; k=k+i){
+				check[k] = true;
+			}
+		}
+	}
+	for(i=0; i<sosu.size(); ++i){
+		isthissosu[sosu[i]] = true;
+	}
+}
+
+int main(void)
+{
+	fastio;
+	int num;
+	fill_sosu();
+	while(1){
+		cin>>num;
+		if(num==0) break;
+		solve(num);
+		cout<<"\n";
+	}
+	return 0;
+}
