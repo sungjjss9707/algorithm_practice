@@ -1,0 +1,46 @@
+#include<iostream>
+
+using namespace std;
+
+long long dp[100001][4];
+long long mod = 1000000009;
+
+void dp_clear(){
+	int i,k;
+	for(i=0; i<=100000; ++i){
+		for(k=0; k<=3; ++k){
+			dp[i][k] = -1;	
+		}
+	}
+}
+
+long long solve(long long num, long long yeejeon){
+	if(num==0) return 1;
+	if(num<0) return 0;
+	long long ret = dp[num][yeejeon];
+	if(ret!=-1) return ret;
+	if(yeejeon==1){
+		ret = (solve(num-2, 2)%mod+solve(num-3, 3)%mod)%mod;
+	}
+	else if(yeejeon==2){
+		ret = (solve(num-1, 1)%mod+solve(num-3, 3)%mod)%mod;
+	}
+	else{
+		ret = (solve(num-1, 1)%mod+solve(num-2, 2)%mod)%mod;
+	}
+	dp[num][yeejeon] = ret;
+	return ret;
+}
+
+int main(void)
+{
+	int testcase, t;
+	long long num;
+	cin>>testcase;
+	dp_clear();
+	for(t=0; t<testcase; ++t){
+		cin>>num;
+		cout<<(solve(num-1,1)%mod+solve(num-2,2)%mod+solve(num-3,3)%mod)%mod<<"\n";
+	}
+	return 0;
+}
