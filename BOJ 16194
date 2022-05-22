@@ -1,0 +1,35 @@
+#include<iostream>
+
+using namespace std;
+
+int numofcard;
+int price[1001];
+int dp[1001];
+
+int solve(){
+	int i,k, smallest;
+	dp[1] = price[1];
+	if(numofcard==1){
+		return price[1];
+	}
+	for(i=2; i<=numofcard; ++i){
+		smallest = 2100000000;
+		for(k=1; k<=i-1; ++k){
+			smallest = min(smallest, dp[k]+dp[i-k]);
+		}
+		smallest = min(smallest, price[i]);
+		dp[i] = smallest;
+	}
+	return dp[numofcard];
+}
+
+int main(void)
+{
+	cin>>numofcard;
+	int i;
+	for(i=1; i<=numofcard; ++i){
+		cin>>price[i];
+	}
+	cout<<solve();
+	return 0;
+}
