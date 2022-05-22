@@ -1,0 +1,56 @@
+#include<iostream>
+#include<vector>
+using namespace std;
+
+int number;
+int check[50001];
+vector<int> one;
+vector<int> two;
+vector<int> three;
+
+void init(){
+	int i,k, jegop, num;
+	for(i=1; i<=50000; ++i){
+		check[i] = -1;
+	}
+	
+	for(i=1; ; ++i){
+		jegop = i*i;
+		if(jegop>50000) break;
+		check[jegop] = 1;
+		one.push_back(jegop);
+	}
+	for(i=0; i<one.size(); ++i){
+		for(k=0; k<one.size(); ++k){
+			num = one[i]+one[k];
+			if(num>50000) continue;
+			if(check[num]!=-1) continue;
+			check[num] = 2;
+			two.push_back(num);
+		}
+	}
+	for(i=0; i<one.size(); ++i){
+		for(k=0; k<two.size(); ++k){
+			num = one[i]+two[k];
+			if(num>50000) continue;
+			if(check[num]!=-1) continue;
+			check[num] = 3;
+			three.push_back(num);
+		}
+	}
+	for(i=1; i<=50000; ++i){
+		if(check[i]==-1) check[i] = 4;
+	}
+}
+
+int solve(){
+	init();
+	return check[number];
+}
+
+int main(void)
+{
+	cin>>number;
+	cout<<solve();
+	return 0;
+}
