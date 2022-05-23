@@ -1,0 +1,62 @@
+#include<iostream>
+
+using namespace std;
+
+int numofsit, numofvip;
+
+bool vip[41];
+int dp[41];
+
+void vip_clear(){
+	int i;
+	for(i=1; i<=numofsit; ++i){
+		vip[i] = false;
+	}
+}
+
+int dp_solve(int now){
+	int ret = dp[now];
+	if(ret!=-1) return ret;
+	if(now==1) return 1;
+	if(vip[now]){
+		ret = dp_solve(now-1);
+	}
+	else{
+		if(vip[now-1]){
+			ret = dp_solve(now-1);
+		}
+		else{
+			ret = dp_solve(now-1)+dp_solve(now-2);
+		}
+		
+	}
+	dp[now] = ret;
+	return ret;
+}
+
+void dp_clear(){
+	int i;
+	for(i=1; i<=numofsit; ++i){
+		dp[i] = -1;
+	}
+	dp[0] = 1;
+}
+
+int solve(){
+	dp_clear();
+	int ret = dp_solve(numofsit);
+	return ret;
+}
+
+int main(void)
+{
+	cin>>numofsit>>numofvip;
+	int i, num;
+	vip_clear();
+	for(i=1; i<=numofvip; ++i){
+		cin>>num;
+		vip[num] = true;
+	}
+	cout<<solve();
+	return 0;
+}
