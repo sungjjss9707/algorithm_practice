@@ -1,0 +1,48 @@
+#include<iostream>
+
+using namespace std;
+
+int num;
+int arr[1001];
+int dp[1001];
+int inf = 50000000;
+
+void dp_clear(){
+	int i;
+	for(i=1; i<=num; ++i){
+		dp[i] = -1;
+	}
+}
+
+int dp_solve(int now){
+	if(now==num) return 0;
+	if(now>num) return inf;
+	int ret = dp[now];
+	if(ret!=-1) return ret;
+	int end = min(now+arr[now], num);
+	int i;
+	ret = inf;
+	for(i=now+1; i<=end; ++i){
+		ret = min(dp_solve(i)+1, ret);
+	}
+	dp[now] = ret;
+	return ret;
+}
+
+int solve(){
+	dp_clear();
+	int ret = dp_solve(1);
+	if(ret==inf) ret = -1;
+	return ret;
+}
+
+int main(void)
+{
+	cin>>num;
+	int i;
+	for(i=1; i<=num ;++i){
+		cin>>arr[i];
+	}
+	cout<<solve();
+	return 0;
+}
