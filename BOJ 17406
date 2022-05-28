@@ -1,0 +1,117 @@
+#include<iostream>
+#include<vector>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+struct tri{
+	int y,x,len;
+};
+
+int sero, garo, query;
+int arr[51][51];
+int origin_arr[51][51];
+bool check[6];
+vector<tri> v;
+vector<int> soonseo;
+
+void arr_copy(){
+	int i,k;
+	for(i=1; i<=sero; ++i){
+		for(k=1; k<=garo; ++k){
+			arr[i][k]=origin_arr[i][k];
+		}
+	}
+}
+
+int value_of_matrix(){
+	arr_copy();
+	int i, index,sy, sx, ey, ex,k, init_num;
+	for(i=0; i<query; ++i){
+		index = soonseo[i];
+		sy = v[index].y-v[index].len;
+		sx = v[index].x-v[index].len;
+		ey = v[index].y+v[index].len;
+		ex = v[index].x+v[index].len;
+		//cout<<sy<<","<<sx<<" ~ "<<ey<<","<<ex<<endl;
+		while(1){
+			if(sy==ey&&sx==ex) break;
+			init_num = arr[sy][sx];
+			for(k=sy; k<ey; ++k){
+				arr[k][sx] = arr[k+1][sx];
+			}
+			for(k=sx; k<ex; ++k){
+				arr[ey][k] = arr[ey][k+1];
+			}
+			for(k=ey; k>sy; --k){
+				arr[k][ex] = arr[k-1][ex];
+			}
+			for(k=ex; k>sx; --k){
+				arr[sy][k] = arr[sy][k-1];
+			}
+			arr[sy][sx+1] = init_num;
+			sy++;
+			sx++;
+			ey--;
+			ex--;
+		}
+	}
+	int minimum = 2100000000;
+	int hap;
+	for(i=1; i<=sero; ++i){
+		hap=0;
+		for(k=1; k<=garo; ++k){
+			hap+=arr[i][k];
+		}
+		minimum = min(minimum, hap);
+	}
+	return minimum;
+}
+
+int brute_force(int count){
+	if(count==query){
+		int dap=value_of_matrix();
+		return dap;
+	}
+	int i, ret = 2100000000;
+	for(i=0; i<query; ++i){
+		if(!check[i]){
+			check[i] = true;
+			soonseo.push_back(i);
+			ret = min(ret, brute_force(count+1));
+			check[i] = false;
+			soonseo.pop_back();
+		}
+	}
+	return ret;
+}
+
+void check_clear(){
+	int i;
+	for(i=0; i<query; ++i){
+		check[i] = false;
+	}
+}
+
+int solve(){
+	check_clear();
+	int ret = brute_force(0);
+	return ret;
+}
+
+int main(void)
+{
+	fastio;
+	cin>>sero>>garo>>query;
+	int i,k,a,b,c;
+	for(i=1; i<=sero; ++i){
+		for(k=1; k<=garo; ++k){
+			cin>>origin_arr[i][k];
+		}
+	}
+	for(i=0; i<query; ++i){
+		cin>>a>>b>>c;
+		v.push_back({a,b,c});
+	}
+	cout<<solve();
+	return 0;
+}
