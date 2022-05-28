@@ -1,0 +1,25 @@
+#include<iostream>
+
+using namespace std;
+
+int num;
+long long dp[81];
+
+void init(){
+	int i;
+	dp[1] = 4;
+	dp[2] = 6;
+	dp[3] = 10;
+	dp[4] = 16;
+	for(i=5; i<=80; ++i){
+		dp[i] = dp[i-1]+dp[i-2];
+	}
+}
+
+int main(void)
+{
+	cin>>num;
+	init();
+	cout<<dp[num];
+	return 0;
+}
