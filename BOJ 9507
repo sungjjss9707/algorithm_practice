@@ -1,0 +1,69 @@
+#include<iostream>
+#include<string>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+string dp[10001];
+
+string string_hap(string num1, string num2){	//num2가 더 길어야함 
+	if(num1.length()>num2.length()){
+		string temp = num1;
+		num1 = num2;
+		num2 = temp; 
+	}
+	int i, index1 = num1.length()-1, index2 = num2.length()-1;
+	int hap, oleem=0;
+	while(1){
+		if(index1<0){
+			hap = 0+(int)(num2[index2]-'0')+oleem;
+			oleem = hap/10;
+			hap = hap%10;
+			num2[index2] = (char)(hap+'0'); 
+			index2--;
+		}
+		else{
+			hap = (int)(num1[index1]-'0')+(int)(num2[index2]-'0')+oleem;
+			oleem = hap/10;
+			hap = hap%10;
+			num2[index2] = (char)(hap+'0'); 
+			index1--;
+			index2--;	
+		}
+		if(index2<0){
+			if(oleem!=0){
+				num2 = to_string(oleem)+num2;
+			}
+			break;
+		}
+	}
+	return num2;
+}
+
+void init(){
+	dp[0] = "1";
+	dp[1] = "1";
+	dp[2] = "2";
+	dp[3] = "4";
+	int i;
+	string hap;
+	for(i=4; i<=67; ++i){
+		hap = string_hap(dp[i-1],dp[i-2]);
+		hap = string_hap(hap,dp[i-3]);
+		hap = string_hap(hap,dp[i-4]);
+		dp[i] = hap;
+		//cout<<dp[i]<<" ";
+	}
+}
+
+int main(void)
+{
+	fastio;
+	init();
+	int getsu,num, i;
+	cin>>getsu;
+	for(i=0; i<getsu; ++i){
+		cin>>num;
+		cout<<dp[num]<<"\n";
+	}
+	return 0;
+}
