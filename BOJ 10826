@@ -1,0 +1,57 @@
+#include<iostream>
+#include<string>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+string dp[10001];
+
+string string_hap(string num1, string num2){
+	int i, index1 = num1.length()-1, index2 = num2.length()-1;
+	int hap, oleem=0;
+	while(1){
+		if(index1<0){
+			hap = 0+(int)(num2[index2]-'0')+oleem;
+			oleem = hap/10;
+			hap = hap%10;
+			num2[index2] = (char)(hap+'0'); 
+			index2--;
+		}
+		else{
+			hap = (int)(num1[index1]-'0')+(int)(num2[index2]-'0')+oleem;
+			oleem = hap/10;
+			hap = hap%10;
+			num2[index2] = (char)(hap+'0'); 
+			index1--;
+			index2--;	
+		}
+		if(index2<0){
+			if(oleem!=0){
+				num2 = to_string(oleem)+num2;
+			}
+			break;
+		}
+	}
+	return num2;
+}
+
+string solve(int num){
+	if(num==0) return "0";
+	if(num==1) return "1";
+	dp[0] = "0";
+	dp[1] = "1";
+	int i;
+	for(i=2; i<=num; ++i){
+		dp[i] = string_hap(dp[i-2],dp[i-1]);
+		//cout<<dp[i]<<" ";
+	}
+	return dp[num];
+}
+
+int main(void)
+{
+	fastio;
+	int num;
+	cin>>num;
+	cout<<solve(num);
+	return 0;
+}
