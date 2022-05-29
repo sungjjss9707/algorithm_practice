@@ -1,0 +1,89 @@
+#include<iostream>
+
+using namespace std;
+
+int numofhouse;
+int inf = 200000000;
+int red[1001];
+int green[1001];
+int blue[1001];
+int dp[1001][3][3];
+
+int choose_RGB(int house, int color, int init){
+	//cout<<house<<" "<<color<<endl;
+	int ret = dp[house][color][init];
+	if(ret!=-1) return ret;
+	if(house == numofhouse){
+		if(color==init) return inf;
+		else{
+			if(color==0){
+				ret = red[house];
+			}
+			else if(color==1){
+				ret = green[house];
+			}
+			else{
+				ret = blue[house];
+			}
+		}	
+	}
+	else{
+		if(color==0){
+			ret = min(choose_RGB(house+1, 1, init), choose_RGB(house+1, 2, init));
+		}
+		else if(color==1){
+			ret = min(choose_RGB(house+1, 0, init), choose_RGB(house+1, 2, init));
+		}
+		else{
+			ret = min(choose_RGB(house+1, 0, init), choose_RGB(house+1, 1, init));
+		}
+	
+		if(color==0){
+			ret+=red[house];
+		}
+		else if(color==1){
+			ret+=green[house];
+		}
+		else{
+			ret+=blue[house];
+		}
+	}
+	dp[house][color][init] = ret;
+	return ret;
+	
+}
+
+void dp_clear(){
+	int i,k,j;
+	for(i=1; i<=numofhouse; ++i){
+		for(k=0; k<3; ++k){
+			for(j=0; j<3; ++j){
+				dp[i][k][j] = -1;	
+			}
+			
+		}
+	}
+}
+
+int solve(){
+	dp_clear();
+	int one_red = choose_RGB(1,0,0);
+	int one_green = choose_RGB(1,1,1);
+	int one_blue = choose_RGB(1,2,2);
+	int ret = min(one_red, one_green);
+	ret = min(ret, one_blue);
+
+	//cout<<one_red<<" "<<one_green<<" "<<one_blue<<endl;
+	return ret;
+}
+
+int main(void)
+{
+	cin>>numofhouse;
+	int i;
+	for(i=1; i<=numofhouse; ++i){
+		cin>>red[i]>>green[i]>>blue[i];
+	}
+	cout<<solve();
+	return 0;
+}
