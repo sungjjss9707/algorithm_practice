@@ -1,0 +1,42 @@
+#include<iostream>
+
+using namespace std;
+
+int don;
+int inf = 2000000000;
+int dp[100001];
+
+int two_and_five(int money){
+	if(money==0) return 0;
+	if(money<0) return inf;
+	int ret = dp[money];
+	if(ret!=-1) return ret;
+	//cout<<money<<endl;
+	
+	int five = two_and_five(money-5)+1;
+	int two = two_and_five(money-2)+1;
+	ret = min(five, two);
+	dp[money] = ret;
+	return ret;
+}
+
+void dp_clear(){
+	int i;
+	for(i=0; i<=don; ++i){
+		dp[i] = -1;
+	}
+}
+
+int solve(){
+	dp_clear();
+	int dap = two_and_five(don);
+	if(dap>=inf) dap = -1;
+	return dap;
+}
+
+int main(void)
+{
+	cin>>don;
+	cout<<solve();
+	return 0;
+}
