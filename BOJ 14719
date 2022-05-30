@@ -1,0 +1,73 @@
+#include<iostream>
+#include<vector>
+using namespace std;
+
+int sero, garo;
+int arr[501];
+int cup[501][501];
+bool visit[501];
+
+int solve(){
+	int i,k, dap=0;
+	for(k=1; k<=garo; ++k){
+		for(i=1; i<=arr[k]; ++i){
+			cup[i][k] = 1;
+		}
+	}
+	/*
+	for(i=1; i<=sero; ++i){
+		for(k=1; k<=garo; ++k){
+			cout<<cup[i][k];
+		}
+		cout<<endl;
+	}
+	*/
+	int index, one, two,j,l;
+	vector<int> v;
+	for(i=sero; i>=1; --i){
+		v.clear();
+		for(k=1; k<=garo; ++k){
+			if(cup[i][k]==1){
+				v.push_back(k);
+			}
+		}
+		if(v.size()==0||v.size()==1) continue;
+		for(k=0; k<v.size()-1; ++k){
+			one = v[k];
+			two = v[k+1];
+			if(one+1==two) continue;
+			for(j=1; j<=i; ++j){
+				for(l=one; l<=two; ++l){
+					if(cup[j][l]==0) cup[j][l]=2;
+				}
+			}
+		}
+	}
+	for(i=1; i<=sero; ++i){
+		for(k=1; k<=garo; ++k){
+			if(cup[i][k]==2) dap++;
+		}
+	}
+	/*
+	cout<<endl;
+	for(i=1; i<=sero; ++i){
+		for(k=1; k<=garo; ++k){
+			cout<<cup[i][k];
+		}
+		cout<<endl;
+	}
+	*/
+	return dap;
+}
+
+int main(void)
+{
+	cin>>sero>>garo;
+	int i;
+	for(i=1; i<=garo; ++i){
+		cin>>arr[i];
+		visit[i] = false;
+	}
+	cout<<solve();
+	return 0;
+} 
