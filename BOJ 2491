@@ -1,0 +1,57 @@
+#include<iostream>
+
+using namespace std;
+
+int numofnum;
+int arr[100001];
+int in[100001];
+int de[100001];
+
+int solve(){
+	if(numofnum==1) return 1;
+	int i, now;
+	in[0] = 1;
+	now = arr[0];
+	for(i=1; i<numofnum; ++i){
+		if(arr[i]>=now){
+			now = arr[i];
+			in[i] = in[i-1]+1;
+		}
+		else{
+			now = arr[i];
+			in[i] = 1;
+		}
+	}
+	
+	de[numofnum-1] = 1;
+	now = arr[numofnum-1];
+	for(i=numofnum-2; i>=0; --i){
+		if(arr[i]>=now){
+			now = arr[i];
+			de[i] = de[i+1]+1;
+		}
+		else{
+			now = arr[i];
+			de[i] = 1;
+		}
+	}
+	int dap = -1;
+	for(i=0; i<numofnum; ++i){
+		dap = max(dap, in[i]);
+	}
+	for(i=0; i<numofnum; ++i){
+		dap = max(de[i], dap);
+	}
+	return dap;
+}
+
+int main(void)
+{
+	cin>>numofnum;
+	int i;
+	for(i=0; i<numofnum; ++i){
+		cin>>arr[i];
+	}
+	cout<<solve();
+	return 0;
+}
