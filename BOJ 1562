@@ -1,0 +1,58 @@
+#include<iostream>
+#include<vector>
+using namespace std;
+
+int jaree, mod = 1000000000;
+int dp[101][10][1025];
+bool visit[10];
+vector<int> soon;
+
+
+
+void clear(){
+	int i, j, k;
+	for(i=1; i<=jaree; ++i){
+		for(j=0; j<10; ++j){
+			for(k=0; k<1025; ++k){
+				dp[i][j][k] = 0;
+			}
+		}
+	}
+}
+
+int solve(){
+	if(jaree<10) return 0;
+	clear();
+	int i,j,k;
+	for(k=1; k<=9; ++k){
+		dp[1][k][1<<k] = 1;	
+	}
+	for(i=2; i<=jaree; ++i){
+		for(j=0; j<10; ++j){
+			for(k=0; k<=1023; ++k){
+				if(j==0){
+					dp[i][j][k|(1<<j)] = (dp[i][j][k|(1<<j)]%mod+dp[i-1][1][k]%mod)%mod;
+				}
+				else if(j==9){
+					dp[i][j][k|(1<<j)] = (dp[i][j][k|(1<<j)]%mod+dp[i-1][8][k]%mod)%mod;
+				}
+				else{
+					dp[i][j][k|(1<<j)] = (dp[i][j][k|(1<<j)]%mod+dp[i-1][j-1][k]%mod)%mod;
+					dp[i][j][k|(1<<j)] = (dp[i][j][k|(1<<j)]%mod+dp[i-1][j+1][k]%mod)%mod;
+				}
+			}
+		}
+	}
+	int hap=0;
+	for(k=0; k<10; ++k){
+		hap = (hap+dp[jaree][k][1023]%mod)%mod;
+	}
+	return hap;
+}
+
+int main(void)
+{
+	cin>>jaree;
+	cout<<solve();
+	return 0;
+}
