@@ -1,0 +1,48 @@
+#include<iostream>
+
+using namespace std;
+
+double arr[10001];
+double dp[10001];
+int num;
+
+double solve(){
+	int i;
+	if(num==1){
+		return arr[1];
+	}
+	dp[1] = arr[1];
+	for(i=2; i<=num; ++i){
+		if(arr[i]>=1){
+			if(dp[i-1]>=1) dp[i] = dp[i-1]*arr[i];
+			else dp[i] = arr[i];
+		} 
+		else{
+			if(dp[i-1]>=1) dp[i] = dp[i-1]*arr[i];
+			else dp[i] = arr[i];
+		}
+	}
+	double maximum = dp[1];
+	//for(i=1; i<=num; ++i){
+	//	cout<<dp[i]<<" ";
+	//}
+	//cout<<endl;
+	for(i=1; i<=num; ++i){
+		maximum = max(maximum, dp[i]);
+	}
+	return maximum;
+}
+
+int main(void)
+{
+	cout<<fixed;
+	cout.precision(3);
+	cin>>num;
+	int i;
+	for(i=1; i<=num; ++i){
+		cin>>arr[i];
+	}
+	
+	cout<<solve();
+	return 0;
+}
