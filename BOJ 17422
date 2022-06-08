@@ -1,0 +1,250 @@
+#include<iostream>
+#include<vector>
+#include<queue>
+#include<algorithm>
+using namespace std;
+
+struct str{
+	int firsty, firstx, y,x,dist;
+};
+
+struct yee{
+	int yeey, yeex;
+};
+
+int sero, garo, numofisland;
+int copy_sea[11][11];
+int sea[11][11];
+int dy[4] = {1,0,-1,0};
+int dx[4] = {0,1,0,-1};
+int parent[7];
+vector<pair<int, int>> island[7];
+
+
+void print_sea(){
+	int i,k;
+	cout<<endl;
+	for(i=1; i<=sero; ++i){
+		for(k=1; k<=garo; ++k){
+			cout<<sea[i][k]<<" ";
+		}
+		cout<<endl;
+	}
+}
+
+void island_color(int y, int x, int color){
+	sea[y][x] = color;
+	int i,ny, nx;
+	for(i=0; i<4; ++i){
+		ny = y+dy[i];
+		nx = x+dx[i];
+		if(ny>=1&&ny<=sero&&nx>=1&&nx<=garo){
+			if(sea[ny][nx]==-1){
+				island_color(ny, nx, color);
+			}
+		}
+	}
+}
+
+void sea_copy(){
+	int i,k, count, ny, nx, n, color;
+	for(i=1; i<=sero; ++i){
+		for(k=1; k<=garo; ++k){
+			if(copy_sea[i][k]==1) sea[i][k] = -1;
+		}
+	}
+	count = 1;
+	for(i=1; i<=sero; ++i){
+		for(k=1; k<=garo; ++k){
+			if(sea[i][k]==-1){
+				island_color(i,k,count);
+				count++;	
+			}
+		}
+	}
+	for(i=1; i<=sero; ++i){
+		for(k=1; k<=garo; ++k){
+			if(sea[i][k]!=0){
+				color = sea[i][k];
+				for(n=0; n<4; ++n){
+					ny = i+dy[n];
+					nx = k+dx[n];
+					if(ny>=1&&ny<=sero&&nx>=1&&nx<=garo){
+						if(sea[ny][nx]==0){
+							island[color].push_back({i,k});
+							break;
+						}
+					}
+				}
+			}
+		}
+	}
+	numofisland = count-1;
+	/*
+	print_sea();
+	
+	cout<<endl;
+	cout<<endl;
+	for(i=1; i<=numofisland; ++i){
+		cout<<i<<" : ";
+		for(k=0; k<island[i].size(); ++k){
+			cout<<island[i][k].first<<" "<<island[i][k].second<<"   ";
+		}
+		cout<<endl;
+	}
+	cout<<endl;
+	*/
+}
+
+void parent_clear(){
+	int i;
+	for(i=1; i<=numofisland; ++i){
+		parent[i] = i;
+	}
+}
+/*
+vector<str> get_jeek(int color){
+	int i,j,k, y,x;
+	for(i=0; i<island[color].size(); ++i){
+		y = island[color][i].first;
+		x = island[color][i].second;
+		for(j=y-1; j>=1; --j){
+			if(sea[j])
+		}
+	}
+}
+*/
+vector<str> bfs(int color){
+	queue<pair<str,yee>> q;
+	bool visit[11][11];
+	int i, k,y,x,ny, nx, fy, fx, nowd;
+	for(i=1; i<=sero; ++i){
+		for(k=1; k<=garo; ++k){
+			visit[i][k] = false;
+		}
+	}
+	for(i=1; i<=sero; ++i){
+		for(k=1; k<=garo; ++k){
+			if(sea[i][k]==color) visit[i][k] = true;
+		}
+	}
+	for(i=0; i<island[color].size(); ++i){
+		q.push({{island[color][i].first, island[color][i].second,island[color][i].first, island[color][i].second,0},{0, 0}});
+	}
+	vector<str> dap;
+	int yy, yx;
+	while(!q.empty()){
+		y = q.front().first.y;
+		x = q.front().first.x;
+		fy = q.front().first.firsty;
+		fx = q.front().first.firstx;
+		nowd = q.front().first.dist;
+		yy = q.front().second.yeey;
+		yx = q.front().second.yeex;
+		q.pop();
+		for(i=0; i<4; ++i){
+			ny = y+dy[i];
+			nx = x+dx[i];
+			if(ny>=1&&ny<=sero&&nx>=1&&nx<=garo){
+				if((fy==ny||fx==nx)&&!(ny==yy&&nx==yx)){
+					if(sea[ny][nx]==0){
+						q.push({{fy, fx, ny, nx, nowd+1},{y,x}});
+					}
+					else{
+						if(nowd>=2) dap.push_back({fy, fx,ny,nx,nowd});
+					}
+				}
+			}
+		}
+	}
+	return dap;
+}
+
+int get_parent(int x){
+	if(x==parent[x]) return x;
+	int x_parent = get_parent(parent[x]);
+	parent[x] = x_parent;
+	return x_parent;
+}
+
+void union_set(int x, int y){
+	int x_parent = get_parent(x);
+	int y_parent = get_parent(y);
+	if(x_parent<y_parent){
+		parent[y_parent] = x_parent;
+	}
+	else{
+		parent[x_parent] = y_parent;
+	}
+}
+
+bool compare(str st1, str st2){
+	return st1.dist<st2.dist;
+}
+
+int make_link(){
+	int i,j,k,me, nowy, nowx, len, min_len, friend_color, y,x,fy,fx, dap=0;
+	int parent_me, parent_friend;
+	vector<str> temp; 
+	vector<str> ret;
+	for(i=1; i<=numofisland; ++i){
+		temp.clear();
+		//cout<<i<<" : ";
+		temp = bfs(i);
+		
+		if(temp.empty()){
+			//cout<<i<<"일떄\n";
+			cout<<-1;
+			exit(0);
+		}
+		for(k=0; k<temp.size(); ++k){
+			//y = temp[k].firsty;
+			//x = temp[k].firstx;
+			//fy = temp[k].y;
+			//fx = temp[k].x;
+			//friend_color = sea[fy][fx];
+			ret.push_back({temp[k]});
+		}
+		//cout<<friend_color<<"이랑 연결됨 / ";
+		//cout<<temp.firsty<<","<<temp.firstx<<" "<<temp.y<<","<<temp.x<<" "<<temp.dist<<endl;
+	}
+	sort(ret.begin(), ret.end(), compare);
+	for(i=0; i<ret.size(); ++i){
+		//cout<<ret[i].firsty<<","<<ret[i].firstx<<"->"<<ret[i].y<<","<<ret[i].x<<" = "<<ret[i].dist<<endl;
+		me = sea[ret[i].firsty][ret[i].firstx];
+		friend_color = sea[ret[i].y][ret[i].x];
+		parent_me = get_parent(me);
+		parent_friend = get_parent(friend_color);
+		if(parent_me==parent_friend) continue;
+		union_set(me,friend_color);
+		dap+=ret[i].dist;
+	}
+	int real_parent = get_parent(1);
+	for(i=1; i<=numofisland; ++i){
+		if(get_parent(i)!=real_parent){
+			cout<<-1;
+			exit(0);
+		}
+	}
+	return dap;
+}
+
+int solve(){
+	sea_copy();
+	parent_clear();
+	int dap = make_link();
+	return dap;
+}
+
+int main(void)
+{
+	cin>>sero>>garo;
+	int i,k;
+	for(i=1; i<=sero; ++i){
+		for(k=1; k<=garo; ++k){
+			cin>>copy_sea[i][k];
+		}
+	}
+	cout<<solve();
+	return 0;
+}
