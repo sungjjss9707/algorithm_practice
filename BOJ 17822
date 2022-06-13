@@ -1,0 +1,301 @@
+#include<iostream>
+#include<deque>
+using namespace std;
+
+int numofpan, numofnum,numofrotate, erasenum = -329472938;
+deque<int> onepan[51];
+int temp[51][51];
+
+
+
+void just_one_rotate(int pan_num, int dir, int kan){
+	int i,front,back;
+	if(dir==0){	//시계 방향 
+		//cout<<"시계방향\n";
+		for(i=0; i<kan; ++i){
+			back = onepan[pan_num].back();
+			onepan[pan_num].pop_back();
+			onepan[pan_num].push_front(back);
+		}
+	}
+	else{		//반시계방향  
+		//cout<<"반시계방향\n";
+		for(i=0; i<kan; ++i){
+			front = onepan[pan_num].front();
+			onepan[pan_num].pop_front();
+			onepan[pan_num].push_back(front);
+		}
+		
+	}
+}
+
+void temp_clear(){
+	int i,k;
+	for(i=1; i<=numofpan; ++i){
+		for(k=0; k<numofnum; ++k){
+			temp[i][k] = 0;
+		}
+	}
+}
+
+bool naver_erase(){
+	int i, k, nownum;
+	bool flag = false;
+	temp_clear();
+	for(i=1; i<=numofpan; ++i){
+		for(k=0; k<numofnum; ++k){
+			if(onepan[i][k]==erasenum) continue;
+			nownum = onepan[i][k];
+			if(i==1){	//제일 첫판  
+				if(onepan[i+1][k]==nownum){
+					temp[i+1][k] = erasenum;
+					temp[i][k] = erasenum;
+					flag = true;
+				}
+				if(k==0){
+					if(onepan[i][1]==nownum){
+						temp[i][1] = erasenum;
+						temp[i][k] = erasenum;
+						flag = true;
+					}
+					if(onepan[i][numofnum-1]==nownum){
+						temp[i][numofnum-1] = erasenum;
+						temp[i][k] = erasenum;
+						flag = true;
+					}
+				}
+				else if(k==numofnum-1){
+					if(onepan[i][k-1]==nownum){
+						temp[i][k-1] = erasenum;
+						temp[i][k] = erasenum;
+						flag = true;
+					}
+					if(onepan[i][0]==nownum){
+						temp[i][0] = erasenum;
+						temp[i][k] = erasenum;
+						flag = true;
+					}
+				}
+				else{
+					if(onepan[i][k-1]==nownum){
+						temp[i][k-1] = erasenum;
+						temp[i][k] = erasenum;
+						flag = true;
+					}
+					if(onepan[i][k+1]==nownum){
+						temp[i][k+1] = erasenum;
+						temp[i][k] = erasenum;
+						flag = true;
+					}
+				}
+			}
+			else if(i==numofpan){		//제일 막판
+				if(onepan[i-1][k]==nownum){
+					temp[i-1][k] = erasenum;
+					temp[i][k] = erasenum;
+					flag = true;
+				}  
+				if(k==0){
+					if(onepan[i][1]==nownum){
+						temp[i][1] = erasenum;
+						temp[i][k] = erasenum;
+						flag = true;
+					}
+					if(onepan[i][numofnum-1]==nownum){
+						temp[i][numofnum-1] = erasenum;
+						temp[i][k] = erasenum;
+						flag = true;
+					}
+				}
+				else if(k==numofnum-1){
+					if(onepan[i][k-1]==nownum){
+						temp[i][k-1] = erasenum;
+						temp[i][k] = erasenum;
+						flag = true;
+					}
+					if(onepan[i][0]==nownum){
+						temp[i][0] = erasenum;
+						temp[i][k] = erasenum;
+						flag = true;
+					}
+				}
+				else{
+					if(onepan[i][k-1]==nownum){
+						temp[i][k-1] = erasenum;
+						temp[i][k] = erasenum;
+						flag = true;
+					}
+					if(onepan[i][k+1]==nownum){
+						temp[i][k+1] = erasenum;
+						temp[i][k] = erasenum;
+						flag = true;
+					}
+				}
+			}
+			else{		//중간꺼  
+				if(onepan[i-1][k]==nownum){
+					temp[i-1][k] = erasenum;
+					temp[i][k] = erasenum;
+					flag = true;
+				}
+				if(onepan[i+1][k]==nownum){
+					temp[i+1][k] = erasenum;
+					temp[i][k] = erasenum;
+					flag = true;
+				}
+				if(k==0){
+					if(onepan[i][1]==nownum){
+						temp[i][1] = erasenum;
+						temp[i][k] = erasenum;
+						flag = true;
+					}
+					if(onepan[i][numofnum-1]==nownum){
+						temp[i][numofnum-1] = erasenum;
+						temp[i][k] = erasenum;
+						flag = true;
+					}
+				}
+				else if(k==numofnum-1){
+					if(onepan[i][k-1]==nownum){
+						temp[i][k-1] = erasenum;
+						temp[i][k] = erasenum;
+						flag = true;
+					}
+					if(onepan[i][0]==nownum){
+						temp[i][0] = erasenum;
+						temp[i][k] = erasenum;
+						flag = true;
+					}
+				}
+				else{
+					if(onepan[i][k-1]==nownum){
+						temp[i][k-1] = erasenum;
+						temp[i][k] = erasenum;
+						flag = true;
+					}
+					if(onepan[i][k+1]==nownum){
+						temp[i][k+1] = erasenum;
+						temp[i][k] = erasenum;
+						flag = true;
+					}
+				}
+			}
+		}
+	}
+	
+	
+	if(flag){
+		for(i=1; i<=numofpan; ++i){
+			for(k=0; k<numofnum; ++k){
+				if(temp[i][k]==erasenum) onepan[i][k] = erasenum;
+			}
+		}
+	}
+	return flag;
+}
+
+double get_average(){
+	int i,k;
+	int hap = 0, getsu=0;
+	double  avg;
+	
+	for(i=1; i<=numofpan; ++i){
+		for(k=0; k<numofnum; ++k){
+			if(onepan[i][k]==erasenum) continue;
+			hap+=onepan[i][k];
+			getsu++;
+		}
+	}
+	avg = (double)(hap)/(double)(getsu);
+	return avg;
+}
+
+void printpan(){
+	int i,k;
+	cout<<endl;
+	for(i=1; i<=numofpan; ++i){
+		for(k=0; k<numofnum; ++k){
+			cout<<onepan[i][k]<<" ";
+		}
+		cout<<endl;
+	}
+	
+}
+
+void one_plus_or_minus(double avg){
+	int i,k;
+	double doublenum;
+	for(i=1; i<=numofpan; ++i){
+		for(k=0; k<numofnum; ++k){
+			if(onepan[i][k]==erasenum) continue;
+			doublenum = (double)(onepan[i][k]);
+			if(doublenum>avg){
+				onepan[i][k]--;
+			}
+			else if(doublenum<avg){
+				onepan[i][k]++;
+			}
+		}
+	}
+}
+
+
+
+void pan_rotate(int baesoo, int dir, int kan){
+	int num = baesoo, nowpan, i;
+	double avg; 
+	for(i=num; i<=numofpan; i+=baesoo){
+		nowpan = i;
+		just_one_rotate(i, dir, kan);
+		//cout<<i<<"돌림 ";
+	}
+	
+	//cout<<endl; 
+	//printpan();
+	if(!naver_erase()){	//인접한거중에 같은게 하나도 없으면  
+		//cout<<"같은거 하나도 없어서 빼고 더함\n"; 
+		avg = get_average();
+		//cout<<"평균 : "<<avg<<endl;
+		one_plus_or_minus(avg);
+	}
+	/*
+	for(i=num; i<=numofpan; i+=baesoo){
+		if(!naver_erase()){	//인접한거중에 같은게 하나도 없으면  
+			cout<<"같은거 하나도 없어서 빼고 더함\n"; 
+			avg = get_average();
+			one_plus_or_minus(avg);
+		}
+	}
+	*/
+}
+
+int calcul(){
+	int i,k, hap=0;
+	for(i=1; i<=numofpan; ++i){
+		for(k=0; k<numofnum; ++k){
+			if(onepan[i][k]==erasenum) continue;
+			hap+=onepan[i][k];
+		}
+	}
+	return hap;	
+}
+
+int main(void)
+{
+	cin>>numofpan>>numofnum>>numofrotate;
+	int i, k, baesoo, direction, kan, num;
+	for(i=1; i<=numofpan; ++i){
+		for(k=0; k<numofnum; ++k){
+			cin>>num;
+			onepan[i].push_back(num);
+		}
+	}
+	//printpan();
+	for(i=0; i<numofrotate; ++i){
+		cin>>baesoo>>direction>>kan;
+		pan_rotate(baesoo, direction, kan);
+		//printpan();
+	}
+	cout<<calcul();
+	return 0;
+}
