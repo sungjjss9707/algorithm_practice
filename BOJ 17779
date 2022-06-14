@@ -1,0 +1,162 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+using namespace std;
+
+int city[21][21];
+int color[21][21];
+int dy[4] = {1,0,-1,0};
+int dx[4] = {0,1,0,-1};
+int len;
+
+void color_clear(){
+	int i,k;
+	for(i=1; i<=len; ++i){
+		for(k=1; k<=len; ++k){
+			color[i][k] = 0;
+		}
+	}	
+}
+
+void print_color(){
+	//cout<<endl;
+	int i,k;
+	for(i=1; i<=len; ++i){
+		for(k=1; k<=len; ++k){
+			cout<<color[i][k]<<" ";
+		}
+		cout<<endl;
+	}
+	cout<<endl;
+	cout<<endl;
+}
+
+void bfs(int y, int x, int col){
+	color[y][x] = col;
+	int i, ny, nx;
+	for(i=0; i<4; ++i){
+		ny = y+dy[i];
+		nx = x+dx[i];
+		if(ny>=1&&ny<=len&&nx>=1&&nx<=len){
+			if(color[ny][nx]==0){
+				bfs(ny, nx, col);
+			}
+		}
+	}
+}
+
+void fill_five(){
+	int i,k;
+	for(i=1; i<=len; ++i){
+		for(k=1; k<=len; ++k){
+			if(color[i][k]==0) color[i][k] = 5;
+		}
+	}
+}
+
+int get_cha(){
+	int i,k, one=0, two=0, three=0, four=0, five=0;
+	for(i=1; i<=len; ++i){
+		for(k=1; k<=len; ++k){
+			if(color[i][k]==1) one+=city[i][k];
+			else if(color[i][k]==2) two+=city[i][k];
+			else if(color[i][k]==3) three+=city[i][k];
+			else if(color[i][k]==4) four+=city[i][k];
+			else five+=city[i][k];
+		}
+	}
+	vector<int> v;
+	v.push_back(one);
+	v.push_back(two);
+	v.push_back(three);
+	v.push_back(four);
+	v.push_back(five);
+	sort(v.begin(), v.end());
+	return (v[4]-v[0]);
+}
+
+int get_max_min_cha(int y, int x){
+	int i,k,l,a,b ,sy, sx, cha;
+	int minimum = 2100000000;
+	for(i=1; i<=len; ++i){
+		for(k=1; k<=len; ++k){
+			//cout<<y<<","<<x<<"  "<<i<<" "<<k<<"일때 : \n";
+			if(y+i+k>len||x+k>len||x-i<1) continue;
+			//cout<<y<<","<<x<<"  "<<i<<" "<<k<<"일때 : \n";
+			color_clear();
+			sy = y;
+			sx = x;
+			color[sy][sx] = 5;
+			for(l=1; l<=i; ++l){
+				color[sy+l][sx-l] = 5;
+			}
+			sy = y;
+			sx = x;
+			for(l=1; l<=k; ++l){
+				color[sy+l][sx+l] = 5;
+			}
+			sy = y+i;
+			sx = x-i;
+			for(l=1; l<=k; ++l){
+				color[sy+l][sx+l] = 5;
+			}
+			sy = y+k;
+			sx = x+k;
+			for(l=1; l<=i; ++l){
+				color[sy+l][sx-l] = 5;
+			}
+			//cout<<y<<","<<x<<"  "<<i<<" "<<k<<"일때 : \n";
+			//print_color();
+			//bfs_five(y,x); 5는 보류 
+			//print_color();
+			for(a=y-1; a>=1; --a){
+				color[a][x] = 1;
+			}
+			
+			for(b=x-i-1; b>=1; --b){
+				color[y+i][b] = 3;
+			}
+			
+			for(a=y+i+k+1; a<=len; ++a){
+				color[a][x+k-i] = 4;
+			}
+			
+			for(b=x+k+1; b<=len; ++b){
+				color[y+k][b] = 2;
+			}
+			bfs(1,1,1);
+			bfs(1,len,2);
+			bfs(len,1,3);
+			bfs(len,len,4);
+			fill_five();
+			//print_color();
+			cha = get_cha();
+			minimum = min(minimum, cha);	
+		}
+	}
+	return minimum;
+}
+
+int solve(){
+	int i,k, minimum = 2100000000, temp;
+	for(i=1; i<=len; ++i){
+		for(k=1; k<=len; ++k){
+			temp = get_max_min_cha(i,k);
+			minimum = min(minimum, temp);
+		}
+	}
+	return minimum;
+}
+
+int main(void)
+{
+	cin>>len;
+	int i,k;
+	for(i=1; i<=len; ++i){
+		for(k=1; k<=len; ++k){
+			cin>>city[i][k];
+		}
+	}
+	cout<<solve();
+	return 0;
+}
