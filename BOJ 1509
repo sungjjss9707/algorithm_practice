@@ -1,0 +1,78 @@
+#include<iostream>
+#include<string>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std; 
+
+string str;
+int dp[2510][2510];	//start ~ end 가 펠린드롬이면 1, 아니면 0 반환  
+int real_dp[2510];
+int len;
+
+void dp_clear(){
+	int i,k;
+	for(i=0; i<len; ++i){
+		for(k=0; k<len; ++k){
+			dp[i][k] = -1;
+		}
+	}
+	for(i=0; i<len; ++i){
+		real_dp[i] = i+1;
+	}
+}
+
+int find_felin(int start, int end){	
+	if(start==end) return 1;
+	int ret = dp[start][end];
+	if(ret!=-1) return ret;
+	if(start==end-1){
+		if(str[start]==str[end]){
+			ret = 1;
+		}
+		else ret = 0;
+		dp[start][end] = ret;
+		return ret;
+	}
+	if(str[start]==str[end]){
+		if(find_felin(start+1, end-1)==1){
+			ret = 1;
+		}
+		else ret = 0;
+	}
+	else{
+		ret = 0;
+	} 
+	dp[start][end] = ret;
+	return ret;
+}
+
+int solve(){
+	if(len==1) return 1;
+	if(len==2){
+		if(str[0]==str[1]) return 1;
+		else return 2;
+	}
+	dp_clear();
+	int i,k;
+	if(str[0]==str[1]) real_dp[1] = 1;
+	for(i=2; i<len; ++i){
+		if(find_felin(0,i)==1){
+			real_dp[i] = 1;
+			continue;
+		}
+		for(k=0; k<i; ++k){
+			if(find_felin(k+1,i)==1){
+				real_dp[i] = min(real_dp[i], real_dp[k]+1);		
+			}
+		}	
+	}
+	return real_dp[len-1];
+}
+
+int main(void)
+{
+	fastio;
+	cin>>str;
+	len = str.length();
+	cout<<solve();
+	return 0 ;
+}
