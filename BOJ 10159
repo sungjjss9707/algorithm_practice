@@ -1,0 +1,82 @@
+#include<iostream>
+#include<vector>
+using namespace std;
+
+pair<vector<int>, vector<int>> family[101];
+int numofthings, numofrels;
+bool visit[101];
+
+
+int find_parent(int x){
+	visit[x] = true;
+	int i, p, ret = 1;
+	for(i=0; i<family[x].first.size(); ++i){
+		p = family[x].first[i];
+		if(!visit[p]){
+			ret+=find_parent(p);
+		}
+	}
+	return ret;
+}
+
+int find_child(int x){
+	visit[x] = true;
+	int i, c, ret = 1;
+	for(i=0; i<family[x].second.size(); ++i){
+		c = family[x].second[i];
+		if(!visit[c]){
+			ret+=find_child(c);
+		}
+	}
+	return ret;
+}
+
+void clear(){
+	int i;
+	for(i=1; i<=numofthings; ++i){
+		visit[i] = false;
+	}
+}
+
+void solve(){
+	int i, numofparents, numofchildren;
+	for(i=1; i<=numofthings; ++i){
+		clear();
+		numofparents = find_parent(i)-1;
+		//cout<<i<<"의 부모 수 : "<<numofparents<<endl;
+		//clear(); /////////////////
+		visit[i] = false;
+		numofchildren = find_child(i)-1;
+		//cout<<i<<"의 자식 수 : "<<numofchildren<<endl;
+		cout<<numofthings-(numofparents+numofchildren+1)<<"\n";
+	}
+}
+
+int main(void)
+{
+	cin>>numofthings>>numofrels;
+	int i, p,c;
+	for(i=0; i<numofrels; ++i){
+		cin>>p>>c;
+		family[p].second.push_back(c);
+		family[c].first.push_back(p);
+	}
+	/*
+	for(i=1; i<=numofthings; ++i){
+		//cout<<i<<"의 부모 : ";
+		
+		for(int k=0; k<family[i].first.size(); ++k){
+			cout<<family[i].first[k]<<" ";
+		}
+		
+		//cout<<endl;
+		//cout<<i<<"의 자식 : ";
+		for(int k=0; k<family[i].second.size(); ++k){
+			cout<<family[i].second[k]<<" ";
+		}
+		//cout<<endl;
+	}
+	*/
+	solve();
+	return 0;
+} 
