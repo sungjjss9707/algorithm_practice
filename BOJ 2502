@@ -1,0 +1,59 @@
+#include<iostream>
+
+using namespace std;
+
+int day, last;
+int dp[31][100001];
+
+void dp_clear(){
+	int i,k;
+	for(i=0; i<=day; ++i){
+		for(k=0; k<=last; ++k){
+			dp[i][k] = -1;
+		}
+	}
+}
+
+int solve_with_dp(int nal, int yesterday,int today){
+	if(nal==1){
+		cout<<yesterday<<"\n"<<today;
+		exit(0);
+	}
+	if(yesterday<=1&&nal>1){
+		dp[nal][yesterday] = -100;
+		return -100;	
+	} 
+	if(today-yesterday>yesterday){
+		dp[nal][yesterday] = -100;
+		return -100;
+	}
+	int ret = dp[nal][yesterday];
+	if(ret!=-1) return ret;
+	int i, now, ohjae;
+	
+	ret = solve_with_dp(nal-1, today-yesterday, yesterday);
+	dp[nal][yesterday] = ret;
+	return ret;
+}
+
+int solve(){
+	int dap=0;
+	dp_clear();
+	int i, today, yesterday;
+	
+	for(i=last-1; i>=1; --i){
+		today = i;
+		yesterday = last-today;
+		if(today<yesterday) break;
+		//cout<<yesterday<<" "<<today<<endl;
+		dp[day-2][yesterday] = solve_with_dp(day-2, yesterday, today);
+	}
+	return dap;
+}
+
+int main(void)
+{
+	cin>>day>>last;
+	cout<<solve();
+	return 0;
+}
