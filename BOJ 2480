@@ -1,0 +1,32 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+using namespace std;
+
+vector<int> v;
+
+int solve(){
+	sort(v.begin(), v.end());
+	int i, ret;
+	if(v[0]==v[1]&&v[1]==v[2]){
+		ret = 10000+v[0]*1000;
+	}
+	else if(v[0]==v[1]||v[1]==v[2]){
+		ret = 1000+v[1]*100;
+	}
+	else{
+		ret = v[2]*100;
+	}
+	return ret;
+}
+
+int main(void)
+{
+	int i, num;
+	for(i=0; i<3; ++i){
+		cin>>num;
+		v.push_back(num);
+	}
+	cout<<solve();
+	return 0;
+}
