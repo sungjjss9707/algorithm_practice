@@ -1,0 +1,30 @@
+#include<iostream>
+using namespace std;
+
+int num;
+long long dp[101];
+
+long long solve(){
+	dp[1] = 1;
+	dp[2] = 2;
+	dp[3] = 3;
+	dp[4] = 4;
+	dp[5] = 5;
+	dp[6] = 6;
+	//dp[7] = 7;
+	int i,k;
+	for(i=7; i<=100; ++i){
+		dp[i] = 2*dp[i-3];
+		for(k=3; k<=i-3; ++k){
+			dp[i] = max(dp[i], (long long)(i-k)*dp[k-1]);
+		}
+	}
+	return dp[num];
+}
+
+int main(void)
+{
+	cin>>num;
+	cout<<solve();
+	return 0;
+}
