@@ -1,0 +1,85 @@
+#include<iostream>
+#include<string>
+using namespace std;
+
+string duru, angel, devil;
+
+int dp[101][21][2];
+int len;
+
+void clear(){
+	int i,j,k;
+	for(i=0; i<=100; ++i){
+		for(j=0; j<=20; ++j){
+			for(k=0; k<2; ++k){
+				dp[i][j][k] = -1;
+			}
+		}
+	}
+}
+
+int get_dap(int pos, int duru_index, int a_or_d){
+	//cout<<pos<<" "<<duru_index<<" "<<a_or_d<<endl;
+	if(duru_index==len-1){
+		return 1;
+	}
+	int ret = dp[pos][duru_index][a_or_d];
+	//cout<<ret<<"씨발\n";
+	if(ret!=-1) return ret;
+	//cout<<"열로옴\n";
+	int i;
+	ret=0;
+	char nextc = duru[duru_index+1];
+	if(a_or_d==0){	//천사면  
+		for(i=pos+1; i<devil.length(); ++i){
+			if(devil[i]==nextc){
+				ret+=get_dap(i, duru_index+1, 1);
+			}
+		}
+	}
+	else{			//악마면  
+		for(i=pos+1; i<angel.length(); ++i){
+			if(angel[i]==nextc){
+				ret+=get_dap(i, duru_index+1, 0);
+			}
+		}
+	}
+	dp[pos][duru_index][a_or_d] = ret;
+	return ret;
+	
+}
+
+int solve(){
+	clear();
+	int dap = 0;
+	int angel_start, devil_start;
+	len = duru.length();
+	int i;
+	int angel_dap = 0, devil_dap = 0;
+	for(i=0; i<angel.length(); ++i){
+		if(duru[0]==angel[i]){
+			angel_start = i;
+			angel_dap+=get_dap(angel_start, 0,0);
+		}
+	}	
+	for(i=0; i<devil.length(); ++i){
+		if(duru[0]==devil[i]){
+			devil_start = i;
+			devil_dap += get_dap(devil_start, 0,1);
+		}
+	}
+	//cout<<len<<endl;
+	//cout<<angel_start<<" "<<devil_start<<endl;
+
+	//cout<<angel_dap<<" "<<devil_dap<<endl;
+	
+	dap = angel_dap+devil_dap;
+	return dap;
+}
+
+int main(void)
+{
+	cin>>duru>>angel>>devil;
+	cout<<solve();
+	return 0;
+}
