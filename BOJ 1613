@@ -1,0 +1,72 @@
+#include<iostream>
+#include<vector>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+int family[401][401]; 
+
+int numofver, numofedge;
+
+void family_clear(){
+	int i,k;
+	for(i=1; i<=numofver; ++i){
+		for(k=1; k<=numofver; ++k){
+			family[i][k] = 0;
+		}
+	}
+}
+//플로이드 워셜 주의점 : 가장 바깥 for문은 경유지
+//                       중간 for문은 출발점, 가장 안쪽 for문은 도착점으로 해야함 
+ 
+void floyd(){
+	int i,j,k, up, mid, down;
+	for(i=1; i<=numofver; ++i){
+		mid = i;
+		for(j=1; j<=numofver; ++j){
+			up = j;
+			for(k=1; k<=numofver; ++k){
+				down = k;
+				if(family[up][down]==0){
+					if(family[up][mid]==-1&&family[mid][down]==-1){
+						family[up][down] = -1;
+						family[down][up] =  1;
+					}
+					
+					/*
+					if(family[up][mid]==-1&&family[mid][down]==-1){
+						family[up][down] = -1;
+					}
+					else if(family[up][mid]==1&&family[mid][down]==1){
+						family[up][down] =  1;
+					}
+					*/
+					/*
+					if(family[up][mid]==1&&family[mid][down]==1){
+						family[up][down] = 1;
+						family[down][up] = -1;
+					}
+					*/
+				}
+			}
+		}
+	}
+}
+
+int main(void)
+{
+	fastio;
+	cin>>numofver>>numofedge;
+	int i, up, down,numofquest;
+	family_clear();
+	for(i=0; i<numofedge; ++i){
+		cin>>up>>down;
+		family[up][down] = -1;
+		family[down][up] = 1;
+	}
+	floyd();
+	cin>>numofquest;
+	for(i=0; i<numofquest; ++i){
+		cin>>up>>down;
+		cout<<family[up][down]<<"\n";
+	}
+} 
