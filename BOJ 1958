@@ -1,0 +1,58 @@
+#include<iostream>
+#include<string>
+using namespace std;
+
+string a,b,c;
+
+int dp[101][101][101];
+
+int get_lcs_len(string one, string two, string three){
+	int i,j,k, len, biggest;
+	char one_c, two_c, three_c;
+	
+	for(i=1; i<=one.length(); ++i){
+		one_c = one[i-1];
+		for(j=1; j<=two.length(); ++j){
+			two_c = two[j-1];
+			for(k=1; k<=three.length(); ++k){
+				three_c = three[k-1];
+				if(one_c==two_c&&three_c==two_c){
+					dp[i][j][k] = dp[i-1][j-1][k-1]+1;
+				}
+				else{
+					biggest = max(dp[i-1][j][k], dp[i][j-1][k]);
+					biggest = max(biggest, dp[i][j][k-1]);
+					dp[i][j][k] = biggest;
+				}
+				len = dp[i][j][k];
+			}
+		}
+	}
+	return len;
+}
+
+void clear_dp(){
+	int i,j,k;
+	for(i=0; i<=a.length(); ++i){
+		for(j=0; j<=b.length(); ++j){
+			for(k=0; k<=c.length(); ++k){
+				dp[i][j][k] = 0;
+			}
+		}
+	}
+}
+
+int solve(){
+	//cout<<"fuck\n";
+	clear_dp();
+	
+	int dap = get_lcs_len(a,b,c);
+	return dap;
+}
+
+int main(void)
+{
+	cin>>a>>b>>c;
+	cout<<solve();
+	return 0;
+}
