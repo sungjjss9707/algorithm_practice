@@ -1,0 +1,54 @@
+#include<iostream> 
+#include<vector>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+int numofver, root, numofquery;
+int numofsubtree[100001];
+bool visit[100001];
+vector<int> v[100001];
+
+int get_subtree(int node){
+	int dap = numofsubtree[node];
+	if(dap!=-1) return dap;
+	visit[node] = true;
+	dap = 1;
+	int i, child;
+	for(i=0; i<v[node].size(); ++i){
+		child = v[node][i];
+		if(!visit[child]) dap+=get_subtree(child);
+	}
+	numofsubtree[node] = dap;
+	return dap;
+}
+
+void get_all_subtree(){
+	int i;
+	for(i=1; i<=numofver; ++i){
+		numofsubtree[i] = -1;
+		visit[i] = false;
+	}
+	numofsubtree[root] = get_subtree(root);
+}
+
+int get_numofsubtree(int x){
+	return numofsubtree[x];
+}
+
+int main(void)
+{
+	fastio;
+	cin>>numofver>>root>>numofquery;
+	int i, v1, v2, node;
+	for(i=0; i<numofver-1; ++i){
+		cin>>v1>>v2;
+		v[v1].push_back(v2);
+		v[v2].push_back(v1);
+	}
+	get_all_subtree();
+	for(i=0; i<numofquery; ++i){
+		cin>>node;
+		cout<<get_numofsubtree(node)<<"\n";
+	}
+	return 0;
+}
