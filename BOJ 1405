@@ -1,0 +1,69 @@
+#include<iostream>
+
+using namespace std;
+
+int num, e,w,s,n;
+double ratio[4];
+bool visit[31][31];
+int dy[4] = {0,0,1,-1};
+int dx[4] = {1,-1,0,0};
+
+double backtracking(int hwetsu, double yeejeon, int y, int x){
+	//cout<<y<<" "<<x<<endl;
+	if(hwetsu==num){
+		return yeejeon;
+	}
+	int i,ny, nx;
+	double dap = 0.0;
+	for(i=0; i<4; ++i){
+		if(ratio[i]==0.0) continue;
+		ny = y+dy[i];
+		nx = x+dx[i];
+		if(visit[ny][nx]) continue;
+		visit[ny][nx] = true;
+		dap += backtracking(hwetsu+1,yeejeon*ratio[i], ny, nx);
+		visit[ny][nx] = false;
+	}
+	return dap;
+}
+
+void visit_clear(){
+	int i,k;
+	for(i=1; i<=30; ++i){
+		for(k=1; k<=30; ++k){
+			visit[i][k] = false;
+		}
+	}
+}
+
+double solve(){
+	visit_clear();
+	int i;
+	ratio[0] = (double)((double)(e)/100.0);	
+	ratio[1] = (double)((double)(w)/100.0);
+	ratio[2] = (double)((double)(s)/100.0);
+	ratio[3] = (double)((double)(n)/100.0);
+	visit[15][15] = true;
+	double dap = 0.0;
+	int ny, nx;
+	for(i=0; i<4; ++i){
+		if(ratio[i]==0.0) continue;
+		ny = 15+dy[i];
+		nx = 15+dx[i];
+		visit[ny][nx] = true;
+		dap += backtracking(1,ratio[i], ny, nx);
+		visit[ny][nx] = false;
+	}
+	
+	return dap;
+	
+}
+
+int main(void)
+{
+	cout<<fixed;
+	cout.precision(12);
+	cin>>num>>e>>w>>s>>n;
+	cout<<solve();
+	return 0;
+}
