@@ -1,0 +1,120 @@
+#include<iostream>
+#include<vector>
+
+using namespace std;
+
+char ban[6][6];
+bool visit[6][6];
+vector<int> choose;
+int dap=0;
+int choose_ban[6][6];
+int dy[4] = {1,0,-1,0};
+int dx[4] = {0,1,0,-1};
+////////////////////////////////////////////////////////////////////////
+
+int get_numof7star(int y, int x){
+	visit[y][x] = true;
+	int i, getsu = 1;
+	int ny, nx;
+	for(i=0; i<4; ++i){
+		ny = y+dy[i];
+		nx = x+dx[i];
+		if(ny>=1&&ny<=5&&nx>=1&&nx<=5){
+			if(choose_ban[ny][nx]==1){
+				if(!visit[ny][nx]) getsu+=get_numof7star(ny, nx);
+			}
+		}
+	}
+	return getsu;
+}
+
+int numofs(){
+	int i,k, getsu = 0;
+	for(i=1; i<=5; ++i){
+		for(k=1; k<=5; ++k){
+			if(choose_ban[i][k]==1){
+				if(ban[i][k]=='S') getsu++;
+			} 
+		}
+	}
+	return getsu;
+}
+
+bool princess7_panstar(){
+	int i,k, y,x, getsu;
+	for(i=1; i<=5; ++i){
+		for(k=1; k<=5; ++k){
+			choose_ban[i][k] = 0;
+			visit[i][k] = false; 
+		}
+	}
+	for(int i=0; i<choose.size(); ++i){
+		//cout<<choose[i]<<" ";
+		y = choose[i]/5+1;
+		if(choose[i]%5==0) y--;
+		x = choose[i]%5;
+		if(choose[i]%5==0) x=5;
+		///cout<<"("<<y<<","<<x<<") ";
+		choose_ban[y][x] = 1;
+	}
+	/*
+	for(i=1; i<=5; ++i){
+		for(k=1; k<=5; ++k){
+			cout<<choose_ban[i][k]; 
+		}
+		cout<<endl;
+	}
+	cout<<endl;
+	*/
+	for(i=1; i<=5; ++i){
+		for(k=1; k<=5; ++k){
+			
+			if(choose_ban[i][k]==1){
+				getsu = get_numof7star(i,k);
+				if(getsu==7){
+					if(numofs()>=4) return true;
+				}
+				return false;
+			}
+		}
+	}
+	return true;
+}
+
+void get_all_case(int lastnum){
+	if(choose.size()==7){
+		/*
+		for(int i=0; i<choose.size(); ++i){
+			cout<<choose[i]<<" ";
+		}
+		cout<<endl;
+		*/
+		if(princess7_panstar()) dap++;
+		return;
+	}
+	int i;
+	for(i=lastnum+1; i<=25; ++i){
+		choose.push_back(i);
+		get_all_case(i);
+		choose.pop_back();
+	}
+}
+
+int solve(){
+	
+	int i;	
+	get_all_case(0);
+	return dap;
+}
+
+int main(void)
+{
+	int i,k;
+	for(i=1; i<=5; ++i){
+		for(k=1; k<=5; ++k){
+			cin>>ban[i][k]; 
+		}
+	}
+	cout<<solve();
+	return 0;
+}
