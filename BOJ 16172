@@ -1,0 +1,78 @@
+#include<iostream>
+#include<string>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+string wrong, real, mystr;
+int farr[200001];
+
+string delete_digit(){
+	int i;
+	string ret = "";
+	for(i=0; i<wrong.length(); ++i){
+		if(wrong[i]<'0'||wrong[i]>'9') ret.push_back(wrong[i]);
+	}
+	return ret;
+}
+
+void make_failure_arr(){
+	int i,k;
+	farr[0] = 0;
+	k=0;
+	for(i=1; i<mystr.length(); ++i){
+		while(k>0&&mystr[i]!=mystr[k]){
+			k = farr[k-1];
+		}
+		if(mystr[i]==mystr[k]){
+			k++;
+			farr[i] = k;
+		}
+		else{
+			farr[i] = 0;
+		}
+	}
+	/*
+	for(i=0; i<mystr.length(); ++i){
+		cout<<farr[i]<<endl;
+	}
+	*/
+}
+
+bool find_mystr(){
+	int i,k, count=0;
+	k=0;
+	for(i=0; i<real.length(); ++i){
+		while(k>0&&real[i]!=mystr[k]){
+			k = farr[k-1];
+		}
+		if(real[i]==mystr[k]){
+			if(k==mystr.length()-1){
+				k = farr[k];
+				//count++;
+				return true;
+			}
+			else k++;
+		}
+	}
+	//cout<<count<<endl;
+	return false;
+}
+
+bool solve(){
+	real = delete_digit();
+	//cout<<real<<endl;
+	make_failure_arr();
+	if(find_mystr()){
+		return true;
+	}
+	return false;
+}
+
+int main(void)
+{
+	fastio;
+	cin>>wrong>>mystr;
+	if(solve()) cout<<1;
+	else cout<<0;
+	return 0;
+}
