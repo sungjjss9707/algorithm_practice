@@ -1,0 +1,83 @@
+#include<iostream>
+#include<vector>
+#include<string>
+#include<map> 
+#include<algorithm>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+struct ant_gool{
+	map<string, ant_gool*> child;
+	map<string, ant_gool*>::iterator iter;
+	void insert(vector<string> v, int index){
+		if(index==v.size()) return;
+		string nowfood = v[index];
+		if(child.count(nowfood)==0){  //넣을려는게 없으면 == 처음 넣는거면 
+			ant_gool* newhouse = new ant_gool;
+			child.insert({nowfood, newhouse});
+			newhouse->insert(v, index+1);
+		}
+		else{						 //넣을려는게 이미 있으면 
+			child[nowfood] -> insert(v, index+1);
+		}
+	}
+	void print(int floor){
+		if(child.empty()) return;
+		string foodname;
+		int i;
+		for(iter = child.begin(); iter!=child.end(); ++iter){
+			foodname = iter->first;
+			for(i=0; i<floor; ++i){
+				cout<<"--";
+			}
+			cout<<foodname<<"\n";
+			(iter->second)->print(floor+1);
+		}
+	}
+	
+};
+
+vector<string> gool[1001];
+int numofant;
+ant_gool* house;
+
+
+void make_ant_gool(){
+	int i,k;
+	string food;
+	house = new ant_gool;
+	for(i=1; i<=numofant; ++i){
+		vector<string> v;
+		for(k=0; k<gool[i].size(); ++k){
+			food = gool[i][k];
+			v.push_back(food);
+		}
+		house -> insert(v, 0);
+	}
+}
+
+void print_all_ant_gool(){
+	house->print(0);
+}
+
+void solve(){
+	make_ant_gool();
+	print_all_ant_gool();
+}
+
+int main(void)
+{
+	fastio;
+	cin>>numofant;
+	int i, k,num;
+	string s;
+	for(i=1; i<=numofant; ++i){
+		cin>>num;
+		for(k=0; k<num; ++k){
+			cin>>s;
+			gool[i].push_back(s);
+		}
+	}
+	solve();
+	return 0;
+}
