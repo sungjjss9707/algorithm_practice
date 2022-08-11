@@ -1,0 +1,122 @@
+#include<iostream>
+#include<vector>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+vector<string> v;
+string dap;
+
+int get_hap(){
+	int i, num, temp;
+	string sik = "";
+	sik.push_back('1');
+	for(i=0; i<v.size(); ++i){
+		num = i+2;
+		sik+=v[i];
+		sik.push_back((char)(num+'0'));
+	}
+	//cout<<sik<<" = ";
+	temp = 0;
+	vector<int> number;
+	vector<char> oper;
+	for(i=0; i<sik.length(); ++i){
+		if(sik[i]>='1'&&sik[i]<='9'){
+			num = (int)(sik[i]-'0');
+			if(temp==0){
+				temp+=num;
+			}
+			else{
+				temp=temp*10;
+				temp+=num;
+			}
+		}
+		else{
+			number.push_back(temp);
+			oper.push_back(sik[i]);
+			temp = 0;
+		}
+	}
+	number.push_back(temp);
+	/*
+	for(i=0; i<number.size(); ++i){
+		cout<<number[i]<<" ";
+	}
+	cout<<endl;
+	for(i=0; i<oper.size(); ++i){
+		cout<<oper[i]<<" ";
+	}
+	cout<<endl;
+	*/
+	int sum = number[0], oper_index;
+	for(i=1; i<number.size(); ++i){
+		oper_index = i-1;
+		if(oper[oper_index]=='+'){
+			sum+=number[i];
+		}
+		else{
+			sum-=number[i];
+		}
+	}
+	dap = sik;
+	//cout<<sum<<endl;
+	return sum;
+} 
+
+void brute_force(int getsu){
+	if(v.size()==getsu-1){
+		/*
+		for(int i=0; i<v.size(); ++i){
+			if(v[i]==""){
+				cout<<"  ";
+			}
+			else{
+				cout<<v[i]<<" ";	
+			}
+		}
+		cout<<endl;
+		*/
+		int hap = get_hap();
+		if(hap==0){
+			int num = 1;
+			cout<<num;
+			for(int i=0; i<v.size(); ++i){
+				if(v[i]=="") cout<<" ";
+				else cout<<v[i];
+				cout<<++num;
+			}
+			cout<<"\n";	
+		} 
+		
+		return ;
+	}
+	int i;
+	v.push_back("");
+	brute_force(getsu);
+	v.pop_back();
+	v.push_back("+");
+	brute_force(getsu);
+	v.pop_back();
+	v.push_back("-");
+	brute_force(getsu);
+	v.pop_back();
+	
+}
+
+void solve(int getsu){
+	brute_force(getsu);
+}
+
+int main(void)
+{
+	fastio;
+	int testcase;
+	cin>>testcase;
+	int i, getsu;
+	for(i=0; i<testcase; ++i){
+		cin>>getsu;
+		solve(getsu);
+		cout<<"\n";
+	}
+
+	return 0;
+} 
