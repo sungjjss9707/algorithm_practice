@@ -1,0 +1,90 @@
+#include<iostream>
+#include<string>
+using namespace std;
+
+string str;
+int dp[150][150];
+
+bool patern_1(int start, int end){
+	if(end-start<3) return false;
+	if(str[start]!='1'||str[start+1]!='0'||str[end]!='1') return false;
+	int i, one_start_index;
+	for(i=start+2; i<=end; ++i){
+		if(str[i]=='1'){
+			one_start_index = i;
+			break;
+ 		}
+	}
+	for(i=start+2; i<one_start_index; ++i){
+		if(str[i]!='0') return false;
+	}
+	for(i=one_start_index; i<=end; ++i){
+		if(str[i]!='1') return false;
+	}
+	return true;
+}
+
+bool patern_2(int start, int end){
+	if(end-start!=1) return false;
+	if(str[start]=='0'&&str[end]=='1') return true;
+	return false;
+}
+
+bool find_next(int start_index, int end_index){
+	//cout<<start_index<<" "<<end_index<<endl;
+	if(end_index<=start_index) return false;	
+	int ret = dp[start_index][end_index];
+	if(ret!=-1){
+		if(ret==0) return false;
+		else return true;
+	}
+	bool pat_1 = patern_1(start_index, end_index);
+	bool pat_2 = patern_2(start_index, end_index);
+	if(pat_1||pat_2){
+		dp[start_index][end_index] = 1;
+		return true;
+	}
+	
+	int i, mid;
+	for(i=start_index+1; i<end_index; ++i){
+		mid = i;
+		if(find_next(start_index, mid)&&find_next(mid+1, end_index)){
+			dp[start_index][end_index] = 1;
+			return true;
+		}
+	}
+	dp[start_index][end_index] = 0;
+	return false;
+}
+
+void dp_clear(){
+	int i,k;
+	for(i=0; i<str.length(); ++i){
+		for(k=0; k<str.length(); ++k){
+			dp[i][k] = -1;
+		}	
+	}
+}
+
+bool panstar(){
+	int i, start = 0,end;
+	dp_clear();
+	if(find_next(0, str.length()-1)) return true;
+	return false;
+}
+
+string solve(){
+	if(panstar()){
+		return "SUBMARINE";
+	}
+	else{
+		return "NOISE";
+	}
+}
+
+int main(void)
+{
+	cin>>str;
+	cout<<solve();
+	return 0;
+}
