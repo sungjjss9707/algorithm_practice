@@ -1,0 +1,49 @@
+#include<iostream>
+#include<string>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+#include<vector>
+using namespace std;
+
+string str;
+
+bool panstar(){
+	int i;
+	int p_num=0;
+	for(i=0; i<str.length(); ++i){
+		if(str[i]=='P'){
+			p_num++;
+		}
+		else{
+			if(i==str.length()-1) return false;
+			if(p_num>=2&&str[i+1]=='P'){
+				p_num--;
+				i++;
+			}
+			else{
+				return false;
+			}
+		}
+	}
+	if(p_num==1) return true;
+	return false;
+	
+}
+
+string solve(){
+
+	if(panstar()){
+		return "PPAP";
+	}
+	else{
+		return "NP";
+	}
+}
+
+int main(void)
+{
+	//fastio;
+	cin>>str;
+	
+	cout<<solve();
+	return 0;
+}
