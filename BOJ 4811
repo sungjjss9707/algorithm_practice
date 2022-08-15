@@ -1,0 +1,80 @@
+#include<iostream>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+/*WH
+
+WWHH
+WHWH
+
+시작은 무조건 W  끝은 무조건 H
+
+W WHHW H
+W WWHH H
+W WHWH H
+//W HHWW H
+W HWWH H
+W HWHW H
+*/
+
+using namespace std;
+
+long long dp[31][31];
+
+long long get_dp(int w, int h){
+	if(w==0&&h==0){
+		return 1;
+	}
+	long long dap = dp[w][h];
+	if(dap!=-1) return dap;
+	int nextw, nexth;
+	dap=0;
+	if(w-2>=0){
+		nextw = w-2;
+		nexth = h;
+		if(nextw>=nexth){
+			dap+=get_dp(nextw, nexth);
+		}	
+	}
+	if(w-1>=0&&h-1>=0){
+		nextw = w-1;
+		nexth = h-1;
+		if(nextw>=nexth){
+			dap+=(2*get_dp(nextw, nexth));
+		}	
+	}
+	if(h-2>=0){
+		nextw = w;
+		nexth = h-2;
+		if(nextw>=nexth){
+			dap+=get_dp(nextw, nexth);
+		}	
+	}
+	dp[w][h] = dap;
+	return dap;
+}
+
+long long solve(int num){
+	long long dap = get_dp(num-1, num-1);
+	return dap;
+}
+
+void dp_clear(){
+	int i,k;
+	for(i=0; i<=30; i++){
+		for(k=0; k<=30; ++k){
+			dp[i][k] = -1;
+		}
+	}
+}
+
+int main(void)
+{
+	fastio;
+	dp_clear();
+	int i, num;
+	while(1){
+		cin>>num;
+		if(num==0) break;
+		cout<<solve(num)<<"\n";
+	}
+	return 0;
+}
