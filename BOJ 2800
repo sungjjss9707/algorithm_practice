@@ -1,0 +1,77 @@
+#include<iostream>
+#include<string>
+#include<vector>
+#include<algorithm>
+#include<stack>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+string sik;
+vector<pair<int, int>> gwalho;
+vector<int> v;
+vector<string> dap;
+
+void make_sik_without(){
+	int i;
+	string temp = "";
+	bool check[201];
+	for(i=0; i<sik.length(); ++i){
+		check[i] = false;
+	}
+	for(i=0; i<v.size(); ++i){
+		check[gwalho[v[i]].first] = true;
+		check[gwalho[v[i]].second] = true;
+	}
+	for(i=0; i<sik.length(); ++i){
+		if(!check[i]) temp.push_back(sik[i]);
+	}
+	//cout<<temp<<endl;
+	dap.push_back(temp);
+	
+}
+
+void brute_force(int lastindex){
+	make_sik_without();
+	if(lastindex==gwalho.size()-1) return;
+	int i;
+	for(i=lastindex+1; i<gwalho.size(); ++i){
+		v.push_back(i);
+		brute_force(i);
+		v.pop_back();
+	}
+}
+
+void solve(){
+	int i, last_open_index;
+	vector<int> open;
+	vector<int> close;
+	stack<int> s;
+	for(i=0; i<sik.length(); ++i){
+		if(sik[i]=='('){
+			s.push(i);
+		}
+		else if(sik[i]==')'){
+			last_open_index = s.top();
+			s.pop();
+			gwalho.push_back({last_open_index, i});
+		}
+	}
+	for(i=0; i<gwalho.size(); ++i){
+		v.push_back(i);
+		brute_force(i);
+		v.pop_back();
+	}
+	sort(dap.begin(), dap.end());
+	dap.erase(unique(dap.begin(), dap.end()), dap.end());
+	for(i=0; i<dap.size(); ++i){
+		cout<<dap[i]<<"\n";
+	}
+}
+
+int main(void)
+{
+	fastio;
+	cin>>sik;
+	solve();
+	return 0;
+}
