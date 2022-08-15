@@ -1,0 +1,176 @@
+#include<iostream>
+#include<string>
+#include<map>
+#include<queue>
+using namespace std;
+
+string num1, num2;
+map<char, int> m;
+
+
+
+int str_to_int(string str){
+	//mcmv 
+	int i, temp_hap, hap=0, index=1;
+	if(str.length()==1){
+		//cout<<m[str[0]]<<endl;
+		return m[str[0]];	
+	} 
+	int flag[100];
+	for(i=0; i<100; ++i){
+		flag[i] = 0;
+	}
+	for(i=1; i<str.length(); ++i){
+		if(m[str[i]]>m[str[i-1]]){
+			flag[i]=index;
+			flag[i-1] = index;
+			index++;
+		}
+	}
+	/*
+	for(i=0; i<str.length(); ++i){
+		cout<<flag[i]<<" ";
+	}
+	cout<<endl;
+	*/
+	for(i=0; i<str.length(); ++i){
+		if(flag[i]==0){
+			hap+=m[str[i]];
+		}
+		else{
+			hap+=(m[str[i+1]]-m[str[i]]);
+			i++;
+		}
+	}
+	//cout<<" "<<hap<<endl;
+	/*
+	for(i=0; i<str.length()-1; ++i){
+		if(m[str[i]]<m[str[i+1]]){
+			temp_hap = m[str[i+1]]-m[str[i]];
+			if(i==str.length()-3){
+				temp_hap+=m[str[str.length()-1]];
+			}
+			i++;
+			
+		}
+		else{
+			temp_hap = m[str[i]];
+			if(i==str.length()-2){
+				temp_hap+=m[str[str.length()-1]];
+			}
+		}
+		hap+=temp_hap;
+	} 
+	cout<<hap<<endl;
+	*/
+	return hap;
+}
+string int_to_str(int num){
+	string dap = "";
+	int mynum = num,i;
+	if(mynum>=1000){
+		int numof_3 = mynum/1000;
+		mynum%=1000;
+		for(i=0; i<numof_3; ++i){
+			dap.push_back('M');
+		}
+	}
+	if(mynum>=100){
+		int numof_2 = mynum/100;
+		mynum%=100;
+		if(numof_2==9){
+			dap+="CM";
+		}
+		else if(numof_2==4){
+			dap+="CD";
+		}
+		else{
+			if(numof_2>=0&&numof_2<4){
+				for(i=0; i<numof_2; ++i){
+					dap.push_back('C');
+				}
+			}
+			else if(numof_2>=5&&numof_2<9){
+				dap.push_back('D');
+				for(i=0; i<numof_2-5; ++i){
+					dap.push_back('C');
+				}
+			}
+		}
+	}
+	if(mynum>=10){
+		int numof_1 = mynum/10;
+		mynum%=10;
+		if(numof_1==9){
+			dap+="XC";
+		}
+		else if(numof_1==4){
+			dap+="XL";
+		}
+		else{
+			if(numof_1>=0&&numof_1<4){
+				for(i=0; i<numof_1; ++i){
+					dap.push_back('X');
+				}
+			}
+			else if(numof_1>=5&&numof_1<9){
+				dap.push_back('L');
+				for(i=0; i<numof_1-5; ++i){
+					dap.push_back('X');
+				}
+			}
+		}
+	}
+	if(mynum>=0){
+		int numof_0 = mynum;
+		if(numof_0==9){
+			dap+="IX";
+		}
+		else if(numof_0==4){
+			dap+="IV";
+		}
+		else{
+			if(numof_0>=0&&numof_0<4){
+				for(i=0; i<numof_0; ++i){
+					dap.push_back('I');
+				}
+			}
+			else if(numof_0>=5&&numof_0<9){
+				dap.push_back('V');
+				for(i=0; i<numof_0-5; ++i){
+					dap.push_back('I');
+				}
+			}
+		}
+	}
+	return dap;
+}
+
+void make_priority(){
+	m.insert({'I', 1});
+	m.insert({'V', 5});
+	m.insert({'X', 10});
+	m.insert({'L', 50});
+	m.insert({'C', 100});
+	m.insert({'D', 500});
+	m.insert({'M', 1000});
+	
+}
+
+string solve(){
+	make_priority();
+	string dap = "";
+	int int_num1 = str_to_int(num1);
+	int int_num2 = str_to_int(num2);
+	int int_hap = int_num1+int_num2;
+	dap = int_to_str(int_hap);
+	cout<<int_hap<<endl;
+	return dap;
+}
+
+int main(void)
+{
+	cin>>num1>>num2;
+	cout<<solve();
+	return 0;
+}
