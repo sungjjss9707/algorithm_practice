@@ -1,0 +1,38 @@
+#include<iostream>
+
+using namespace std;
+
+long long choiso, choidae;
+
+
+long long gcd(int a, int b){
+	if(b==0) return a;
+	else return gcd(b, a%b);
+}
+
+void solve(){
+	//cout<<gcd(choidae, choiso)<<endl;
+	long long gop = choidae*choiso;
+	long long i, mok, dapbig, dapsmall;
+	for(i=choidae; i<=gop; i+=choidae){
+		if(gop%i==0){
+			mok = gop/i;
+			if(gcd(i, mok)==choidae){
+				if(choidae*(i/choidae)*(mok/choidae)==choiso){
+					//cout<<i<<" "<<mok<<endl;
+					if(mok<i) break;
+					dapsmall = i;
+					dapbig = mok;
+				}
+			}	
+		}
+	}
+	cout<<dapsmall<<" "<<dapbig;
+}
+
+int main(void)
+{
+	cin>>choidae>>choiso;
+	solve();
+	return 0;
+}
