@@ -1,0 +1,113 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+using namespace std;
+
+long long num;
+long long arr[21];
+long long fac[21];
+bool check[21];
+
+
+
+long long print_count(){
+	long long i,k, dap=0, gop;
+	vector<long long> v;
+	for(i=0; i<num-1; ++i){
+		v.clear();
+		for(k=i; k<num; ++k){
+			v.push_back(arr[k]);
+		}
+		sort(v.begin(), v.end());
+		for(k=0; k<v.size(); ++k){
+			if(v[k]==arr[i]){
+				gop = k;
+				break;
+			}
+		}
+		//cout<<gop<<" "<<fac[num-i-1]<<endl;
+		dap+=(gop*fac[num-i-1]);
+	}	
+	dap++;
+	return dap;
+}
+
+long long get_index(long long x){
+	int i, count=0;
+	for(i=1; i<=num; ++i){
+		if(!check[i]){
+			count++;
+			if(count==x) return i;
+		}
+	}
+}
+
+void print_arr(long long count){
+	if(count==1){
+		cout<<1;
+		return;
+	}
+	long long i,k,j,mycount = count, temp, index;
+	vector<long long> v;
+	for(i=1; i<=20; ++i){
+		check[i] = false;
+	}
+	for(i=num-1; i>0; i--){
+		for(k=1; ; k++){
+			temp = fac[i]*k;
+			if(temp==mycount){
+				index = get_index(k);
+				check[index] = true;
+				//cout<<index<<" "<<mycount<<endl;
+				cout<<index<<" ";
+				for(j=num; j>=1; --j){
+					if(!check[j]) cout<<j<<" ";
+				}
+				exit(0);
+			}
+			if(temp>mycount){
+				temp-=fac[i];
+				mycount-=temp;
+				break;
+			}
+		}
+		index = get_index(k);
+		//cout<<index<<" "<<mycount<<endl;
+		check[index] = true;
+		cout<<index<<" ";
+		//cout<<index<<" "<<mycount<<endl;
+	}
+}
+
+void fill_fac(){
+	long long i, gop=1;
+	for(i=1; i<=20; i++){
+		gop*=i;
+		fac[i] = gop;
+	}
+	/*
+	for(i=1; i<=20; i++){
+		cout<<i<<" "<<fac[i]<<endl;
+	}
+	*/
+}
+
+int main(void)
+{
+	cin>>num;
+	long long select, count,i;
+	cin>>select;
+	fill_fac();
+	if(select==1){
+		cin>>count;
+		print_arr(count);
+	}
+	else{
+		for(i=0; i<num; ++i){
+			cin>>arr[i];
+		}
+		cout<<print_count();
+	}
+	
+	return 0;
+}
