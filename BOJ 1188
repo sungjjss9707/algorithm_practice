@@ -1,0 +1,63 @@
+#include<iostream>
+
+using namespace std;
+
+int numofso, numofpeople;
+int dp[101][101];
+
+void dp_clear(){
+	int i,k;
+	for(i=0; i<=100; ++i){
+		for(k=0; k<=100; ++k){
+			dp[i][k] = -1;
+		}
+	}
+}
+
+int dp_solve(int so, int people){
+	if(so>=people){
+		if(so%people==0) return 0;
+		else{
+			return dp_solve(so%people, people);
+		}
+	}
+	int ret = dp[so][people];
+	if(ret!=-1) return ret;
+	int mok,i, hap=0, getsu;
+	for(i=1; ; i++){
+		hap = so*i;
+		if(hap>=people){
+			if(hap==people){
+				getsu = i;
+				return (getsu-1)*so;	
+			} 
+			else{
+				getsu = i-1;
+				return getsu*so+dp_solve(so, people-getsu*so);	
+			} 
+			break;
+		}
+	}
+	
+}
+
+int solve(){
+	dp_clear();
+	int dap = dp_solve(numofso, numofpeople);
+	/*
+	if(numofso>=numofpeople){
+		if(numofso%numofpeople==0) return 0;
+		else{
+			return numofpeople-1;
+		}
+	}
+	*/
+	return dap;
+}
+
+int main(void)
+{
+	cin>>numofso>>numofpeople;
+	cout<<solve();
+	return 0;
+}
