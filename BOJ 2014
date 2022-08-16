@@ -1,0 +1,53 @@
+#include<iostream>
+#include<vector>
+#include<queue>
+#include<set>
+using namespace std;
+
+long long numofsosu, count;
+long long mysosu[101];
+set<long long> visit;
+vector<long long> sosu;
+long long solve(){
+	long long i,k, dap,now, next, hap=0, still, maximum = -1;
+	priority_queue<long long, vector<long long>, greater<long long>> pq;
+	for(i=0; i<numofsosu; ++i){
+		pq.push(mysosu[i]);
+		maximum = max(mysosu[i], maximum);
+		visit.insert(mysosu[i]);
+	}
+	
+	while(1){
+		now = pq.top();
+		pq.pop();
+		//if(visit[now]) continue;
+		//cout<<now<<" ";
+		//visit.insert(now);
+		hap++;
+		if(hap==count){
+			dap = now;
+			break;	
+		} 
+		for(i=0; i<numofsosu; ++i){
+			next = now*mysosu[i];
+			if(visit.count(next)==0){
+				if(visit.size()>count&&next>maximum) continue;
+				visit.insert(next);
+				pq.push(next);
+				maximum = max(maximum, next);
+			}
+		}
+	}
+	return dap;
+}
+
+int main(void)
+{
+	cin>>numofsosu>>count;
+	long long i;
+	for(i=0; i<numofsosu; i++){
+		cin>>mysosu[i];
+	}
+	cout<<solve();
+	return 0;
+}
