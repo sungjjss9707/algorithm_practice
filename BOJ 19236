@@ -1,0 +1,235 @@
+#include<iostream>
+#include<vector>
+using namespace std;
+
+pair<int, int> sea[5][5];
+int dap = -1;
+int dy[9] = {0,-1,-1, 0, 1, 1, 1, 0,-1};
+int dx[9] = {0, 0, -1, -1, -1, 0, 1,1,1};
+
+void print_sea(int y, int x){
+	int i,k;
+	cout<<"-----------------\n";
+	for(i=1; i<=4; ++i){
+		for(k=1; k<=4; ++k){
+			if(i==y&&k==x){
+				cout<<0<<" ";
+			}
+			else if(sea[i][k].second==-1){
+				cout<<-1<<" ";
+			}
+			else{
+				cout<<sea[i][k].first<<" ";	
+			}
+		}
+		cout<<" ";
+		for(k=1; k<=4; ++k){
+			cout<<sea[i][k].second<<" ";	
+		}
+		cout<<endl;
+	}
+	/*
+	cout<<endl;
+	for(i=1; i<=4; ++i){
+		for(k=1; k<=4; ++k){
+			cout<<sea[i][k].second<<" ";	
+		}
+		cout<<endl;
+	}
+	*/
+	cout<<"-----------------\n";
+	cout<<endl;
+}
+/*
+void go_fish(int y, int x){
+	pair<int, int> arr[17];
+	int i,k, num, direction;
+	for(i=1; i<=16; ++i){
+		arr[i] = {-1,-1};
+	}
+	for(i=1; i<=4; ++i){
+		for(k=1; k<=4; ++k){
+			num = sea[i][k].second;
+			if(num!=-1){
+				arr[sea[i][k].first] = {i,k};	
+			}
+		}
+	}
+
+	int nowy, nowx, nowdir_index, nexty, nextx, nextdir_index, now_index,change_index, temp;
+	pair<int, int> temp_pair;
+	//print_sea();
+	for(i=1; i<=16; ++i){
+		if(arr[i].first==-1) continue;
+		nowy = arr[i].first;
+		nowx = arr[i].second;
+		nowdir_index = sea[nowy][nowx].second;
+		for(k=0; k<8; ++k){
+			nextdir_index = nowdir_index+k;
+			if(nextdir_index>8){
+				nextdir_index-=8;
+			}
+			nexty = nowy+dy[nextdir_index];
+			nextx = nowx+dx[nextdir_index];
+			if(nexty>=1&&nexty<=4&&nextx>=1&&nextx<=4){
+				if(!(y==nexty&&x==nextx)){
+					break;
+				}
+			}
+			nexty=-100;
+			nextx=-100;
+		}
+		if(nexty==-100&&nextx==-100) continue;
+		now_index = i;
+		//cout<<now_index<<"이동 : \n";
+		//cout<<nexty<<" "<<nextx<<endl;
+		change_index = sea[nexty][nextx].first;
+		temp_pair = {nowy, nowx};
+		arr[now_index] = arr[change_index];
+		arr[change_index] = temp_pair;	
+		temp_pair = sea[nowy][nowx];
+		sea[nowy][nowx] = sea[nexty][nextx];
+		sea[nexty][nextx] = temp_pair;
+		
+		//print_sea(y,x);
+ 	}
+}
+*/
+void go_fish(int y, int x){
+	int i,j,k, num, direction;
+
+	int nowy, nowx, nowdir_index, nexty, nextx, nextdir_index, now_index,change_index, temp, last_dir;
+	pair<int, int> temp_pair;
+	//print_sea();
+	
+	for(i=1; i<=16; ++i){
+		nowy = 0;
+		nowx = 0;
+		for(j=1; j<=4; ++j){
+			for(k=1; k<=4; ++k){
+				if(sea[j][k].first==i&&sea[j][k].second!=-1){
+					nowy = j;
+					nowx = k;
+					break;
+				}
+			}
+			if(nowy!=0) break;
+		}
+		if(nowy==0) continue;
+		nowdir_index = sea[nowy][nowx].second;
+		for(k=0; k<8; ++k){
+			nextdir_index = nowdir_index+k;
+			if(nextdir_index>8){
+				nextdir_index-=8;
+			}
+			nexty = nowy+dy[nextdir_index];
+			nextx = nowx+dx[nextdir_index];
+			if(nexty>=1&&nexty<=4&&nextx>=1&&nextx<=4){
+				if(!(y==nexty&&x==nextx)){
+					last_dir = nextdir_index;
+					break;
+				}
+			}
+			nexty=-100;
+			nextx=-100;
+		}
+		if(nexty==-100&&nextx==-100) continue;
+		now_index = i;
+		sea[nowy][nowx].second = last_dir;
+		//cout<<now_index<<"이동 : \n";
+		//cout<<nexty<<" "<<nextx<<endl;
+		//change_index = sea[nexty][nextx].first;
+		temp_pair = sea[nowy][nowx];
+		sea[nowy][nowx] = sea[nexty][nextx];
+		sea[nexty][nextx] = temp_pair;
+		
+		//print_sea(y,x);
+ 	}
+}
+int eat_fish(int y, int x){
+	int ret = sea[y][x].first;
+	sea[y][x].second = -1;
+	return ret;
+}
+
+vector<pair<int, int>> go_shark(int y, int x, int dir){
+	int i,k, nexty=y, nextx=x;
+	vector<pair<int, int>> ret;
+	while(1){
+		nexty+=dy[dir];
+		nextx+=dx[dir];
+		if(nexty>=1&&nexty<=4&&nextx>=1&&nextx<=4){
+			if(sea[nexty][nextx].second!=-1){
+				ret.push_back({nexty, nextx});
+			}
+		}
+		else break;
+	}
+	return ret;
+}
+
+void brute_force(int y, int x, int dir, int ate){
+	//sea_copy();
+	
+	int i,j,k, eat;
+	//print_sea(y,x);
+	eat = eat_fish(y,x);
+	//print_sea(y,x);
+	go_fish(y,x);
+	//print_sea(y,x);
+	//exit(0);
+	pair<int, int> copied_sea[5][5];
+	for(i=1; i<=4; ++i){
+		for(k=1; k<=4; ++k){
+			copied_sea[i][k] = sea[i][k];
+		}
+	}
+	vector<pair<int, int>> hoobo = go_shark(y,x,dir);
+	//cout<<y<<","<<x<<"에서 갈 수 있는 곳 : \n";
+	
+	if(hoobo.size()==0){
+		//print_sea(y,x);
+		dap = max(dap, ate+eat);
+		//cout<<ate+eat<<" "<<"갈곳 없으니까 그만\n\n";
+		return;
+	}
+	
+	int nexty, nextx;
+	for(i=0; i<hoobo.size(); ++i){
+		nexty = hoobo[i].first;
+		nextx = hoobo[i].second;
+		//cout<<nexty<<","<<nextx<<"   ";	
+	}
+	//cout<<endl;
+	for(i=0; i<hoobo.size(); ++i){
+		nexty = hoobo[i].first;
+		nextx = hoobo[i].second;
+		brute_force(nexty, nextx, sea[nexty][nextx].second, ate+eat);
+		for(j=1; j<=4; ++j){
+			for(k=1; k<=4; ++k){
+				sea[j][k] = copied_sea[j][k];
+			}
+		}
+	}
+}
+
+int solve(){
+	brute_force(1,1, sea[1][1].second,0);
+	//cout<<dap<<endl;
+	return dap;
+}
+
+int main(void)
+{
+	int i,k, a,b;
+	for(i=1; i<=4; ++i){
+		for(k=1; k<=4; ++k){
+			cin>>a>>b;
+			sea[i][k].first = a;
+			sea[i][k].second = b;
+		}
+	}
+	//print_sea(-1, -1);
+	cout<<solve();
+	return 0;
+}
