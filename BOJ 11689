@@ -1,0 +1,39 @@
+#include<iostream>
+
+using namespace std;
+
+long long num;
+
+long long solve(){
+	long long i, mynum = num;
+	long long dap = num;
+	for(i=2; i*i<=num; ++i){
+		if(i>mynum) break;
+		if(mynum%i==0){
+		//	cout<<mynum<<" "<<i<<endl;
+			dap = dap/i;
+			dap = dap*(i-1);
+			
+			while(mynum%i==0){
+				//cout<<mynum<<" "<<i<<endl;
+				mynum/=i;
+			}
+		}
+	}
+	//cout<<dap<<endl;
+	//cout<<mynum<<endl;
+	if(mynum!=1){
+		dap = dap/(mynum);
+		dap = dap*(mynum-1);
+		
+	}
+	//cout<<mynum<<endl;
+	return dap;
+}
+
+int main(void)
+{
+	cin>>num;
+	cout<<solve();	
+	return 0;
+}
