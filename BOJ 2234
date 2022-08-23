@@ -1,0 +1,165 @@
+#include<iostream>
+#include<vector>
+using namespace std;
+
+int sero, garo;
+int bang[51][51];
+bool visit[51][51];
+vector<pair<int, int>> rel[51][51];
+bool bang_link[51][51][51][51];
+int dy[4] = {1,0,-1,0};
+int dx[4] = {0,1,0,-1};
+void make_bang_relationship(){
+	int i,j,k,l, yee;
+	for(i=1; i<=sero; ++i){
+		for(j=1; j<=garo; ++j){
+			for(k=1; k<=sero; ++k){
+				for(l=1; l<=garo; ++l){
+					//cout<<i<<" "<<j<<" "<<k<<" "<<l<<endl;
+					bang_link[i][j][k][l] = false;
+				}
+			}
+		}
+	}
+	
+	for(i=1; i<=sero; ++i){
+		for(k=1; k<=garo; ++k){
+			yee = bang[i][k];
+			//cout<<yee<<endl;
+			if(yee>=8){		//밑 
+				yee-=8;
+			}
+			else{
+				bang_link[i][k][i+1][k] = true;
+				rel[i][k].push_back({i+1,k});
+			}
+			if(yee>=4){		//오른쪽 
+				yee-=4;
+			}
+			else{
+				bang_link[i][k][i][k+1] = true;
+				rel[i][k].push_back({i,k+1});
+			}
+			if(yee>=2){		//위 
+				yee-=2;
+			}
+			else{
+				bang_link[i][k][i-1][k] = true;
+				rel[i][k].push_back({i-1,k});
+			}
+			if(yee>=1){		//왼쪽  
+				yee-=1;
+			}
+			else{
+				bang_link[i][k][i][k-1] = true;
+				rel[i][k].push_back({i,k-1});
+			}
+		}
+	}
+	/*
+	for(i=1; i<=sero; ++i){
+		for(j=1; j<=garo; ++j){
+			cout<<i<<","<<j<<" : ";
+			for(k=0; k<rel[i][j].size(); ++k){
+				cout<<rel[i][j][k].first<<","<<rel[i][j][k].second<<"    ";
+			}
+			cout<<endl;
+		}
+	}
+	*/
+}
+
+void visit_clear(){
+	int i,k;
+	for(i=1; i<=sero; ++i){
+		for(k=1; k<=garo; ++k){
+			visit[i][k] = false;
+		}
+	}
+}
+
+int dfs(int y, int x){
+	visit[y][x] = true;
+	int dap = 1;
+	int i, ny, nx;
+	for(i=0; i<rel[y][x].size(); ++i){
+		ny = rel[y][x][i].first;
+		nx = rel[y][x][i].second;
+		if(ny>=1&&ny<=sero&&nx>=1&&nx<=garo){
+			if(!visit[ny][nx]){
+				dap+=dfs(ny, nx);
+			}	
+		}
+	}
+	return dap;
+}
+
+pair<int, int> get_getsu_and_largest(){
+	int i,k, getsu = 0, largest = -1, area;
+	pair<int, int> dap;
+	visit_clear();
+	for(i=1; i<=sero; ++i){
+		for(k=1; k<=garo; ++k){
+			if(!visit[i][k]){
+				getsu++;
+				area = dfs(i,k);
+				largest = max(largest, area);
+			}
+		}
+	}
+	dap = {getsu, largest};
+	return dap;
+}
+
+int get_one_break_largest(){
+	int i,j,k, largest = -1, area;
+	int ny, nx;
+	
+	for(i=1; i<=sero; ++i){
+		for(j=1; j<=garo; ++j){
+			for(k=0; k<4; ++k){
+				ny = i+dy[k];
+				nx = j+dx[k];
+				if(ny>=1&&ny<=sero&&nx>=1&&nx<=garo){
+					if(!bang_link[i][j][ny][nx]){
+						rel[i][j].push_back({ny,nx});
+						visit_clear();
+						area = dfs(i,j);
+						largest = max(area, largest);
+						rel[i][j].pop_back();
+					}
+				}
+			}
+		}
+	}
+	return largest;
+}
+
+void solve(){
+	
+	make_bang_relationship();
+	
+
+	pair<int, int> getsu_and_largest = get_getsu_and_largest();
+	
+	cout<<getsu_and_largest.first<<"\n"<<getsu_and_largest.second<<"\n";
+	
+	
+	int one_break_largest = get_one_break_largest();
+	cout<<one_break_largest;
+	
+}
+
+int main(void)
+{
+	cin>>garo>>sero;
+	int i,k;
+	for(i=1; i<=sero; ++i){
+		for(k=1; k<=garo; ++k){
+			cin>>bang[i][k];
+		}
+	}
+		
+	solve();
+	return 0;
+}
