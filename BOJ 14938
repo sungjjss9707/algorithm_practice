@@ -1,0 +1,73 @@
+#include<iostream>
+
+using namespace std;
+
+int numofver, len, numofedge, inf=2100000;
+int numofitem[101];
+int dist[101][101];
+
+void floyd_wash(){	//가장 바깥쪽 for은 경유할정점, 가운데는 출발정점, 가장 안쪽은 도착정점  
+	int i,j,k;
+	for(i=1; i<=numofver; ++i){	
+		for(j=1; j<=numofver; ++j){
+			for(k=1; k<=numofver; ++k){
+				if(dist[j][k]>dist[j][i]+dist[i][k]){
+					dist[j][k]=dist[j][i]+dist[i][k];
+				} 
+			}	
+		}	
+	}
+	/*
+	for(i=1; i<=numofver; ++i){
+		for(k=1; k<=numofver; ++k){
+			cout<<dist[i][k]<<" ";
+		}
+		cout<<endl;
+	}
+	cout<<endl;
+	*/
+}
+
+int solve(){
+	floyd_wash();
+	int i,k,hap,dap=0;
+	for(i=1; i<=numofver; ++i){
+		hap=0;
+		for(k=1; k<=numofver; ++k){
+			if(dist[i][k]<=len){
+				hap+=numofitem[k];
+			}
+		}
+		dap = max(dap, hap);
+	}
+	return dap;
+}
+
+void dist_clear(){
+	int i,k;
+	for(i=1; i<=numofver; ++i){
+		for(k=1; k<=numofver; ++k){
+			dist[i][k] = inf;
+		}
+	}
+	for(i=1; i<=numofver; ++i){
+		dist[i][i] = 0;
+	}
+}
+
+int main(void)
+{
+	cin>>numofver>>len>>numofedge;
+	dist_clear();
+	int i,s,e,d;
+	for(i=1; i<=numofver; ++i){
+		cin>>numofitem[i];
+	}
+	for(i=0; i<numofedge; ++i){
+		cin>>s>>e>>d;
+		dist[s][e] = d;
+		dist[e][s] = d;
+	}
+	cout<<solve();
+	return 0;
+}
