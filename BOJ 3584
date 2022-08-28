@@ -1,0 +1,60 @@
+#include<iostream>
+#include<vector>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+
+int numofnode, head,goal_x, goal_y;
+int parent[10001];
+
+void family_clear(){
+	int i;
+	for(i=1; i<=numofnode; ++i){
+		parent[i] = i;
+	}
+}
+
+int solve(){
+	int i,k;
+	
+	//cout<<"head : "<<head<<endl;
+	int father_x = goal_x, father_y = goal_y;
+	bool check[10001];
+	for(i=1; i<=numofnode; ++i){
+		check[i] = false;
+	}
+	//cout<<"fuck\n";
+	while(1){
+		check[father_x] = true; 
+		//cout<<father_x<<"체크\n"; 
+		if(father_x==parent[father_x]) break;
+		father_x = parent[father_x];
+	} 
+	
+	while(1){
+		if(check[father_y]) break;
+		if(father_y==parent[father_y]) break;
+		father_y = parent[father_y];
+	} 
+	return father_y;
+}
+
+int main(void)
+{
+	fastio;
+	int testcase,t,i, p,c;
+	cin>>testcase;
+	for(t=0; t<testcase; ++t){
+		cin>>numofnode;
+		family_clear();
+		for(i=0; i<numofnode-1; ++i){
+			cin>>p>>c;
+			parent[c] = p;
+		}	
+		cin>>goal_x>>goal_y;
+		cout<<solve()<<"\n";
+	}
+	return 0;
+	
+	
+}
