@@ -1,0 +1,174 @@
+#include<iostream>
+#include<math.h>
+#include<vector>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+int chasoo, len, hwetsu;
+int pan[70][70];
+int temp_pan[70][70];
+int level[1001];
+int dy[4] = {1,0,-1,0};
+int dx[4] = {0,1,0,-1};
+bool visit[70][70];
+
+void print_pan(){
+	int i,k;
+	cout<<endl;
+	for(i=1; i<=len; ++i){
+		for(k=1; k<=len ;++k){
+			cout<<pan[i][k]<<" ";
+		}
+		cout<<endl;
+	}
+}
+
+void boonhal(int sy, int sx, int ey, int ex){
+	//cout<<sy<<","<<sx<<"  "<<ey<<","<<ex<<endl;
+	int i,k,side = ey-sy+1, temp, index;
+	vector<int> v;
+	while(sy<ey){
+		v.clear();
+		for(i=ey; i>sy; --i){
+			v.push_back(pan[i][sx]);
+		}
+		//cout<<"here\n";
+		index = sx+1;
+		for(i=sy+1; i<=ey; ++i){
+			pan[i][sx] = pan[ey][index++];
+		}
+		
+		index = ey-1;
+		for(k=sx+1; k<=ex; ++k){
+			pan[ey][k] = pan[index--][ex];
+		}
+		
+		index = ex-1;
+		for(i=ey-1; i>=sy; --i){
+			pan[i][ex] = pan[sy][index--];
+		}
+		
+		index = 0;
+		for(k=sx; k<ex; ++k){
+			pan[sy][k] = v[index++];
+		}
+		sy++;
+		sx++;
+		ey--;
+		ex--;
+	}
+	
+}
+
+void rotate(int cut_len){
+	
+	int i,k, mylen = pow(2, cut_len);
+	//cout<<mylen<<endl;
+	for(i=1; i<=len; i+=mylen){
+		for(k=1; k<=len; k+=mylen){
+			boonhal(i,k,i+mylen-1, k+mylen-1);
+		}
+	}
+}
+
+void minus_one(){	///////////////////////////////
+	int i,k,l, ny, nx, getsu;
+	for(i=1; i<=len; ++i){
+		for(k=1; k<=len; ++k){
+			temp_pan[i][k] = pan[i][k];
+		}
+	}
+	for(i=1; i<=len; ++i){
+		for(k=1; k<=len; ++k){
+			if(temp_pan[i][k]==0) continue;
+			getsu = 0;
+			for(l=0; l<4; ++l){
+				ny = i+dy[l];
+				nx = k+dx[l];
+				if(ny>=1&&ny<=len&&nx>=1&&nx<=len){
+					if(temp_pan[ny][nx]>0) getsu++;
+				}	
+			}
+			if(getsu<3) pan[i][k]--;
+		}
+	}
+}
+
+int ice_hap(){
+	int i,k, hap=0;
+	for(i=1; i<=len; ++i){
+		for(k=1; k<=len; ++k){
+			hap+=pan[i][k];
+		}
+	}
+	return hap;
+}
+
+void visit_clear(){
+	int i,k;
+	for(i=1; i<=len; ++i){
+		for(k=1; k<=len; ++k){
+			visit[i][k] = false;
+		}
+	}
+}
+
+int dfs(int y, int x){
+	visit[y][x] = true;
+	int i,ny, nx, ret = 1;
+	for(i=0; i<4; ++i){
+		ny = y+dy[i];
+		nx = x+dx[i];
+		if(ny>=1&&ny<=len&&nx>=1&&nx<=len){
+			if(!visit[ny][nx]&&pan[ny][nx]>0){
+				ret+=dfs(ny, nx);
+			}
+		}
+	}
+	return ret;
+}
+
+int biggest_iceberg(){
+	visit_clear();
+	int i,k, biggest = 0, hoobo;
+	for(i=1; i<=len; ++i){
+		for(k=1; k<=len; ++k){
+			if(!visit[i][k]&&pan[i][k]>0){
+				hoobo = dfs(i,k);
+				//cout<<hoobo<<endl;
+				biggest = max(biggest, hoobo);
+			}
+		}
+	}
+	return biggest;
+}
+
+void solve(){
+	int i, cut;
+	for(i=0; i<hwetsu; ++i){
+		cut = level[i];
+		rotate(cut);
+		minus_one();
+	}
+	//print_pan();
+	cout<<ice_hap()<<"\n";
+	cout<<biggest_iceberg();
+}
+
+int main(void)
+{
+	fastio;
+	cin>>chasoo>>hwetsu;
+	len = pow(2, chasoo);
+	int i,k;
+	for(i=1; i<=len ;++i){
+		for(k=1; k<=len; ++k){
+			cin>>pan[i][k];
+		}
+	}
+	for(i=0; i<hwetsu; ++i){
+		cin>>level[i];
+	}
+	solve();
+	return 0;
+}
