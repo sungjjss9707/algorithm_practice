@@ -1,0 +1,113 @@
+#include<iostream>
+#include<vector>
+#include<queue>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+struct triple{
+	int y, x, time;
+};
+
+int len, getsu, inf = 200000000, dap;
+int miro[51][51];
+int dy[4] = {1,0,-1,0};
+int dx[4] = {0,1,0,-1};
+vector<pair<int, int>> can;
+vector<int> choice;
+
+int bfs(){
+	//bool visit[51][51];
+	int copy[51][51];
+	int i,k;
+	for(i=1; i<=len; ++i){
+		for(k=1; k<=len; ++k){
+			//visit[i][k] = false;
+			if(miro[i][k]==1){
+				copy[i][k] = -2;
+			}
+			else{
+				copy[i][k] = -1;
+			}
+		}
+	}
+	queue<triple> q;
+	int y,x,ny, nx,time;
+	for(i=0; i<choice.size(); ++i){
+		y = can[choice[i]].first;
+		x = can[choice[i]].second;
+		q.push({y,x,0});
+		copy[y][x] = 0;
+		//visit[y][x] = true;
+	}
+	while(!q.empty()){
+		y = q.front().y;
+		x = q.front().x;
+		time = q.front().time;
+		q.pop();
+		for(i=0; i<4; ++i){
+			ny = y+dy[i];
+			nx = x+dx[i];
+			if(ny>=1&&ny<=len&&nx>=1&&nx<=len){
+				if(copy[ny][nx]==-1){
+					copy[ny][nx] = time+1;
+					q.push({ny,nx,time+1});
+				}
+			}
+		}
+	}
+	int maximum = -1;
+	for(i=1; i<=len; ++i){
+		for(k=1; k<=len; ++k){
+			if(copy[i][k]==-1){
+				return inf;
+			}
+			else{
+				maximum = max(maximum, copy[i][k]);
+			}
+		}
+	}
+	return maximum;
+}
+
+void brute_force(int index){
+	if(choice.size()==getsu){
+		/*
+		for(int i=0; i<choice.size(); ++i){
+			cout<<can[choice[i]].first<<" "<<can[choice[i]].second<<endl;;
+		}
+		cout<<endl;
+		*/
+		int time = bfs();
+		dap = min(dap, time);
+		return;
+	}
+	int nextindex = index+1, i;
+	for(i=nextindex; i<can.size(); ++i){
+		choice.push_back(i);
+		brute_force(i);
+		choice.pop_back();
+	}
+}
+
+int solve(){
+	//cout<<can.size()<<endl;
+	dap = inf;
+	brute_force(-1);
+	if(dap==inf) return -1;
+	return dap;
+}
+
+int main(void)
+{
+	fastio;
+	cin>>len>>getsu;
+	int i,k;
+	for(i=1; i<=len; ++i){
+		for(k=1; k<=len; ++k){
+			cin>>miro[i][k];
+			if(miro[i][k]==2) can.push_back({i,k});
+		}
+	}
+	cout<<solve();
+	return 0;
+}
