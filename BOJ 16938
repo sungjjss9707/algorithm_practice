@@ -1,0 +1,67 @@
+#include<iostream>
+#include<algorithm>
+#include<vector>
+
+using namespace std;
+
+int numofprob, hap_low, hap_up, diff_easy_cha, dap;
+int nanyeedo[16];
+vector<int> v;
+
+void brute(int yeejeon_index){
+	
+	if(v.size()>=2){
+		int i;
+		
+		int hap = 0, first, last;
+		for(i=0; i<v.size(); ++i){
+			hap+=v[i];
+		}
+		first = v[0];
+		last = v[v.size()-1];
+		if(hap>=hap_low&&hap<=hap_up&&last-first>=diff_easy_cha){
+			dap++;
+			/*
+			for(i=0; i<v.size(); ++i){
+				cout<<v[i]<<" ";
+			}
+			cout<<"답 : "<<dap;
+			cout<<endl;
+			*/
+		}
+	}
+	if(yeejeon_index==numofprob) return;
+	int i;
+	for(i=yeejeon_index+1; i<=numofprob; ++i){
+		v.push_back(nanyeedo[i]);
+		brute(i);
+		v.pop_back();
+	}
+	
+}
+
+int solve(){
+	if(numofprob==1) return 0;
+	dap=0;
+	sort(nanyeedo+1, nanyeedo+numofprob+1);
+	int i;
+	/*
+	for(i=1; i<=numofprob; ++i){
+		cout<<nanyeedo[i]<<" ";
+	}
+	cout<<endl;
+	*/
+	brute(0);
+	return dap;
+}
+
+int main(void)
+{
+	cin>>numofprob>>hap_low>>hap_up>>diff_easy_cha;
+	int i,k;
+	for(i=1; i<=numofprob; ++i){
+		cin>>nanyeedo[i];
+	}
+	cout<<solve();
+	return 0;
+}
