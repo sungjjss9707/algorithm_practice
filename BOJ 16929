@@ -1,0 +1,67 @@
+#include<iostream>
+
+using namespace std;
+
+int sero, garo;
+char miro[51][51];
+bool visit[51][51];
+int dy[4] = {1,0,-1,0};
+int dx[4] = {0,1,0,-1};
+
+void clear(){
+	int i,k;
+	for(i=1; i<=sero; ++i){
+		for(k=1; k<=garo; ++k){
+			visit[i][k] = false;
+		}
+	}
+}
+
+void dfs(int y, int x, int last_y, int last_x, char color, int count){
+	visit[y][x] = true;
+	int i, ny, nx;
+	for(i=0; i<4; ++i){
+		ny = y+dy[i];
+		nx = x+dx[i];
+		if(ny==last_y&&nx==last_x) continue;
+		if(ny>=1&&ny<=sero&&nx>=1&&nx<=garo){
+			if(miro[ny][nx]==color){
+				if(visit[ny][nx]){
+					if(count>=4){
+						cout<<"Yes";
+						exit(0);
+					}
+				}
+				else{
+					visit[ny][nx] = true;
+					dfs(ny, nx, y,x,color, count+1);
+				}
+			}
+		}
+	}
+	visit[y][x] = false;
+}
+
+string solve(){
+	clear();
+	int i,k;
+	for(i=1; i<=sero; ++i){
+		for(k=1; k<=garo; ++k){
+			dfs(i,k, 0,0,miro[i][k],1);
+		}
+	}
+	return "No";
+}
+
+int main(void)
+{
+	cin>>sero>>garo;
+	int i,k;
+	for(i=1; i<=sero; ++i){
+		for(k=1; k<=garo; ++k){
+			cin>>miro[i][k];
+		}
+	}
+	cout<<solve();
+	return 0;
+}
