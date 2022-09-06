@@ -1,0 +1,63 @@
+#include<iostream>
+#include<vector>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+vector<pair<int, int>> v;
+int parent[500001];
+
+int numofver, numofedge;
+
+void parent_clear(){
+	int i;
+	for(i=0; i<numofver; ++i){
+		parent[i] = i;
+	}
+}
+
+int get_parent(int x){
+	if(x==parent[x]) return x;
+	int parent_x = get_parent(parent[x]);
+	parent[x] = parent_x;
+	return parent_x;
+}
+
+void union_set(int p_x, int p_y){
+	if(p_x<p_y){
+		parent[p_y] = p_x;
+	}
+	else{
+		parent[p_x] = p_y;
+	}
+}
+
+int solve(){
+	parent_clear();
+	int i, x,y ,p_y, p_x;
+	for(i=0; i<numofedge; ++i){
+		x = v[i].first;
+		y = v[i].second;
+		p_x = get_parent(x);
+		p_y = get_parent(y);
+		if(p_y==p_x&&i>=2){
+			return i+1;
+		}
+		else{
+			union_set(p_x, p_y);
+		}
+	}
+	return 0;
+}
+
+int main(void)
+{
+	fastio;
+	cin>>numofver>>numofedge;
+	int i,s,e;
+	for(i=0; i<numofedge; ++i){
+		cin>>s>>e;
+		v.push_back({s,e});
+	}
+	cout<<solve();
+	return 0;
+}
