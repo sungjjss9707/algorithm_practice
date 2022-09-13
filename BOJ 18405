@@ -1,0 +1,84 @@
+#include<iostream>
+#include<queue>
+#include<vector>
+
+using namespace std;
+
+struct tri{
+	int y,x,my_birus, my_time;
+};
+
+int len, birus;
+int time, goal_y, goal_x;
+int miro[201][201];
+int dy[4] = {1,0,-1,0};
+int dx[4] = {0,1,0,-1};
+
+vector<pair<int, int>> v[1001];
+
+void print_miro(){
+	int i,k;
+	for(i=1; i<=len ;++i){
+		for(k=1; k<=len; ++k){
+			cout<<miro[i][k]<<" ";
+		}
+		cout<<endl;
+	}
+	cout<<endl;
+}
+
+int solve(){
+	int i,k;
+	for(i=1; i<=len ;++i){
+		for(k=1; k<=len; ++k){
+			if(miro[i][k]!=0){
+				v[miro[i][k]].push_back({i,k});
+			}
+		}
+	}
+	queue<tri> q;
+	for(i=1; i<=1000; ++i){
+		if(v[i].size()==0) continue;
+		for(k=0; k<v[i].size(); ++k){
+			//cout<<v[i][k].first<<","<<v[i][k].second<<" 에 "<<i<<"있음\n";
+			q.push({v[i][k].first, v[i][k].second, i, 0});
+		}
+	}
+	int nowy, nowx, nowtime,nexty, nextx, nowb;
+	while(!q.empty()){
+		nowy = q.front().y;
+		nowx = q.front().x;
+		nowb = q.front().my_birus;
+		nowtime = q.front().my_time;
+		//cout<<nowtime<<endl;
+		//print_miro();
+		q.pop();
+		if(nowtime>time-1) break;
+		for(i=0; i<4; ++i){
+			nexty = nowy+dy[i];
+			nextx = nowx+dx[i];
+			if(nexty>=1&&nexty<=len&&nexty>=1&&nextx<=len){
+				if(miro[nexty][nextx]==0){
+					miro[nexty][nextx] = nowb;
+					
+					q.push({nexty, nextx, nowb, nowtime+1});
+				}
+			}
+		}
+	}
+	return miro[goal_y][goal_x];
+}
+
+int main(void)
+{
+	cin>>len>>birus;
+	int i,k;
+	for(i=1; i<=len ;++i){
+		for(k=1; k<=len; ++k){
+			cin>>miro[i][k];
+		}
+	}
+	cin>>time>>goal_y>>goal_x;
+	cout<<solve();
+	return 0;
+}
