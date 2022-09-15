@@ -1,0 +1,112 @@
+#include<iostream>
+#include<vector>
+#include<math.h>
+#include<algorithm>
+using namespace std;
+
+struct link_inform{
+	double len;
+	int a,b;
+};
+
+vector<link_inform> mylink;
+int numofdot, numoflink, head;
+bool sok[1001];
+int parent[1001];
+pair<long long , long long> mydot[1001];
+
+void parent_clear(){
+	int i;
+	for(i=1; i<=numofdot; ++i){
+		parent[i] = i;
+	}
+}
+
+int get_parent(int x){
+	if(x==parent[x]) return x;
+	int parent_x = get_parent(parent[x]);
+	parent[x] = parent_x;
+	return parent_x;
+}
+
+void union_set(int p_a, int p_b){
+	if(p_a<p_b){
+		parent[p_b] = p_a;
+	}
+	else{
+		parent[p_a] = p_b;
+	}
+}
+
+double get_len(int a, int b){
+	long long a_x = mydot[a].first, a_y = mydot[a].second;
+	long long b_x = mydot[b].first, b_y = mydot[b].second;
+	long long x_cha = a_x-b_x, y_cha = a_y-b_y;
+	double len = sqrt(x_cha*x_cha+y_cha*y_cha);
+	return len;
+}
+
+bool compare(link_inform a, link_inform b){
+	return a.len<b.len;
+}
+
+double solve(){
+	int i,k, p_i,a,b, p_a, p_b;
+	double len, dap=0.0;
+	for(i=1; i<=numofdot; ++i){
+		p_i = get_parent(i);
+		if(p_i!=i){
+			head = p_i;
+			break; 
+		}
+	}
+	//cout<<"헤드 : "<<head<<endl;
+	for(i=1; i<numofdot; ++i){
+		for(k=i+1; k<=numofdot; ++k){
+			len = get_len(i,k);
+			//cout<<i<<" "<<k<<" "<<len<<endl;
+			mylink.push_back({len, i,k});
+		}
+	}
+	sort(mylink.begin(), mylink.end(), compare);
+	/*
+	for(i=0; i<mylink.size(); ++i){
+		cout<<mylink[i].a<<"랑"<<mylink[i].b<<"의 거리 : "<<mylink[i].len<<endl; 
+	}
+	*/
+	for(i=0; i<mylink.size(); ++i){
+		a = mylink[i].a;
+		b = mylink[i].b;
+		len = mylink[i].len;
+		p_a = get_parent(a);
+		p_b = get_parent(b);
+		if(p_a!=p_b){
+			union_set(p_a, p_b);
+			dap+=len;
+		}
+	}
+	return dap;
+}
+
+int main(void)
+{
+	cout<<fixed;
+	cout.precision(2);
+	cin>>numofdot>>numoflink;
+	int i,k,a,b, p_a, p_b;
+	long long x,y;
+	for(i=1; i<=numofdot; ++i){
+		cin>>x>>y;
+		mydot[i] = {x,y};
+		//dot_set.push_back({i,x,y});
+	}
+	parent_clear();
+	for(i=0; i<numoflink; ++i){
+		cin>>a>>b;
+		p_a = get_parent(a);
+		p_b = get_parent(b);
+		if(p_a!=p_b) union_set(p_a, p_b);
+	}
+	cout<<solve();
+	return 0;
+}
