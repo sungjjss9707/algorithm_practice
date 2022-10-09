@@ -1,0 +1,195 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#include<math.h>
+using namespace std;
+
+int numofnum;
+
+vector<long long> plus_arr;
+vector<long long> minus_arr;
+vector<pair<long long, long long>> p;
+vector<pair<long long, long long>> m;
+
+long long yeeboon_m(int start, int end, int goal){
+	if(start==end){
+		if(minus_arr[start]==goal) return minus_arr[start];
+		int index = start;
+		long long cha = abs(minus_arr[start]-goal), ret;
+		while(index>=0){
+			if(abs(minus_arr[index]-goal)<=cha){
+				cha = abs(minus_arr[index]-goal);
+				ret = minus_arr[index];
+				index--;
+			}
+			else break;
+		}
+		index = start;
+		while(index<minus_arr.size()){
+			if(abs(minus_arr[index]-goal)<=cha){
+				cha = abs(minus_arr[index]-goal);
+				ret = minus_arr[index];
+				index++;
+			}
+			else break;
+		}
+		return ret; 
+	}
+	int mid = (start+end)/2;
+	if(minus_arr[mid]>goal){
+		return yeeboon_m(start, mid,goal);
+	}
+	else{
+		return yeeboon_m(mid+1, end ,goal);
+	}
+}
+
+long long yeeboon_p(int start, int end, int goal){
+	if(start==end){
+		if(plus_arr[start]==goal) return plus_arr[start];
+		int index = start;
+		long long cha = abs(plus_arr[start]-goal), ret;
+		while(index>=0){
+			if(abs(plus_arr[index]-goal)<=cha){
+				cha = abs(plus_arr[index]-goal);
+				ret = plus_arr[index];
+				index--;
+			}
+			else break;
+		}
+		index = start;
+		while(index<plus_arr.size()){
+			if(abs(plus_arr[index]-goal)<=cha){
+				cha = abs(plus_arr[index]-goal);
+				ret = plus_arr[index];
+				index++;
+			}
+			else break;
+		}
+		return ret; 
+	}
+	int mid = (start+end)/2;
+	if(plus_arr[mid]>goal){
+		return yeeboon_p(start, mid,goal);
+	}
+	else{
+		return yeeboon_p(mid+1, end ,goal);
+	}
+}
+
+void solve(){
+	sort(plus_arr.begin(), plus_arr.end());
+	sort(minus_arr.begin(), minus_arr.end());
+	long long dap = 210000000000;
+	long long arr[3] = {0,0,0};
+	if(plus_arr.size()>=3){
+		long long plushap = plus_arr[0]+plus_arr[1]+plus_arr[2];
+		if(dap>plushap){
+			dap = plushap;
+			arr[0] = plus_arr[0];
+			arr[1] = plus_arr[1];
+			arr[2] = plus_arr[2];
+		}
+	}
+	if(minus_arr.size()>=3){
+		long long minushap = minus_arr[minus_arr.size()-1]+minus_arr[minus_arr.size()-2]+minus_arr[minus_arr.size()-3];
+		if(dap>abs(minushap)){
+			dap = abs(minushap);
+			arr[0] = minus_arr[minus_arr.size()-1];
+			arr[1] = minus_arr[minus_arr.size()-2];
+			arr[2] = minus_arr[minus_arr.size()-3];
+		}
+	}
+	sort(arr, arr+3);
+	if(plus_arr.size()==0||minus_arr.size()==0){
+		cout<<arr[0]<<" "<<arr[1]<<" "<<arr[2];
+		return;
+	}
+	int i,k;
+	for(i=0; i<plus_arr.size()-1; ++i){
+		for(k=i+1; k<plus_arr.size(); ++k){
+			p.push_back({plus_arr[i], plus_arr[k]});
+		}
+	}
+	for(i=0; i<minus_arr.size()-1; ++i){
+		for(k=i+1; k<minus_arr.size(); ++k){
+			m.push_back({minus_arr[i], minus_arr[k]});
+		}
+	}
+	long long a,b, hap, nearest, nearest_index;
+	long long temp_dap;
+	for(i=0; i<p.size(); ++i){
+		hap = p[i].first+p[i].second;
+		nearest_index = lower_bound(minus_arr.begin(), minus_arr.end(), (-1)*hap)-minus_arr.begin();
+		if(nearest_index>=minus_arr.size()) nearest_index--;
+		nearest = minus_arr[nearest_index];
+		temp_dap=hap+nearest;
+		if(nearest_index>0){
+			if(abs(hap+minus_arr[nearest_index-1])<temp_dap){
+				temp_dap = abs(hap+minus_arr[nearest_index-1]);
+				nearest = minus_arr[nearest_index-1];
+			}
+		}
+		if(nearest_index<minus_arr.size()-1){
+			if(abs(hap+minus_arr[nearest_index+1])<temp_dap){
+				temp_dap = abs(hap+minus_arr[nearest_index+1]);
+				nearest = minus_arr[nearest_index+1];
+			}
+		}
+		
+		//nearest = yeeboon_m(0, minus_arr.size(), (-1)*hap);
+		//hap = hap+nearest;
+		//cout<<p[i].first<<" "<<p[i].second<<" "<<nearest<<" = "<<hap<<endl;
+		if(dap>abs(temp_dap)){
+			arr[0] = p[i].first;
+			arr[1] = p[i].second;
+			arr[2] = nearest;
+			dap=abs(temp_dap);
+		}
+	}	
+	for(i=0; i<m.size(); ++i){
+		hap = m[i].first+m[i].second;
+		nearest_index = lower_bound(plus_arr.begin(), plus_arr.end(), (-1)*hap)-plus_arr.begin();
+		
+		if(nearest_index>=plus_arr.size()) nearest_index--;
+		nearest = plus_arr[nearest_index];
+		temp_dap=hap+nearest;
+		if(nearest_index>0){
+			if(abs(hap+plus_arr[nearest_index-1])<temp_dap){
+				temp_dap = abs(hap+plus_arr[nearest_index-1]);
+				nearest = plus_arr[nearest_index-1];
+			}
+		}
+		if(nearest_index<plus_arr.size()-1){
+			if(abs(hap+plus_arr[nearest_index+1])<temp_dap){
+				temp_dap = abs(hap+plus_arr[nearest_index+1]);
+				nearest = plus_arr[nearest_index+1];
+			}
+		}
+		
+		//nearest = yeeboon_m(0, minus_arr.size(), (-1)*hap);
+		//hap = hap+nearest;
+		//cout<<m[i].first<<" "<<m[i].second<<" "<<nearest<<" = "<<temp_dap<<endl;
+		if(dap>abs(temp_dap)){
+			arr[0] = m[i].first;
+			arr[1] = m[i].second;
+			arr[2] = nearest;
+			dap=abs(temp_dap);
+		}
+	}		
+	sort(arr, arr+3);
+	cout<<arr[0]<<" "<<arr[1]<<" "<<arr[2];
+}
+
+int main(void)
+{
+	cin>>numofnum;
+	int i, num;
+	for(i=0; i<numofnum; ++i){
+		cin>>num;
+		if(num>0) plus_arr.push_back(num);
+		else minus_arr.push_back(num);
+	}
+	solve();
+	return 0;
+}
