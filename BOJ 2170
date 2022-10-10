@@ -1,0 +1,76 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#include<map>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+int numofdrow;
+
+vector<pair<int, int>> v;
+vector<pair<int, int>> distinct_v;
+map<int, int> m;
+bool compare(pair<int, int> p1, pair<int, int> p2){
+	
+	if(p1.first==p2.first){
+		return p1.second>p2.second;
+	}
+	return p1.first<p2.first;
+}
+
+int solve(){
+	if(numofdrow==1){
+		return v[0].second-v[0].first;
+	}
+	int i;	
+	sort(v.begin(), v.end(), compare);
+	int yeejeon = -1;
+	for(i=0; i<v.size(); ++i){
+		if(yeejeon!=v[i].first){
+			distinct_v.push_back({v[i].first, v[i].second});
+			yeejeon = v[i].first;
+		}
+	}
+	/*
+	cout<<endl;
+	for(i=0; i<distinct_v.size(); ++i){
+		cout<<distinct_v[i].first<<" "<<distinct_v[i].second<<endl;
+	}
+	*/
+	m[distinct_v[0].first] = distinct_v[0].second;
+	int yeejeon_s = distinct_v[0].first, yeejeon_e = distinct_v[0].second;
+	for(i=1; i<distinct_v.size(); ++i){
+		if(distinct_v[i].first>yeejeon_e){
+			m[distinct_v[i].first] = distinct_v[i].second;
+			yeejeon_s = distinct_v[i].first;
+			yeejeon_e = distinct_v[i].second;
+		}
+		else{
+			if(m[yeejeon_s]<distinct_v[i].second){
+				m[yeejeon_s] = distinct_v[i].second;
+				yeejeon_e = distinct_v[i].second;	
+			}
+		}
+	}
+	//cout<<endl;
+	int len=0;
+	for(auto iter = m.begin(); iter!=m.end(); ++iter){
+		len+=(iter->second - iter->first);
+		//cout<<iter->first<<" "<<iter->second<<endl;
+	}
+	return len;
+}
+
+int main(void)
+{
+	fastio;
+	cin>>numofdrow;
+	int i,s,e;
+	for(i=0; i<numofdrow; ++i){
+		cin>>s>>e;
+		v.push_back({s,e});
+		
+	}
+	cout<<solve();
+	return 0;
+}
