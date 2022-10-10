@@ -1,0 +1,78 @@
+#include<iostream>
+#include<set>
+#include<vector>
+#include<algorithm>
+using namespace std;
+
+int numofsensor, numofzip;
+set<int> s;
+vector<int> v;
+vector<int> blank;
+
+bool compare(int a, int b){
+	return a>b;
+}
+
+int solve(){
+	if(numofsensor==1) return 0;
+	int i, start=v[0], beenkan;
+	for(i=1; i<v.size(); ++i){
+		beenkan = v[i]-start-1;
+		if(beenkan>0) blank.push_back(beenkan);
+		start = v[i];
+	}
+	sort(blank.begin(), blank.end(), compare);
+	/*
+	for(i=0; i<blank.size(); ++i){
+		cout<<blank[i]<<" ";
+	}
+	cout<<endl;
+	*/
+	int len = v[v.size()-1];
+	//cout<<len<<endl;
+	if(blank.size()<numofzip-1){
+		for(i=0; i<blank.size(); ++i){
+			len-=(blank[i]+1);
+		}	
+	}
+	else{
+		for(i=0; i<numofzip-1; ++i){
+			len-=(blank[i]+1);
+		}	
+	}
+	
+	return len;
+}
+
+int main(void)
+{
+	cin>>numofsensor>>numofzip;
+	int i, num, startnum;
+	for(i=0; i<numofsensor; ++i){
+		cin>>num;
+		s.insert(num);
+	}
+	startnum = *s.begin();
+	//cout<<<<endl;
+	if(startnum>0){
+		for(auto iter = s.begin(); iter!=s.end(); ++iter){
+			num = (*iter);
+			num-=startnum;
+			v.push_back(num);
+		}	
+	}
+	else{
+		for(auto iter = s.begin(); iter!=s.end(); ++iter){
+			num = (*iter);
+			num-=startnum;
+			v.push_back(num);
+		}
+	}
+	/*
+	for(i=0; i<v.size(); ++i){
+		cout<<v[i]<<" ";
+	}
+	*/
+	cout<<solve(); 
+	return 0;
+}
