@@ -1,0 +1,51 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+int numofnum;
+long long cha;
+vector<long long> v;
+long long arr[100001];
+
+int solve(){
+	//sort(v.begin(), v.end());
+	sort(arr, arr+numofnum);
+	int i, lb_index;
+	long long goal, nownum, lb, nowcha,minimum_cha = 200000000000000;
+	for(i=0; i<numofnum; ++i){
+		//nownum = v[i];
+		nownum = arr[i];
+		goal = nownum+cha;
+		lb_index = lower_bound(arr+i, arr+numofnum, goal)-arr;
+		//cout<<nownum<<" "<<lb_index<<endl;
+		if(lb_index>=numofnum){
+			continue;
+		}
+		else{
+			lb = arr[lb_index];
+			//cout<<nownum<<" "<<lb<<" "<<lb_index<<endl;
+			nowcha = lb-nownum;
+			if(nowcha==0) return 0;
+			minimum_cha = min(minimum_cha, nowcha);
+		}
+		//lb_index = lower_bound(v.begin(), v.end(), goal)-v.begin();
+	}
+	return minimum_cha;
+}
+
+int main(void)
+{
+	fastio;
+	cin>>numofnum>>cha;
+	int i;
+	long long num;
+	for(i=0; i<numofnum; ++i){
+		cin>>num;
+		arr[i] = num;
+		//v.push_back(num);
+	}
+	cout<<solve();
+	return 0;
+} 
