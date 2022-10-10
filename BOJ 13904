@@ -1,0 +1,51 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+using namespace std;
+
+int numoftask;
+vector<pair<int, int>> v;
+
+bool compare(pair<int, int> p1, pair<int, int> p2){
+	return p1.second>p2.second;
+}
+
+int solve(){
+	sort(v.begin(), v.end(), compare);
+	int schedule[1001],i;	
+	for(i=1; i<=1000; ++i){
+		schedule[i] = 0;
+	}
+	int magam, sang,k;
+	for(i=0; i<v.size(); ++i){
+		magam = v[i].first;
+		sang = v[i].second;
+		if(schedule[magam]==0) schedule[magam] = sang;
+		else{
+			for(k=magam-1; k>=1; --k){
+				if(schedule[k]==0){
+					break;
+ 				}
+			}	
+			if(k>0) schedule[k] = sang;	
+		}
+		
+	}
+	int sum=0;
+	for(i=1; i<=1000; ++i){
+		sum+=schedule[i];
+	}
+	return sum;
+}
+
+int main(void)
+{
+	cin>>numoftask;
+	int i, date, bosang;
+	for(i=0; i<numoftask; ++i){
+		cin>>date>>bosang;
+		v.push_back({date, bosang});
+	}
+	cout<<solve();
+	return 0;
+}
