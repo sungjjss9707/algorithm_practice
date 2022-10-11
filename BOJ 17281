@@ -1,0 +1,163 @@
+#include<iostream>
+#include<vector>
+using namespace std;
+
+int ining;
+int attack[51][10];
+int soonseo[10];
+bool visit[10];
+int biggest = -1;
+vector<int> soonyeol;
+
+int find_biggest_score(){
+	int seq[10];
+	seq[1] = 4;
+	int i;
+	for(i=2; i<=9; ++i){
+		seq[i] = soonyeol[i-2];
+	}
+	//for(i=1; i<=9; ++i){
+	//	cout<<seq[i]<<" ";
+	//}
+	int taseok[10];
+	for(i=1; i<=9; ++i){
+		taseok[seq[i]] = i;
+	}
+	/*
+	for(i=1; i<=9; ++i){
+		cout<<taseok[i]<<" ";
+	}
+	cout<<endl;
+	*/
+	int numofout=0, nowining=1;
+	int one=0, two=0, three=0;
+	int score =0, count=1;
+	int start_taseok = taseok[count];
+	while(nowining<=ining){
+		//cout<<nowining<<"이닝  "<<start_taseok<<" 칠차례 : ";
+		if(attack[nowining][start_taseok]==0){	
+			//cout<<"아웃침\n"; 
+			numofout++;
+			if(numofout==3){
+				one=0;
+				two=0;
+				three=0;
+				numofout=0;
+				nowining++;
+			}
+		}
+		else if(attack[nowining][start_taseok]==1){
+			if(three==1){
+				score++;
+				three=0;
+			}
+			if(two==1){
+				three = 1;
+				two=0;
+			}
+			if(one==1){
+				two = 1;
+				one = 0;
+			}
+			one=1;
+		}
+		else if(attack[nowining][start_taseok]==2){
+			if(three==1){
+				score++;
+				three=0;
+			}
+			if(two==1){
+				score++;
+				two=0;
+			}
+			if(one==1){
+				three = 1;
+				one = 0;
+			}
+			two=1;
+		}
+		else if(attack[nowining][start_taseok]==3){
+			if(three==1){
+				score++;
+				three=0;
+			}
+			if(two==1){
+				score++;
+				two=0;
+			}
+			if(one==1){
+				score++;
+				one = 0;
+			}
+			three=1;
+		}
+		else{
+			if(three==1){
+				score++;
+				three=0;
+			}
+			if(two==1){
+				score++;
+				two=0;
+			}
+			if(one==1){
+				score++;
+				one = 0;
+			}
+			score++;
+		}
+		count++;
+		if(count==10) count=1;
+		start_taseok = taseok[count];
+		
+	}
+	//cout<<endl;
+	return score;
+}
+
+void brute_force(){
+	if(soonyeol.size()==8){
+		int i;
+		/*		
+		for(i=0; i<soonyeol.size(); ++i){
+			cout<<soonyeol[i]<<" ";
+		}
+		cout<<endl;
+		*/
+		int myscore = find_biggest_score();
+		//exit(0);
+		biggest = max(biggest, myscore);
+		return; 
+	}
+	int i;
+	for(i=1; i<=9; ++i){
+		if(!visit[i]&&i!=4){
+			visit[i] = true;
+			soonyeol.push_back(i);
+			brute_force();
+			visit[i] = false;
+			soonyeol.pop_back();	
+		}
+		
+	}
+}
+
+
+int solve(){
+	brute_force();
+	int dap = biggest;
+	return dap;
+}
+
+int main(void)
+{
+	cin>>ining;
+	int i,k;
+	for(i=1; i<=ining; ++i){
+		for(k=1; k<=9; ++k){
+			cin>>attack[i][k];
+		}
+	}
+	cout<<solve();
+	return 0;
+}
