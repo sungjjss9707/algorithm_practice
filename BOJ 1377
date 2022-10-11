@@ -1,0 +1,37 @@
+#include<iostream>
+#include<algorithm>
+#include<vector>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+int numofnum;
+pair<int, int> arr[500001];
+
+bool compare(pair<int ,int> p1, pair<int, int> p2){
+	return p1.first<p2.first;
+}
+
+int solve(){
+	sort(arr+1, arr+numofnum+1);
+	int i, biggest_cha = -1, cha;
+	for(i=1; i<=numofnum; ++i){
+		cha = arr[i].second-i;
+		biggest_cha = max(biggest_cha, cha);
+		//cout<<arr[i].first<<" "<<arr[i].second<<endl;
+	}
+	//cout<<endl;
+	return biggest_cha+1;
+}
+
+int main(void)
+{
+	fastio;
+	cin>>numofnum;
+	int i, num;
+	for(i=1; i<=numofnum; ++i){
+		cin>>num;
+		arr[i] = {num, i};
+	}
+	cout<<solve();
+	return 0;
+}
