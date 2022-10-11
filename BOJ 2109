@@ -1,0 +1,57 @@
+#include<iostream>
+#include<algorithm>
+using namespace std; 
+
+int numofclass;
+pair<int, int> arr[10001];
+int schedule[10001];
+
+bool compare(pair<int, int> p1, pair<int, int> p2){
+	return p1.first>p2.first;
+}
+
+int solve(){
+	sort(arr, arr+numofclass, compare);
+	int i, don, time;
+	/*
+	for(i=0; i<numofclass; ++i){
+		cout<<arr[i].first<<" "<<arr[i].second<<endl;
+	}
+	*/
+	for(i=1; i<=10000; ++i){
+		schedule[i] = 0;
+	}
+	int last, k;
+	for(i=0; i<numofclass; ++i){
+		don = arr[i].first;
+		last = arr[i].second;
+		if(schedule[last]==0){
+			schedule[last] = don;
+		}
+		else{
+			for(k=last-1; k>=1; --k){
+				if(schedule[k]==0){
+					schedule[k] = don;	
+					break;
+				} 	
+			}
+		}
+	}
+	int sum = 0;
+	for(i=1; i<=10000; ++i){
+		sum+=schedule[i];
+	}
+	return sum;
+}
+
+int main(void)
+{
+	cin>>numofclass;
+	int i, don, time;
+	for(i=0; i<numofclass; ++i){
+		cin>>don>>time;
+		arr[i] = {don, time};
+	}
+	cout<<solve();
+	return 0;
+}
