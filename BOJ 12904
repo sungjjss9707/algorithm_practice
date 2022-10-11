@@ -1,0 +1,38 @@
+#include<iostream>
+#include<string>
+using namespace std;
+
+string a,b;
+
+string reverse_str(string x){
+	int i;
+	string ret = "";
+	for(i=x.length()-1; i>=0; --i){
+		ret.push_back(x[i]);
+	}
+	return ret;
+}
+
+int solve(){
+	while(a.length()!=b.length()){
+		//cout<<b<<endl;
+		if(b[b.length()-1]=='A'){
+			b=b.substr(0,b.length()-1);
+		}
+		else{
+			b=b.substr(0,b.length()-1);
+			//cout<<"뒤집기전 : "<<b<<endl;
+			b=reverse_str(b);
+			//cout<<"뒤집은후 : "<<b<<endl;
+		}
+	}
+	if(a==b) return 1;
+	return 0;
+}
+
+int main(void)
+{
+	cin>>a>>b;
+	cout<<solve();
+	return 0;
+}
