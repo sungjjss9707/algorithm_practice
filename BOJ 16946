@@ -1,0 +1,113 @@
+#include<iostream>
+#include<vector>
+#include<set>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+int sero,garo;
+int miro[1001][1001];
+int dap[1001][1001];
+//bool visit[1001][1001];
+int dy[4] = {1,0,-1,0};
+int dx[4] = {0,1,0,-1};
+vector<int> color;
+
+int dfs(int y, int x, int index){
+	miro[y][x] = index;
+	//cout<<y<<","<<x<<endl;
+	int ret = 1;
+	int ny, nx, i;
+	
+	for(i=0; i<4; ++i){
+		ny = y+dy[i];
+		nx = x+dx[i];
+		if(ny>=1&&ny<=sero&&nx>=1&&nx<=garo){
+			if(miro[ny][nx]==0){
+				ret+=dfs(ny, nx, index);	
+			}
+		}
+		
+	}
+	return ret;
+}
+
+void solve(){
+	int i,k, getsu, index = 1;
+	color.push_back(0);
+	for(i=1; i<=sero; ++i){
+		for(k=1; k<=garo; ++k){
+			if(miro[i][k]==0){
+				getsu = dfs(i,k,index);
+				color.push_back(getsu);
+				index++;
+			}
+		}
+	}
+	/*
+	cout<<endl;
+	for(i=1; i<=sero; ++i){
+		for(k=1; k<=garo; ++k){
+			cout<<miro[i][k]<<" ";
+		}
+		cout<<"\n";
+	}
+	
+	for(i=1; i<index; ++i){
+		cout<<color[i]<<" ";
+	}
+	cout<<endl;
+	*/
+	int hap, ny, nx, yeejeon_color;
+	for(i=1; i<=sero; ++i){
+		for(k=1; k<=garo; ++k){
+			if(miro[i][k]==-1){
+				hap=1;
+				set<int> s;
+				for(int d = 0; d<4; ++d){
+					ny = i+dy[d];
+					nx = k+dx[d];
+					if(ny>=1&&ny<=sero&&nx>=1&&nx<=garo){
+						if(miro[ny][nx]!=-1){
+							if(s.count(miro[ny][nx])!=0) continue;
+							hap+=color[miro[ny][nx]];
+							s.insert(miro[ny][nx]);
+						}
+					}	
+				}
+				dap[i][k] = (hap%10);	
+			}
+			else{
+				dap[i][k] = 0;
+			}
+		}
+	}
+
+	for(i=1; i<=sero; ++i){
+		for(k=1; k<=garo; ++k){
+			cout<<(dap[i][k]);
+		}
+		cout<<"\n";
+	}
+}
+
+int main(void)
+{
+	fastio;
+	cin>>sero>>garo;
+	int i,k;
+	char a;
+	for(i=1; i<=sero; ++i){
+		for(k=1; k<=garo; ++k){
+			cin>>a;
+			if(a=='1'){
+				miro[i][k] = -1;
+			}	
+			else{
+				miro[i][k] = 0;	
+			}
+		}
+	}
+	
+	solve();
+	return 0;
+}
