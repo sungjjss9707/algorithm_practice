@@ -1,0 +1,82 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+struct tri{
+	int s,e,dist;
+};
+
+int numofver, numofedge;
+vector<tri> v;
+int parent[200001];
+int origin_hap;
+
+bool compare(tri a, tri b){
+	return a.dist<b.dist;
+}
+
+void parent_clear(){
+	int i;
+	for(i=0; i<numofver; ++i){
+		parent[i] = i;
+	}
+}
+
+int get_parent(int x){
+	if(x==parent[x]) return x;
+	int p_x = get_parent(parent[x]);
+	parent[x] = p_x;
+	return p_x;
+}
+
+void set_union(int p_x, int p_y){
+	if(p_x<p_y){
+		parent[p_y] = p_x;
+	}
+	else{
+		parent[p_x] = p_y;
+	}
+}
+
+int solve(){
+	sort(v.begin(), v.end(), compare);
+	int i,x,y, p_x, p_y, sum=0, dist;
+	for(i=0; i<numofedge; ++i){
+		x = v[i].s;
+		y = v[i].e;
+		dist = v[i].dist;
+		p_x = get_parent(x);
+		p_y = get_parent(y);
+		if(p_x!=p_y){
+			//cout<<x<<" "<<y<<endl;
+			sum+=dist;
+			set_union(p_x, p_y);
+		}
+	}
+	int dap = origin_hap-sum;
+	return dap;
+}
+
+int main(void)
+{
+	fastio;
+	
+	int i, s,e,dist;
+	while(1){
+		cin>>numofver>>numofedge;
+		if(numofver==0&&numofedge==0) break;
+		v.clear();
+		parent_clear();
+		origin_hap=0;	
+		for(i=0; i<numofedge; ++i){
+			cin>>s>>e>>dist;
+			origin_hap+=dist;
+			v.push_back({s,e,dist});
+		}
+		cout<<solve()<<endl;
+	}
+	
+	return 0;
+}
