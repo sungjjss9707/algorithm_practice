@@ -1,0 +1,129 @@
+#include<iostream>
+#include<vector>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+int len, num, hwetsu;
+
+struct tri{
+	int weight, speed, dir;
+};
+
+vector<tri> pan[51][51];
+
+int dy[8] = {-1,-1,0,1,1,1,0,-1};
+int dx[8] = {0,1,1,1,0,-1,-1,-1};
+
+
+
+void fireball_go(){
+	int i,k,j, noww, nows, nowd, nexty, nextx, y_cha, x_cha;
+	vector<tri> copy[51][51];
+	for(i=1; i<=len; ++i){
+		for(k=1; k<=len; ++k){
+			if(pan[i][k].empty()) continue;
+			for(j=0; j<pan[i][k].size(); ++j){
+				noww = pan[i][k][j].weight;
+				nows = pan[i][k][j].speed;
+				nowd = pan[i][k][j].dir;
+				y_cha = nows*dy[nowd];
+				x_cha = nows*dx[nowd];
+				nexty = i+(y_cha);
+				nextx = k+(x_cha);
+				if(nexty<=0){
+					y_cha = (-1)*y_cha;
+					nexty = (i-(y_cha%len))>=1 ? (i-(y_cha%len)):(i-(y_cha%len))+len;
+				}
+				else if(nexty>len){
+					nexty = (i+y_cha%len)>len?(i+y_cha%len)-len:(i+y_cha%len);
+				}
+				if(nextx<=0){
+					x_cha = (-1)*x_cha;
+					nextx = (k-(x_cha%len))>=1 ? (k-(x_cha%len)):(k-(x_cha%len))+len;
+				}
+				else if(nextx>len){
+					nextx = (k+x_cha%len)>len?(k+x_cha%len)-len:(k+x_cha%len);
+				}
+				copy[nexty][nextx].push_back({noww, nows, nowd});	
+			}
+		}
+	}
+	for(i=1; i<=len; ++i){
+		for(k=1; k<=len; ++k){
+			pan[i][k] = copy[i][k];
+		}
+	}
+}
+
+void fireball_after_go(){
+	int i,j,k,w_hap,gop,flag ,s_hap,w,s,d;
+	for(i=1; i<=len; ++i){
+		for(j=1; j<=len; ++j){
+			//cout<<i<<" "<<j<<" "<<pan[i][j].size()<<endl;
+			if(pan[i][j].size()<=1) continue;
+			w_hap=0;
+			s_hap = 0;
+			flag = 0;
+			gop = 1;
+			for(k=0; k<pan[i][j].size(); ++k){
+				w_hap+=pan[i][j][k].weight;
+				s_hap+=pan[i][j][k].speed;
+				gop*=pan[i][j][k].dir;
+				if(pan[i][j][k].dir%2==1) flag = 1;
+			}
+			//cout<<w_hap<<" "<<s_hap<<endl;
+			s_hap/=pan[i][j].size();
+			pan[i][j].clear();
+			w_hap/=5;
+			if(w_hap==0) continue;
+			
+			///cout<<w_hap<<" "<<s_hap<<endl;
+			if(flag==0||gop%2==1){	//모두 홀수거나 짝수면 
+				for(k=0; k<4; ++k){
+					pan[i][j].push_back({w_hap, s_hap, 2*k});
+				}	
+			}
+			else{
+				for(k=0; k<4; ++k){
+					pan[i][j].push_back({w_hap, s_hap, 2*k+1});
+				}
+			}
+			
+		}
+	}
+}
+
+int weight_hap(){
+	int i,j,k, hap=0;
+	for(i=1; i<=len; ++i){
+		for(j=1; j<=len; ++j){
+			for(k=0; k<pan[i][j].size(); ++k){
+				hap+=pan[i][j][k].weight;
+			}
+		}
+	}
+	return hap;
+}
+
+int solve(){
+	int h,i,j,k, hap;
+	for(h=0; h<hwetsu; ++h){
+		fireball_go();
+		fireball_after_go();
+	}
+	hap = weight_hap();
+	return hap;
+}
+
+int main(void)
+{
+	fastio;
+	cin>>len>>num>>hwetsu;
+	int i, y,x,w,s,d;
+	for(i=0; i<num; ++i){
+		cin>>y>>x>>w>>s>>d;
+		pan[y][x].push_back({w,s,d});
+	}
+	cout<<solve();
+	return 0;
+}
