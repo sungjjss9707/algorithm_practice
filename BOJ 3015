@@ -1,0 +1,57 @@
+#include<iostream>
+#include<stack>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+int numofpeople;
+int line[500001];
+
+long long solve(){
+	if(numofpeople==1){
+		return 0;
+	}
+	stack<pair<int, long long>> s;
+	s.push({line[0], 1});
+	int i, now, mytop;
+	long long dap=0, getsu;
+	for(i=1; i<numofpeople; ++i){
+		now = line[i];
+		while(!s.empty()){
+			mytop = s.top().first;
+			getsu = s.top().second;
+			if(mytop==now){
+				dap+=getsu;
+				s.pop();
+				if(s.size()>0) dap+=1;
+				s.push({now, getsu+1});	
+				break;
+			}
+			else if(mytop>now){
+				dap+=1;
+				s.push({now, 1});
+				break;
+			}
+			else{
+				//dap++;
+				dap+=getsu;
+				s.pop();
+			}
+		}
+		if(s.empty()){
+			s.push({now, 1});
+		}
+	}
+	return dap;
+}
+
+int main(void)
+{
+	fastio;
+	cin>>numofpeople;
+	int i;
+	for(i=0; i<numofpeople; ++i){
+		cin>>line[i];
+	}
+	cout<<solve();
+	return 0;
+}
