@@ -1,0 +1,81 @@
+#include<iostream>
+#include<vector>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+int numoftown;
+int joomin[10001];
+//bool visit[10001];
+vector<int> v[10001];
+int dp[10001][2];
+
+void clear(){
+	int i;
+	for(i=1; i<=numoftown; ++i){
+		dp[i][0] = -1;
+		dp[i][1] = -1;
+	}
+}
+
+
+int get_maximum_joomin(int now, int yes_or_no, int yeejeon){
+	int ret = dp[now][yes_or_no];
+	if(ret!=-1) return ret;
+	if(v[now].size()==1&&yeejeon!=0){
+		if(yes_or_no==1) ret = joomin[now];
+		else ret = 0;
+	}
+	else{
+		int i, next;
+		if(yes_or_no==1){
+			ret = joomin[now];
+			for(i=0; i<v[now].size(); ++i){
+				next = v[now][i];
+				if(next==yeejeon) continue;
+				ret+=get_maximum_joomin(next, 0, now);
+			}
+		}
+		else{
+			int maximum;
+			ret = 0;
+			for(i=0; i<v[now].size(); ++i){
+				next = v[now][i];
+				if(next==yeejeon) continue;
+				maximum = max(get_maximum_joomin(next, 0, now),get_maximum_joomin(next, 1, now));
+				ret+=maximum;	
+			}
+		}
+		
+	}
+	dp[now][yes_or_no] = ret;
+	//cout<<now<<" "<<yes_or_no<<":"<<ret<<endl;
+	return ret;
+}
+
+int solve(){
+	
+	if(numoftown==1) return joomin[1];
+	clear();
+	int one_yes = get_maximum_joomin(1,0,0);
+	int one_no = get_maximum_joomin(1,1,0);
+	//cout<<one_yes<<" "<<one_no<<endl;
+	int dap = max(one_yes, one_no);
+	return dap;
+}
+
+int main(void)
+{
+	fastio;
+	cin>>numoftown;
+	int i, a,b;
+	for(i=1; i<=numoftown; ++i){
+		cin>>joomin[i];
+	}
+	for(i=0; i<numoftown-1; ++i){
+		cin>>a>>b;
+		v[a].push_back(b);
+		v[b].push_back(a);
+	}
+	cout<<solve();
+	return 0;
+}
