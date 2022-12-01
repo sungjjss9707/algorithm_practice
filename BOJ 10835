@@ -1,0 +1,59 @@
+#include<iostream>
+
+using namespace std;
+
+int l_card[2001], r_card[2001];
+int dp[2001][2001];
+int numofcard;
+
+void clear(){
+	int i,k;
+	for(i=0; i<=numofcard; ++i){
+		for(k=0; k<=numofcard; ++k){
+			dp[i][k] = -1;
+		}
+	}
+	//dp[0][0] = 0;
+}
+
+int find_maximum(int l, int r){
+	if(r==numofcard||l==numofcard){
+		return 0;
+	}
+	//else if(l==numofcard){
+//		return 0;
+//	}
+	int ret = dp[l][r];
+	if(ret!=-1) return ret;
+	int l_card_top = l_card[l+1];
+	int r_card_top = r_card[r+1];
+	int maximum = -1;
+	maximum = max(find_maximum(l+1, r+1), maximum);
+	maximum = max(find_maximum(l+1, r), maximum);
+	if(l_card[l+1]>r_card[r+1]){
+		maximum = max(find_maximum(l, r+1)+r_card[r+1], maximum);
+	}
+	ret = maximum;
+	dp[l][r] = maximum;
+	return ret;
+}
+
+int solve(){
+	clear();
+	int dap = find_maximum(0,0);
+	return dap;
+}
+
+int main(void)
+{
+	cin>>numofcard;
+	int i;
+	for(i=1; i<=numofcard; ++i){
+		cin>>l_card[i];
+	}
+	for(i=1; i<=numofcard; ++i){
+		cin>>r_card[i];
+	}		
+	cout<<solve();
+	return 0;
+}
