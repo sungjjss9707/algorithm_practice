@@ -1,0 +1,49 @@
+#include<iostream>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+int numofnum, len;
+int hap[50001];
+int arr[50001];
+int dp[4][50001];
+
+void clear(){
+	int i,k, sum=0;
+	for(i=1; i<=numofnum; ++i){
+		sum+=arr[i];
+		hap[i] = sum;
+	}
+	for(i=0; i<=3; ++i){
+		for(k=0; k<=numofnum; ++k){
+			dp[i][k] = 0;
+		}
+	}
+}
+
+int solve(){
+	clear();
+	
+	int i,k;
+	for(i=1; i<=3; ++i){
+		for(k=len; k<=numofnum; ++k){
+			dp[i][k] = max(dp[i][k-1], dp[i-1][k-len]+hap[k]-hap[k-len+1]+arr[k-len+1]);
+			//cout<<dp[i][k]<<" ";
+		}
+		//cout<<endl;
+	}
+		
+	return dp[3][numofnum];
+}
+
+int main(void)
+{
+	fastio;
+	cin>>numofnum; 
+	int i;
+	for(i=1; i<=numofnum; ++i){
+		cin>>arr[i];
+	}
+	cin>>len;
+	cout<<solve();
+	return 0;
+}
