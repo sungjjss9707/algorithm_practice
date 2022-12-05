@@ -1,0 +1,55 @@
+#include<iostream>
+#include<stack>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+long long numofnum;
+long long city[80001];
+long long can_see_list[80001];
+stack<long long> s;
+
+long long solve(){
+	long long i, now, now_index, cansee, dap=0, head, head_index;
+	for(i=numofnum; i>=1; --i){
+		now = city[i];
+		now_index = i;
+		cansee=0;
+		if(!s.empty()){
+			while(!s.empty()){
+				head_index = s.top();
+				head = city[head_index];
+				if(head>=now){
+					break;
+				}
+				s.pop();
+				cansee++;
+				cansee+=can_see_list[head_index];
+			}
+			dap+=cansee;
+			
+		}
+		//cout<<cansee<<" ";
+		can_see_list[now_index] = cansee;
+		s.push(now_index);
+	}
+	//cout<<endl;
+	/*
+	for(i=1; i<=numofnum; ++i){
+		cout<<can_see_list[i]<<" ";
+	}
+	cout<<endl;
+	*/
+	return dap;
+}
+
+int main(void)
+{
+	fastio;
+	cin>>numofnum;
+	long long i;
+	for(i=1; i<=numofnum; ++i){
+		cin>>city[i];
+	}
+	cout<<solve();
+	return 0;
+}
