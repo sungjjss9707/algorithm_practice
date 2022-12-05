@@ -1,0 +1,74 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+
+using namespace std;
+
+int numofbook, can_lift;
+vector<int> p;
+vector<int> m;
+
+int solve(){
+	sort(p.begin(), p.end());
+	sort(m.begin(), m.end());
+	int i;
+	/*
+	for(i=0; i<p.size(); ++i){
+		cout<<p[i]<<" ";
+	}	
+	cout<<endl;
+	for(i=0; i<m.size(); ++i){
+		cout<<m[i]<<" ";
+	}
+	
+	cout<<endl;
+	*/	
+	int p_index, m_index, p_hap=0, m_hap=0;
+	if(!p.empty()){
+		p_index = p.size()-1;
+		p_hap+=p[p_index];
+		p_index-=can_lift;
+		while(p_index>=0){
+			p_hap+=(2*p[p_index]);
+			p_index-=can_lift;	
+		}
+		//cout<<p_hap<<endl;	
+	}
+	if(!m.empty()){
+		m_index = m.size()-1;
+		m_hap+=m[m_index];
+		m_index-=can_lift;
+		while(m_index>=0){
+			m_hap+=(2*m[m_index]);
+			m_index-=can_lift;	
+		}
+		//cout<<p_hap<<endl;	
+	}
+	if(!p.empty()&&!m.empty()){
+		if(p[p.size()-1]>m[m.size()-1]){
+			m_hap+=m[m.size()-1];
+		}
+		else{
+			p_hap+=p[p.size()-1];
+		}
+	}
+	//cout<<p_hap<<" "<<m_hap<<endl;
+	return (p_hap+m_hap);
+}
+
+int main(void)
+{
+	cin>>numofbook>>can_lift;
+	int i,num;
+	for(i=0; i<numofbook; ++i){
+		cin>>num;
+		if(num>0){
+			p.push_back(num);
+		}
+		else{
+			m.push_back((-1)*num);
+		}
+	}
+	cout<<solve();
+	return 0;
+}
