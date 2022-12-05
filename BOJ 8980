@@ -1,0 +1,60 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+int numoftown, capacity, numofprocess;
+int lift[2001];
+struct tri{
+	int s,e,w;
+};
+
+vector<tri> v;
+
+bool compare(tri t1, tri t2){
+	if(t1.e==t2.e){
+		return t1.s>t2.s;
+	}
+	return t1.e<t2.e;
+}
+
+int solve(){
+	sort(v.begin(), v.end(), compare);
+	int i,k,start, end, weight, real ,maximum, dap=0;
+	for(i=0; i<=2000; ++i){
+		lift[i] = 0;
+	}
+	for(i=0; i<numofprocess; ++i){
+		start = v[i].s;
+		end = v[i].e;
+		weight = v[i].w;
+		maximum = 1000000;
+		for(k=start; k<end; ++k){
+			maximum = min(maximum, capacity-lift[k]);
+		}
+		real = min(maximum, weight);
+		if(real!=0){
+			for(k=start; k<end; ++k){
+				lift[k] = lift[k]+real;
+			}
+			dap+=real;
+		}
+	}
+	
+	return dap;
+}
+
+int main(void)
+{
+	fastio;
+	cin>>numoftown>>capacity;
+	cin>>numofprocess;
+	int i,s,e,w;
+	for(i=0; i<numofprocess; ++i){
+		cin>>s>>e>>w;
+		v.push_back({s,e,w});
+	}
+	cout<<solve();
+	return 0;
+}
