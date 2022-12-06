@@ -1,0 +1,98 @@
+#include<iostream>
+#include<algorithm>
+#include<queue>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+struct quad{
+	int m1, d1, m2, d2;
+};
+
+struct cmp{
+	bool operator()(pair<int, int> p1, pair<int, int> p2){
+		if(p1.first==p2.first){
+			return p1.second<p2.second;
+		}
+		return p1.first<p2.first;
+	}
+};
+
+quad flower[100001];
+int numofflower;
+
+bool compare(quad q1, quad q2){
+	if(q1.m1==q2.m1){
+		return q1.d1<q2.d1;
+	}
+	return q1.m1<q2.m1;
+}
+
+int compare_day(int m1, int d1, int m2, int d2){	//앞에꼐 더 빠르면 -1, 완전히 같으면 0, 뒤에꼐 더 빠르면 1 
+	if(m1<m2) return -1;
+	else if(m1==m2){
+		if(d1<d2) return -1;
+		else if(d1==d2) return 0;
+		else return 1;
+	}
+	else return 1;
+}
+
+int solve(){
+	sort(flower+1, flower+1+numofflower, compare);
+	int i, m1, d1, m2,d2;
+	/*
+	for(i=1; i<=numofflower; ++i){
+		cout<<flower[i].m1<<"/"<<flower[i].d1<<" ~ "<<flower[i].m2<<"/"<<flower[i].d2<<"\n";
+	}
+	cout<<endl;
+	*/
+	int first_m = 3, first_d = 1;
+	int compare_with_1, compare_with_2, next_m, next_d, compare_with_last, dap=0;
+	priority_queue<pair<int, int>, vector<pair<int, int>>, cmp> pq;
+	for(i=1; i<=numofflower; ++i){
+		m1 = flower[i].m1;
+		d1 = flower[i].d1;
+		m2 = flower[i].m2;
+		d2 = flower[i].d2;
+		compare_with_1 = compare_day(m1,d1,first_m, first_d);
+		compare_with_2 = compare_day(m2,d2,first_m, first_d);
+		if(compare_with_1==-1||compare_with_1==0){
+			if(compare_with_2==1){
+				//cout<<m1<<d1<<" "<<m2<<d2<<endl;
+				pq.push({m2, d2});
+			}
+		}
+		else{
+			//exit(0);
+			if(pq.empty()) return 0;
+			first_m = pq.top().first;
+			first_d = pq.top().second;
+			//cout<<first_m<<"/"<<first_d<<endl;
+			compare_with_last = compare_day(first_m, first_d, 11,30);
+			dap++;
+			if(compare_with_last==1) return dap;
+			pq = priority_queue<pair<int, int>, vector<pair<int, int>>, cmp>();
+			i--;
+		}
+	}
+	if(pq.empty()) return 0;
+	first_m = pq.top().first;
+	first_d = pq.top().second;
+	//cout<<first_m<<"/"<<first_d<<endl;
+	compare_with_last = compare_day(first_m, first_d, 11,30);
+	if(compare_with_last==1) return dap+1;
+	return 0;
+}
+
+int main(void)
+{
+	fastio;
+	cin>>numofflower;
+	int i, a,b,c,d;
+	for(i=1; i<=numofflower; ++i){
+		cin>>a>>b>>c>>d;
+		flower[i] = {a,b,c,d};
+	}
+	cout<<solve();
+	return 0;
+}
