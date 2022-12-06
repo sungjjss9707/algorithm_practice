@@ -1,0 +1,65 @@
+#include<iostream>
+#include<algorithm>
+#include<queue> 
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+int numofprob;
+pair<int, int> p[200001];	//first : 데드라인 , second : 보상  
+int award[200001];
+
+bool compare(pair<int, int> p1, pair<int, int> p2){
+	//if(p1.first==p2.second){
+	//	return p1.first>p2.first;
+	//}
+	return p1.first<p2.first;
+}
+
+int solve(){
+	sort(p+1, p+1+numofprob, compare);
+	int i;
+	/*
+	cout<<endl;
+	for(i=1; i<=numofprob; ++i){
+		cout<<p[i].first<<" "<<p[i].second<<endl;
+	}
+	cout<<endl;
+	*/
+	priority_queue<int, vector<int>, greater<int>> pq;
+	
+	int deadline, ramen,k;
+	for(i=1; i<=numofprob; ++i){
+		deadline = p[i].first;
+		ramen = p[i].second;
+		if(pq.size()<deadline){
+			pq.push(ramen);
+		}
+		else{
+			if(pq.top()<ramen){
+				pq.pop();
+				pq.push(ramen);
+			}
+		}
+	}
+	int dap = 0;
+	while(!pq.empty()){
+		dap+=pq.top();
+		//cout<<pq.top()<<" ";
+		pq.pop();
+	}
+	//cout<<endl;
+	return dap;
+}
+
+int main(void)
+{
+	fastio;
+	cin>>numofprob;
+	int i, a,b;
+	for(i=1; i<=numofprob; ++i){
+		cin>>a>>b;
+		p[i] = {a,b};
+	}
+	cout<<solve();
+	return 0;
+}
