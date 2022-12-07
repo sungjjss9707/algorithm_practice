@@ -1,0 +1,202 @@
+#include<iostream>
+#include<vector>
+using namespace std;
+
+int dice[10], score[35];
+vector<int> road[35];
+
+void make_map(){
+	int i,k;
+	for(i=0; i<=20; ++i){
+		score[i] = i*2;
+	}
+	score[21] = 13;
+	score[22] = 16;
+	score[23] = 19;
+	score[24] = 25;
+	score[25] = 26;
+	score[26] = 27;
+	score[27] = 28;
+	score[28] = 35;
+	score[29] = 30;
+	score[30] = 24;
+	score[31] = 22;
+	score[32] = 0;	//끝  
+	
+	for(i=0; i<20; ++i){
+		road[i].push_back(i+1);
+	}
+	road[20].push_back(32);
+	road[5].push_back(21);
+	road[21].push_back(22);
+	road[22].push_back(23);
+	road[23].push_back(24);
+	road[15].push_back(27);
+	road[27].push_back(26);
+	road[26].push_back(25);
+	road[25].push_back(24);
+	road[10].push_back(31);
+	road[31].push_back(30);
+	road[30].push_back(24);
+	road[24].push_back(29);
+	road[29].push_back(28);
+	road[28].push_back(20);
+	/*
+	for(i=0; i<=32; ++i){
+		cout<<i<<" -> ";
+		for(k=0; k<road[i].size(); ++k){
+			cout<<road[i][k]<<",";
+		} 
+		cout<<endl;
+	}
+	*/
+}	//시작:0, 끝 32 
+
+int brute_force(int d1, int d2, int d3, int d4, int count){
+	
+	if(count==10){
+		return 0;
+	}
+	int to_go = dice[count];
+	//cout<<d1<<" "<<d2<<" "<<d3<<" "<<d4<<" "<<count<<" "<<to_go<<endl;;
+	int next_d1 = d1, next_d2=d2, next_d3=d3, next_d4=d4;
+	int d1_score, d2_score, d3_score, d4_score;
+	int maximum = 0;
+	int i; 
+	if(d1!=32){
+		if(road[d1].size()==1){
+			for(i=0; i<to_go; ++i){
+				next_d1 = road[next_d1][0];
+				if(next_d1==32) break;
+			}
+			//cout<<next_d1<<endl;	
+		}
+		else{
+			next_d1 = road[next_d1][1];
+			for(i=0; i<to_go-1; ++i){
+				next_d1 = road[next_d1][0];
+				if(next_d1==32) break;
+			}
+		}
+		if(next_d1==32){
+			d1_score = score[next_d1];
+			d1_score+=brute_force(next_d1, d2,d3,d4, count+1);
+			maximum = max(maximum, d1_score);
+		}
+		else{
+			if(next_d1!=d2&&next_d1!=d3&&next_d1!=d4){
+				d1_score = score[next_d1];
+				d1_score+=brute_force(next_d1, d2,d3,d4, count+1);
+				maximum = max(maximum, d1_score);
+			}
+		}
+			
+	}
+	if(d2!=32){
+		if(road[d2].size()==1){
+			for(i=0; i<to_go; ++i){
+				next_d2 = road[next_d2][0];
+				if(next_d2==32) break;
+				
+			}
+			//cout<<next_d1<<endl;	
+		}
+		else{
+			next_d2 = road[next_d2][1];
+			for(i=0; i<to_go-1; ++i){
+				next_d2 = road[next_d2][0];
+				if(next_d2==32) break;
+			}
+		}
+		if(next_d2==32){
+			d2_score = score[next_d2];
+			d2_score+=brute_force(d1, next_d2,d3,d4, count+1);
+			maximum = max(maximum, d2_score);
+		}
+		else{
+			if(next_d2!=d1&&next_d2!=d3&&next_d2!=d4){
+				d2_score = score[next_d2];
+				d2_score+=brute_force(d1, next_d2,d3,d4, count+1);
+				maximum = max(maximum, d2_score);
+			}
+		}
+			
+	}
+	if(d3!=32){
+		if(road[d3].size()==1){
+			for(i=0; i<to_go; ++i){
+				next_d3 = road[next_d3][0];
+				if(next_d3==32) break;
+				
+			}
+			//cout<<next_d1<<endl;	
+		}
+		else{
+			next_d3 = road[next_d3][1];
+			for(i=0; i<to_go-1; ++i){
+				next_d3 = road[next_d3][0];
+				if(next_d3==32) break;
+			}
+		}
+		if(next_d3==32){
+			d3_score = score[next_d3];
+			d3_score+=brute_force(d1, d2,next_d3,d4, count+1);
+			maximum = max(maximum, d3_score);
+		}
+		else{
+			if(next_d3!=d1&&next_d3!=d2&&next_d3!=d4){
+				d3_score = score[next_d3];
+				d3_score+=brute_force(d1, d2,next_d3,d4, count+1);
+				maximum = max(maximum, d3_score);
+			}
+		}
+			
+	}
+	if(d4!=32){
+		if(road[d4].size()==1){
+			for(i=0; i<to_go; ++i){
+				next_d4 = road[next_d4][0];
+				if(next_d4==32) break;
+				
+			}
+			//cout<<next_d1<<endl;	
+		}
+		else{
+			next_d4 = road[next_d4][1];
+			for(i=0; i<to_go-1; ++i){
+				next_d4 = road[next_d4][0];
+				if(next_d4==32) break;
+			}
+		}
+		if(next_d4==32){
+			d4_score = score[next_d4];
+			d4_score+=brute_force(d1, d2,d3,next_d4, count+1);
+			maximum = max(maximum, d4_score);
+		}
+		else{
+			if(next_d4!=d1&&next_d4!=d2&&next_d4!=d3){
+				d4_score = score[next_d4];
+				d4_score+=brute_force(d1, d2,d3,next_d4, count+1);
+				maximum = max(maximum, d4_score);
+			}
+		}
+			
+	}
+	return maximum;
+}
+
+int solve(){
+	make_map();
+	int dap = brute_force(0,0,0,0,0); 
+	return dap;
+}
+
+int main(void)
+{
+	int i;
+	for(i=0; i<10; ++i){
+		cin>>dice[i];
+	}
+	cout<<solve();
+	return 0;
+}
