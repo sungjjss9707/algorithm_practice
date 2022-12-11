@@ -1,0 +1,287 @@
+#include<iostream>
+#include<vector>
+using namespace std;
+
+struct tri{
+	int y, x, per;
+};
+
+int sand[500][500];
+int len;
+int ty[4] = {0,1,0,-2};
+int tx[4] = {-1,0,2,0};
+vector<tri> v[4];
+
+void print_sand(){
+	int i,k;
+	for(i=1; i<=len; ++i){
+		for(k=1; k<=len; ++k){
+			cout<<sand[i][k]<<" ";
+		}
+		cout<<endl;
+	}
+	cout<<endl;
+}
+
+void make_v(){
+	v[0].push_back({-2,0,2});
+	v[0].push_back({-1,1,1});
+	v[0].push_back({-1,0,7});
+	v[0].push_back({-1,-1,10});
+	v[0].push_back({0,-2,5});
+	v[0].push_back({1,-1,10});
+	v[0].push_back({1,0,7});
+	v[0].push_back({1,1,1});
+	v[0].push_back({2,0,2});
+	
+	v[1].push_back({-1,1,1});
+	v[1].push_back({-1,-1,1});
+	v[1].push_back({0,-2,2});
+	v[1].push_back({0,-1,7});
+	v[1].push_back({0,1,7});
+	v[1].push_back({0,2,2});
+	v[1].push_back({1,-1,10});
+	v[1].push_back({1,1,10});
+	v[1].push_back({2,0,5});
+	
+	v[2].push_back({-2,0,2});
+	v[2].push_back({-1,-1,1});
+	v[2].push_back({-1,0,7});
+	v[2].push_back({-1,1,10});
+	v[2].push_back({0,2,5});
+	v[2].push_back({1,-1,1});
+	v[2].push_back({1,0,7});
+	v[2].push_back({1,1,10});
+	v[2].push_back({2,0,2});	
+	
+	v[3].push_back({-1,1,10});
+	v[3].push_back({-1,-1,10});
+	v[3].push_back({-2,0,5});
+	v[3].push_back({0,-2,2});
+	v[3].push_back({0,-1,7});
+	v[3].push_back({0,1,7});
+	v[3].push_back({0,2,2});
+	v[3].push_back({1,-1,1});
+	v[3].push_back({1,1,1});
+}
+
+int solve(){
+	int y = (len/2)+1, x = (len/2)+1,j, dy, dx, per, ny, nx;
+	int nexty, nextx, length=0,i,k,dir, dap=0,i_next, hap, namojee;
+	double d_next;
+	make_v();
+	//cout<<endl;
+	while(1){
+		//cout<<y<<","<<x<<endl;
+		if(y==1&&x==len){
+			dir = 0;
+			for(k=x-1; k>=1; --k){
+				hap=0;
+				for(j=0; j<10; ++j){
+					dy = v[dir][j].y;
+					dx = v[dir][j].x;
+					ny = nexty+dy;
+					nx = k+dx;
+					per = v[dir][j].per;
+					d_next = ((double)(sand[nexty][k]*per))/100.0;		
+					i_next = (int)(d_next);
+					
+					hap+=i_next;
+					
+					if(ny>=1&&ny<=len&&nx>=1&&nx<=len){
+						sand[ny][nx]+=i_next;
+					}
+					else{
+						dap+=i_next;
+					}
+				}
+				namojee = sand[nexty][k]-hap;
+				if(k-1>=1){
+					sand[nexty][k-1] += namojee;	
+				}
+				else{
+					dap+=namojee;
+				}
+				sand[nexty][k] = 0;
+				//cout<<nexty<<","<<k<<endl;
+				//print_sand();
+				//cout<<nexty<<","<<k<<endl;
+			}
+			break;
+		} 
+		nexty = y+ty[0];
+		nextx = x+tx[0]-length;
+		////////////
+		dir = 0;
+		for(k=x-1; k>=nextx; --k){
+			hap=0;
+			//print_sand();
+			//cout<<nexty<<","<<k<<endl;
+			for(j=0; j<10; ++j){
+				dy = v[dir][j].y;
+				dx = v[dir][j].x;
+				ny = nexty+dy;
+				nx = k+dx;
+				per = v[dir][j].per;
+				d_next = ((double)(sand[nexty][k]*per))/100.0;		
+				i_next = (int)(d_next);
+				hap+=i_next;
+				if(ny>=1&&ny<=len&&nx>=1&&nx<=len){
+					sand[ny][nx]+=i_next;
+				}
+				else{
+					dap+=i_next;
+				}
+				
+				//cout<<ny<<","<<nx<<" = "<<per<<endl;
+			}
+			namojee = sand[nexty][k]-hap;
+			if(k-1>=1){
+				sand[nexty][k-1] += namojee;	
+			}
+			else{
+				dap+=namojee;
+			}
+			sand[nexty][k] = 0;
+			//cout<<nexty<<","<<k<<endl;
+			//print_sand();
+			//cout<<endl;
+			//cout<<nexty<<","<<k<<endl;
+		}
+		//exit(0);
+		y=nexty;
+		x=nextx;
+		//cout<<y<<","<<x<<endl;
+		
+		
+		nexty = y+ty[1]+length;
+		nextx = x+tx[1];
+		dir = 1;
+		/////////////
+		for(i=y+1; i<=nexty; ++i){
+			hap=0;
+			for(j=0; j<10; ++j){
+				dy = v[dir][j].y;
+				dx = v[dir][j].x;
+				ny = i+dy;
+				nx = nextx+dx;
+				per = v[dir][j].per;
+				d_next = ((double)(sand[i][nextx]*per))/100.0;		
+				i_next = (int)(d_next);
+				hap+=i_next;
+				if(ny>=1&&ny<=len&&nx>=1&&nx<=len){
+					sand[ny][nx]+=i_next;
+				}
+				else{
+					dap+=i_next;
+				}
+			}
+			namojee = sand[i][nextx]-hap;
+			if(i+1<=len){
+				sand[i+1][nextx] += namojee;	
+			}
+			else{
+				
+				dap+=namojee;
+				//cout<<dap<<"!!!!!\n";
+			}
+			sand[i][nextx] = 0;
+			//cout<<i<<","<<nextx<<endl;
+			//print_sand();
+			//cout<<i<<","<<nextx<<endl;
+		}
+		y=nexty;
+		x=nextx;
+		//cout<<y<<","<<x<<endl;
+		nexty = y+ty[2];
+		nextx = x+tx[2]+length;
+		/////////////
+		dir = 2;
+		for(k=x+1; k<=nextx; ++k){
+			hap=0;
+			for(j=0; j<10; ++j){
+				dy = v[dir][j].y;
+				dx = v[dir][j].x;
+				ny = nexty+dy;
+				nx = k+dx;
+				per = v[dir][j].per;
+				d_next = ((double)(sand[nexty][k]*per))/100.0;		
+				i_next = (int)(d_next);
+				hap+=i_next;
+				if(ny>=1&&ny<=len&&nx>=1&&nx<=len){
+					sand[ny][nx]+=i_next;
+				}
+				else{
+					dap+=i_next;
+				}
+			}
+			namojee = sand[nexty][k]-hap;
+			if(k+1<=len){
+				sand[nexty][k+1] += namojee;	
+			}
+			else{
+				dap+=namojee;
+			}
+			sand[nexty][k] = 0;
+			//cout<<nexty<<","<<k<<endl;
+			//print_sand();
+			//cout<<nexty<<","<<k<<endl;
+		}
+		y=nexty;
+		x=nextx;
+		//cout<<y<<","<<x<<endl;
+		nexty = y+ty[3]-length;
+		nextx = x+tx[3];
+		/////////////
+		dir = 3;
+		for(i=y-1; i>=nexty; --i){
+			hap=0;
+			for(j=0; j<10; ++j){
+				dy = v[dir][j].y;
+				dx = v[dir][j].x;
+				ny = i+dy;
+				nx = nextx+dx;
+				per = v[dir][j].per;
+				d_next = ((double)(sand[i][nextx]*per))/100.0;		
+				i_next = (int)(d_next);
+				hap+=i_next;
+				if(ny>=1&&ny<=len&&nx>=1&&nx<=len){
+					sand[ny][nx]+=i_next;
+				}
+				else{
+					dap+=i_next;
+				}
+			}
+			namojee = sand[i][nextx]-hap;
+			if(i-1>=1){
+				sand[i-1][nextx] += namojee;	
+			}
+			else{
+				dap+=namojee;
+			}
+			sand[i][nextx] = 0;
+			//cout<<i<<","<<nextx<<endl;
+			//print_sand();
+			//cout<<i<<","<<nextx<<endl;
+		}
+		y=nexty;
+		x=nextx;
+		
+		length+=2;
+	}
+	//print_sand();
+	return dap;
+}
+
+int main(void)
+{
+	cin>>len;
+	int i,k; 
+	for(i=1; i<=len; ++i){
+		for(k=1; k<=len; ++k){
+			cin>>sand[i][k];
+		}
+	}
+	cout<<solve();
+	return 0;
+}
