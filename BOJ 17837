@@ -1,0 +1,603 @@
+#include<iostream>
+#include<vector> 
+using namespace std;
+
+struct horse{
+	int y, x, dir;
+};
+
+int len, getsu;
+int chess[13][13];
+vector<int> horse_chess[13][13];
+horse horse_arr[11];
+
+bool more_than_four(){
+	int i,k;
+	for(i=1; i<=len ; ++i){
+		for(k=1; k<=len; ++k){
+			if(horse_chess[i][k].size()>=4) return true;
+		}
+	}
+	return false;
+}
+
+int go_horse(int now){
+	int i,k;
+	int nowx, nowy, nowd, next;
+	
+	nowy = horse_arr[now].y;
+	nowx = horse_arr[now].x;
+	nowd = horse_arr[now].dir;
+	//cout<<nowy<<","<<nowx<<" "<<nowd<<endl;
+	int nexty, nextx, index, del_getsu;
+	for(i=0; i<horse_chess[nowy][nowx].size(); ++i){
+		if(horse_chess[nowy][nowx][i]==now){
+			index = i;
+			break;
+		}
+	} 
+	vector<int> temp;
+	if(nowd == 1){	//오른쪽
+		nexty = nowy;
+		nextx = nowx+1; 
+		if(nexty>=1&&nexty<=len&&nextx>=1&&nextx<=len){
+			if(chess[nexty][nextx]==0){	//흰색 
+				for(i=index; i<horse_chess[nowy][nowx].size(); ++i){
+					temp.push_back(horse_chess[nowy][nowx][i]);
+				}
+				del_getsu = horse_chess[nowy][nowx].size()-index;
+				for(i=0; i<del_getsu; ++i){
+					horse_chess[nowy][nowx].pop_back();
+				}
+				for(i=0; i<temp.size(); ++i){
+					horse_chess[nexty][nextx].push_back(temp[i]);
+					next = temp[i];
+					horse_arr[next] = {nexty, nextx, horse_arr[next].dir}; 
+				}
+				horse_arr[now] = {nexty, nextx, nowd}; 
+			} 
+			else if(chess[nexty][nextx]==1){	//빨간색
+				for(i=index; i<horse_chess[nowy][nowx].size(); ++i){
+					temp.push_back(horse_chess[nowy][nowx][i]);
+				}
+				del_getsu = horse_chess[nowy][nowx].size()-index;
+				for(i=0; i<del_getsu; ++i){
+					horse_chess[nowy][nowx].pop_back();
+				}
+				for(i=temp.size()-1; i>=0; --i){
+					horse_chess[nexty][nextx].push_back(temp[i]);
+					next = temp[i];
+					horse_arr[next] = {nexty, nextx, horse_arr[next].dir}; 
+				}
+				horse_arr[now] = {nexty, nextx, nowd};
+			}
+			else{	//파란색  
+				nowd = 2;
+				nexty = nowy;
+				nextx = nowx-1;
+				if(nexty>=1&&nexty<=len&&nextx>=1&&nextx<=len){
+					if(chess[nexty][nextx]==0){	//흰색 
+						for(i=index; i<horse_chess[nowy][nowx].size(); ++i){
+							temp.push_back(horse_chess[nowy][nowx][i]);
+						}
+						del_getsu = horse_chess[nowy][nowx].size()-index;
+						for(i=0; i<del_getsu; ++i){
+							horse_chess[nowy][nowx].pop_back();
+						}
+						for(i=0; i<temp.size(); ++i){
+							horse_chess[nexty][nextx].push_back(temp[i]);
+							next = temp[i];
+							horse_arr[next] = {nexty, nextx, horse_arr[next].dir}; 
+						}
+						horse_arr[now] = {nexty, nextx, nowd};
+					} 
+					else if(chess[nexty][nextx]==1){	//빨간색
+						for(i=index; i<horse_chess[nowy][nowx].size(); ++i){
+							temp.push_back(horse_chess[nowy][nowx][i]);
+						}
+						del_getsu = horse_chess[nowy][nowx].size()-index;
+						for(i=0; i<del_getsu; ++i){
+							horse_chess[nowy][nowx].pop_back();
+						}
+						for(i=temp.size()-1; i>=0; --i){
+							horse_chess[nexty][nextx].push_back(temp[i]);
+							next = temp[i];
+							horse_arr[next] = {nexty, nextx, horse_arr[next].dir}; 
+						}
+						horse_arr[now] = {nexty, nextx, nowd};
+					}
+					else{	//파란색  
+						//아무거도 안함  
+						horse_arr[now] = {nowy, nowx, nowd};
+					} 
+				}
+				else{	//벗어날리가 없음  
+					horse_arr[now] = {nowy, nowx, nowd};
+				}
+			} 
+		} 
+		else{	//맵밖을 벗어나려하면  
+			nowd = 2;
+			nexty = nowy;
+			nextx = nowx-1;
+			if(nexty>=1&&nexty<=len&&nextx>=1&&nextx<=len){
+				if(chess[nexty][nextx]==0){	//흰색 
+					for(i=index; i<horse_chess[nowy][nowx].size(); ++i){
+						temp.push_back(horse_chess[nowy][nowx][i]);
+					}
+					del_getsu = horse_chess[nowy][nowx].size()-index;
+					for(i=0; i<del_getsu; ++i){
+						horse_chess[nowy][nowx].pop_back();
+					}
+					for(i=0; i<temp.size(); ++i){
+						horse_chess[nexty][nextx].push_back(temp[i]);
+						next = temp[i];
+						horse_arr[next] = {nexty, nextx, horse_arr[next].dir}; 
+					}
+					horse_arr[now] = {nexty, nextx, nowd};
+				} 
+				else if(chess[nexty][nextx]==1){	//빨간색
+					for(i=index; i<horse_chess[nowy][nowx].size(); ++i){
+						temp.push_back(horse_chess[nowy][nowx][i]);
+					}
+					del_getsu = horse_chess[nowy][nowx].size()-index;
+					for(i=0; i<del_getsu; ++i){
+						horse_chess[nowy][nowx].pop_back();
+					}
+					for(i=temp.size()-1; i>=0; --i){
+						horse_chess[nexty][nextx].push_back(temp[i]);
+						next = temp[i];
+						horse_arr[next] = {nexty, nextx, horse_arr[next].dir}; 
+					}
+					horse_arr[now] = {nexty, nextx, nowd};
+				}
+				else{	//파란색  
+					//아무거도 안함  
+					horse_arr[now] = {nowy, nowx, nowd};
+				} 
+			}
+			else{	//벗어날리가 없음  
+				horse_arr[now] = {nowy, nowx, nowd};
+			}
+		}
+	}
+	else if(nowd == 2){	//왼쪽 
+		nexty = nowy;
+		nextx = nowx-1; 
+		if(nexty>=1&&nexty<=len&&nextx>=1&&nextx<=len){
+			if(chess[nexty][nextx]==0){	//흰색 
+				for(i=index; i<horse_chess[nowy][nowx].size(); ++i){
+					temp.push_back(horse_chess[nowy][nowx][i]);
+				}
+				del_getsu = horse_chess[nowy][nowx].size()-index;
+				for(i=0; i<del_getsu; ++i){
+					horse_chess[nowy][nowx].pop_back();
+				}
+				for(i=0; i<temp.size(); ++i){
+					horse_chess[nexty][nextx].push_back(temp[i]);
+					next = temp[i];
+					horse_arr[next] = {nexty, nextx, horse_arr[next].dir}; 
+				}
+				horse_arr[now] = {nexty, nextx, nowd}; 
+			} 
+			else if(chess[nexty][nextx]==1){	//빨간색
+				for(i=index; i<horse_chess[nowy][nowx].size(); ++i){
+					temp.push_back(horse_chess[nowy][nowx][i]);
+				}
+				del_getsu = horse_chess[nowy][nowx].size()-index;
+				for(i=0; i<del_getsu; ++i){
+					horse_chess[nowy][nowx].pop_back();
+				}
+				for(i=temp.size()-1; i>=0; --i){
+					horse_chess[nexty][nextx].push_back(temp[i]);
+					next = temp[i];
+					horse_arr[next] = {nexty, nextx, horse_arr[next].dir}; 
+				}
+				horse_arr[now] = {nexty, nextx, nowd};
+			}
+			else{	//파란색  
+				nowd = 1;
+				nexty = nowy;
+				nextx = nowx+1;
+				if(nexty>=1&&nexty<=len&&nextx>=1&&nextx<=len){
+					if(chess[nexty][nextx]==0){	//흰색 
+						for(i=index; i<horse_chess[nowy][nowx].size(); ++i){
+							temp.push_back(horse_chess[nowy][nowx][i]);
+						}
+						del_getsu = horse_chess[nowy][nowx].size()-index;
+						for(i=0; i<del_getsu; ++i){
+							horse_chess[nowy][nowx].pop_back();
+						}
+						for(i=0; i<temp.size(); ++i){
+							horse_chess[nexty][nextx].push_back(temp[i]);
+							next = temp[i];
+							horse_arr[next] = {nexty, nextx, horse_arr[next].dir}; 
+						}
+						horse_arr[now] = {nexty, nextx, nowd};
+					} 
+					else if(chess[nexty][nextx]==1){	//빨간색
+						for(i=index; i<horse_chess[nowy][nowx].size(); ++i){
+							temp.push_back(horse_chess[nowy][nowx][i]);
+						}
+						del_getsu = horse_chess[nowy][nowx].size()-index;
+						for(i=0; i<del_getsu; ++i){
+							horse_chess[nowy][nowx].pop_back();
+						}
+						for(i=temp.size()-1; i>=0; --i){
+							horse_chess[nexty][nextx].push_back(temp[i]);
+							next = temp[i];
+							horse_arr[next] = {nexty, nextx, horse_arr[next].dir}; 
+						}
+						horse_arr[now] = {nexty, nextx, nowd};
+					}
+					else{	//파란색  
+						//아무거도 안함  
+						horse_arr[now] = {nowy, nowx, nowd};
+					} 
+				}
+				else{	//벗어날리가 없음  
+					horse_arr[now] = {nowy, nowx, nowd};
+				}
+			} 
+		} 
+		else{	//맵밖을 벗어나려하면  
+			nowd = 1;
+			nexty = nowy;
+			nextx = nowx+1;
+			if(nexty>=1&&nexty<=len&&nextx>=1&&nextx<=len){
+				if(chess[nexty][nextx]==0){	//흰색 
+					for(i=index; i<horse_chess[nowy][nowx].size(); ++i){
+						temp.push_back(horse_chess[nowy][nowx][i]);
+					}
+					del_getsu = horse_chess[nowy][nowx].size()-index;
+					for(i=0; i<del_getsu; ++i){
+						horse_chess[nowy][nowx].pop_back();
+					}
+					for(i=0; i<temp.size(); ++i){
+						horse_chess[nexty][nextx].push_back(temp[i]);
+						next = temp[i];
+						horse_arr[next] = {nexty, nextx, horse_arr[next].dir}; 
+					}
+					horse_arr[now] = {nexty, nextx, nowd};
+				} 
+				else if(chess[nexty][nextx]==1){	//빨간색
+					for(i=index; i<horse_chess[nowy][nowx].size(); ++i){
+						temp.push_back(horse_chess[nowy][nowx][i]);
+					}
+					del_getsu = horse_chess[nowy][nowx].size()-index;
+					for(i=0; i<del_getsu; ++i){
+						horse_chess[nowy][nowx].pop_back();
+					}
+					for(i=temp.size()-1; i>=0; --i){
+						horse_chess[nexty][nextx].push_back(temp[i]);
+						next = temp[i];
+						horse_arr[next] = {nexty, nextx, horse_arr[next].dir}; 
+					}
+					horse_arr[now] = {nexty, nextx, nowd};
+				}
+				else{	//파란색  
+					//아무거도 안함  
+					horse_arr[now] = {nowy, nowx, nowd};
+				} 
+			}
+			else{	//벗어날리가 없음  
+				horse_arr[now] = {nowy, nowx, nowd};
+			}
+		}
+	}
+	else if(nowd == 3){	//위 
+		nexty = nowy-1;
+		nextx = nowx; 
+		if(nexty>=1&&nexty<=len&&nextx>=1&&nextx<=len){
+			if(chess[nexty][nextx]==0){	//흰색 
+				for(i=index; i<horse_chess[nowy][nowx].size(); ++i){
+					temp.push_back(horse_chess[nowy][nowx][i]);
+				}
+				del_getsu = horse_chess[nowy][nowx].size()-index;
+				for(i=0; i<del_getsu; ++i){
+					horse_chess[nowy][nowx].pop_back();
+				}
+				for(i=0; i<temp.size(); ++i){
+					horse_chess[nexty][nextx].push_back(temp[i]);
+					next = temp[i];
+					horse_arr[next] = {nexty, nextx, horse_arr[next].dir}; 
+				}
+				horse_arr[now] = {nexty, nextx, nowd}; 
+			} 
+			else if(chess[nexty][nextx]==1){	//빨간색
+				for(i=index; i<horse_chess[nowy][nowx].size(); ++i){
+					temp.push_back(horse_chess[nowy][nowx][i]);
+				}
+				del_getsu = horse_chess[nowy][nowx].size()-index;
+				for(i=0; i<del_getsu; ++i){
+					horse_chess[nowy][nowx].pop_back();
+				}
+				for(i=temp.size()-1; i>=0; --i){
+					horse_chess[nexty][nextx].push_back(temp[i]);
+					next = temp[i];
+					horse_arr[next] = {nexty, nextx, horse_arr[next].dir}; 
+				}
+				horse_arr[now] = {nexty, nextx, nowd};
+			}
+			else{	//파란색  
+				nowd = 4;
+				nexty = nowy+1;
+				nextx = nowx;
+				if(nexty>=1&&nexty<=len&&nextx>=1&&nextx<=len){
+					if(chess[nexty][nextx]==0){	//흰색 
+						for(i=index; i<horse_chess[nowy][nowx].size(); ++i){
+							temp.push_back(horse_chess[nowy][nowx][i]);
+						}
+						del_getsu = horse_chess[nowy][nowx].size()-index;
+						for(i=0; i<del_getsu; ++i){
+							horse_chess[nowy][nowx].pop_back();
+						}
+						for(i=0; i<temp.size(); ++i){
+							horse_chess[nexty][nextx].push_back(temp[i]);
+							next = temp[i];
+							horse_arr[next] = {nexty, nextx, horse_arr[next].dir}; 
+						}
+						horse_arr[now] = {nexty, nextx, nowd};
+					} 
+					else if(chess[nexty][nextx]==1){	//빨간색
+						for(i=index; i<horse_chess[nowy][nowx].size(); ++i){
+							temp.push_back(horse_chess[nowy][nowx][i]);
+						}
+						del_getsu = horse_chess[nowy][nowx].size()-index;
+						for(i=0; i<del_getsu; ++i){
+							horse_chess[nowy][nowx].pop_back();
+						}
+						for(i=temp.size()-1; i>=0; --i){
+							horse_chess[nexty][nextx].push_back(temp[i]);
+							next = temp[i];
+							horse_arr[next] = {nexty, nextx, horse_arr[next].dir}; 
+						}
+						horse_arr[now] = {nexty, nextx, nowd};
+					}
+					else{	//파란색  
+						//아무거도 안함  
+						horse_arr[now] = {nowy, nowx, nowd};
+					} 
+				}
+				else{	//벗어날리가 없음  
+					horse_arr[now] = {nowy, nowx, nowd};
+				}
+			} 
+		} 
+		else{	//맵밖을 벗어나려하면  
+			nowd = 4;
+			nexty = nowy+1;
+			nextx = nowx;
+			if(nexty>=1&&nexty<=len&&nextx>=1&&nextx<=len){
+				if(chess[nexty][nextx]==0){	//흰색 
+					for(i=index; i<horse_chess[nowy][nowx].size(); ++i){
+						temp.push_back(horse_chess[nowy][nowx][i]);
+					}
+					del_getsu = horse_chess[nowy][nowx].size()-index;
+					for(i=0; i<del_getsu; ++i){
+						horse_chess[nowy][nowx].pop_back();
+					}
+					for(i=0; i<temp.size(); ++i){
+						horse_chess[nexty][nextx].push_back(temp[i]);
+						next = temp[i];
+						horse_arr[next] = {nexty, nextx, horse_arr[next].dir}; 
+					}
+					horse_arr[now] = {nexty, nextx, nowd};
+				} 
+				else if(chess[nexty][nextx]==1){	//빨간색
+					for(i=index; i<horse_chess[nowy][nowx].size(); ++i){
+						temp.push_back(horse_chess[nowy][nowx][i]);
+					}
+					del_getsu = horse_chess[nowy][nowx].size()-index;
+					for(i=0; i<del_getsu; ++i){
+						horse_chess[nowy][nowx].pop_back();
+					}
+					for(i=temp.size()-1; i>=0; --i){
+						horse_chess[nexty][nextx].push_back(temp[i]);
+						next = temp[i];
+						horse_arr[next] = {nexty, nextx, horse_arr[next].dir}; 
+					}
+					horse_arr[now] = {nexty, nextx, nowd};
+				}
+				else{	//파란색  
+					//아무거도 안함  
+					horse_arr[now] = {nowy, nowx, nowd};
+				} 
+			}
+			else{	//벗어날리가 없음  
+				horse_arr[now] = {nowy, nowx, nowd};
+			}
+		}
+	}
+	else{		//아래 
+		nexty = nowy+1;
+		nextx = nowx; 
+		if(nexty>=1&&nexty<=len&&nextx>=1&&nextx<=len){
+			if(chess[nexty][nextx]==0){	//흰색 
+				for(i=index; i<horse_chess[nowy][nowx].size(); ++i){
+					temp.push_back(horse_chess[nowy][nowx][i]);
+				}
+				del_getsu = horse_chess[nowy][nowx].size()-index;
+				for(i=0; i<del_getsu; ++i){
+					horse_chess[nowy][nowx].pop_back();
+				}
+				for(i=0; i<temp.size(); ++i){
+					horse_chess[nexty][nextx].push_back(temp[i]);
+					next = temp[i];
+					horse_arr[next] = {nexty, nextx, horse_arr[next].dir}; 
+				}
+				horse_arr[now] = {nexty, nextx, nowd}; 
+			} 
+			else if(chess[nexty][nextx]==1){	//빨간색
+				for(i=index; i<horse_chess[nowy][nowx].size(); ++i){
+					temp.push_back(horse_chess[nowy][nowx][i]);
+				}
+				del_getsu = horse_chess[nowy][nowx].size()-index;
+				for(i=0; i<del_getsu; ++i){
+					horse_chess[nowy][nowx].pop_back();
+				}
+				for(i=temp.size()-1; i>=0; --i){
+					horse_chess[nexty][nextx].push_back(temp[i]);
+					next = temp[i];
+					horse_arr[next] = {nexty, nextx, horse_arr[next].dir}; 
+				}
+				horse_arr[now] = {nexty, nextx, nowd};
+			}
+			else{	//파란색  
+				nowd = 3;
+				nexty = nowy-1;
+				nextx = nowx;
+				if(nexty>=1&&nexty<=len&&nextx>=1&&nextx<=len){
+					if(chess[nexty][nextx]==0){	//흰색 
+						for(i=index; i<horse_chess[nowy][nowx].size(); ++i){
+							temp.push_back(horse_chess[nowy][nowx][i]);
+						}
+						del_getsu = horse_chess[nowy][nowx].size()-index;
+						for(i=0; i<del_getsu; ++i){
+							horse_chess[nowy][nowx].pop_back();
+						}
+						for(i=0; i<temp.size(); ++i){
+							horse_chess[nexty][nextx].push_back(temp[i]);
+							next = temp[i];
+							horse_arr[next] = {nexty, nextx, horse_arr[next].dir}; 
+						}
+						horse_arr[now] = {nexty, nextx, nowd};
+					} 
+					else if(chess[nexty][nextx]==1){	//빨간색
+						for(i=index; i<horse_chess[nowy][nowx].size(); ++i){
+							temp.push_back(horse_chess[nowy][nowx][i]);
+						}
+						del_getsu = horse_chess[nowy][nowx].size()-index;
+						for(i=0; i<del_getsu; ++i){
+							horse_chess[nowy][nowx].pop_back();
+						}
+						for(i=temp.size()-1; i>=0; --i){
+							horse_chess[nexty][nextx].push_back(temp[i]);
+							next = temp[i];
+							horse_arr[next] = {nexty, nextx, horse_arr[next].dir}; 
+						}
+						horse_arr[now] = {nexty, nextx, nowd};
+					}
+					else{	//파란색  
+						//아무거도 안함  
+						horse_arr[now] = {nowy, nowx, nowd};
+					} 
+				}
+				else{	//벗어날리가 없음  
+					horse_arr[now] = {nowy, nowx, nowd};
+				}
+			} 
+		} 
+		else{	//맵밖을 벗어나려하면  
+			nowd = 3;
+			nexty = nowy-1;
+			nextx = nowx;
+			if(nexty>=1&&nexty<=len&&nextx>=1&&nextx<=len){
+				if(chess[nexty][nextx]==0){	//흰색 
+					for(i=index; i<horse_chess[nowy][nowx].size(); ++i){
+						temp.push_back(horse_chess[nowy][nowx][i]);
+					}
+					del_getsu = horse_chess[nowy][nowx].size()-index;
+					for(i=0; i<del_getsu; ++i){
+						horse_chess[nowy][nowx].pop_back();
+					}
+					for(i=0; i<temp.size(); ++i){
+						horse_chess[nexty][nextx].push_back(temp[i]);
+						next = temp[i];
+						horse_arr[next] = {nexty, nextx, horse_arr[next].dir}; 
+					}
+					horse_arr[now] = {nexty, nextx, nowd};
+				} 
+				else if(chess[nexty][nextx]==1){	//빨간색
+					for(i=index; i<horse_chess[nowy][nowx].size(); ++i){
+						temp.push_back(horse_chess[nowy][nowx][i]);
+					}
+					del_getsu = horse_chess[nowy][nowx].size()-index;
+					for(i=0; i<del_getsu; ++i){
+						horse_chess[nowy][nowx].pop_back();
+					}
+					for(i=temp.size()-1; i>=0; --i){
+						horse_chess[nexty][nextx].push_back(temp[i]);
+						next = temp[i];
+						horse_arr[next] = {nexty, nextx, horse_arr[next].dir}; 
+					}
+					horse_arr[now] = {nexty, nextx, nowd};
+				}
+				else{	//파란색  
+					//아무거도 안함  
+					horse_arr[now] = {nowy, nowx, nowd};
+				} 
+			}
+			else{	//벗어날리가 없음  
+				horse_arr[now] = {nowy, nowx, nowd};
+			}
+		}
+	}
+	temp.clear();
+	/*
+	cout<<endl;
+	for(i=1; i<=len; ++i){
+		for(k=1; k<=len; ++k){
+			cout<<i<<","<<k<<" : ";
+			for(int j=0; j<horse_chess[i][k].size(); ++j){
+				cout<<horse_chess[i][k][j]<<"("<<horse_arr[horse_chess[i][k][j]].dir<<")  ";
+			}
+			cout<<endl;
+		}
+	}
+	
+	cout<<endl;
+	*/
+	int maximum = 0, size;
+	for(i=1; i<=len; ++i){
+		for(k=1; k<=len; ++k){
+			size = horse_chess[i][k].size();
+			maximum = max(maximum, size);
+		}
+	}
+	return maximum;
+}
+
+int solve(){
+	int count = 0;
+	int i,k,nowy, nowx, nowd, now, num;
+	for(i=1; i<=getsu; ++i){
+		nowy = horse_arr[i].y;
+		nowx = horse_arr[i].x;
+		nowd = horse_arr[i].dir;
+		horse_chess[nowy][nowx].push_back(i); 
+	}
+	while(1){
+		if(more_than_four()||count>1000){	//한 칸에 말이 네개 이상 있으면  
+			break;
+		}
+		
+		for(i=1; i<=getsu; ++i){
+			//cout<<count<<"-"<<i<<endl;
+			now = i;
+			num = go_horse(i);
+			if(num>=4) return count+1;
+		}
+		
+		count++;
+	}
+	if(count>1000) return -1;
+	return count;
+}
+
+int main(void)
+{
+	cin>>len>>getsu;
+	int i,k,y,x,d;
+	for(i=1; i<=len; ++i){
+		for(k=1; k<=len; ++k){
+			cin>>chess[i][k];
+		}
+	}
+	for(i=1; i<=getsu; ++i){
+		cin>>y>>x>>d;
+		horse_arr[i] = {y,x,d};	
+	}
+	cout<<solve();
+	return 0;
+}
