@@ -1,0 +1,29 @@
+#include<iostream>
+#include<map>
+
+using namespace std;
+
+long long n, p,q;
+map<long long, long long> m;
+//set<long long> s;
+
+long long func(long long num){
+	if(m.count(num)!=0) return m[num];
+	long long ret = func(num/p)+func(num/q);
+	m.insert({num, ret});
+	return ret;
+}
+
+long long solve(){
+	if(n==0) return 1;
+	m.insert({0,1});
+	long long dap = func(n);
+	return dap;
+}
+
+int main(void)
+{
+	cin>>n>>p>>q;
+	cout<<solve();
+	return 0;
+}
