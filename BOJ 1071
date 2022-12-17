@@ -1,0 +1,76 @@
+#include<iostream>
+#include<vector>
+//#include<algorithm>
+using namespace std;
+
+int arr[1002];
+int num;
+
+int get_nextnum(int a){
+	int i;
+	for(i=a+1; i<=1000; ++i){
+		if(arr[i]!=0) return i;
+	}
+	return -1;
+}
+
+void solve(){
+	int index = 0, count = 0, now, nextnum,i;
+	vector<int> v;
+	while(1){
+		if(arr[index]==0) index++;
+		else{
+			now = index;
+			if(arr[now+1]!=0){	//+1이 있으면  
+				nextnum = get_nextnum(now+1);
+				if(nextnum!=-1){	//+1 초과도 있으면  
+					while(1){
+						if(arr[now]==0) break;
+						v.push_back(now);
+						arr[now]--;
+					}
+					v.push_back(nextnum);
+					arr[nextnum]--;
+				}
+				else{	//+1을 싹다 넣어야함  
+					while(1){
+						if(arr[now+1]==0) break;
+						v.push_back(now+1);
+						arr[now+1]--;
+					}
+					while(1){
+						if(arr[now]==0) break;
+						v.push_back(now);
+						arr[now]--;
+					}
+				}
+			}
+			else{
+				while(1){
+					if(arr[now]==0) break;
+					v.push_back(now);
+					arr[now]--;
+				}
+			}
+		}
+		if(v.size()==num) break;
+	}
+	for(i=0; i<v.size(); ++i){
+		cout<<v[i]<<" ";
+	}
+}
+
+int main(void)
+{
+	cin>>num;
+	int i,a;
+	for(i=0; i<=1001; ++i){
+		arr[i] = 0;
+	}
+	for(i=0; i<num; ++i){
+		cin>>a;
+		arr[a]++;
+	}
+	solve();
+	return 0;
+}
