@@ -1,0 +1,53 @@
+#include<iostream>
+#include<queue>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+int num, len;
+int arr[5000001];
+
+void solve(){
+	int i, start, end, dap;
+	//cout<<"fuck"<<" ";
+	deque<pair<int, int>> dq;
+	int smallest, index, dq_front;
+	for(i=1; i<=num; ++i){
+		start = i-len+1;
+		while(!dq.empty()){
+			index = dq.front().second;
+			if(index>=start) break; 	
+			dq.pop_front();
+		}
+		if(dq.empty()){
+			cout<<arr[i]<<" ";
+			dq.push_back({arr[i], i});
+		}
+		else{
+			dq_front = dq.front().first;
+			if(dq_front>arr[i]){
+				cout<<arr[i]<<" ";
+				dq.push_front({arr[i], i});
+			}
+			else{
+				while(!dq.empty()){
+					if(dq.back().first<=arr[i]) break;
+					dq.pop_back();
+				}
+				dq.push_back({arr[i], i});
+				cout<<dq.front().first<<" ";
+			}
+		}
+	}
+}
+
+int main(void)
+{
+	fastio;
+	cin>>num>>len;
+	int i;
+	for(i=1; i<=num; ++i){
+		cin>>arr[i];
+	}
+	solve();
+	return 0;
+}
