@@ -1,0 +1,57 @@
+#include<iostream>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+int numofver, stage;
+pair<int, int> v[1000001];
+int parent[500001];
+
+void parent_clear(){
+	int i;
+	for(i=0; i<numofver; ++i){
+		parent[i] = i;
+	}
+}
+
+int get_parent(int x){
+	if(x==parent[x]) return x;
+	int p_x = get_parent(parent[x]);
+	parent[x] = p_x;
+	return p_x;
+}
+
+void set_union(int p_a, int p_b){
+	if(p_a<p_b){
+		parent[p_b] = p_a;
+	}
+	else{
+		parent[p_a] = p_b;
+	}
+}
+
+int solve(){
+	parent_clear();
+	int i,a,b,p_a,p_b;
+	for(i=0; i<stage; ++i){
+		a = v[i].first;
+		b = v[i].second;
+		p_a = get_parent(a);
+		p_b = get_parent(b);
+		if(p_a==p_b) return i+1;
+		set_union(p_a, p_b);
+	}
+	return 0;
+}
+
+int main(void)
+{
+	fastio;
+	cin>>numofver>>stage;
+	int i, a,b;
+	for(i=0; i<stage; ++i){
+		cin>>a>>b;
+		v[i] = {a,b};
+	}
+	cout<<solve();
+	return 0;
+}
