@@ -1,0 +1,153 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+using namespace std;
+
+int len, numofpeople;
+int people[401];
+vector<int> like[401];
+int seat[21][21];
+int dy[4] = {1,0,-1,0};
+int dx[4] = {0,1,0,-1};
+
+struct quad{
+	int y,x, score, blank;
+};
+
+bool him_like(int now, int classmate){
+	int i;
+	for(i=0; i<4; ++i){
+		if(like[now][i]==classmate) return true; 
+	}
+	return false;
+}
+
+bool compare(quad q1, quad q2){
+	if(q1.score==q2.score){
+		if(q1.blank==q2.blank){
+			if(q1.y==q2.y){
+				return q1.x<q2.x;
+			}
+			return q1.y<q2.y;
+		}
+		return q1.blank>q2.blank;
+	}
+	return q1.score>q2.score;
+}
+
+pair<int, int> get_pos(int now){
+	int i,j,k, ny, nx, classmate, score,y,x, blank;
+	vector<quad> v;
+	for(i=1; i<=len; ++i){
+		for(j=1; j<=len; ++j){
+			if(seat[i][j]!=0) continue; 
+			score=0;
+			blank=0;
+			for(k=0; k<4; ++k){
+				ny = i+dy[k];
+				nx = j+dx[k];
+				if(ny>=1&&ny<=len&&nx>=1&&nx<=len){
+					if(seat[ny][nx]!=0){
+						classmate = seat[ny][nx];
+						if(him_like(now, classmate)){
+							score++;
+						}
+					}
+					else blank++;
+				}
+			}
+			v.push_back({i,j, score, blank});
+		}
+	}
+	/*
+	for(i=0; i<v.size(); ++i){
+		cout<<v[i].y<<" "<<v[i].x<<" "<<v[i].score<<" "<<v[i].blank<<endl;
+	}
+	*/
+	//exit(0);
+	sort(v.begin(), v.end(), compare);
+	return {v[0].y, v[0].x};
+}
+
+void clear_seat(){
+	int i,k;
+	for(i=1; i<=len; ++i){
+		for(k=1; k<=len; ++k){
+			seat[i][k] = 0;
+		}
+	}
+}
+
+int solve(){
+	int i,j, k, now;
+	pair<int, int> p;
+	clear_seat();
+	for(i=1; i<=numofpeople; ++i){
+		now = people[i];
+		//cout<<now<<" ";
+		p = get_pos(now);
+		seat[p.first][p.second] = now;
+	}
+	/*
+	cout<<endl;
+	for(i=1; i<=len; ++i){
+		for(k=1; k<=len; ++k){
+			cout<<seat[i][k]<<" ";
+		}
+		cout<<endl;
+	}
+	cout<<endl;
+	*/
+	int dap=0, score, ny, nx, classmate, now_dot;
+	for(i=1; i<=len; ++i){
+		for(j=1; j<=len; ++j){
+			score=0;
+			now_dot = seat[i][j];
+			for(k=0; k<4; ++k){
+				ny = i+dy[k];
+				nx = j+dx[k];
+				if(ny>=1&&ny<=len&&nx>=1&&nx<=len){
+					classmate = seat[ny][nx];
+					if(him_like(now_dot, classmate)){
+						
+						score++;
+					}
+				}
+			}
+			if(score==0){
+				
+			}
+			else if(score==1){
+				dap+=1;
+			}
+			else if(score==2){
+				dap+=10;
+			}
+			else if(score==3){
+				dap+=100;
+			}
+			else{
+				dap+=1000;
+			}
+		}
+	}
+	return dap;
+}
+
+int main(void)
+{
+	cin>>len;
+	numofpeople = len*len;
+	int i, x,a,b,c,d,e;
+	for(i=1; i<=numofpeople; ++i){
+		cin>>x;
+		people[i] = x;
+		cin>>a>>b>>c>>d;
+		like[x].push_back(a);
+		like[x].push_back(b);
+		like[x].push_back(c);
+		like[x].push_back(d);
+	}
+	cout<<solve();
+	return 0;
+}
