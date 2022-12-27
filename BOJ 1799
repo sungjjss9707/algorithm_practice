@@ -1,0 +1,254 @@
+#include<iostream>
+#include<vector>
+using namespace std;
+
+int len, maximum;
+int hol_max, jjak_max;
+int numofcan_go;
+int chess[11][11];
+int pan[11][11];
+int vector_size;
+vector<pair<int, int>> right_up[21];
+vector<pair<int, int>> left_up[21];
+//vector<pair<int ,int>> can_go;
+
+void clear(){
+	int i,k;
+	vector_size=2*len-1;
+	for(i=1; i<=len; ++i){
+		for(k=1; k<=len; ++k){
+			pan[i][k] = 0;
+		}
+	} 
+	int y,x, index=0;
+	for(i=1; i<=len; ++i){
+		y = i;
+		x = 1;
+		while(y>=1&&y<=len&&x>=1&&x<=len){
+			if(chess[y][x]==1){
+				right_up[index].push_back({y,x});
+			}
+			y--;
+			x++;
+		}
+		index++;
+	}
+	for(k=2; k<=len; ++k){
+		y = len;
+		x = k;
+		while(y>=1&&y<=len&&x>=1&&x<=len){
+			if(chess[y][x]==1){
+				right_up[index].push_back({y,x});
+			}
+			y--;
+			x++;
+		}
+		index++;
+	}
+	index = 0;
+	for(k=len; k>=1; --k){
+		y = 1;
+		x = k;
+		while(y>=1&&y<=len&&x>=1&&x<=len){
+			if(chess[y][x]==1){
+				left_up[index].push_back({y,x});
+			}
+			y++;
+			x++;
+		}
+		index++;
+	}
+	for(i=2; i<=len; ++i){
+		y = i;
+		x = 1;
+		while(y>=1&&y<=len&&x>=1&&x<=len){
+			if(chess[y][x]==1){
+				left_up[index].push_back({y,x});
+			}
+			y++;
+			x++;
+		}
+		index++;
+	}
+	/*
+	for(i=0; i<vector_size; ++i){
+		cout<<i<<" : ";
+		for(k=0; k<right_up[i].size(); ++k){
+			cout<<right_up[i][k].first<<","<<right_up[i][k].second<<"   ";
+		}
+		cout<<endl;
+	}
+	for(i=0; i<vector_size; ++i){
+		cout<<i<<" : ";
+		for(k=0; k<left_up[i].size(); ++k){
+			cout<<left_up[i][k].first<<","<<left_up[i][k].second<<"   ";
+		}
+		cout<<endl;
+	}
+	*/
+}
+/*
+int get_numofbee(){
+	int i,k, ret = 0;
+	for(i=1; i<=len; ++i){
+		for(k=1; k<=len; ++k){
+			if(pan[i][k]==1) ret++;
+		}
+	}
+	return ret;
+}
+*/
+bool can_next(int y, int x){
+
+	int nexty, nextx;
+	nexty = y-1;
+	nextx = x-1;
+	while(nexty>=1&&nexty<=len&&nextx>=1&&nextx<=len){
+		if(pan[nexty][nextx]==1) return false;
+		nexty--;
+		nextx--;
+	}
+	nexty = y+1;
+	nextx = x+1;
+	while(nexty>=1&&nexty<=len&&nextx>=1&&nextx<=len){
+		if(pan[nexty][nextx]==1) return false;
+		nexty++;
+		nextx++;
+	}
+	nexty = y+1;
+	nextx = x-1;
+	while(nexty>=1&&nexty<=len&&nextx>=1&&nextx<=len){
+		if(pan[nexty][nextx]==1) return false;
+		nexty++;
+		nextx--;
+	}
+	nexty = y-1;
+	nextx = x+1;
+	while(nexty>=1&&nexty<=len&&nextx>=1&&nextx<=len){
+		if(pan[nexty][nextx]==1) return false;
+		nexty--;
+		nextx++;
+	}
+	return true;
+}
+
+void print_pan(){
+	int i,k;
+	for(i=1; i<=len; ++i){
+		for(k=1; k<=len; ++k){
+			cout<<pan[i][k]<<" ";
+		}
+		cout<<endl;
+	}
+	cout<<endl;
+}
+
+void get_choidae_right_up(int index, int count, int hol_jjak){
+	int getsu = count+1;
+	if(hol_jjak%2==0){
+		jjak_max = max(jjak_max, getsu);
+	}
+	else{
+		hol_max = max(hol_max, getsu);
+	}
+	//maximum = max(maximum, getsu);
+	if(index>=vector_size-1) return;	
+	int i,k, y,x;
+	for(i=index+1; i<vector_size; ++i){
+		if(right_up[i].size()!=0&&i%2==hol_jjak%2){
+			for(k=0; k<right_up[i].size(); ++k){
+				y = right_up[i][k].first;
+				x = right_up[i][k].second;
+				if(can_next(y,x)){
+					pan[y][x] = 1;
+					get_choidae_right_up(i, count+1, hol_jjak);
+					pan[y][x] = 0;
+				}
+				
+			}
+		}
+	}
+}
+
+void get_choidae_left_up(int index, int count, int hol_jjak){
+	int getsu = count+1;
+	if(hol_jjak%2==0){
+		jjak_max = max(jjak_max, getsu);
+	}
+	else{
+		hol_max = max(hol_max, getsu);
+	}
+	//maximum = max(maximum, getsu);
+	if(index>=vector_size-1) return;	
+	int i,k, y,x;
+	for(i=index+1; i<vector_size; ++i){
+		if(left_up[i].size()!=0&&i%2==hol_jjak%2){
+			for(k=0; k<left_up[i].size(); ++k){
+				y = left_up[i][k].first;
+				x = left_up[i][k].second;
+				if(can_next(y,x)){
+					pan[y][x] = 1;
+					get_choidae_left_up(i, count+1, hol_jjak);
+					pan[y][x] = 0;
+				}
+			}
+		}
+	}
+}
+
+int solve(){
+	if(len==1){
+		if(chess[1][1]==1) return 1;
+		else return 0;
+	}
+	int i, k,y,x;
+	//numofcan_go=can_go.size(); 
+	maximum = 0;
+	clear();
+	hol_max = 0;
+	jjak_max = 0;
+	for(i=0; i<vector_size; ++i){
+		if(right_up[i].size()!=0){
+			for(k=0; k<right_up[i].size(); ++k){
+				y = right_up[i][k].first;
+				x = right_up[i][k].second;
+				pan[y][x] = 1;
+				get_choidae_right_up(i, 0, i);
+				pan[y][x] = 0;
+			}
+		}
+	}
+	maximum = max(maximum, hol_max+jjak_max);
+	
+	hol_max = 0;
+	jjak_max = 0;
+	for(i=0; i<vector_size; ++i){
+		if(left_up[i].size()!=0){
+			for(k=0; k<left_up[i].size(); ++k){
+				y = left_up[i][k].first;
+				x = left_up[i][k].second;
+				pan[y][x] = 1;
+				get_choidae_left_up(i, 0,i);
+				pan[y][x] = 0;
+			}
+		}
+	}
+	maximum = max(maximum, hol_max+jjak_max);
+	
+	
+	return maximum;
+}
+
+int main(void)
+{
+	cin>>len;
+	int i,k;
+	for(i=1; i<=len; ++i){
+		for(k=1; k<=len; ++k){
+			cin>>chess[i][k];
+			//if(chess[i][k]==1) can_go.push_back({i,k});			
+		}
+	}
+	cout<<solve();
+	return 0;
+}
