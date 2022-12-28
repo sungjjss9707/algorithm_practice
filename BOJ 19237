@@ -1,0 +1,228 @@
+#include<iostream>
+#include<vector>
+using namespace std;
+
+struct shark{
+	int y,x,dir, live;
+};
+
+int len, numofshark, sec;
+int sea[21][21];
+int shark_dir[402];
+int priority_dir[402][5][5];	//priority_dir[i][j][k] = i번째상어가 j를 보고있을때 k 번째 우선순위  
+vector<pair<int, int>> smell[21][21];
+shark shark_inform[402];
+int dy[5] = {0,-1,1,0,0};
+int dx[5] = {0,0,0,-1,1};
+
+bool istheremysmell(int now, int y, int x){
+	int i;
+	for(i=0; i<smell[y][x].size(); ++i){
+		if(now==smell[y][x][i].first) return true;
+	}
+	return false;
+}
+
+void go_shark(){
+	int i,j,k;
+	/*
+	for(i=1; i<=numofshark; ++i){
+		cout<<i<<"번상어 : "<<shark_inform[i].y<<","<<shark_inform[i].x<<"   "<<shark_inform[i].dir<<endl;
+	}
+	*/
+	vector<int> shark_pos[21][21];
+	int now_shark, now_dir, now_y, now_x, next_y, next_x, next_dir;
+	bool select;
+	for(i=1; i<=numofshark; ++i){
+		
+		now_shark = i;
+		if(shark_inform[now_shark].live!=1) continue;
+		now_dir = shark_inform[now_shark].dir;
+		now_y = shark_inform[now_shark].y;
+		now_x = shark_inform[now_shark].x;
+		select = false;
+		for(j=1; j<=4; ++j){
+			next_dir = priority_dir[now_shark][now_dir][j];
+			next_y = now_y+dy[next_dir];
+			next_x = now_x+dx[next_dir];
+			
+			if(next_y>=1&&next_y<=len&&next_x>=1&&next_x<=len){
+				//cout<<now_shark<<":"<<next_y<<","<<next_x<<" = "<<smell[next_y][next_x].size()<<"  ";
+				if(smell[next_y][next_x].empty()){
+					//cout<<now_shark<<" "<<next_y<<","<<next_x<<"로 감\n";
+					select = true;
+					break;
+				}
+			}
+		}
+		//cout<<endl;
+		if(!select){
+			//cout<<now_shark<<" 반대로감\n";
+			for(j=1; j<=4; ++j){
+				next_dir = priority_dir[now_shark][now_dir][j];
+				next_y = now_y+dy[next_dir];
+				next_x = now_x+dx[next_dir];
+			
+				if(next_y>=1&&next_y<=len&&next_x>=1&&next_x<=len){
+				//cout<<now_shark<<":"<<next_y<<","<<next_x<<" = "<<smell[next_y][next_x].size()<<"  ";
+					if(istheremysmell(now_shark, next_y, next_x)){
+					//cout<<now_shark<<" "<<next_y<<","<<next_x<<"로 감\n";
+						break;
+					}
+				}
+			}
+		}
+		shark_inform[now_shark] = {next_y, next_x, next_dir, 1};
+		shark_pos[next_y][next_x].push_back(now_shark);
+	}
+	int smallest;
+	for(i=1; i<=len; ++i){
+		for(j=1; j<=len; ++j){
+			smallest = 100000;
+			if(shark_pos[i][j].size()>1){
+				for(k=0; k<shark_pos[i][j].size(); ++k){
+					smallest = min(smallest, shark_pos[i][j][k]);
+				}
+				for(k=0; k<shark_pos[i][j].size(); ++k){
+					if(shark_pos[i][j][k]!=smallest){
+						shark_inform[shark_pos[i][j][k]].live=0;
+					}
+				}
+				sea[i][j] = smallest;
+			}
+			else if(shark_pos[i][j].size()==1){
+				sea[i][j] = shark_pos[i][j][0];
+			}
+			else{
+				sea[i][j] = 0;
+			}
+		}
+	}
+	
+}
+
+bool only_one(){
+	int i,k, hap=0;
+	for(i=1; i<=len; ++i){
+		for(k=1; k<=len; ++k){
+			hap+=sea[i][k];
+		}
+	}
+	if(hap==1) return true;
+	return false;
+}
+
+void make_smell(){
+	int i,j,k;
+	int now_shark, now_dir, now_y, now_x, next_y, next_x, next_dir;
+	for(i=1; i<=numofshark; ++i){
+		now_shark = i;
+		if(shark_inform[now_shark].live!=1) continue;
+		now_dir = shark_inform[now_shark].dir;
+		now_y = shark_inform[now_shark].y;
+		now_x = shark_inform[now_shark].x;
+		smell[now_y][now_x].push_back({now_shark, sec});
+	}
+}
+
+
+void smell_minus(){
+	int i,j,k;
+	int cho, who;
+	for(i=1; i<=len; ++i){
+		for(j=1; j<=len; ++j){
+			if(smell[i][j].size()==0) continue;
+			vector<pair<int, int>> temp;
+			for(k=0; k<smell[i][j].size(); ++k){
+				who = smell[i][j][k].first;
+				cho = smell[i][j][k].second;
+				if(cho>1){
+					temp.push_back({who, cho-1});
+				}
+			}
+			smell[i][j] = temp;
+		}
+	}
+}
+
+void print_sea(){
+	int i,k;
+	for(i=1; i<=len; ++i){
+		for(k=1; k<=len; ++k){
+			cout<<sea[i][k]<<" ";
+		}
+		cout<<endl;
+	}
+	cout<<endl;
+}
+
+void print_smell(){
+	int i,k,j;
+	for(i=1; i<=len; ++i){
+		for(k=1; k<=len; ++k){
+			cout<<smell[i][k].size()<<" ";
+		}
+		cout<<endl;
+	}
+	cout<<endl;
+}
+
+int solve(){
+	int dap=0;
+	int i,j,k;
+	for(i=1; i<=numofshark; ++i){
+		for(j=1; j<=len; ++j){
+			for(k=1; k<=len; ++k){
+				if(sea[j][k]==i){
+					shark_inform[i] = {j,k,shark_dir[i], 1};
+					break;
+				}
+			}
+			if(shark_inform[i].dir==shark_dir[i]) break;
+		}
+	}
+	//cout<<endl;
+	while(1){
+		if(only_one()){
+			break;
+		}
+		if(dap>=1000) return -1;
+		//1. 냄세를 뿌린다.
+		//cout<<dap<<endl;
+		make_smell();
+		
+		//print_sea();
+		//print_smell();
+		//smell_minus();
+		//cout<<"fuck\n";
+		go_shark();
+		smell_minus();
+		dap++;
+		//cout<<dap<<" ";
+	}
+	return dap;
+}
+
+int main(void)
+{
+	cin>>len>>numofshark>>sec;
+	int i,j,k;
+	for(i=1; i<=len; ++i){
+		for(k=1; k<=len; ++k){
+			cin>>sea[i][k];
+		}
+	}
+	for(i=1; i<=numofshark; ++i){
+		cin>>shark_dir[i];
+	}
+	for(i=1; i<=numofshark; ++i){
+		//cout<<i<<" "; 
+		for(j=1; j<=4; ++j){
+			for(k=1; k<=4; ++k){
+				cin>>priority_dir[i][j][k];
+			}	
+		}
+	}
+	cout<<solve();
+	return 0;
+}
