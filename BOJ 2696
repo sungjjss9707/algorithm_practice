@@ -1,0 +1,138 @@
+#include<iostream>
+#include<vector>
+#include<queue>
+using namespace std;
+
+int numofnum;
+vector<int> v;
+
+void print_big_small(priority_queue<int, vector<int> , greater<int>> big, priority_queue<int> small){
+	int i;
+	//vector<int> b;
+	//vector<int> s;
+	//int b_size = big.size();
+	//int s_size = small.size();
+	cout<<"small : ";
+	while(!small.empty()){
+		cout<<small.top()<<" ";
+		//s.push_back(small.top());
+		small.pop();
+	}
+	cout<<endl;
+	cout<<"big : ";
+	while(!big.empty()){
+		cout<<big.top()<<" ";
+		//b.push_back(big.top());
+		big.pop();
+	}
+	cout<<endl;
+}
+
+void solve(){
+	priority_queue<int, vector<int> , greater<int>> big;
+	priority_queue<int> small;
+	int i, now;
+	vector<int> dap;
+	for(i=0; i<numofnum; ++i){
+		//cout<<v[i]<<" ";
+		//big.push(v[i]);
+		if(i%2==0){	//index가 홀수일때  
+			if(i==0){		
+				dap.push_back(v[i]);
+				big.push(v[i]);
+			} 
+			else{
+				if(v[i]>small.top()){
+					if(v[i]<=big.top()){
+						small.push(v[i]);
+						dap.push_back(v[i]);
+					}
+					else{
+						dap.push_back(big.top());
+						big.push(v[i]);
+					}
+				}
+				else{
+					dap.push_back(small.top());
+					small.push(v[i]);
+					
+				}
+			}
+		}
+		else{
+			if(big.size()>small.size()){
+				if(small.size()==0){
+					if(big.top()>=v[i]) small.push(v[i]);
+					else{
+						small.push(big.top());
+						big.pop();
+						big.push(v[i]);
+					}
+				}
+				else{
+					if(small.top()>=v[i]){
+						small.push(v[i]);
+					}
+					else{
+						if(big.top()>=v[i]){
+							small.push(v[i]);
+						}
+						else{
+							small.push(big.top());
+							big.pop();
+							big.push(v[i]);
+						}
+					}
+				}
+				
+			}
+			else{
+				if(big.top()<=v[i]){
+					big.push(v[i]);
+				}
+				else{
+					if(small.top()<=v[i]){
+						big.push(v[i]);
+					}
+					else{
+						big.push(small.top());
+						small.pop();
+						small.push(v[i]);
+					}
+				}
+			}
+			
+		}
+		//print_big_small(big, small);
+		//cout<<endl;
+		/*
+		else{
+			big.push(v[i]);
+		}
+		*/
+		//cout<<small.size()<<" "<<big.size()<<endl;
+	}
+	cout<<dap.size()<<"\n";
+	for(i=0; i<dap.size(); ++i){
+		cout<<dap[i]<<" ";
+		if((i+1)%10==0) cout<<"\n";
+	}
+	cout<<"\n";
+}
+
+int main(void)
+{
+	int testcase;
+	cin>>testcase;
+	int t,i, n;
+	for(t=0; t<testcase; ++t){
+		cin>>numofnum;
+		v.clear();
+		for(i=0; i<numofnum; ++i){
+			cin>>n;
+			v.push_back(n);	
+		}
+		solve();
+	}
+	return 0;
+}
