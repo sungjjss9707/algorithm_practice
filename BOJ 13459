@@ -1,0 +1,363 @@
+#include<iostream>
+#include<vector>
+using namespace std;
+
+int sero, garo, goal_y, goal_x;
+char miro[11][11];
+vector<int> v;
+
+pair<pair<int, int>, pair<int, int>> after_move(int b_y, int b_x, int r_y, int r_x, int dir){
+	bool b_stop = false, r_stop = false;
+	bool b_goal = false, r_goal = false;
+	int by, bx, ry, rx;
+	by = b_y;
+	bx = b_x;
+	ry = r_y;
+	rx = r_x;
+	if(dir==1){			//위 
+		if(bx==rx&&ry<by){
+			while(1){
+				ry--;
+				if(miro[ry][rx]=='O'){
+					ry = 0;
+					rx = 0;
+					r_goal = true;
+					break;
+				}
+				else if(miro[ry][rx]=='#'){
+					ry++;
+					break;
+				}
+			}
+			while(1){
+				by--;
+				if(miro[by][bx]=='O'){
+					b_goal = true;
+					break;
+				}
+				else if(miro[by][bx]=='#'){
+					by++;
+					break;
+				}
+				else if(by==ry&&bx==rx){
+					by++;
+					break;
+				}
+			}
+		}
+		else{
+			while(1){
+				by--;
+				if(miro[by][bx]=='O'){
+					b_goal = true;
+					by = 0;
+					bx = 0;
+					break;
+				}
+				else if(miro[by][bx]=='#'){
+					by++;
+					break;		
+				}
+			}
+			while(1){
+				ry--;
+				if(miro[ry][rx]=='O'){
+					r_goal = true;
+					break;
+				}
+				else if(miro[ry][rx]=='#'){
+					ry++;
+					break;		
+				}
+				else if(by==ry&&bx==rx){
+					ry++;
+					break;	
+				}
+			}
+		}
+	}
+	
+	else if(dir==2){	//아래 
+		if(bx==rx&&ry>by){
+			while(1){
+				ry++;
+				if(miro[ry][rx]=='O'){
+					ry = 0;
+					rx = 0;
+					r_goal = true;
+					break;
+				}
+				else if(miro[ry][rx]=='#'){
+					ry--;
+					break;
+				}
+			}
+			while(1){
+				by++;
+				if(miro[by][bx]=='O'){
+					b_goal = true;
+					break;
+				}
+				else if(miro[by][bx]=='#'){
+					by--;
+					break;
+				}
+				else if(by==ry&&bx==rx){
+					by--;
+					break;
+				}
+			}
+		}
+		else{
+			while(1){
+			by++;
+			if(miro[by][bx]=='O'){
+				b_goal = true;
+				by = 0;
+				bx = 0;
+				break;
+			}
+			else if(miro[by][bx]=='#'){
+				by--;
+				break;		
+			}
+			else if(by==ry&&bx==rx){
+				if(miro[ry+1][rx]=='#'){
+					by--;
+					break;
+				}
+			}
+		}
+		while(1){
+			ry++;
+			if(miro[ry][rx]=='O'){
+				r_goal = true;
+				break;
+			}
+			else if(miro[ry][rx]=='#'){
+				ry--;
+				break;		
+			}
+			else if(by==ry&&bx==rx){
+				ry--;
+				break;	
+			}
+		}
+		}
+	}
+	else if(dir==3){	//오른족 	
+		if(by==ry&&rx>bx){
+			while(1){
+				rx++;
+				if(miro[ry][rx]=='O'){
+					ry = 0;
+					rx = 0;
+					r_goal = true;
+					break;
+				}
+				else if(miro[ry][rx]=='#'){
+					rx--;
+					break;
+				}
+			}
+			while(1){
+				bx++;
+				if(miro[by][bx]=='O'){
+					b_goal = true;
+					break;
+				}
+				else if(miro[by][bx]=='#'){
+					bx--;
+					break;
+				}
+				else if(by==ry&&bx==rx){
+					bx--;
+					break;
+				}
+			}
+		}
+		else{
+				while(1){
+			bx++;
+			if(miro[by][bx]=='O'){
+				b_goal = true;
+				by = 0;
+				bx = 0;
+				break;
+			}
+			else if(miro[by][bx]=='#'){
+				bx--;
+				break;		
+			}
+			else if(by==ry&&bx==rx){
+				if(miro[ry][rx+1]=='#'){
+					bx--;
+					break;
+				}
+			}
+		}
+		while(1){
+			rx++;
+			if(miro[ry][rx]=='O'){
+				r_goal = true;
+				ry = 0;
+				rx = 0;
+				break;
+			}
+			else if(miro[ry][rx]=='#'){
+				rx--;
+				break;		
+			}
+			else if(by==ry&&bx==rx){
+				rx--;
+				break;	
+			}
+		}
+		}
+	}
+	else{				//왼쪽  
+		if(by==ry&&rx<bx){
+			while(1){
+				rx--;
+				if(miro[ry][rx]=='O'){
+					ry = 0;
+					rx = 0;
+					r_goal = true;
+					break;
+				}
+				else if(miro[ry][rx]=='#'){
+					rx++;
+					break;
+				}
+			}
+			while(1){
+				bx--;
+				if(miro[by][bx]=='O'){
+					b_goal = true;
+					break;
+				}
+				else if(miro[by][bx]=='#'){
+					bx++;
+					break;
+				}
+				else if(by==ry&&bx==rx){
+					bx++;
+					break;
+				}
+			}
+		}
+		else{
+			while(1){
+			bx--;
+			if(miro[by][bx]=='O'){
+				b_goal = true;
+				by = 0;
+				bx = 0;
+				break;
+			}
+			else if(miro[by][bx]=='#'){
+				bx++;
+				break;		
+			}
+			else if(by==ry&&bx==rx){
+				if(miro[ry][rx-1]=='#'){
+					bx++;
+					break;
+				}
+			}
+		}
+		while(1){
+			rx--;
+			if(miro[ry][rx]=='O'){
+				r_goal = true;
+				ry = 0;
+				rx = 0;
+				break;
+			}
+			else if(miro[ry][rx]=='#'){
+				rx++;
+				break;		
+			}
+			else if(by==ry&&bx==rx){
+				rx++;
+				break;	
+			}
+		}
+		}
+	}
+	if(b_goal){
+		//cout<<"0";
+		//exit(0);
+		return {{0,0}, {0,0}};
+	}
+	if(r_goal){
+		cout<<"1";
+		exit(0);
+	}
+	return {{by, bx}, {ry, rx}};
+}
+void brute(int by, int bx, int ry, int rx){
+	int nby, nbx, nry, nrx;
+	//cout<<by<<","<<bx<<" "<<ry<<","<<rx<<endl;
+	if(v.size()>0){
+		int last = v.size()-1;	
+		int dir = v[last];
+		pair<pair<int, int>, pair<int, int>> p =  after_move(by, bx, ry, rx, dir);
+		nby = p.first.first;
+		nbx = p.first.second;
+		nry = p.second.first;
+		nrx = p.second.second;
+		if(nby==0) return;
+	}
+	else{
+		nby = by;
+		nbx = bx;
+		nry = ry;
+		nrx = rx;
+	}
+	if(v.size()==10){
+		
+		return;
+	}
+	int i;
+	for(i=1; i<=4; ++i){
+		v.push_back(i);
+		brute(nby, nbx, nry, nrx);
+		v.pop_back();
+	}
+}
+
+int solve(){
+	int i,k, by, bx, ry, rx;
+	for(i=1; i<=sero; ++i){
+		for(k=1; k<=garo; ++k){
+			if(miro[i][k]=='R'){
+				ry = i;
+				rx = k;
+			}
+			else if(miro[i][k]=='B'){
+				by = i;
+				bx = k;
+			}
+			else if(miro[i][k]=='O'){
+				goal_y = i;
+				goal_x = k;
+			}
+		}
+	}
+	brute(by, bx, ry, rx); 
+	return 0;
+}
+
+int main(void)
+{
+	cin>>sero>>garo;
+	int i,k;
+	for(i=1; i<=sero; ++i){
+		for(k=1; k<=garo; ++k){
+			cin>>miro[i][k];
+		}
+	}
+	cout<<solve();
+	return 0;
+}
