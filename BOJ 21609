@@ -1,0 +1,223 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+using namespace std;
+
+struct block{
+	int all_getsu, rainbow_getsu;
+};
+
+struct quad{
+	int all, rainbow, y,x;
+};
+
+
+int len, numofcolor;
+int pan[21][21];
+bool visit[21][21];
+int dy[4] = {1,0,-1,0};
+int dx[4] = {0,1,0,-1};
+
+
+
+
+void visit_clear(){
+	int i,k;
+	for(i=1; i<=len; ++i){
+		for(k=1; k<=len; ++k){
+			visit[i][k] = false;
+		}
+	}
+}
+
+
+
+block dfs(int y, int x, int color){
+	visit[y][x] = true;
+	int i, ny, nx;
+	int all = 0, rainbow = 0;
+	all++;
+	if(pan[y][x]==0){
+		rainbow++;
+	}
+	block temp;
+	for(i=0; i<4; ++i){
+		ny = y+dy[i];
+		nx = x+dx[i];
+		if(ny>=1&&ny<=len&&nx>=1&&nx<=len){
+			if(!visit[ny][nx]){
+				if(pan[ny][nx]==0||pan[ny][nx]==color){
+					temp = dfs(ny, nx, color);
+					rainbow+=temp.rainbow_getsu;
+					all+=temp.all_getsu;				
+				}
+			}
+		}
+	}
+	return {all, rainbow};
+}
+
+void rainbow_clear(){
+	int i,k;
+	for(i=1; i<=len; ++i){
+		for(k=1; k<=len; ++k){
+			if(pan[i][k]==0) visit[i][k] = false;
+		}
+	}
+}
+
+bool compare(quad q1, quad q2){
+	if(q1.all==q2.all){
+		if(q1.rainbow==q2.rainbow){
+			if(q1.y==q2.y){
+				return q1.x>q2.x;
+			}
+			return q1.y>q2.y;
+		}
+		return q1.rainbow>q2.rainbow;
+	}
+	return q1.all>q2.all;
+}
+
+void dfs_delete(int y, int x, int color){
+	visit[y][x] = true;
+	pan[y][x] = -2;
+	int i,ny, nx;
+	for(i=0; i<4; ++i){
+		ny = y+dy[i];
+		nx = x+dx[i];
+		if(ny>=1&&ny<=len&&nx>=1&&nx<=len){
+			if(!visit[ny][nx]){
+				if(pan[ny][nx]==0||pan[ny][nx]==color){
+					dfs_delete(ny, nx, color);
+				}
+			}
+		}
+	}
+}
+
+void print_pan(){
+	int i,k;
+	cout<<endl;
+	for(i=1; i<=len; ++i){
+		for(k=1; k<=len; ++k){
+			cout<<pan[i][k]<<" ";
+		}
+		cout<<endl;
+	}
+	cout<<endl;
+
+	
+}
+
+int delete_block(){
+	int i,k;
+	
+	visit_clear();
+	block temp;
+	int y,x,all=0, getsu=0,rainbow;
+	vector<quad> v;
+	for(i=1; i<=len; ++i){
+		for(k=1; k<=len; ++k){
+			if(!visit[i][k]&&pan[i][k]>=1){
+				rainbow_clear();
+				temp = dfs(i,k,pan[i][k]);
+				all = temp.all_getsu;
+				rainbow = temp.rainbow_getsu;
+				if(all<=1) continue;
+				v.push_back({all, rainbow, i,k});
+				/*	
+				cout<<i<<","<<k<<" : ";
+				cout<<temp.all_getsu<<" "<<temp.rainbow_getsu<<endl;
+				*/
+				
+			}
+		}
+	}
+	if(v.size()==0) return 0;
+	sort(v.begin(), v.end(), compare);
+	y = v[0].y;
+	x = v[0].x;
+	getsu = v[0].all;
+	rainbow = v[0].rainbow;
+	visit_clear();
+	dfs_delete(y,x, pan[y][x]);
+	
+	//exit(0);
+	return getsu;
+}
+
+
+
+void gravity(){
+	int i,k, y, color, start_y;
+	for(k=1; k<=len; ++k){
+		start_y = len;
+		while(start_y>=1){
+			for(i=start_y; i>=1; --i){
+				if(pan[i][k]!=-2&&pan[i][k]!=-1){
+					y = i;
+					break;
+				}
+			}
+			if(i==0) break;
+			for(i=y+1; i<=len; ++i){
+				if(pan[i][k]!=-2) break;
+			}
+			color = pan[y][k];
+			pan[y][k] = -2;
+			pan[i-1][k] = color;
+			start_y=i-2;
+		}
+	}
+}
+
+void reverse_clock(){
+	int temp[21][21];
+	int i,k;
+	for(i=1; i<=len; ++i){
+		for(k=1; k<=len; ++k){
+			temp[i][k] = pan[k][len-i+1];
+		}
+	}
+	for(i=1; i<=len; ++i){
+		for(k=1; k<=len; ++k){
+			pan[i][k] = temp[i][k];
+		}
+	}
+		
+}
+
+int solve(){
+	int dap=0;
+	int score;
+	while(1){
+		score = delete_block();
+		//print_pan();
+		//cout<<score<<endl;
+		if(score==0) break;
+		dap+=(score*score);
+		gravity();
+		//print_pan();
+		
+		reverse_clock();
+		
+		//exit(0);
+		gravity();
+	}
+	
+	return dap;
+}
+
+int main(void)
+{
+	cin>>len>>numofcolor;
+	int i,k;
+	for(i=1; i<=len; ++i){
+		for(k=1; k<=len; ++k){
+			cin>>pan[i][k];
+		}
+	}
+	cout<<solve();
+	return 0;
+}
