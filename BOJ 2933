@@ -1,0 +1,201 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#include<queue>
+using namespace std;
+
+int sero, garo, numofthrow;
+int pitch[101];
+char cave[101][101];
+bool visit[101][101];
+int color[101][101];
+int dy[4] = {1,0,-1,0};
+int dx[4] = {0,1,0,-1};
+
+
+int get_hit(int h, int from_l_or_r){
+	int k,dap = 0; 
+	if(from_l_or_r==1){	//왼쪽 -> 오른쪽  
+		for(k=1; k<=garo; ++k){
+			if(cave[h][k]=='x'){
+				dap = k;
+				break;
+			}
+		}
+	}
+	else{
+		for(k=garo; k>=1; --k){
+			if(cave[h][k]=='x'){
+				dap = k;
+				break;
+			}
+		}
+	}
+	return dap;
+} 
+
+void visit_clear(){
+	int i,k;
+	for(i=1; i<=sero; ++i){
+		for(k=1; k<=garo; ++k){
+			visit[i][k] = false;
+		}
+ 	}
+}
+
+void color_clear(){
+	int i,k;
+	for(i=1; i<=sero; ++i){
+		for(k=1; k<=garo; ++k){
+			color[i][k] = 0;
+		}
+ 	}
+}
+
+int dfs(int y, int x, int index){
+	visit[y][x] = true;
+	color[y][x] = index;
+	//cluster.push_back({y,x});
+	int ny, nx, i, ret = y;
+	for(i=0; i<4; ++i){
+		ny = y+dy[i];
+		nx = x+dx[i];
+		if(ny>=1&&ny<=sero&&nx>=1&&nx<=garo){
+			if(!visit[ny][nx]&&cave[ny][nx]=='x'&&color[ny][nx]==0){
+				ret = max(ret, dfs(ny, nx, index));	
+			} 
+		}
+	}
+	return ret;
+}
+
+bool compare(pair<int, int> p1, pair<int, int> p2){
+	return p1.first>p2.first;
+}
+
+void print_cave(){
+	int i,k;
+	//cout<<endl;
+	for(i=1; i<=sero; ++i){
+		for(k=1; k<=garo; ++k){
+			cout<<cave[i][k];
+		}
+		cout<<endl;
+ 	}
+ 	//cout<<endl;
+}
+
+void break_stones(int y, int x){
+	visit_clear();
+	color_clear();
+	//cluster.clear();
+	vector<pair<int, int>> cluster;
+	cave[y][x] = '.';
+	int k;
+	int i, ny, nx, gy= -1, gx = -1, h, index = 1, p,q;
+	//print_cave();
+	for(i=1; i<=sero; ++i){
+		for(k=1; k<=garo; ++k){
+			if(i>=1&&i<=sero&&k>=1&&k<=garo){
+				if(cave[i][k]=='x'&&!visit[i][k]){
+					h = dfs(i, k, index);
+					//cout<<h<<"!\n";
+					if(h!=sero){
+						for(p=1; p<=sero; ++p){
+							for(q=1; q<=garo; ++q){
+								if(color[p][q]==index) cluster.push_back({p,q});
+							}
+						}
+						
+					}
+					index++;
+					//cout<<h<<"!!\n";
+				}
+			}
+		}
+	}
+	
+	int cluster_getsu = cluster.size();
+	//cout<<cluster_getsu<<endl;
+	if(cluster_getsu==0) return;
+	sort(cluster.begin(), cluster.end(), compare);
+	if(cluster[0].first==sero) return;
+	int oy, ox;
+	//cout<<"이까진 옴\n";
+	deque<pair<int, int>> dq;
+	for(i=0; i<cluster.size(); ++i){
+		dq.push_back({cluster[i].first, cluster[i].second});
+	}
+	char temp[101][101];
+	while(1){
+		for(i=1; i<=sero; ++i){
+			for(k=1; k<=garo; ++k){
+				temp[i][k] = cave[i][k];
+			}
+		}
+		//cout<<dq.size()<<endl;
+		for(i=0; i<cluster_getsu; ++i){
+			
+			oy = dq.front().first;
+			ox = dq.front().second;
+			//cout<<oy<<","<<ox<<" ";
+			ny = oy+1;
+			dq.pop_front();
+			if(ny>sero){
+				for(i=1; i<=sero; ++i){
+					for(k=1; k<=garo; ++k){
+						cave[i][k] = temp[i][k];
+					}
+				}
+				return;
+			}
+			if(cave[ny][ox]=='x'){
+				for(i=1; i<=sero; ++i){
+					for(k=1; k<=garo; ++k){
+						cave[i][k] = temp[i][k];
+					}
+				}
+				return;
+			}
+			cave[oy][ox] = '.';
+			cave[ny][ox] = 'x';
+			dq.push_back({ny, ox});
+		}
+	}
+}
+
+void solve(){
+	int i, y, x;
+	for(i=0; i<numofthrow; ++i){
+		//cout<<y<<"\n";
+		
+		y = sero-pitch[i]+1;
+		if(i%2==0){		//왼쪽 -> 오른쪽 
+			x = get_hit(y,1);	
+		}
+		else{			//오른쪽 -> 왼쪽 
+			x = get_hit(y,-1);
+		}
+		if(x==0) continue;
+		break_stones(y,x);
+		//print_cave();
+	}
+	print_cave();
+}
+
+int main(void)
+{
+	cin>>sero>>garo;
+	int i,k;
+	for(i=1; i<=sero; ++i){
+		for(k=1; k<=garo; ++k){
+			cin>>cave[i][k];
+		}
+	}
+	cin>>numofthrow;
+	for(i=0; i<numofthrow; ++i){
+		cin>>pitch[i];
+	}
+	solve();
+	return 0;
+}
