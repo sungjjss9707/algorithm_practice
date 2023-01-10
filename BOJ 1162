@@ -1,0 +1,73 @@
+#include<iostream>
+#include<vector>
+#include<queue>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+vector<pair<long long, long long>> v[10001];	//{end, time}
+long long dist[10001][21];
+long long numofcity, numofroad, numofclear;
+
+long long dijkstra(){
+	long long nowv, nowd, nowh, nextv, nexth, nextd,i,k;
+	priority_queue<pair<long long, pair<long long, long long>>, vector<pair<long long, pair<long long, long long>>>, greater<pair<long long, pair<long long, long long>>>> pq;
+	//{dist,{nextv, hwetsu}}
+	for(i=1; i<=numofcity; ++i){
+		for(k=0; k<=numofclear; ++k){
+			dist[i][k] = 21000000000000000;
+		}
+	}
+	dist[1][0] = 0;
+	pq.push({0,{1,0}});
+	while(!pq.empty()){
+		nowd = pq.top().first;
+		nowv = pq.top().second.first;
+		nowh = pq.top().second.second;
+		//cout<<nowd<<" "<<nowv<<" "<<nowh<<endl;
+		pq.pop();
+		if(nowd>dist[nowv][nowh]) continue;
+		//cout<<"일로옴\n";
+		for(i=0; i<v[nowv].size(); ++i){
+			nextv = v[nowv][i].first;
+			nextd = v[nowv][i].second+nowd;
+			//cout<<nextv<<" "<<nextd<<endl;
+			if(dist[nextv][nowh]>nextd){
+				dist[nextv][nowh]=nextd;
+				pq.push({nextd,{nextv, nowh}});
+			}
+			if(nowh<numofclear){
+				nexth = nowh+1;
+				//nextv = v[nowv][i].first;
+				nextd = nowd;
+				if(dist[nextv][nexth]>nextd){
+					dist[nextv][nexth]=nextd;
+					pq.push({nextd,{nextv, nexth}});
+				}
+			}
+		}
+	}
+	long long dap = 2100000000000000;
+	for(i=0; i<=numofclear; ++i){
+		dap = min(dap, dist[numofcity][i]);
+	}
+	return dap;
+}
+
+long long solve(){
+	long long dap = dijkstra();
+	return dap;
+}
+
+int main(void)
+{
+	fastio;
+	cin>>numofcity>>numofroad>>numofclear;
+	long long i,s,e,time;
+	for(i=0; i<numofroad; ++i){
+		cin>>s>>e>>time;
+		v[s].push_back({e,time});
+		v[e].push_back({s,time});
+	}
+	cout<<solve();
+	return 0;
+}
