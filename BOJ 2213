@@ -1,0 +1,120 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+int numofver;
+int weight[10001];
+vector<int> tree[10001];
+int dp[10001][2];
+vector<int> v;
+
+void clear(){
+	int i,k;
+	for(i=1; i<=numofver; ++i){
+		dp[i][0] = -1;
+		dp[i][1] = -1;
+	}
+}
+
+int get_weight_hap(int now, int pick, int yeejeon){
+	int ret = dp[now][pick];
+	if(ret!=-1) return ret;
+	int i, next,bigger;
+	if(pick==0){
+		ret = 0;
+		for(i=0; i<tree[now].size(); ++i){
+			next = tree[now][i];
+			if(next!=yeejeon){
+				//ret+=get_weight_hap(next, 0, now);
+				bigger = max(get_weight_hap(next, 0, now), get_weight_hap(next, 1, now));
+				ret+=bigger;
+			}
+		}
+	}
+	else{
+		ret = weight[now];
+		for(i=0; i<tree[now].size(); ++i){
+			next = tree[now][i];
+			if(next!=yeejeon){
+				ret+=get_weight_hap(next, 0, now);
+			}
+		}
+	}
+	
+	dp[now][pick] = ret;
+	return ret;
+	
+}
+
+void dfs(int now, int pick, int yeejeon){
+	int i, next;
+	if(pick==1){
+		//cout<<now<<" ";	
+		v.push_back(now);
+		for(i=0; i<tree[now].size(); ++i){
+			next = tree[now][i];
+			if(next!=yeejeon){
+				dfs(next, 0, now);
+			}
+		}
+	} 
+	else{
+		for(i=0; i<tree[now].size(); ++i){
+			next = tree[now][i];
+			if(next!=yeejeon){
+				if(dp[next][0]>dp[next][1]){
+					dfs(next, 0, now);	
+				}
+				else{
+					dfs(next, 1, now);
+				}
+				
+			}
+		}
+	}
+	
+}
+
+void solve(){
+	clear();
+	int dap1, dap2,i;
+	dap1 = get_weight_hap(1,0,-1);
+	dap2 = get_weight_hap(1,1,-1);
+	/*
+	cout<<dap1<<" "<<dap2<<endl;
+	for(i=1; i<=numofver; ++i){
+		cout<<i<<" : "<<dp[i][0]<<" "<<dp[i][1]<<endl;
+	}
+	*/
+	if(dp[1][0]>dp[1][1]){	//선택안한게 더큼  
+		//cout<<"일로옴\n";
+		dfs(1,0,-1);
+	}
+	else{
+		dfs(1,1,-1);
+	} 
+	sort(v.begin(), v.end());
+	cout<<max(dap1, dap2)<<endl;
+	for(i=0; i<v.size(); ++i){
+		cout<<v[i]<<" ";
+	}
+}
+
+int main(void)
+{
+	fastio;
+	cin>>numofver;
+	int i,a,b;
+	for(i=1; i<=numofver; ++i){
+		cin>>weight[i];
+	}
+	for(i=0; i<numofver-1; ++i){
+		cin>>a>>b;
+		tree[a].push_back(b);
+		tree[b].push_back(a);
+	}
+	solve();
+	return 0;
+}
