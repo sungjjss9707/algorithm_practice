@@ -1,0 +1,234 @@
+#include<iostream>
+#include<queue>
+#include<vector>
+using namespace std;
+
+struct quad{
+	int y, x, g_s, hwetsu;
+};
+
+int len;
+char pan[51][51];
+bool visit[51][51][2];
+//////////////가로가 항상 0이고 세로가 1임  
+
+bool can_rotate(int y, int x){
+	int dy[8] = {-1,-1,-1,0,1,1,1,0};
+	int dx[8] = {-1,0,1,1,1,0,-1,-1};
+	if(y>1&&y<len&&x>1&&x<len){
+		int i, ny, nx;
+		for(i=0; i<8; ++i){
+			ny = y+dy[i];
+			nx = x+dx[i];
+			if(pan[ny][nx]=='1') return false;
+		}
+		return true;
+	}
+	return false;
+} 
+
+int bfs(){
+	int y,x,ny, nx, i,k, g_s, h;
+	int end_y, end_x, end_g_s; 
+	vector<pair<int, int>> start;
+	vector<pair<int, int>> end;
+	for(i=1; i<=len; ++i){
+		for(k=1; k<=len; ++k){
+			if(pan[i][k]=='B'){
+				start.push_back({i,k});
+			}
+			else if(pan[i][k]=='E'){
+				end.push_back({i,k});
+			}
+		}
+	}
+	for(i=1; i<=len; ++i){
+		for(k=1; k<=len; ++k){
+			visit[i][k][0] = false;
+			visit[i][k][1] = false;
+		}
+	}
+	queue<quad> q;
+	if(start[0].first==start[1].first){	//가로  
+		q.push({start[1].first, start[1].second, 0,0});
+		visit[start[1].first][start[1].second][0] = true;
+	}
+	else{	//세로 
+		q.push({start[1].first, start[1].second, 1,0});
+		visit[start[1].first][start[1].second][1] = true;
+	}
+	end_y = end[1].first;
+	end_x = end[1].second;
+	if(end[0].first==end[1].first){	//가로  
+		end_g_s = 0;
+	}
+	else{	//세로 
+		end_g_s = 1;
+	}
+	int y0, x0, y2, x2, ny0, nx0, ny2, nx2;
+	while(!q.empty()){
+		y = q.front().y;
+		x = q.front().x;
+		g_s = q.front().g_s;
+		h = q.front().hwetsu;
+		q.pop();
+		if(y==end_y&&x==end_x&&g_s==end_g_s){
+			return h; 
+		}
+		if(g_s==0){	//가로일때  
+			y0 = y;
+			x0 = x-1;
+			y2 = y;
+			x2 = x+1;
+			if(y>1){	//위 
+				ny = y-1;
+				nx = x;
+				ny0 = y0-1;
+				nx0 = x0;
+				ny2 = y2-1;
+				nx2 = x2;
+				if(pan[ny][nx]!='1'&&pan[ny0][nx0]!='1'&&pan[ny2][nx2]!='1'){
+					if(!visit[ny][nx][0]){
+						visit[ny][nx][0] = true;
+						q.push({ny, nx, 0, h+1});
+					}
+				}
+			}			//아래  
+			if(y<len){
+				ny = y+1;
+				nx = x;
+				ny0 = y0+1;
+				nx0 = x0;
+				ny2 = y2+1;
+				nx2 = x2;
+				if(pan[ny][nx]!='1'&&pan[ny0][nx0]!='1'&&pan[ny2][nx2]!='1'){
+					if(!visit[ny][nx][0]){
+						visit[ny][nx][0] = true;
+						q.push({ny, nx, 0, h+1});
+					}
+				}
+			}	
+			if(x-1>1){	//왼쪽 
+				ny = y;
+				nx = x-1;
+				ny0 = y0;
+				nx0 = x0-1;
+				ny2 = y2;
+				nx2 = x2-1;
+				if(pan[ny][nx]!='1'&&pan[ny0][nx0]!='1'&&pan[ny2][nx2]!='1'){
+					if(!visit[ny][nx][0]){
+						visit[ny][nx][0] = true;
+						q.push({ny, nx, 0, h+1});
+					}
+				}
+			}	
+			if(x+1<len){	//오른족  
+				ny = y;
+				nx = x+1;
+				ny0 = y0;
+				nx0 = x0+1;
+				ny2 = y2;
+				nx2 = x2+1;
+				if(pan[ny][nx]!='1'&&pan[ny0][nx0]!='1'&&pan[ny2][nx2]!='1'){
+					if(!visit[ny][nx][0]){
+						visit[ny][nx][0] = true;
+						q.push({ny, nx, 0, h+1});
+					}
+				}
+			} 
+			if(can_rotate(y,x)){		//90도  
+				if(!visit[y][x][1]){
+					visit[y][x][1] = true;
+					q.push({y, x, 1, h+1});
+				}
+			} 
+		}
+		else{		//세로일때  
+			y0 = y-1;
+			x0 = x;
+			y2 = y+1;
+			x2 = x;
+			if(y-1>1){	//위 
+				ny = y-1;
+				nx = x;
+				ny0 = y0-1;
+				nx0 = x0;
+				ny2 = y2-1;///////////////////////////
+				nx2 = x2;
+				if(pan[ny][nx]!='1'&&pan[ny0][nx0]!='1'&&pan[ny2][nx2]!='1'){
+					if(!visit[ny][nx][1]){
+						visit[ny][nx][1] = true;
+						q.push({ny, nx, 1, h+1});
+					}
+				}
+			}			//아래  
+			if(y+1<len){
+				ny = y+1;
+				nx = x;
+				ny0 = y0+1;
+				nx0 = x0;
+				ny2 = y2+1;
+				nx2 = x2;
+				if(pan[ny][nx]!='1'&&pan[ny0][nx0]!='1'&&pan[ny2][nx2]!='1'){
+					if(!visit[ny][nx][1]){
+						visit[ny][nx][1] = true;
+						q.push({ny, nx, 1, h+1});
+					}
+				}
+			}	
+			if(x>1){	//왼쪽 
+				ny = y;
+				nx = x-1;
+				ny0 = y0;
+				nx0 = x0-1;
+				ny2 = y2;
+				nx2 = x2-1;
+				if(pan[ny][nx]!='1'&&pan[ny0][nx0]!='1'&&pan[ny2][nx2]!='1'){
+					if(!visit[ny][nx][1]){
+						visit[ny][nx][1] = true;
+						q.push({ny, nx, 1, h+1});
+					}
+				}
+			}	
+			if(x<len){	//오른족  
+				ny = y;
+				nx = x+1;
+				ny0 = y0;
+				nx0 = x0+1;
+				ny2 = y2;
+				nx2 = x2+1;
+				if(pan[ny][nx]!='1'&&pan[ny0][nx0]!='1'&&pan[ny2][nx2]!='1'){
+					if(!visit[ny][nx][1]){
+						visit[ny][nx][1] = true;
+						q.push({ny, nx, 1, h+1});
+					}
+				}
+			} 
+			if(can_rotate(y,x)){		//90도  
+				if(!visit[y][x][0]){
+					visit[y][x][0] = true;
+					q.push({y, x, 0, h+1});
+				}
+			}
+		}
+	}
+	return 0;
+}
+
+int solve(){
+	int dap = bfs();
+	return dap;
+}
+
+int main(void)
+{
+	cin>>len;
+	int i,k;
+	for(i=1; i<=len; ++i){
+		for(k=1; k<=len; ++k){
+			cin>>pan[i][k];
+		}
+	}	
+	cout<<solve();
+	return 0;
+}
