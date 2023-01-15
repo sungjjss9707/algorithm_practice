@@ -1,0 +1,87 @@
+#include<iostream>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+int numofnum;
+int arr[100001];
+int seg_tree[400010];
+
+int seg_init(int index, int start, int end){
+	if(start==end){
+		seg_tree[index] = arr[start];
+		return seg_tree[index];
+	}
+	int mid = (start+end)/2;
+	int ret1 = seg_init(2*index, start, mid);
+	int ret2 = seg_init(2*index+1, mid+1, end);
+	int ret = min(ret1, ret2);
+	seg_tree[index] = ret;
+	return ret;
+}
+
+int seg_min(int index, int start, int end, int left, int right){
+	if(start>=left&&end<=right){
+		return seg_tree[index];
+	}
+	else if(start>right||end<left){
+		return 2100000000;
+	}
+	else{
+		int mid = (start+end)/2;
+		int ret1 = seg_min(2*index, start, mid, left, right);
+		int ret2 = seg_min(2*index+1, mid+1, end, left, right);
+		int ret = min(ret1, ret2);
+		return ret;
+	}
+}
+
+int find_seg_index(int index, int start, int end, int arr_index){
+	if(start==end) return index;
+	int mid = (start+end)/2;
+	if(arr_index<=mid) return find_seg_index(2*index, start, mid, arr_index);
+	else return find_seg_index(2*index+1, mid+1, end, arr_index);
+}
+
+void seg_modify(int index, int goal){
+	arr[index] = goal;
+	int seg_index = find_seg_index(1,1,numofnum, index);
+	seg_tree[seg_index] = goal;
+	//cout<<"  "<<seg_index<<endl;
+	if(seg_index==1) return;
+	int parent = seg_index/2;
+	while(parent>=1){
+		seg_tree[parent] = min(seg_tree[2*parent], seg_tree[2*parent+1]);
+		parent/=2;
+	}
+}
+
+void print(){
+	int i;
+	for(i=1; i<=4*numofnum; ++i){
+		cout<<seg_tree[i]<<" ";
+	}
+}
+
+int main(void)
+{
+	fastio;
+	cin>>numofnum;
+	int i;
+	int numofquery, a,b,c;
+	for(i=1; i<=numofnum; ++i){
+		cin>>arr[i];
+	}
+	seg_init(1,1, numofnum); 
+	//print();
+	cin>>numofquery;
+	for(i=0; i<numofquery; ++i){
+		cin>>a>>b>>c;
+		if(a==1){	//바꾸기  
+			seg_modify(b,c);
+			//print();
+		}
+		else{		//최소 출력  
+			cout<<seg_min(1,1,numofnum,b,c)<<"\n";
+		}
+	}
+}
