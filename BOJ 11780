@@ -1,0 +1,135 @@
+#include<iostream>
+#include<vector>
+#include<queue>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+int arr[101][101];
+int parent[101][101];
+int dist[101][101];
+int numofver, numofedge;
+int inf = 2100000000;
+vector<pair<int, int>> v[101];
+
+void arr_clear(){
+	int i,k;
+	for(i=1; i<=numofver; ++i){
+		for(k=1; k<=numofver; ++k){
+			arr[i][k] = inf;
+		}
+	}
+}
+
+void dist_parent_clear(){
+	int i,k;
+	for(i=1; i<=numofver; ++i){
+		for(k=1; k<=numofver; ++k){
+			parent[i][k] = k;
+			dist[i][k] = inf;
+		}
+	}
+}
+
+void dijkstra(int start){
+	priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
+	pq.push({0, start});
+	dist[start][start] = 0;
+	parent[start][start] = start;
+	int nowv, nowd, nextv, nextd,i;
+	while(!pq.empty()){
+		nowv = pq.top().second;
+		nowd = pq.top().first;
+		pq.pop();
+		if(dist[start][nowv]<nowd) continue;
+		for(i=0; i<v[nowv].size(); ++i){
+			nextv = v[nowv][i].first;
+			nextd = v[nowv][i].second+nowd;
+			if(dist[start][nextv]>nextd){
+				dist[start][nextv]=nextd;
+				pq.push({nextd, nextv});
+				parent[start][nextv] = nowv;
+			}
+		}
+	}
+}
+
+void solve(){
+	int i,k;
+	for(i=1; i<=numofver; ++i){
+		for(k=1; k<=numofver; ++k){
+			if(arr[i][k]!=inf){
+				v[i].push_back({k, arr[i][k]});
+			}
+		}
+	}
+	/*
+	for(i=1; i<=numofver; ++i){
+		for(k=0; k<v[i].size(); ++k){
+			cout<<v[i][k].first<<"("<<v[i][k].second<<")  ";
+		}
+		cout<<endl;
+	}
+	*/
+	dist_parent_clear();
+	for(i=1; i<=numofver; ++i){
+		dijkstra(i);	
+	}
+	/*
+	cout<<endl;
+	for(i=1; i<=numofver; ++i){
+		for(k=1; k<=numofver; ++k){
+			if(dist[i][k]>=inf) dist[i][k] = 0;
+			cout<<dist[i][k]<<" ";
+		}
+		cout<<endl;
+	}
+	cout<<endl;
+	*/
+	for(i=1; i<=numofver; ++i){
+		for(k=1; k<=numofver; ++k){
+			if(dist[i][k]>=inf) dist[i][k] = 0;
+			cout<<dist[i][k]<<" ";
+		}
+		cout<<"\n";
+	}
+	
+	int start, end,l;
+	vector<int> v;
+	for(i=1; i<=numofver; ++i){
+		for(k=1; k<=numofver; ++k){
+			if(dist[i][k]==0) cout<<0<<"\n";
+			else{
+				v.clear();
+				start = i;
+				end = k;
+				while(1){
+					//cout<<end<<" ";
+					v.push_back(end);a
+					if(end==start) break;
+					end = parent[start][end];
+				}
+				cout<<v.size()<<" ";
+				for(l=v.size()-1; l>=0; --l){
+					cout<<v[l]<<" ";
+				}
+				cout<<"\n";
+			}
+		}
+		//cout<<endl;
+	}
+	
+}
+
+int main(void)
+{
+	fastio;
+	cin>>numofver>>numofedge;
+	int i,s,e,d;
+	arr_clear();
+	for(i=0; i<numofedge; ++i){
+		cin>>s>>e>>d;
+		arr[s][e] = min(arr[s][e], d);
+	}
+	solve();
+	return 0;
+}
