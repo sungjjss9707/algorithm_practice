@@ -1,0 +1,110 @@
+#include<iostream>
+#include<vector>
+#include<queue>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+int arr[101][101];
+int between[101][101];
+int dist[101][101];
+vector<int> route;
+int numofver, numofedge;
+int inf = 1000000000;
+int getsu;
+
+void arr_clear(){
+	int i,k;
+	for(i=1; i<=numofver; ++i){
+		for(k=1; k<=numofver; ++k){
+			arr[i][k] = inf;
+		}
+	}
+}
+
+void between_clear(){
+	int i,k;
+	for(i=1; i<=numofver; ++i){
+		for(k=1; k<=numofver; ++k){
+			between[i][k] = 0;
+		}
+	}
+}
+
+/*
+가장 바깥쪽 for문은 경유할 정점
+가운데 for문은 출발 정점
+가장 안쪽 for문은 도착 정점
+*/
+void floyd(){
+	int s,e,v;
+	
+	for(v=1; v<=numofver; ++v){
+		for(s=1; s<=numofver; ++s){
+			for(e=1; e<=numofver; ++e){
+				if(s==e) continue;
+				if(arr[s][v]>=inf||arr[v][e]>=inf) continue;
+				if(arr[s][e]>arr[s][v]+arr[v][e]){
+					arr[s][e]=arr[s][v]+arr[v][e];
+					between[s][e] = v;
+				}
+			}
+		}
+	}
+}
+
+void get_between(int start, int end){
+	if(between[start][end]==0){
+		route.push_back(end);
+		//cout<<end<<" ";
+		return;	
+	} 
+	int mid = between[start][end];
+	get_between(start,mid);
+	get_between(mid, end);
+}
+
+void solve(){
+	int i,k,r, start, end;
+	floyd();
+	for(i=1; i<=numofver; ++i){
+		for(k=1; k<=numofver; ++k){
+			if(arr[i][k]>=inf) arr[i][k] = 0;
+			cout<<arr[i][k]<<" ";
+		}
+		cout<<"\n";
+	}
+	
+	for(i=1; i<=numofver; ++i){
+		for(k=1; k<=numofver; ++k){
+			start = i;
+			end = k;
+			if(arr[start][end]==0) cout<<0;
+			else{
+				//cout<<start<<" ";
+				route.clear();
+				route.push_back(start);
+				get_between(start, end);
+				cout<<route.size()<<" ";
+				for(r=0; r<route.size(); ++r){
+					cout<<route[r]<<" ";
+				}	
+			}
+			
+			cout<<"\n";
+		}
+	}
+}
+
+int main(void)
+{
+	fastio;
+	cin>>numofver>>numofedge;
+	int i,s,e,d;
+	arr_clear();
+	for(i=0; i<numofedge; ++i){
+		cin>>s>>e>>d;
+		arr[s][e] = min(arr[s][e], d);
+	}
+	solve();
+	return 0;
+}
