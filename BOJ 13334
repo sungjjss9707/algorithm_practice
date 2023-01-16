@@ -1,0 +1,70 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#include<queue>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+int numofpair, len;
+vector<pair<int, int>> temp;
+vector<pair<int, int>> v;
+
+bool compare(pair<int, int> p1, pair<int, int> p2){
+	if(p1.second==p2.second){
+		return p1.first<p2.first;
+	}
+	return p1.second<p2.second;
+}
+
+int solve(){
+	int dap = 0;
+	sort(v.begin(), v.end(), compare);
+	priority_queue<int, vector<int>, greater<int>> pq;
+	int nowend,i, pqsize;
+	for(i=0; i<v.size(); ++i){		
+		nowend = v[i].second;
+		if(pq.empty()){
+			pq.push(v[i].first);
+		}
+		else{
+			while(!pq.empty()){
+				if(nowend-len<=pq.top()){
+					break;
+				}
+				pq.pop();
+			}
+			pq.push(v[i].first);
+		}
+		pqsize = pq.size();
+		dap = max(dap, pqsize);
+	}
+	//dap = max(dap, pq.size());
+	return dap;
+}
+
+int main(void)
+{
+	fastio;
+	cin>>numofpair;
+	int i, a,b, hap, cha, getsu=0;
+	for(i=0; i<numofpair; ++i){
+		cin>>a>>b;
+		hap = a+b;
+		a = min(a,b);
+		b = hap-a;
+		//cout<<b-a<<endl;
+		temp.push_back({a,b});
+	}
+	cin>>len;
+	for(i=0; i<numofpair; ++i){
+		b = temp[i].second;
+		a = temp[i].first;
+		if((b-a)<=len){
+			v.push_back({a,b});
+		}
+	}
+	numofpair = v.size();
+	
+	cout<<solve();
+	return 0;
+}
