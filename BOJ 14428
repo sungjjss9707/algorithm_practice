@@ -1,0 +1,121 @@
+#include<iostream>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+int arr[100001], seg_tree[400100];
+int numofnum;
+
+int seg_init(int index, int start, int end){
+	if(start==end){
+		seg_tree[index] = start;
+		return seg_tree[index];
+	}
+	int mid = (start+end)/2;
+	int ret1 = seg_init(2*index, start, mid);
+	int ret2 = seg_init(2*index+1, mid+1, end);
+	int ret;
+	if(arr[ret1]<=arr[ret2]){
+		ret = ret1;
+	}
+	else{
+		ret = ret2;
+	}
+	seg_tree[index] = ret;
+	return ret;
+}
+
+int seg_min(int index, int start, int end, int left, int right){
+	if(start>=left&&end<=right){
+		return seg_tree[index];
+	}
+	else if(start>right||end<left){
+		return 0;
+	}
+	else{
+		int mid = (start+end)/2;
+		int ret1 = seg_min(2*index, start, mid, left, right);
+		int ret2 = seg_min(2*index+1, mid+1, end, left, right);
+		int ret;
+		if(arr[ret1]<=arr[ret2]){
+			ret = ret1;
+		}
+		else{
+			ret = ret2;
+		}
+		return ret;
+	}
+}
+
+int find_seg_index(int index, int start, int end, int arr_index){
+	if(start==end){
+		return index;
+	}
+	int mid = (start+end)/2;
+	if(arr_index<=mid){
+		return find_seg_index(2*index, start, mid, arr_index);
+	}
+	else{
+		return find_seg_index(2*index+1, mid+1,end, arr_index);
+	}
+}
+
+void seg_modify(int arr_index, int goal){
+	int seg_index = find_seg_index(1,1,numofnum, arr_index);
+	arr[arr_index] = goal;
+	if(seg_index==1){
+		return;
+	}
+	
+	int parent_index = seg_index/2, left_child, right_child,left_child_index, right_child_index;
+	while(parent_index>=1){
+		left_child_index = parent_index*2;
+		right_child_index = (parent_index*2)+1;
+		left_child = seg_tree[left_child_index];
+		right_child = seg_tree[right_child_index];
+		if(arr[left_child]<=arr[right_child]){
+			seg_tree[parent_index] = left_child;
+		}
+		else{
+			seg_tree[parent_index] = right_child;
+		}
+		parent_index/=2;
+	}
+}
+//5 4 3 3 3
+
+int main(void)
+{
+	fastio;
+	cin>>numofnum;
+	int i, numofquery, a,b,c;
+	for(i=1; i<=numofnum; ++i){
+		cin>>arr[i];
+	}	
+	seg_init(1,1,numofnum);
+	arr[0] = 2100000000; 
+	seg_tree[0] = 0;
+	/*
+	cout<<endl;
+	for(i=0; i<=20; ++i){
+		cout<<seg_tree[i]<<" ";
+	}
+	cout<<endl;
+	*/
+	cin>>numofquery;
+	for(i=0; i<numofquery; ++i){
+		cin>>a>>b>>c;
+		if(a==1){	//수정 
+			seg_modify(b, c);
+		}
+		else{		//제일 작은거 출력(인덱스를 출력) 
+			cout<<seg_min(1, 1, numofnum, b,c)<<"\n";
+		}
+	}
+	/*
+	cout<<endl;
+	for(i=1; seg_tree[i]!=0; ++i){
+		cout<<seg_tree[i]<<" ";
+	}
+	*/
+	return 0;
+}
