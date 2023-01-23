@@ -1,0 +1,150 @@
+#include<iostream>
+#include<vector>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+#define inf -9999999999999999
+using namespace std;
+
+struct tri{
+	long long s,e,w;
+};
+
+long long numofver, startv, endv, numofedge;
+long long road[51][51], sooyeek[51];
+long long dist[51];
+bool visit[51];
+//long long inf = -21000000000000000;
+vector<tri> v;
+vector<long long> islink[51];
+
+void road_clear(){
+	long long i,k;
+	for(i=1; i<=numofver; ++i){
+		for(k=1; k<=numofver; ++k){
+			road[i][k] = inf;
+		}
+	}
+}
+
+void dist_clear(){
+	long long i;
+	for(i=1; i<=numofver; ++i){
+		dist[i] = inf;
+	}
+}
+
+void visit_clear(){
+	long long i;
+	for(i=1; i<=numofver; ++i){
+		visit[i] = false;
+	}
+}
+
+void dfs(long long x){
+	visit[x] = true;
+	long long i, nextx;
+	for(i=0; i<islink[x].size(); ++i){
+		nextx = islink[x][i];
+		if(!visit[nextx]){
+			dfs(nextx);
+		}
+	}
+}
+
+bool a_to_b_link(long long a, long long b){
+	visit_clear();
+	dfs(a);
+	if(visit[b]) return true;
+	return false;
+}
+
+void solve(){
+	
+	long long i,k,s,e,w;
+	
+	for(i=1; i<=numofver; ++i){
+		for(k=1; k<=numofver; ++k){
+			if(road[i][k]!=inf){
+				v.push_back({i,k, road[i][k]});
+				islink[i].push_back(k);
+			} 
+		}
+	}
+	if(!a_to_b_link(startv, endv)){
+		cout<<"gg";
+		return;
+	}
+	/*
+	for(i=0; i<v.size(); ++i){
+		cout<<v[i].s<<"~"<<v[i].e<<" = "<<v[i].w<<endl;
+	}
+	*/
+	dist_clear();
+	//cout<<endl;
+	dist[startv] = sooyeek[startv];
+	//cout<<dist[startv]<<endl;
+	for(i=0; i<=numofver; ++i){
+		for(k=0; k<v.size(); ++k){
+			s = v[k].s;
+			e = v[k].e;
+			w = v[k].w;
+			//cout<<s<<e<<w<<endl;
+			if(dist[s]>inf){
+				//cout<<"일로옴\n";
+				if(dist[e]<dist[s]-w+sooyeek[e]){
+					dist[e]=dist[s]-w+sooyeek[e];
+					//cout<<e<<" = "<<dist[e]<<endl;
+				}
+			}
+		}
+	}
+	
+	for(k=0; k<v.size(); ++k){
+		s = v[k].s;
+		e = v[k].e;
+		w = v[k].w;
+		//cout<<s<<e<<w<<endl;
+		if(dist[s]>inf){
+			if(dist[e]<dist[s]-w+sooyeek[e]){
+				//cout<<"일로옴\n";
+				if(a_to_b_link(startv, e)&&a_to_b_link(e, endv)){
+					cout<<"Gee";
+					return;
+				}
+			}
+		}
+	}
+	cout<<dist[endv];
+	/*
+	for(i=1; i<=numofver; ++i){
+		cout<<dist[i]<<" ";
+	}
+	cout<<endl;
+	*/
+}
+
+int main(void)
+{
+	fastio;
+	cin>>numofver>>startv>>endv>>numofedge;
+	startv++;
+	endv++;
+	long long i, s,e,w;
+	road_clear();
+	for(i=0; i<numofedge; ++i){
+		cin>>s>>e>>w;
+		s++;
+		e++;
+		
+		if(road[s][e]==inf){
+			road[s][e] = w;
+		}
+		else{
+			road[s][e] = min(road[s][e], w);
+		}
+	}
+	for(i=1; i<=numofver; ++i){
+		cin>>sooyeek[i];
+	}
+	solve();
+	return 0;
+}
