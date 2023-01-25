@@ -1,0 +1,100 @@
+#include<iostream>
+
+using namespace std;
+
+long long numofpeople;
+int numofrol;
+int time[10001];
+
+long long get_riding(long long now){
+	int i;
+	long long mok, mod; 
+	long long dap=0;
+	for(i=1; i<=numofrol; ++i){
+		mok = now/(long long)(time[i]);
+		mod = now%(long long)(time[i]);
+		if(mod!=0){
+			dap+=(mok+1);	
+		}
+		else{
+			dap+=mok;	
+		}
+	}
+	return dap;
+}
+
+long long find_clock(long long start, long long end, int people){
+	
+	if(start==end){
+		return start;
+	}
+	long long mid = (start+end)/2;
+	long long mid_riding_people = get_riding(mid);
+	//cout<<start<<" "<<end<<" "<<mid_riding_people<<endl;
+	if(people<=mid_riding_people){
+		return find_clock(start, mid, people);
+	}
+	else{
+		return find_clock(mid+1,end, people);
+	}
+}
+
+int solve(){
+	long long choidae_clock=0;
+	int dap;
+	int i;
+	/*
+	for(i=1; i<=numofrol; ++i){
+		choidae_clock+=(numofpeople)/((long long)(time[i]));
+	}
+	*/
+	long long clock = find_clock(0, 60000000001, numofpeople);
+	
+	long long now_riding_people = get_riding(clock);
+	//cout<<"now is "<<clock<<" and people are "<<now_riding_people<<endl;
+	long long k,yeejeon_time, yeejeon_people;
+	for(k=clock; k>=0; --k){
+		if(now_riding_people!=get_riding(k)){
+			yeejeon_people = get_riding(k);
+			yeejeon_time = k;
+			break;
+		}
+	}
+	
+	for(i=1; i<=numofrol; ++i){
+		if(yeejeon_time%((long long)(time[i]))==0){
+			yeejeon_people++;
+			if(yeejeon_people==numofpeople){
+				dap = i;
+				break;	
+			}
+			
+		}
+	}
+	/*
+	if(now_riding_people==numofpeople){
+		for(i=numofrol; i>=0; --i){
+			if(clock%((long long)(time[i]))==0){
+				dap = i;
+				break;
+			}
+		}
+	}
+	else{
+		
+	}
+	*/
+
+	return dap;
+}
+
+int main(void)
+{
+	cin>>numofpeople>>numofrol;
+	int i;
+	for(i=1; i<=numofrol; ++i){
+		cin>>time[i];
+	}
+	cout<<solve();
+	return 0;
+}
