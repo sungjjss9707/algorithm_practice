@@ -1,0 +1,104 @@
+#include<iostream>
+#include<vector>
+#include<map>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+
+
+using namespace std;
+
+struct tri{
+	int s,o,n;
+};
+
+struct two{
+	int b,getsu;
+};
+
+int numofnum, numofrel;
+vector<tri> v;
+bool basic[101];
+vector<two> dp[101];
+vector<two> rel[101];
+
+vector<two> get_all_basic(int num){
+	//cout<<num<<endl;
+	vector<two> ret = dp[num];
+	if(!ret.empty()){
+		return ret;
+	}
+	int i,k, child, getsu, childchild, getsugetsu, origin;
+	map<int, int> m;
+	vector<two> temp;
+	for(i=0; i<rel[num].size(); ++i){
+		child = rel[num][i].b;
+		getsu = rel[num][i].getsu;
+		temp = get_all_basic(child);
+		for(k=0; k<temp.size(); ++k){
+			childchild = temp[k].b;
+			getsugetsu = temp[k].getsu;
+			if(m.count(childchild)==0){
+				m.insert({childchild, getsu*getsugetsu});
+			}
+			else{
+				origin = m[childchild];
+				origin += (getsu*getsugetsu);
+				m[childchild] = origin;
+			}
+		}
+	}
+	ret.clear();
+	map<int, int>:: iterator iter;
+	for(iter=m.begin(); iter!=m.end(); ++iter){
+		child = iter->first;
+		getsu = iter->second;
+		ret.push_back({child, getsu});
+	}
+	dp[num] = ret;
+	return ret;
+	
+}
+
+void solve(){
+	int i,s,o,n;
+	for(i=1; i<=numofnum; ++i){
+		basic[i] = true;
+	}
+	for(i=0; i<numofrel; ++i){
+		s = v[i].s;
+		o = v[i].o;
+		n = v[i].n;
+		basic[s] = false;
+	}
+	for(i=1; i<=numofnum; ++i){
+		dp[i].clear();
+	}
+	/*
+	for(i=1; i<=numofnum; ++i){
+		cout<<i<<" "<<basic[i]<<endl;
+	}
+	*/
+	for(i=1; i<=numofnum; ++i){
+		if(basic[i]){
+			dp[i].push_back({i,1});
+		}
+	}
+	get_all_basic(numofnum);
+	for(i=0; i<dp[numofnum].size(); ++i){
+		cout<<dp[numofnum][i].b<<" "<<dp[numofnum][i].getsu<<"\n";
+	}
+}
+
+int main(void)
+{
+	fastio;
+	cin>>numofnum;
+	int i, s,o,need;
+	cin>>numofrel;
+	for(i=0; i<numofrel; ++i){
+		cin>>s>>o>>need;
+		v.push_back({s,o,need});
+		rel[s].push_back({o,need});
+	}	
+	solve();
+	return 0;
+}
