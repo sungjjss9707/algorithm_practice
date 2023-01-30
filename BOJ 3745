@@ -1,0 +1,46 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+
+
+using namespace std;
+
+int numofnum;
+vector<int> v;
+
+int solve(){
+	int i, now, last, index;
+	vector<int> temp;
+	for(i=0; i<numofnum; ++i){
+		now = v[i];
+		if(temp.empty()){
+			temp.push_back(now);
+		}
+		else{
+			last = temp[temp.size()-1];
+			if(last<now){
+				temp.push_back(now);
+			}
+			else{
+				index = lower_bound(temp.begin(), temp.end(), now)-temp.begin();
+				temp[index] = now;
+			}
+		}
+	}
+	return temp.size();
+}
+
+int main(void)
+{
+	fastio;
+	int i, num;
+	while(cin>>numofnum){
+		v.clear();
+		for(i=0; i<numofnum; ++i){
+			cin>>num;
+			v.push_back(num);
+		}
+		cout<<solve()<<"\n";
+	}
+}
