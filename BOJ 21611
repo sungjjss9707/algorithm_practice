@@ -1,0 +1,282 @@
+#include<iostream>
+#include<vector>
+using namespace std;
+
+int len, numofquest;
+int pan[50][50];
+int dy[5] = {0,-1,1,0,0};
+int dx[5] = {0,0,0,-1,1};
+vector<pair<int, int>> quest;
+vector<pair<int, int>> naseon; //나선  
+
+
+void print_pan(){
+	int i,k;
+	cout<<endl;
+	for(i=1; i<=len; ++i){
+		for(k=1; k<=len; ++k){
+			cout<<pan[i][k]<<" ";
+		}
+		cout<<endl;
+	}
+}
+
+
+/*
+int fill_blank(){
+	//int y = (len/2)+1, x = (len/2)+1;
+	int i,k,y,x, ny, nx;
+	for(i=0; i<naseon.size(); ++i){
+		y = naseon[i].first;
+		x = naseon[i].second;
+		if(pan[y][x]==0){
+			ny = 0;
+			nx = 0;
+			for(k=i+1; k<naseon.size(); ++k){
+				ny = naseon[k].first;
+				nx = naseon[k].second;
+				if(pan[ny][nx]!=0) break;
+			}
+			if(ny==0&&nx==0) break;
+			else{
+				pan[y][x] = pan[ny][nx];
+				pan[ny][nx] = 0;
+			}
+		}
+	}
+	//print_pan();
+	//exit(0);
+	
+	
+	return 0;
+}
+*/
+
+void fill_blank(){
+	//int y = (len/2)+1, x = (len/2)+1;
+	int i,k,y,x, ny, nx;
+	vector<int> v;
+	for(i=0; i<naseon.size(); ++i){
+		y = naseon[i].first;
+		x = naseon[i].second;
+		if(pan[y][x]!=0){
+			v.push_back(pan[y][x]);
+		}
+	}
+	int index = 0;
+	for(i=0; i<naseon.size(); ++i){
+		y = naseon[i].first;
+		x = naseon[i].second;
+		if(index<v.size()){
+			pan[y][x] = v[index++];
+		}
+ 		else{
+			pan[y][x] = 0;
+		}
+	}
+
+}
+
+void throw_ice(int dir, int dist){
+	int y = (len/2)+1+dy[dir], x = (len/2)+1+dx[dir];
+	int distance = 1;
+	while(y>=1&&y<=len&&x>=1&&x<=len){
+		pan[y][x] = 0;
+		y+=dy[dir];
+		x+=dx[dir];
+		if(distance==dist) break;
+		distance++;
+	}
+}
+
+
+
+void make_naseon(){
+	int y = (len/2)+1, x = (len/2)+1;
+	len = 1;
+	int i,k;
+	while(1){
+		for(k=0; k<len; ++k){
+			x--;
+			naseon.push_back({y,x});
+			//cout<<y<<","<<x<<endl;	
+		}
+		//cout<<y<<","<<x<<endl;
+		if(y==1&&x==0) break;
+		//naseon.push_back({y,x});
+		for(i=0; i<len; ++i){
+			y++;
+			naseon.push_back({y,x});
+			//cout<<y<<","<<x<<endl;
+		}
+		len++;
+		for(k=0; k<len; ++k){
+			x++;
+			naseon.push_back({y,x});
+			//cout<<y<<","<<x<<endl;
+		}
+		for(i=0; i<len; ++i){
+			y--;
+			naseon.push_back({y,x});
+			//cout<<y<<","<<x<<endl;
+		}
+		len++;
+	}
+	naseon.pop_back();
+	//cout<<naseon.size();
+	/*
+	for(i=0; i<naseon.size(); ++i){
+		cout<<naseon[i].first<<","<<naseon[i].second<<endl;
+	}
+	*/
+	//exit(0);
+}
+
+vector<int> sequence_4(){
+	int i,y,x, start_spot = 0;
+	int yeejeon = pan[naseon[0].first][naseon[0].second], getsu = 1;
+	vector<int> v;
+	for(i=1; i<naseon.size(); ++i){
+		y = naseon[i].first;
+		x = naseon[i].second;
+		if(pan[y][x]==0) break;
+		if(pan[y][x]==yeejeon){
+			getsu++;
+		}
+		else{
+			if(getsu>=4){
+				v.push_back(start_spot);
+			}
+			getsu = 1;
+			yeejeon = pan[y][x];
+			start_spot = i;
+		}
+	}
+	if(getsu>=4){
+		v.push_back(start_spot);
+	}
+	/*
+	for(i=0; i<v.size(); ++i){
+		cout<<naseon[v[i]].first<<","<<naseon[v[i]].second<<endl;
+	}
+	cout<<endl;
+	exit(0);
+	*/
+	return v;
+}
+
+int bomb(){
+	int hap = 0,i,k, index, color;
+	vector<int> v;
+	while(1){
+		v = sequence_4();
+		if(v.empty()) break;
+		for(i=0; i<v.size(); ++i){
+			index = v[i];
+			color = pan[naseon[v[i]].first][naseon[v[i]].second];
+			for(k=index; k<naseon.size(); ++k){
+				if(pan[naseon[k].first][naseon[k].second]!=color) break;
+				pan[naseon[k].first][naseon[k].second] = 0;
+				hap+=color;
+			}
+		}
+		fill_blank();
+	}
+	return hap;	
+}
+
+void change(){
+	int i,y,x;
+	int yeejeon = pan[naseon[0].first][naseon[0].second], getsu = 1;
+	if(yeejeon==0){
+		for(i=0; i<naseon.size(); ++i){
+			y = naseon[i].first;
+			x = naseon[i].second;
+			pan[y][x] = 0;
+		}
+		
+		return;
+		
+	}
+	vector<int> v;
+	vector<pair<int, int>> new_v;
+	/*
+	int temp[50][50];
+	for(i=1; i<=len; ++i){
+		for(k=1; k<=len; ++k){
+			temp[i][k] = pan[i][k];
+ 		}
+	}
+	*/
+	for(i=1; i<naseon.size(); ++i){
+		y = naseon[i].first;
+		x = naseon[i].second;
+		if(pan[y][x]==0) break;
+		if(pan[y][x]==yeejeon){
+			getsu++;
+		}
+		else{
+			v.push_back(getsu);
+			v.push_back(yeejeon);
+			getsu = 1;
+			yeejeon = pan[y][x];
+		}
+	}
+	v.push_back(getsu);
+	v.push_back(yeejeon);
+	int index = 0;
+	for(i=0; i<naseon.size(); ++i){
+		y = naseon[i].first;
+		x = naseon[i].second;
+		if(index<v.size()){
+			pan[y][x] = v[index++];
+		}
+		else{
+			pan[y][x] = 0;
+		}
+	}
+	/*
+	if(getsu>=4){
+		v.push_back(start_spot);
+	}
+	*/
+}
+
+
+int solve(){
+	int i, dir, dist, dap=0;
+	make_naseon(); 
+	for(i=0; i<numofquest; ++i){
+		dir = quest[i].first;
+		dist = quest[i].second;
+		throw_ice(dir, dist);
+		//print_pan();
+		fill_blank();
+		//print_pan();
+		//exit(0);
+		dap+=bomb();
+		//print_pan();
+		//exit(0);
+		change();
+		//print_pan();
+		//exit(0);
+	}
+	return dap;
+}
+
+int main(void)
+{
+	cin>>len>>numofquest;
+	int i,k, dir, dist;
+	for(i=1; i<=len; ++i){
+		for(k=1; k<=len; ++k){
+			cin>>pan[i][k];
+		}
+	}
+	for(i=0; i<numofquest; ++i){
+		cin>>dir>>dist;
+		quest.push_back({dir, dist});
+	}
+	cout<<solve();
+	return 0;
+}
