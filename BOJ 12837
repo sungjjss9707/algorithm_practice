@@ -1,0 +1,74 @@
+#include<iostream>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+
+
+using namespace std;
+
+long long numofday;
+long long arr[1000001];
+long long seg_tree[4000100];
+
+long long seg_init(long long index, long long start, long long end){
+	if(start==end){
+		
+	}
+}
+
+void init(){
+	long long i;
+	for(i=1; i<=numofday; ++i){
+		arr[i] = 0;
+	}
+	for(i=1; i<=(4*numofday)+50; ++i){
+		seg_tree[i] = 0;
+	}
+	//seg_init(1,1,numofday);
+}
+
+void seg_modify(long long index, long long start, long long end, long long arr_index, long long mod){
+	seg_tree[index]+=mod;
+	if(start==end){
+		return;
+	}
+	long long mid = (start+end)/2;
+	if(arr_index<=mid){
+		seg_modify(2*index, start, mid, arr_index, mod);
+	}
+	else{
+		seg_modify(2*index+1, mid+1, end, arr_index, mod);
+	}
+}
+
+long long seg_hap(long long index, long long start, long long end, long long left, long long right){
+	if(start>=left&&end<=right){
+		return seg_tree[index];
+	}
+	else if(start>right||end<left){
+		return 0;
+	}
+	else{
+		long long mid = (start+end)/2;
+		long long ret1 = seg_hap(2*index, start, mid, left, right);
+		long long ret2 = seg_hap(2*index+1, mid+1, end, left, right);
+		return ret1+ret2;
+	}
+}
+
+int main(void)
+{
+	fastio;
+	long long numofquery;
+	cin>>numofday>>numofquery;
+	long long i, a,b,c;
+	init();
+	for(i=0; i<numofquery; ++i){
+		cin>>a>>b>>c;
+		if(a==1){
+			arr[b] += c;
+			seg_modify(1,1,numofday, b,c);
+		}
+		else{
+			cout<<seg_hap(1,1,numofday, b,c)<<"\n";
+		}
+	}
+}
