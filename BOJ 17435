@@ -1,0 +1,94 @@
+#include<iostream>
+#include<vector>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+
+
+using namespace std;
+
+int dp[25][200001];
+int arr[200001];
+int numofnum;
+
+void clear_dp(){
+	int i,k;
+	for(i=0; i<=24; ++i){
+		for(k=0; k<=numofnum; ++k){
+			dp[i][k] = -1;
+		}
+	}
+}
+
+int get_dp(int chasoo, int num){
+	int ret = dp[chasoo][num];
+	if(ret!=-1){
+		return ret;
+	}
+	if(chasoo==0){
+		ret = arr[num];
+	}
+	else{
+		int nextnum = get_dp(chasoo-1, num);
+		ret = get_dp(chasoo-1, nextnum);
+	}
+	dp[chasoo][num] = ret;
+	return ret;
+	 
+}
+
+int get_dap(int chasoo, int num){
+	vector<int> binary;
+	vector<int> v;
+	int mok = chasoo, mod, nowchasoo;
+	int i;
+	if(chasoo==1) binary.push_back(0);
+	else{
+		while(1){
+			mod = mok%2;
+			mok = mok/2;
+			v.push_back(mod);
+			if(mok==1){
+				v.push_back(1);
+				break;	
+			} 
+		}
+		
+		for(i=0; i<v.size(); ++i){
+			if(v[i]==1){
+				binary.push_back(i);
+			}
+		}
+	}	
+	int nownum = num;
+	for(i=0; i<binary.size(); ++i){
+		//cout<<binary[i]<<" - ";
+		nowchasoo = binary[i];
+		//cout<<nowchasoo<<"-"<<nownum<<endl;
+		if(dp[binary[i]][nownum]!=-1){
+			nownum = dp[binary[i]][nownum];
+		}
+		else{
+			nownum = get_dp(binary[i], nownum);
+		}
+		//cout<<nownum<<" -> ";
+	//	if
+	}
+	//cout<<nownum<<"!\n";
+	return nownum;
+}
+
+int main(void)
+{
+	fastio;
+	cin>>numofnum;
+	int i, numofquery, num, chasoo;
+	for(i=1; i<=numofnum; ++i){
+		cin>>arr[i];
+	}
+	clear_dp();
+	cin>>numofquery;
+	for(i=0; i<numofquery; ++i){
+		cin>>chasoo>>num;
+		cout<<get_dap(chasoo, num)<<"\n";
+	}
+	return 0;
+}
