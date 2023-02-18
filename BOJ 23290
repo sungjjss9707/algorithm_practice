@@ -1,0 +1,305 @@
+#include<iostream>
+#include<vector>
+#include<queue>
+using namespace std;
+
+int init_fish, numofpractice, s_x, s_y;
+
+int dy[9] = {0,0,-1,-1,-1,0,1,1,1};
+int dx[9] = {0,-1,-1,0,1,1,1,0,-1};
+
+int shark_dy[4] = {-1,0,1,0};
+int shark_dx[4] = {0,-1,0,1};
+
+//vector<tri> sea[5][5];
+//vector<tri> copy_sea[5][5];
+vector<int> shark_dir;
+vector<int> fish[5][5];
+queue<int> smell[5][5];
+vector<int> copy_fish[5][5];
+int biggest = -1, dir1, dir2, dir3;
+bool visit[5][5];
+
+void copy_start(){
+	int i,k, t;
+	for(i=1; i<=4; ++i){
+		for(k=1; k<=4; ++k){
+			copy_fish[i][k].clear();
+			for(t=0; t<fish[i][k].size(); ++t){
+				copy_fish[i][k].push_back({fish[i][k][t]});
+			}
+		}
+	}
+}
+
+void copy_end(){
+	int i,k, t;
+	for(i=1; i<=4; ++i){
+		for(k=1; k<=4; ++k){
+			for(t=0; t<copy_fish[i][k].size(); ++t){
+				fish[i][k].push_back({copy_fish[i][k][t]});
+			}
+		}
+	}
+}
+
+bool this_kan_smell(int y, int x){	//냄세가 없으면 참 출력함 
+	int i;
+	if(smell[y][x].empty()) return true;
+	return false;
+} 
+
+void fish_go(){
+	vector<int> temp[5][5];
+	int i,k, t,d, shark_or_smell, dir, next_dir, ny, nx;
+	for(i=1; i<=4; ++i){
+		for(k=1; k<=4; ++k){
+			//cout<<i<<","<<k<<" : \n";
+			for(t=0; t<fish[i][k].size(); ++t){
+				dir = fish[i][k][t];
+				//cout<<dir<<" : ";
+				//next_dir = dir;
+				for(d=0; d<8; ++d){
+					next_dir = dir-d;
+					if(next_dir<1) next_dir+=8;
+					ny = i+dy[next_dir];
+					nx = k+dx[next_dir];
+					if(ny>=1&&ny<=4&&nx>=1&&nx<=4){	//격자속 
+						if(!(ny==s_y&&nx==s_x)){	//상어가 없는칸 
+							if(this_kan_smell(ny,nx)){	//냄세가 없는칸  
+								temp[ny][nx].push_back(next_dir);
+								//cout<<ny<<","<<nx<<"에 "<<next_dir<<"추가\n"; 
+								break;
+							} 
+						}
+					}			
+				}
+				if(d==8){
+					temp[i][k].push_back(dir);
+					//cout<<i<<","<<k<<"에 "<<next_dir<<"그대로 있음\n"; 
+				} 
+			}
+		}
+	}
+	for(i=1; i<=4; ++i){
+		for(k=1; k<=4; ++k){
+			fish[i][k].clear();
+			fish[i][k] = temp[i][k];
+		}
+	}
+}
+
+void get_shark_dir(int sy, int sx, int hap){
+	if(shark_dir.size()==3){
+		//cout<<shark_dir[0]<<shark_dir[1]<<shark_dir[2]<<" "<<hap<<endl;
+		if(hap>=biggest){
+			dir1 = shark_dir[0];
+			dir2 = shark_dir[1];
+			dir3 = shark_dir[2];
+			//cout<<dir1<<dir2<<dir3<<" "<<hap<<endl;
+			biggest = hap;
+		}
+		return;
+	}
+	int i, nsy, nsx, nexthap;
+	for(i=3; i>=0; --i){
+		nsy = sy+shark_dy[i];
+		nsx = sx+shark_dx[i];
+		if(nsy>=1&&nsy<=4&&nsx>=1&&nsx<=4){
+			if(!visit[nsy][nsx]){
+				visit[nsy][nsx] = true;
+				nexthap=hap+fish[nsy][nsx].size();
+				shark_dir.push_back(i);
+			
+				get_shark_dir(nsy, nsx, nexthap);
+				shark_dir.pop_back();
+				visit[nsy][nsx] = false;
+			}
+			else{
+				nexthap=hap;
+				shark_dir.push_back(i);
+				
+				get_shark_dir(nsy, nsx, nexthap);
+				shark_dir.pop_back();
+				//visit[nsy][nsx] = false;
+			}
+			
+		}
+	}
+}
+
+void visit_clear(){
+	int i,k;
+	for(i=1; i<=4; ++i){
+		for(k=1; k<=4; ++k){
+			visit[i][k] = false;
+		}
+	}
+}
+
+void shark_go(int now){
+	int i,j,k, sy, sx;
+	biggest = -1;
+	shark_dir.clear();
+	//cout<<"처음상어위치 : "<<s_y<<","<<s_x<<endl;
+	visit_clear();
+	//visit[s_y][s_x] = true;
+	get_shark_dir(s_y, s_x,0);
+	/*
+	for(i=3; i>=0; --i){
+		one_fish=0;
+		
+		oney = s_y+shark_dy[i];
+		onex = s_x+shark_dx[i];
+		if(oney<1||oney>4||onex<1||onex>4) continue;
+		one_fish+=fish[oney][onex].size();
+		for(j=3; j>=0; --j){
+			two_fish=0;
+			twoy = oney+shark_dy[j];
+			twox = onex+shark_dx[j];
+			if(twoy<1||twoy>4||twox<1||twox>4) continue;
+			two_fish=one_fish+fish[twoy][twox].size();
+			for(k=3; k>=0; --k){
+				three_fish=0;
+				threey = twoy+shark_dy[k];
+				threex = twox+shark_dx[k];
+				if(threey<1||threey>4||threex<1||threex>4) continue;
+				three_fish=two_fish+fish[threey][threex].size();
+				cout<<i<<","<<j<<","<<k<<" = "<<three_fish<<endl;;
+				if(biggest<=three_fish){
+					dir1 = i;
+					dir2 = j;
+					dir3 = k;
+					//cout<<endl;
+					
+					//cout<<sy<<"!!"<<sx<<endl;
+					biggest = three_fish;
+				}
+			}
+		}
+	}
+	*/
+	//cout<<"상어위치 : "<<s_y<<","<<s_x<<endl;
+	//cout<<dir1<<"->"<<dir2<<"->"<<dir3<<endl;
+	//cout<<biggest<<endl;
+	sy = s_y;
+	sx = s_x;
+	//cout<<sy<<"-"<<sx<<endl;
+	sy = sy+shark_dy[dir1];
+	sx = sx+shark_dx[dir1];
+	for(i=0; i<fish[sy][sx].size(); ++i){
+		smell[sy][sx].push(now);
+	}	
+	fish[sy][sx].clear();
+	//cout<<sy<<"-"<<sx<<endl; 
+	sy = sy+shark_dy[dir2];
+	sx = sx+shark_dx[dir2];
+	for(i=0; i<fish[sy][sx].size(); ++i){
+		smell[sy][sx].push(now);
+	}
+	fish[sy][sx].clear();
+	//cout<<sy<<"-"<<sx<<endl;
+	sy = sy+shark_dy[dir3];
+	sx = sx+shark_dx[dir3];
+	for(i=0; i<fish[sy][sx].size(); ++i){
+		smell[sy][sx].push(now);
+	}
+	fish[sy][sx].clear();
+	//cout<<sy<<"-"<<sx<<endl;
+	s_y = sy;
+	s_x = sx;
+}
+
+void smell_gone(int now){
+	int i,k, time;
+	for(i=1; i<=4; ++i){
+		for(k=1; k<=4; ++k){
+			//if(smell[i][k].empty()) continue;
+			while(!smell[i][k].empty()){
+				time = smell[i][k].front();
+				if(now-2==time){
+					smell[i][k].pop();
+				}
+				else{
+					break;
+				}
+			}
+		}
+	}
+}
+
+int get_numoffish(){
+	int i,k, dap=0;
+	for(i=1; i<=4; ++i){
+		for(k=1; k<=4; ++k){
+			dap+=fish[i][k].size();
+		}
+	}
+	return dap;
+}
+
+void print_fish(){
+	int i,j,k;
+	cout<<endl;
+	for(i=1; i<=4; ++i){
+		for(j=1; j<=4; ++j){
+			cout<<i<<","<<j<<" : ";
+			for(k=0; k<fish[i][j].size(); ++k){
+				cout<<fish[i][j][k]<<" ";
+			}
+			cout<<endl;
+		}
+	}
+}
+
+void print_smell(){
+	int i,j,k;
+	cout<<endl;
+	for(i=1; i<=4; ++i){
+		for(j=1; j<=4; ++j){
+			if(!smell[i][j].empty()){
+				cout<<"1"<<" ";
+			}
+			else{
+				cout<<"0 ";
+			}
+		}
+		cout<<endl;
+	}
+}
+
+int solve(){
+	int i;
+	int dap = 0;
+	//print_fish();
+	for(i=1; i<=numofpractice; ++i){
+		copy_start();
+		//cout<<"향기 : "<<endl;
+		//print_smell();
+		fish_go();
+		//print_fish();
+		shark_go(i);
+		smell_gone(i);
+		copy_end();
+		//print_fish();
+		//cout<<"----------------------\n";
+	}
+	//cout<<endl;
+	//cout<<s_y<<" "<<s_x<<endl;
+	//print_fish();
+	dap = get_numoffish();
+	return dap;
+}
+
+int main(void)
+{
+	cin>>init_fish>>numofpractice;
+	int i, x,y,d;
+	for(i=1; i<=init_fish; ++i){
+		cin>>y>>x>>d;
+		fish[y][x].push_back(d);
+	}
+	cin>>s_y>>s_x;
+	cout<<solve();
+	return 0;
+}
