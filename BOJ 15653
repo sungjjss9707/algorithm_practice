@@ -1,0 +1,401 @@
+#include<iostream>
+#include<queue>
+using namespace std;
+
+int sero, garo, hy, hx;
+int init_by, init_bx, init_ry, init_rx;
+char miro[11][11];
+bool visit[11][11][11][11];
+
+struct penta{
+	int by, bx, ry, rx, hwetsu;
+};
+
+void visit_clear(){
+	int i,j,k,l;
+	for(i=1; i<=sero; ++i){
+		for(j=1; j<=garo; ++j){
+			for(k=1; k<=sero; ++k){
+				for(l=1; l<=garo; ++l){
+					visit[i][j][k][l] = false;
+				}
+			}
+		}
+	}
+}
+
+pair<pair<int, int>, pair<int, int>> go_1234(int by, int bx, int ry, int rx, int index){
+	int nby = by, nbx = bx, nry = ry, nrx = rx;
+	if(index==1){			//상  
+		if(bx==rx){
+			if(by<ry){		//같은줄에 있는데 by가 더 위에있음 => by부터 올리고 ry 올리기  
+				while(1){
+					nby--;
+					if(miro[nby][nbx]=='O'){
+						break;
+					}
+					else if(miro[nby][nbx]=='#'){
+						nby++;
+						break;
+					}
+				}
+				while(1){
+					nry--;
+					if(miro[nry][nrx]=='O'){
+						break;
+					}
+					else if(miro[nry][nrx]=='#'){
+						nry++;
+						break;
+					}
+					if(nry==nby){
+						nry++;
+						break;
+					}
+				}
+			}
+			else{			//같은줄에 있는데 ry가 더 위에있음 => ry부터 올리고 by 올리기 
+				while(1){
+					nry--;
+					if(miro[nry][nrx]=='O'){
+						break;
+					}
+					else if(miro[nry][nrx]=='#'){
+						nry++;
+						break;
+					}
+				}
+				while(1){
+					nby--;
+					if(miro[nby][nbx]=='O'){
+						break;
+					}
+					else if(miro[nby][nbx]=='#'){
+						nby++;
+						break;
+					}
+					if(nry==nby){
+						nby++;
+						break;
+					}
+				}
+			}
+		} 
+		else{				//서로 다른줄에 있으니까 신경안쓰고 둘다 올려도됨  
+			while(1){
+				nby--;
+				if(miro[nby][nbx]=='O'){
+					break;
+				}
+				else if(miro[nby][nbx]=='#'){
+					nby++;
+					break;
+				}
+			}
+			while(1){
+				nry--;
+				if(miro[nry][nrx]=='O'){
+					break;
+				}
+				else if(miro[nry][nrx]=='#'){
+					nry++;
+					break;
+				}
+			}
+		}
+	}
+	else if(index==2){		//하 
+		if(bx==rx){
+			if(by>ry){		//같은줄에 있는데 by가 더 밑에있음 => by부터 내리고 ry 내리기  
+				while(1){
+					nby++;
+					if(miro[nby][nbx]=='O'){
+						break;
+					}
+					else if(miro[nby][nbx]=='#'){
+						nby--;
+						break;
+					}
+				}
+				while(1){
+					nry++;
+					if(miro[nry][nrx]=='O'){	
+						break;
+					}
+					else if(miro[nry][nrx]=='#'){
+						nry--;
+						break;
+					}
+					if(nry==nby){
+						nry--;
+						break;
+					}
+				}
+			}
+			else{			//같은줄에 있는데 ry가 더 밑에있음 => ry부터 내리고 by 내리기 
+				while(1){
+					nry++;
+					if(miro[nry][nrx]=='O'){
+						break;
+					}
+					else if(miro[nry][nrx]=='#'){
+						nry--;
+						break;
+					}
+				}
+				while(1){
+					nby++;
+					if(miro[nby][nbx]=='O'){
+						break;
+					}
+					else if(miro[nby][nbx]=='#'){
+						nby--;
+						break;
+					}
+					if(nry==nby){
+						nby--;
+						break;
+					}
+				}
+			}
+		} 
+		else{				//서로 다른줄에 있으니까 신경안쓰고 둘다 올려도됨  
+			while(1){
+				nby++;
+				if(miro[nby][nbx]=='O'){
+					break;
+				}
+				else if(miro[nby][nbx]=='#'){
+					nby--;
+					break;
+				}
+			}
+			while(1){
+				nry++;
+				if(miro[nry][nrx]=='O'){
+					break;
+				}
+				else if(miro[nry][nrx]=='#'){
+					nry--;
+					break;
+				}
+			}
+		}
+	}
+	else if(index==3){		//좌 
+		if(by==ry){
+			if(bx<rx){		//같은줄에 있는데 bx가 더 왼쪽에있음 => bx부터 올리고 rx 올리기  
+				while(1){
+					nbx--;
+					if(miro[nby][nbx]=='O'){
+						break;
+					}
+					else if(miro[nby][nbx]=='#'){
+						nbx++;
+						break;
+					}
+				}
+				while(1){
+					nrx--;
+					if(miro[nry][nrx]=='O'){
+						break;
+					}
+					else if(miro[nry][nrx]=='#'){
+						nrx++;
+						break;
+					}
+					if(nrx==nbx){
+						nrx++;
+						break;
+					}
+				}
+			}
+			else{			 
+				while(1){
+					nrx--;
+					if(miro[nry][nrx]=='O') break;
+					else if(miro[nry][nrx]=='#'){
+						nrx++;
+						break;
+					}
+				}
+				while(1){
+					nbx--;
+					if(miro[nby][nbx]=='O') break;
+					else if(miro[nby][nbx]=='#'){
+						nbx++;
+						break;
+					}
+					if(nrx==nbx){
+						nbx++;
+						break;
+					}
+				}
+			}
+		} 
+		else{				//서로 다른줄에 있으니까 신경안쓰고 둘다 올려도됨  
+			while(1){
+				nbx--;
+				if(miro[nby][nbx]=='O'){
+					break;
+				}
+				else if(miro[nby][nbx]=='#'){
+					nbx++;
+					break;
+				}
+			}
+			while(1){
+				nrx--;
+				if(miro[nry][nrx]=='O') break;
+				else if(miro[nry][nrx]=='#'){
+					nrx++;
+					break;
+				}
+			}
+		}
+	}
+	else{					//우 
+		if(by==ry){
+			if(bx>rx){		//같은줄에 있는데 bx가 더 오른 쪽에있음 => bx부터 올리고 rx 올리기  
+				while(1){
+					nbx++;
+					if(miro[nby][nbx]=='O'){
+						break;
+					}
+					else if(miro[nby][nbx]=='#'){
+						nbx--;
+						break;
+					}
+				}
+				while(1){
+					nrx++;
+					if(miro[nry][nrx]=='O'){
+						break;
+					}
+					else if(miro[nry][nrx]=='#'){
+						nrx--;
+						break;
+					}
+					if(nrx==nbx){
+						nrx--;
+						break;
+					}
+				}
+			}
+			else{			 
+				while(1){
+					nrx++;
+					if(miro[nry][nrx]=='O'){
+						break;
+					}
+					else if(miro[nry][nrx]=='#'){
+						nrx--;
+						break;
+					}
+				}
+				while(1){
+					nbx++;
+					if(miro[nby][nbx]=='O'){
+						break;
+					}
+					else if(miro[nby][nbx]=='#'){
+						nbx--;
+						break;
+					}
+					if(nrx==nbx){
+						nbx--;
+						break;
+					}
+				}
+			}
+		} 
+		else{				//서로 다른줄에 있으니까 신경안쓰고 둘다 올려도됨  
+			while(1){
+				nbx++;
+				if(miro[nby][nbx]=='O'){
+					break;
+				}
+				else if(miro[nby][nbx]=='#'){
+					nbx--;
+					break;
+				}
+			}
+			while(1){
+				nrx++;
+				if(miro[nry][nrx]=='O'){
+					break;
+				}
+				else if(miro[nry][nrx]=='#'){
+					nrx--;
+					break;
+				}
+			}
+		}
+	}
+	return {{nby, nbx}, {nry, nrx}};
+}
+
+int bfs(){
+	visit_clear();
+	queue<penta> q;
+	visit[init_by][init_bx][init_ry][init_rx] = true;
+	q.push({init_by, init_bx, init_ry, init_rx, 0});
+	int by, bx, ry, rx, nby, nbx, nry, nrx, hwetsu, i;
+	pair<pair<int, int>, pair<int, int>> temp;
+	while(!q.empty()){
+		by = q.front().by;
+		bx = q.front().bx;
+		ry = q.front().ry;
+		rx = q.front().rx;
+		//cout<<"blue : "<<by<<","<<bx<<" red : "<<ry<<","<<rx<<endl;
+		hwetsu = q.front().hwetsu;
+		q.pop();
+		if(by==hy&&bx==hx) continue;
+		if((ry==hy&&rx==hx)) return hwetsu;
+		for(i=1; i<=4; ++i){
+			temp = go_1234(by, bx, ry, rx, i);
+			nby = temp.first.first;
+			nbx = temp.first.second;
+			nry = temp.second.first;
+			nrx = temp.second.second;
+			if(!visit[nby][nbx][nry][nrx]){
+				visit[nby][nbx][nry][nrx] = true;
+				q.push({nby, nbx, nry, nrx, hwetsu+1});
+			}
+		}
+	}
+	
+	return -1;
+}
+
+int solve(){
+	int dap = bfs();
+	return dap;
+}
+
+int main(void)
+{
+	cin>>sero>>garo;
+	int i,k;
+	for(i=1; i<=sero; ++i){
+		for(k=1; k<=garo; ++k){
+			cin>>miro[i][k];
+			if(miro[i][k]=='O'){
+				hy = i;
+				hx = k;
+			}
+			else if(miro[i][k]=='B'){
+				init_by = i;
+				init_bx = k;
+				miro[i][k]=='.';
+			}
+			else if(miro[i][k]=='R'){
+				init_ry = i;
+				init_rx = k;
+				miro[i][k]=='.';
+			}
+		}
+	}
+	cout<<solve();
+	return 0;
+}
