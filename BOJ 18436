@@ -1,0 +1,181 @@
+#include<iostream>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+
+
+using namespace std;
+
+int numofnum;
+int arr[100001];
+int seg_even[4000101];
+int seg_odd[4000101];
+
+int seg_even_init(int index, int start, int end){
+	if(start==end){
+		if(arr[start]%2==0){
+			seg_even[index] = 1;	
+		}
+		else{
+			seg_even[index] = 0;
+		}
+		return seg_even[index];
+	}
+	int mid = (start+end)/2;
+	int ret1 = seg_even_init(2*index, start, mid);
+	int ret2 = seg_even_init(2*index+1, mid+1, end);
+	seg_even[index] = ret1+ret2;
+	return seg_even[index];
+}
+
+int seg_odd_init(int index, int start, int end){
+	if(start==end){
+		if(arr[start]%2==1){
+			seg_odd[index] = 1;	
+		}
+		else{
+			seg_odd[index] = 0;
+		}
+		return seg_odd[index];
+	}
+	int mid = (start+end)/2;
+	int ret1 = seg_odd_init(2*index, start, mid);
+	int ret2 = seg_odd_init(2*index+1, mid+1, end);
+	seg_odd[index] = ret1+ret2;
+	return seg_odd[index];
+}
+
+int get_index(int index, int start, int end, int arr_index){
+	if(start==end){
+		return index;
+	}
+	int mid = (start+end)/2;
+	if(arr_index<=mid){
+		return get_index(2*index, start, mid, arr_index);
+	}
+	else{
+		return get_index(2*index+1, mid+1, end, arr_index);
+	}
+}
+
+void change_odd_to_even(int arr_index){
+	int leaf_index = get_index(1,1,numofnum, arr_index);
+	//cout<<leaf_index<<"\n";
+	int even_index = leaf_index, odd_index = leaf_index;
+	seg_even[even_index] = 1;
+	seg_odd[odd_index] = 0;
+	if(leaf_index==1) return;
+	int left, right;
+	while(even_index!=1){
+		even_index/=2;
+		left = even_index*2;
+		right = even_index*2+1;
+		seg_even[even_index] = seg_even[left]+seg_even[right];
+	}
+	while(odd_index!=1){
+		odd_index/=2;
+		left = odd_index*2;
+		right = odd_index*2+1;
+		seg_odd[odd_index] = seg_odd[left]+seg_odd[right];
+	}
+}
+
+void change_even_to_odd(int arr_index){
+	int leaf_index = get_index(1,1,numofnum, arr_index);
+	int even_index = leaf_index, odd_index = leaf_index;
+	seg_even[even_index] = 0;
+	seg_odd[odd_index] = 1;
+	if(leaf_index==1) return;
+	int left, right;
+	while(even_index!=1){
+		even_index/=2;
+		left = even_index*2;
+		right = even_index*2+1;
+		seg_even[even_index] = seg_even[left]+seg_even[right];
+	}
+	while(odd_index!=1){
+		odd_index/=2;
+		left = odd_index*2;
+		right = odd_index*2+1;
+		seg_odd[odd_index] = seg_odd[left]+seg_odd[right];
+	}
+}
+
+int get_odd_query(int index, int start, int end, int left, int right){
+	if(start>=left&&end<=right){
+		return seg_odd[index];
+	}
+	else if(start>right||end<left){
+		return 0;
+	}
+	else{
+		int mid = (start+end)/2;
+		int ret1 = get_odd_query(2*index, start, mid, left, right);
+		int ret2 = get_odd_query(2*index+1, mid+1, end, left, right);
+		return ret1+ret2;
+	}
+}
+
+int get_even_query(int index, int start, int end, int left, int right){
+	if(start>=left&&end<=right){
+		return seg_even[index];
+	}
+	else if(start>right||end<left){
+		return 0;
+	}
+	else{
+		int mid = (start+end)/2;
+		int ret1 = get_even_query(2*index, start, mid, left, right);
+		int ret2 = get_even_query(2*index+1, mid+1, end, left, right);
+		return ret1+ret2;
+	}
+}
+
+int main(void)
+{
+	fastio;
+	cin>>numofnum;
+	int i, numofquery,a,b,c;
+	for(i=1; i<=numofnum; ++i){
+		cin>>arr[i];
+	}
+	seg_odd_init(1,1,numofnum);
+	seg_even_init(1,1,numofnum);
+	/*
+	for(i=1; i<=24; ++i){
+		cout<<seg_even[i]<<" ";
+	}
+	cout<<endl;
+	for(i=1; i<=24; ++i){
+		cout<<seg_odd[i]<<" ";
+	}
+	cout<<endl;
+	*/
+	cin>>numofquery;
+	for(i=0; i<numofquery; ++i){
+		cin>>a>>b>>c;
+		if(a==1){	//arr[b]  를 c 로 바꾼다  
+			if(arr[b]%2==0){
+				if(c%2==1){
+					change_even_to_odd(b);
+				}
+			}
+			else{
+				if(c%2==0){
+					change_odd_to_even(b);
+					//cout<<"이거 발동\n";
+				}
+			}
+			arr[b] = c;
+		}
+		else if(a==2){	//b~c 짝수의 수 
+			cout<<get_even_query(1,1,numofnum, b,c)<<"\n";
+		}
+		else{			//b~c 홀수의 수 
+			cout<<get_odd_query(1,1,numofnum, b,c)<<"\n";
+		}
+	}
+	
+	
+	return 0;
+}
+
+
