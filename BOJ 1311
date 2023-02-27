@@ -1,0 +1,67 @@
+#include<iostream>
+#include<math.h>
+using namespace std;
+
+int num;
+int arr[21][21];
+int dp[3000000][21];
+
+void dp_clear(){
+	int i,k;
+	int yee = pow(2, num)-1;
+	for(i=0; i<=yee; ++i){
+		for(k=0; k<=num; ++k){
+			dp[i][k] = -1;
+		}
+	}
+}
+
+int bitmask(int yee, int person){
+	
+	if(person==0){
+		return 0;
+	}
+	
+	//cout<<yee<<"="<<person<<endl;
+	int ret = dp[yee][person];
+	//cout<<ret<<"씨발"<<endl;
+	if(ret!=-1) return ret;
+	int i, number = 1, index;
+	ret = 2100000000;
+	for(i=0; i<num; i++){
+		number = 1<<i;
+		index = num-i;
+		//cout<<number<<" "<<index<<"="<<(yee&number)<<endl;
+		if((yee&number)>0){
+			//cout<<yee<<" "<<number<<endl;
+			//if()
+			ret = min(bitmask(yee-number, person-1)+arr[person][index], ret);
+		}
+		//number = number*2;
+	}
+	//if(ret==2100000000) return 2100000000;
+	dp[yee][person] = ret;
+	return ret;
+}
+
+int solve(){
+	int dap;
+	dp_clear();
+	int yee = pow(2, num)-1;
+	//cout<<yee<<endl;
+	dap = bitmask(yee, num);
+	return dap;
+}
+
+int main(void)
+{
+	cin>>num;
+	int i,k;
+	for(i=1; i<=num; ++i){
+		for(k=1; k<=num; ++k){
+			cin>>arr[i][k];
+		}
+	}
+	cout<<solve();
+	return 0;
+}
