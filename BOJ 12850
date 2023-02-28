@@ -1,0 +1,77 @@
+#include<iostream>
+#include<vector>
+using namespace std;
+
+long long time, mod = 1000000007;
+
+vector<vector<long long>> one(){
+	vector<vector<long long>> ret;
+	ret.push_back({0,1,1,0,0,0,0,0});
+	ret.push_back({1,0,1,1,0,0,0,0});
+	ret.push_back({1,1,0,1,0,1,0,0});
+	ret.push_back({0,1,1,0,1,1,0,0});
+	ret.push_back({0,0,0,1,0,1,1,0});
+	ret.push_back({0,0,1,1,1,0,0,1});
+	ret.push_back({0,0,0,0,1,0,0,1});
+	ret.push_back({0,0,0,0,0,1,1,0});
+	return ret;
+}
+
+vector<vector<long long>> matrix_gop(vector<vector<long long>> a, vector<vector<long long>> b){
+	long long i,j,k, hap;
+	vector<vector<long long>> ret;
+	vector<long long> temp;
+	for(i=0; i<8; ++i){
+		temp.clear();
+		for(j=0; j<8; ++j){
+			hap=0;
+			for(k=0; k<8; ++k){
+				//cout<<a[i][k]<<" "<<b[k][j]<<endl;
+				hap=(hap%mod+(a[i][k]*b[k][j])%mod)%mod;
+			}
+			//cout<<hap<<" ";
+			temp.push_back(hap);
+			//ret[i].push_back(hap);
+		}
+		ret.push_back(temp);
+		//cout<<endl;
+	}
+	return ret;
+}
+
+vector<vector<long long>> yeeboon(long long jisoo){
+	if(jisoo==1){
+		vector<vector<long long>> ret = one();
+		return ret;
+	}
+	vector<vector<long long>> half = yeeboon(jisoo/2);
+	vector<vector<long long>> ret = matrix_gop(half, half);
+	
+	if(jisoo%2!=0){
+		vector<vector<long long>> first = one();
+		ret = matrix_gop(ret, first);	
+	}
+	return ret;
+}
+
+long long solve(){
+	vector<vector<long long>> mat = yeeboon(time);
+	long long i,k;
+	/*
+	for(i=0; i<mat.size(); ++i){
+		for(k=0; k<mat[i].size(); ++k){
+			cout<<mat[i][k]<<" ";
+		}
+		cout<<endl;
+	}
+	*/
+	int ret = mat[0][0];
+	return ret;
+}
+
+int main(void)
+{
+	cin>>time;
+	cout<<solve();
+	return 0;
+}
