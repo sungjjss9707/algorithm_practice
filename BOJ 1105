@@ -1,0 +1,37 @@
+#include<iostream>
+#include<string>
+
+using namespace std;
+
+int a,b;
+
+int solve(){
+	string sa, sb;
+	sa = to_string(a);
+	sb = to_string(b);
+	//cout<<sa<<" "<<sb<<endl;
+	if(sa.length()!=sb.length()) return 0;
+	int i,dap=0, len = sa.length();
+	for(i=0; i<len; ++i){
+		if(sa[i]==sb[i]){
+			if(sa[i]=='8'){
+				dap++;
+			}
+			else{
+				
+			}
+		}
+		else{
+			break;
+		}
+		
+	}
+	return dap;
+}
+
+int main(void)
+{
+	cin>>a>>b;
+	cout<<solve();
+	return 0;
+}
