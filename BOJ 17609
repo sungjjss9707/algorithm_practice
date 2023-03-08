@@ -1,0 +1,44 @@
+#include<iostream>
+#include<string>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+
+
+using namespace std;
+
+int num, len;
+string str;
+
+int panstar(int l, int r, int j){
+	//cout<<str[l]<<" "<<str[r]<<endl;
+	if(j>=2) return 2;
+	if(l>=r) return j;
+	//if(str[l]!=str[r]&&j==1) return 2;
+	if(str[l]==str[r]) return panstar(l+1, r-1, j);
+	else{
+		int ret1 = 3, ret2 = 3;
+		if(str[l+1]==str[r]) ret1 = panstar(l+1, r, j+1);
+		if(str[l]==str[r-1]) ret2 = panstar(l, r-1, j+1);
+		if(ret1==3&&ret2==3) return 2;
+		return min(ret1, ret2);
+		//return 2;	
+	}
+	
+}
+
+int solve(){
+	len = str.length();
+	int dap = panstar(0,len-1,0);
+	return dap;
+}
+
+int main(void)
+{
+	fastio;
+	cin>>num;
+	int i;
+	for(i=0; i<num; ++i){
+		cin>>str;
+		cout<<solve()<<"\n";
+	}
+	return 0;
+}
