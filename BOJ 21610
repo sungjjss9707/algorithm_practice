@@ -1,0 +1,181 @@
+#include<iostream>
+#include<vector>
+using namespace std;
+
+int len, hwetsu;
+int pan[51][51];
+bool cloud_pos[51][51];
+int dy[9] = {0, 0,-1,-1,-1,0,1,1,1 };
+int dx[9] = {0, -1,-1,0,1,1,1,0,-1 };
+int daegak_y[4] = { -1,1,1,-1 };
+int daegak_x[4] = { 1,1,-1,-1 };
+vector<pair<int, int>> cloud;
+vector<pair<int, int>> v;
+
+void make_cloud() {
+	
+	cloud.push_back({ len, 1 });
+	cloud.push_back({ len, 2 });
+	cloud.push_back({ len-1, 1 });
+	cloud.push_back({ len-1, 2 });
+}
+void print_pan() {
+	int i, k, y, x;
+	cout << endl;
+	for (i = 1; i <= len; ++i) {
+		for (k = 1; k <= len; ++k) {
+			cout << pan[i][k] << " ";
+		}
+		cout << endl;
+	}
+	//cout << endl;
+}
+
+pair<int, int> cloud_move(int y, int x, int dir, int kan) {
+	int nexty = y + (dy[dir] * kan);
+	//cout << y << "," << x<<" "<<kan<<endl;
+	if (nexty > len) {
+		while (1) {
+			if (nexty >= 1 && nexty <= len) break;
+			nexty -= len;
+		}
+	}
+	else if (nexty <= 0) {
+		while (1) {
+			if (nexty >= 1 && nexty <= len) break;
+			nexty += len;
+		}
+	}
+	int nextx = x + (dx[dir] * kan);
+	if (nextx > len) {
+		while (1) {
+			if (nextx >= 1 && nextx <= len) break;
+			nextx -= len;
+		}
+	}
+	else if (nextx <= 0) {
+		while (1) {
+			if (nextx >= 1 && nextx <= len) break;
+			nextx += len;
+		}
+	}
+	//cout << nexty << "," << nextx << endl << endl;
+	return { nexty, nextx };
+}
+
+void all_cloud_move_rain_water_copy(int dir, int kan) {
+	int i,k, y,x, ny, nx, getsu;
+	pair<int, int> next;
+	vector<pair<int, int>> magic;
+	
+	for (i = 0; i < cloud.size(); ++i) {
+		y = cloud[i].first;
+		x = cloud[i].second;
+		next = cloud_move(y, x, dir, kan);
+		ny = next.first;
+		nx = next.second;
+		magic.push_back({ ny, nx });
+		cloud_pos[ny][nx] = true;
+		//cout << ny << "," << nx << endl;
+		pan[ny][nx]++;
+	}
+	//print_pan();
+	
+	vector<pair<pair<int, int>, int>> increase;
+	for (i = 0; i < magic.size(); ++i) {
+		y = magic[i].first;
+		x = magic[i].second;
+		getsu = 0;
+		for (k = 0; k < 4; ++k) {
+			ny = y + daegak_y[k];
+			nx = x + daegak_x[k];
+			if (ny >= 1 && ny <= len && nx >= 1 && nx <= len) {
+				if (pan[ny][nx] >= 1) {
+					getsu++;
+				}
+			}
+			
+		}
+		if (getsu >= 1) increase.push_back({ {y,x}, getsu });
+	}
+	for (i = 0; i < increase.size(); ++i) {
+		y = increase[i].first.first;
+		x = increase[i].first.second;
+		//cout << y << "," << x << " = " << getsu << endl;
+		getsu = increase[i].second;
+		pan[y][x] += getsu;
+	}
+	//print_pan();
+}
+
+void cloud_remove() {
+	cloud.clear();
+}
+
+void remake_cloud() {
+	int i, k;
+	for (i = 1; i <= len; ++i) {
+		for (k = 1; k <= len; ++k) {
+			if (pan[i][k] >= 2) {
+				if (!cloud_pos[i][k]) {
+					cloud.push_back({ i,k });
+					pan[i][k] -= 2;
+				}
+				
+			}
+		}
+	}
+}
+
+void cloud_pos_clear() {
+	int i, k,y,x;
+	for (i = 1; i <= len; ++i) {
+		for (k = 1; k <= len; ++k) {
+			cloud_pos[i][k] = false;
+		}
+	}
+}
+
+
+int solve() {
+	int i,k,dap=0, dir, kan;
+	make_cloud();
+	for (i = 0; i < hwetsu; ++i) {
+		//cout << endl;
+		//print_pan();
+		
+		dir = v[i].first;
+		kan = v[i].second;
+		cloud_pos_clear();
+		all_cloud_move_rain_water_copy(dir, kan);
+		cloud_remove();
+		remake_cloud();
+	}
+	for (i = 1; i <= len; ++i) {
+		for (k = 1; k <= len; ++k) {
+			dap += pan[i][k];
+		}
+	}
+	return dap;
+}
+
+int main(void)
+{
+	cin >> len >> hwetsu;
+	//cin>>len;
+	//cout << len << endl;
+	int i, k;
+	
+	for (i = 1; i <= len; ++i) {
+		for (k = 1; k <= len; ++k) {
+			cin >> pan[i][k];
+		}
+	}
+	int dir, kan;
+	for (i = 0; i < hwetsu; ++i) {
+		cin >> dir >> kan;
+		v.push_back({ dir, kan });
+	}
+	cout << solve();
+	return 0;
+}
