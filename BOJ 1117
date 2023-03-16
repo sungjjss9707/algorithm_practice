@@ -1,0 +1,49 @@
+#include<iostream>
+
+using namespace std;
+
+long long sero, garo, f, c, x_1, y_1, x_2, y_2;
+
+long long solve() {
+	long long short_x = f;
+	long long long_x = garo - f;
+	if (short_x > long_x) {
+		long long temp = short_x;
+		short_x = long_x;
+		long_x = temp;
+	}
+	long long hwetsu = c + 1;
+	long long y = sero / hwetsu;
+	long long s = y_2 - y_1, g = x_2 - x_1;
+	long long area = s * g;
+	long long ret;
+	//cout << short_x << " " << long_x << endl;
+	if (x_1 >= short_x) {
+		//cout << "시발\n";
+		//cout << area << " " << hwetsu << endl;
+		ret = area * hwetsu;
+	}
+	else if (x_2 <= short_x) {
+		//cout << area << " " << hwetsu << endl;
+		ret = area * hwetsu * 2;
+		
+	}
+	else {
+		//cout << "일로옴\n";
+		long long small_garo, small_area;
+		ret = area * hwetsu;
+		small_garo = short_x - x_1;
+		small_area = small_garo * s;
+		//cout << short_x << endl;
+		ret += (small_area * hwetsu);
+	}
+	ret = (sero * garo) - ret;
+	return ret;
+}
+
+int main(void)
+{
+	cin >> garo >> sero >> f >> c >> x_1 >> y_1 >> x_2 >> y_2;
+	cout << solve();
+	return 0;
+}
