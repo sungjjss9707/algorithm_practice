@@ -1,0 +1,77 @@
+#include<iostream>
+#include<algorithm>
+#include<vector>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+
+
+using namespace std;
+
+struct tri {
+	int color, weight, index;
+};
+
+tri arr[200001];
+int hap[200001];
+int dap[200001];
+int num;
+
+vector<pair<int, int>> v[2001];
+
+bool compare(tri t1, tri t2) {
+	return t1.weight < t2.weight;
+}
+
+void solve() {
+	int i,k;
+	for (i = 1; i <= num; ++i) {
+		hap[i] = 0;
+	}
+	
+	for (i = 0; i <= 2000; ++i) {
+		if (!v[i].empty()) {
+			cout << i << " : ";
+			for (k = 0; k < v[i].size(); ++k) {
+				cout << v[i][k].first << "," << v[i][k].second << "   ";
+			}
+			cout << endl;
+		}
+	}
+	cout << endl;
+	
+	int sum = 0,nowhap, index, nowcolor, nowweight, mine;
+	for (i = 0; i <= 2000; ++i) {
+		if (!v[i].empty()) {
+			nowhap = 0;
+			nowweight = i;
+			for (k = 0; k < v[i].size(); ++k) {
+				nowcolor = v[i][k].first;
+				index = v[i][k].second;
+				//nowhap += nowweight;
+				mine = sum - hap[nowcolor];	//자기보다 작은놈들 싹다 합 - 자기보다 작고 색깔 같은놈들 합
+				dap[index] = mine;
+			}
+			for (k = 0; k < v[i].size(); ++k) {
+				nowcolor = v[i][k].first;
+				index = v[i][k].second;
+				sum += nowweight;
+				hap[nowcolor] += nowweight;
+			}
+		}
+	}
+	for (i = 1; i <= num; ++i) {
+		cout << dap[i] << "\n";
+	}
+}
+
+int main(void)
+{
+	fastio;
+	cin >> num;
+	int i,a,b;
+	for (i = 1; i <= num; ++i) {
+		cin >> a >> b;
+		//arr[i] = { a,b,i };
+		v[b].push_back({ a,i });
+	}
+	solve();
+}
