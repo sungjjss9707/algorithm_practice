@@ -1,0 +1,243 @@
+#include<iostream>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+
+
+using namespace std;
+
+struct tri {
+	int y, x;
+	char dir;
+};
+struct command {
+	int number, count;
+	char c;
+};
+
+int sero, garo;
+int num, hwetsu;
+tri horse[101];
+command com[101];
+int pan[101][101];
+
+
+int do_command(int number, char c, int count) {
+	int y, x;
+	char dir;
+	y = horse[number].y;
+	x = horse[number].x;
+	dir = horse[number].dir;
+	int mod = count%4;
+	char nextdir;
+	int nexty, nextx;
+	if (c == 'L') {	//시계 반대방향
+		nexty = y;
+		nextx = x;
+		if (mod == 0) {
+			nextdir = dir;
+		}
+		else if (mod == 1) {
+			if (dir == 'N') {
+				nextdir = 'W';
+			}
+			else if (dir == 'E') {
+				nextdir = 'N';
+			}
+			else if (dir == 'S') {
+				nextdir = 'E';
+			}
+			else {	//W
+				nextdir = 'S';
+			}
+		}
+		else if (mod == 2) {
+			if (dir == 'N') {
+				nextdir = 'S';
+			}
+			else if (dir == 'E') {
+				nextdir = 'W';
+			}
+			else if (dir == 'S') {
+				nextdir = 'N';
+			}
+			else {	//W
+				nextdir = 'E';
+			}
+		}
+		else{	//mod==3
+			if (dir == 'N') {
+				nextdir = 'E';
+			}
+			else if (dir == 'E') {
+				nextdir = 'S';
+			}
+			else if (dir == 'S') {
+				nextdir = 'W';
+			}
+			else {	//W
+				nextdir = 'N';
+			}
+		}
+	}
+	else if (c == 'R') {
+		nexty = y;
+		nextx = x;
+		if (mod == 0) {
+			nextdir = dir;
+		}
+		else if (mod == 1) {
+			if (dir == 'N') {
+				nextdir = 'E';
+			}
+			else if (dir == 'E') {
+				nextdir = 'S';
+			}
+			else if (dir == 'S') {
+				nextdir = 'W';
+			}
+			else {	//W
+				nextdir = 'N';
+			}
+		}
+		else if (mod == 2) {
+			if (dir == 'N') {
+				nextdir = 'S';
+			}
+			else if (dir == 'E') {
+				nextdir = 'W';
+			}
+			else if (dir == 'S') {
+				nextdir = 'N';
+			}
+			else {	//W
+				nextdir = 'E';
+			}
+		}
+		else {	//mod==3
+			if (dir == 'N') {
+				nextdir = 'W';
+			}
+			else if (dir == 'E') {
+				nextdir = 'N';
+			}
+			else if (dir == 'S') {
+				nextdir = 'E';
+			}
+			else {	//W
+				nextdir = 'S';
+			}
+		}
+	}
+	else {
+		int index,i;
+		nextdir = dir;
+		int origin_y = y, origin_x = x;
+		int dy[4] = { 1,0,-1,0 };
+		int dx[4] = { 0,1,0,-1 };
+		if (dir == 'N') {
+			index = 0;
+		}
+		else if (dir == 'E') {
+			index = 1;
+		}
+		else if (dir == 'S') {
+			index = 2;
+		}
+		else {	//W
+			index = 3;
+		}
+		//cout << dir << " " << index << endl;
+		for (i = 0; i < count; ++i) {
+			y += dy[index];
+			x += dx[index];
+			if (y<1 || y>sero || x<1 || x>garo) {
+				//cout << y << "," << x << endl;
+				return -1;
+			}
+			if (pan[y][x] != 0) {
+				return pan[y][x];
+			}
+		}
+		pan[origin_y][origin_x] = 0;
+		nexty = y;
+		nextx = x;
+	}
+	pan[nexty][nextx] = number;
+	horse[number].y = nexty;
+	horse[number].x = nextx;
+	horse[number].dir = nextdir;
+	//horse[number] = { nexty, nextx, nextdir };
+	/*
+	 cout << endl;
+	for (int i = 1; i <= sero; ++i) {
+		for (int k = 1; k <= garo; ++k) {
+			cout << pan[i][k] << " ";
+		}
+		cout << endl;
+	}
+	*/
+	
+	return 0;
+}
+
+void solve() {
+	int i, k;
+	int y, x;
+	int number, count;
+	char c;
+	int result;
+	for (i = 1; i <= sero; ++i) {
+		for (k = 1; k <= garo; ++k) {
+			pan[i][k] = 0;
+		}
+	}
+
+	for (i = 1; i <= num; ++i) {
+		y = horse[i].y;
+		x = horse[i].x;
+		pan[y][x] = i;
+	}
+	for (i = 0; i < hwetsu; ++i) {
+		number = com[i].number;
+		count = com[i].count;
+		c = com[i].c;
+		//cout << number <<" " << count<<" " << c << endl;
+		result = do_command(number, c, count);
+		if (result == 0) {
+
+		}
+		else if (result==-1) {
+			cout << "Robot " << number << " crashes into the wall";
+			return;
+		}
+		else{
+			cout << "Robot " << number << " crashes into robot " << result;
+			return;
+		}
+	}
+	cout << "OK";
+}
+
+int main(void)
+{
+	fastio;
+	cin >> garo >> sero;
+	cin >> num >> hwetsu;
+	int i, y,x;
+	char dir;
+	for (i = 1; i <= num; ++i) {
+		cin >>x >> y >> dir;
+		//cout << y << " " << x << " " << dir << endl;
+		horse[i] = { y,x,dir };
+	}
+	int number, count;
+	char c;
+	for (i = 0; i < hwetsu; ++i) {
+		cin >> number >> c >> count;
+		//cout << number << " " << count << " " << c << endl;
+		com[i].number = number;
+		com[i].count = count;
+		com[i].c = c;
+	}
+	solve();
+	return 0;
+}
