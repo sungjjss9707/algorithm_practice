@@ -1,0 +1,84 @@
+#include<iostream>
+#include<queue>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+int len;
+int miro[101][101];
+int inf = 2000000000;
+int dist[101][101];
+int dy[4] = { 1,0,-1,0 };
+int dx[4] = { 0,1,0,-1 };
+
+int dijkstra() {
+
+	int i, k;
+	for (i = 1; i <= len; ++i) {
+		for (k = 1; k <= len; ++k) {
+			dist[i][k] = inf;
+		}
+	}
+	dist[1][1] = miro[i][k];
+	priority_queue<pair<pair<int, int>,int>, vector<pair<pair<int, int>, int>>, greater<pair<pair<int, int>, int>>> pq;
+	pq.push({ {1,1},miro[i][k] });
+
+	int y, x, ny, nx, d, nd;
+
+	while (!pq.empty()) {
+		y = pq.top().first.first;
+		x = pq.top().first.second;
+		d = pq.top().second;
+		pq.pop();
+		if (d > dist[y][x]) continue;
+		for (i = 0; i < 4; ++i) {
+			ny = y + dy[i];
+			nx = x + dx[i];
+			if (ny >= 1 && ny <= len && nx >= 1 && nx <= len) {
+				nd = d + miro[ny][nx];
+				if (dist[ny][nx]>nd) {
+					dist[ny][nx] = nd;
+					pq.push({ {ny, nx}, nd });
+				}
+			}
+		}
+	}
+
+
+	return dist[len][len];
+}
+
+int solve() {
+	
+	int i, k;
+	/*
+	for (i = 1; i <= len; ++i) {
+		for (k = 1; k <= len; ++k) {
+			cout << miro[i][k] << " ";
+		}
+		cout << endl;
+	}
+	cout << endl;
+	*/
+	int dap = dijkstra();
+	return dap;
+}
+
+int main(void)
+{
+	fastio;
+	int testcase;
+	cin >> testcase;
+	int t, i, k;
+	char c;
+	for (t = 1; t <= testcase; ++t) {
+		cin >> len;
+		for (i = 1; i <= len; ++i) {
+			for (k = 1; k <= len; ++k) {
+				cin >> c;
+				miro[i][k] = (int)(c - '0');
+			}
+		}
+		cout << "#" << t << " " << solve() << "\n";
+	}
+	return 0;
+}
