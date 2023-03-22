@@ -1,0 +1,46 @@
+#include<iostream>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+int num;
+int danjee[1010][256];
+
+void danjee_clear() {
+	int i, k;
+	for (i = 1; i <= num; ++i) {
+		for (k = 0; k <= 255; ++k) {
+			danjee[i][k] = 0;
+		}
+	}
+}
+
+int solve() {
+	int i,k;
+	int dap = 0;
+	for (i = 3; i <= num-2; ++i) {
+		for (k = 0; k <= 255; ++k) {
+			if (danjee[i][k] == 0) continue;
+			if (danjee[i - 2][k] == 0 && danjee[i - 1][k] == 0 && danjee[i + 1][k] == 0 && danjee[i + 2][k] == 0)
+				dap++;
+		}
+	}
+	return dap;
+}
+
+int main(void)
+{
+	fastio;
+	int i, k,t,height;
+	for (t = 0; t < 10; ++t) {
+		cin >> num;
+		danjee_clear();
+		for (i = 1; i <= num; ++i) {
+			cin >> height;
+			for (k = 1; k <= height; ++k) {
+				danjee[i][k] = 1;
+			}
+		}
+		cout << "#" << t + 1 << " " << solve() << "\n";
+	}
+	return 0;
+}
