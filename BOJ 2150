@@ -1,0 +1,101 @@
+#include<iostream>
+#include<vector>
+#include<stack>
+#include<algorithm>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+int numofver, numofedge;
+vector<int> road[10001];
+vector<int> rev[10001];
+vector<int> temp;
+bool visit[10001];
+stack<int> s;
+//int cycle[10001];
+
+void visit_clear() {
+	int i;
+	for (i = 1; i <= numofver; ++i) {
+		visit[i] = false;
+	}
+}
+
+
+void dfs_road(int now) {
+	visit[now] = true;
+	int next;
+	int i;
+	for (i = 0; i < road[now].size(); ++i) {
+		next = road[now][i];
+		if (!visit[next]) {
+			dfs_road(next);
+		}
+	}
+	s.push(now);
+}
+
+
+void dfs_rev(int now) {
+	temp.push_back(now);
+	visit[now] = true;
+	//cout << now << " ";
+	int next;
+	int i;
+	for (i = 0; i < rev[now].size(); ++i) {
+		next = rev[now][i];
+		if (!visit[next]) {
+			dfs_rev(next);
+		}
+	}
+}
+
+bool compare(vector<int> v1, vector<int> v2) {
+	return v1[0] < v2[0];
+}
+
+void solve() {
+	int i, k, index = 1;
+	for (i = 1; i <= numofver; ++i) {
+		//cout << i << " : ";
+		if (visit[i] == 0) {
+			dfs_road(i);
+		}
+		//cout << endl;
+	}
+	int now;
+	visit_clear();
+	vector<vector<int>> v;
+	while (!s.empty()) {
+		now = s.top();
+		//cout << now;
+		s.pop();
+		if (!visit[now]) {
+			temp.clear();
+			dfs_rev(now);
+			sort(temp.begin(), temp.end());
+			v.push_back(temp);
+			//cout << endl;
+		}
+	}
+	sort(v.begin(), v.end(), compare);
+	cout << v.size() << "\n";
+	for (i = 0; i < v.size(); ++i) {
+		for (k = 0; k < v[i].size(); ++k) {
+			cout << v[i][k] << " ";
+		}
+		cout << "-1" << "\n";
+	}
+}
+
+int main(void) {
+	fastio;
+	cin >> numofver >> numofedge;
+	int i, s, e;
+	for (i = 0; i < numofedge; ++i) {
+		cin >> s >> e;
+		road[s].push_back(e);
+		rev[e].push_back(s);
+	}
+	solve();
+	return 0;
+}
