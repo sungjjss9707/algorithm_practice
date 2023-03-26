@@ -1,0 +1,50 @@
+#include<iostream>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+string s;
+
+int solve() {
+	if (s.length() == 1) return 1;
+	int i, k;
+	i = 1, k = 0;
+	while (i < s.length()) {
+		if (s[i] == s[k]) {
+			i++;
+			k++;
+		}
+		else {
+			if (k == 0) {
+				i++;
+			}
+			else {
+				k = 0;
+			}
+		}
+	}
+	if (k == 0) {
+		return 1;
+	}
+	else {
+		int len = s.length() - k;
+		if (s.length() % len == 0) {
+			int dap = s.length() / len;
+			return dap;
+		}
+		else {
+			return 1;
+		}
+		
+	}
+}
+
+int main(void)
+{
+	fastio;
+	while (1) {
+		cin >> s;
+		if (s == ".") break;
+		cout << solve() << "\n";
+	}
+	return 0;
+}
