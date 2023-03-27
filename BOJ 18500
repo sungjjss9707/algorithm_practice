@@ -1,0 +1,185 @@
+#include<iostream>
+#include<vector>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+int sero, garo;
+char cave[101][101];
+bool visit[101][101];
+int dy[4] = { 1,0,-1,0 };
+int dx[4] = { 0,1,0,-1 };
+vector<pair<int, int>> cluster;
+
+vector<int> command;
+
+void visit_clear() {
+	int i, k;
+	for (i = 1; i <= sero; ++i) {
+		for (k = 1; k <= garo; ++k) {
+			visit[i][k] = false;
+		}
+	}
+}
+
+int get_lowest(int y, int x) {
+	int i, ny, nx;
+	cluster.push_back({ y,x });
+	int dap = y, low;
+	for (i = 0; i < 4; ++i) {
+		ny = y + dy[i];
+		nx = x + dx[i];
+		if(ny>=1&&ny<=sero&&nx>=1&&nx<=garo){
+			if (cave[ny][nx] == 'x' && !visit[ny][nx]) {
+				visit[ny][nx] = true;
+				low = get_lowest(ny, nx);
+				dap = max(dap, low);
+			}
+		}
+	}
+	return dap;
+}
+
+void cluster_go_down(vector<pair<int, int>> v) {
+	int i, k, y,x, ny, nx;
+	bool isfloor = false;
+	char cave_copy[101][101];
+	for (i = 1; i <= sero; ++i) {
+		for (k = 1; k <= garo; ++k) {
+			cave_copy[i][k] = cave[i][k];
+		}
+	}
+	for (i = 0; i < v.size(); ++i) {
+		y = v[i].first;
+		x = v[i].second;
+		cave_copy[y][x] = '.';
+	}
+	int go_down=1;
+	while (1) {
+		for (i = 0; i < v.size(); ++i) {
+			y = v[i].first;
+			x = v[i].second;
+			ny = y + go_down;
+			nx = x;
+			if (ny >= 1 && ny <= sero && nx >= 1 && nx <= garo) {
+				if (cave_copy[ny][nx] == 'x') {
+					isfloor = true;
+					break;
+				}
+			}
+			else {
+				isfloor = true;
+				break;
+			}
+		}
+		if (isfloor) {
+			for (i = 0; i < v.size(); ++i) {
+				y = v[i].first;
+				x = v[i].second;
+				ny = y + go_down-1;
+				nx = x;
+				cave_copy[ny][nx] = 'x';
+			}
+			break;
+		}
+		go_down++;
+	}
+	for (i = 1; i <= sero; ++i) {
+		for (k = 1; k <= garo; ++k) {
+			cave[i][k] = cave_copy[i][k];
+		}
+	}
+}
+
+void print_cave() {
+	int i, k;
+	for (i = 1; i <= sero; ++i) {
+		for (k = 1; k <= garo; ++k) {
+			cout << cave[i][k];
+		}
+		cout << "\n";
+	}
+	cout << "\n";
+}
+
+void break_wall(int y, int lr) {
+	int i, k;
+	if (lr == 0) {	//왼쪽에서 날라옴
+		for (k = 1; k <= garo; ++k) {
+			if (cave[y][k] == 'x') {
+				cave[y][k] = '.';
+				break;
+			}
+		}
+	}
+	else {	//오른쪽에서 날라옴
+		for (k = garo; k >= 1; --k) {
+			if (cave[y][k] == 'x') {
+				cave[y][k] = '.';
+				break;
+			}
+		}
+	}
+	visit_clear();
+	//print_cave();
+	int lowest;
+	vector<vector<pair<int, int>>> v;
+	vector<pair<int, int>> temp;
+	for (i = 1; i <= sero; ++i) {
+		for (k = 1; k <= garo; ++k) {
+			if (cave[i][k] == 'x' && !visit[i][k]) {
+				visit[i][k] = true;
+				cluster.clear();
+				lowest = get_lowest(i,k);
+				//cout << lowest << endl;
+				if (lowest != sero) {
+					/*
+					for (int t = 0; t < cluster.size(); ++t) {
+						cout << cluster[t].first << " " << cluster[t].second << endl;
+					}
+					*/
+					v.push_back(cluster);
+				}
+			}
+		}
+	}
+	for (i = 0; i < v.size(); ++i) {
+		temp = v[i];
+		/*
+		for (k = 0; k < temp.size(); ++k) {
+			cout << temp[k].first << " " << temp[k].second << endl;
+		}
+		*/
+		cluster_go_down(temp);
+	}
+}
+
+void solve() {
+	int i, height, leftright;
+	for (i = 0; i < command.size(); ++i) {
+		height = sero-command[i]+1;
+		leftright = i % 2;
+		break_wall(height, leftright);
+		
+	}
+	print_cave();
+}
+
+int main(void)
+{
+	fastio;
+	cin >> sero >> garo;
+	int i, k;
+	for (i = 1; i <= sero; ++i) {
+		for (k = 1; k <= garo; ++k) {
+			cin >> cave[i][k];
+		}
+	}
+	int quest, num;
+	cin >> quest;
+	for (i = 0; i < quest; ++i) {
+		cin >> num;
+		command.push_back(num);
+	}
+	solve();
+	return 0;
+}
