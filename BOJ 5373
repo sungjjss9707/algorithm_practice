@@ -1,0 +1,370 @@
+#include<iostream>
+#include<vector>
+#include<string>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+int hwetsu;
+char what_side[1001];
+char dir[1001];
+					//U   D    F   B   L   R
+char cube[6][3][3];	//위,아래, 앞, 뒤, 왼, 오
+					//0   1    2   3   4   5
+
+void Uc(int now_dir) {
+	int i, k;
+	int temp[3][3];
+	int row[3];
+	for (i = 0; i < 3; ++i) {
+		for (k = 0; k < 3; ++k) {
+			temp[i][k] = cube[0][2 - k][i];	//인덱스 맞추기///////////////
+		}
+	}
+	for (i = 0; i < 3; ++i) {
+		for (k = 0; k < 3; ++k) {
+			cube[0][i][k] = temp[i][k];	//인덱스 맞추기///////////////
+		}
+	}
+	for (k = 0; k < 3; ++k) {
+		row[k] = cube[4][0][k];
+	}
+	for (k = 0; k < 3; ++k) {
+		cube[4][0][k] = cube[2][0][k];
+	}
+	for (k = 0; k < 3; ++k) {
+		cube[2][0][k] = cube[5][0][k];
+	}
+	for (k = 0; k < 3; ++k) {
+		cube[5][0][k] = cube[3][0][k];
+	}
+	for (k = 0; k < 3; ++k) {
+		cube[3][0][k] = row[k];
+	}
+	//앞 뒤 왼 오의 가장 윗행이 다 바뀜 왼쪽을 저장
+	//왼 = 앞, 앞 = 오, 오 = 뒤 뒤 = 저장한 왼  
+}
+
+void Dc(int now_dir) {
+	int i, k;
+	int temp[3][3];
+	int row[3];
+	for (i = 0; i < 3; ++i) {
+		for (k = 0; k < 3; ++k) {
+			temp[i][k] = cube[1][2 - k][i];	//인덱스 맞추기///////////////
+		}
+	}
+	for (i = 0; i < 3; ++i) {
+		for (k = 0; k < 3; ++k) {
+			cube[1][i][k] = temp[i][k];	//인덱스 맞추기///////////////
+		}
+	}
+	for (k = 0; k < 3; ++k) {
+		row[k] = cube[5][2][k];
+	}
+	for (k = 0; k < 3; ++k) {
+		cube[5][2][k] = cube[2][2][k];
+	}
+	for (k = 0; k < 3; ++k) {
+		cube[2][2][k] = cube[4][2][k];
+	}
+	for (k = 0; k < 3; ++k) {
+		cube[4][2][k] = cube[3][2][k];
+	}
+	for (k = 0; k < 3; ++k) {
+		cube[3][2][k] = row[k];
+	}
+	//앞 뒤 왼 오의 가장 윗행이 다 바뀜 쪽을 저장
+	//왼 = 앞, 앞 = 오, 오 = 뒤 뒤 = 저장한 왼
+}
+
+void Fc(int now_dir) {
+	int i, k;
+	int temp[3][3];
+	int row[3];
+	for (i = 0; i < 3; ++i) {
+		for (k = 0; k < 3; ++k) {
+			temp[i][k] = cube[2][2 - k][i];	//인덱스 맞추기///////////////
+		}
+	}
+	for (i = 0; i < 3; ++i) {
+		for (k = 0; k < 3; ++k) {
+			cube[2][i][k] = temp[i][k];	//인덱스 맞추기///////////////
+		}
+	}
+
+	for (k = 0; k < 3; ++k) {
+		row[k] = cube[0][2][k];
+	}
+	for (k = 0; k < 3; ++k) {
+		cube[0][2][k] = cube[4][2-k][2];
+	}
+	for (k = 0; k < 3; ++k) {
+		cube[4][2-k][2] = cube[1][0][2-k];
+	}
+	for (k = 0; k < 3; ++k) {
+		cube[1][0][2-k] = cube[5][k][0];
+	}
+	for (k = 0; k < 3; ++k) {
+		cube[5][k][0] = row[k];
+	}
+	//위쪽 2행을 저장
+	//위2행 = 왼2열(순서반대), 왼2열(순서반대) = 아래0행, 아래0행 = 오0열 , 오0열 = 저장한 위 2행
+}
+
+void Bc(int now_dir) {
+	int i, k;
+	int temp[3][3];
+	int row[3];
+	for (i = 0; i < 3; ++i) {
+		for (k = 0; k < 3; ++k) {
+			temp[i][k] = cube[3][2 - k][i];	//인덱스 맞추기///////////////
+		}
+	}
+	for (i = 0; i < 3; ++i) {
+		for (k = 0; k < 3; ++k) {
+			cube[3][i][k] = temp[i][k];	//인덱스 맞추기///////////////
+		}
+	}
+	for (k = 0; k < 3; ++k) {
+		row[k] = cube[0][0][k];
+	}
+	for (k = 0; k < 3; ++k) {
+		cube[0][0][k] = cube[5][k][2];
+	}
+	for (k = 0; k < 3; ++k) {
+		cube[5][k][2] = cube[1][2][2-k];
+	}
+	for (k = 0; k < 3; ++k) {
+		cube[1][2][2-k] = cube[4][2-k][0];
+	}
+	for (k = 0; k < 3; ++k) {
+		cube[4][2 - k][0] = row[k];
+	}
+	//위쪽 0행을 저장
+	//위0행 = 왼0열(순서반대), 왼0열(순서반대) = 아래2행, 아래2행 = 오2열 , 오2열 = 저장한 위 0행
+}
+
+void Lc(int now_dir) {
+	int i, k;
+	int temp[3][3];
+	int row[3];
+	for (i = 0; i < 3; ++i) {
+		for (k = 0; k < 3; ++k) {
+			temp[i][k] = cube[4][2 - k][i];	//인덱스 맞추기///////////////
+		}
+	}
+	for (i = 0; i < 3; ++i) {
+		for (k = 0; k < 3; ++k) {
+			cube[4][i][k] = temp[i][k];	//인덱스 맞추기///////////////
+		}
+	}
+	for (k = 0; k < 3; ++k) {
+		row[k] = cube[0][k][0];
+	}
+	for (k = 0; k < 3; ++k) {
+		cube[0][k][0] = cube[3][2 - k][2];
+	}
+	for (k = 0; k < 3; ++k) {
+		cube[3][2 - k][2] = cube[1][k][0];
+	}
+	for (k = 0; k < 3; ++k) {
+		cube[1][k][0] = cube[2][k][0];
+	}
+	for (k = 0; k < 3; ++k) {
+		cube[2][k][0] = row[k];
+	}
+	//위쪽 0열을 저장
+	//위0열 = 뒤2열(순서반대), 뒤2열(순서반대) = 아래0열, 아래0열 = 앞 0열 , 앞0열 = 저장한 위 0열
+}
+
+void Rc(int now_dir) {
+	int i, k;
+	int temp[3][3];
+	int row[3];
+	for (i = 0; i < 3; ++i) {
+		for (k = 0; k < 3; ++k) {
+			temp[i][k] = cube[5][2 - k][i];	//인덱스 맞추기///////////////
+		}
+	}
+	for (i = 0; i < 3; ++i) {
+		for (k = 0; k < 3; ++k) {
+			cube[5][i][k] = temp[i][k];	//인덱스 맞추기///////////////
+		}
+	}
+	for (k = 0; k < 3; ++k) {
+		row[k] = cube[0][k][2];
+	}
+	for (k = 0; k < 3; ++k) {
+		cube[0][k][2] = cube[2][k][2];
+	}
+	for (k = 0; k < 3; ++k) {
+		cube[2][k][2] = cube[1][k][2];
+	}
+	for (k = 0; k < 3; ++k) {
+		cube[1][k][2] = cube[3][2 - k][0];
+	}
+	for (k = 0; k < 3; ++k) {
+		cube[3][2 - k][0] = row[k];
+	}
+	//위쪽 2열을 저장
+	//위2열 = 앞2열, 앞2열 = 아래2열, 아래2열 = 뒤 0열(순서반대) , 뒤 0열(순서반대) = 저장한 위 2열
+}
+
+void cube_rotate(char now_side, char now_dir) {
+	int i, k;
+	int temp[3][3];
+	int row[3];
+	if (now_side == 'U') {
+		if (now_dir == '+') {	//시계방향
+			Uc(now_dir);
+		}
+		else {					//반시계방향
+			Uc(now_dir);
+			Uc(now_dir);
+			Uc(now_dir);
+		}
+	}
+	else if (now_side == 'D') {
+		if (now_dir == '+') {	//시계방향
+			Dc(now_dir);
+		}
+		else {					//반시계방향
+			Dc(now_dir);
+			Dc(now_dir);
+			Dc(now_dir);
+		}
+	}
+	else if (now_side == 'F') {
+		if (now_dir == '+') {	//시계방향
+			Fc(now_dir);
+		}
+		else {					//반시계방향
+			Fc(now_dir);
+			Fc(now_dir);
+			Fc(now_dir);
+		}
+	}
+	else if (now_side == 'B') {
+		if (now_dir == '+') {	//시계방향
+			Bc(now_dir);
+		}
+		else {					//반시계방향
+			Bc(now_dir);
+			Bc(now_dir);
+			Bc(now_dir);
+		}
+	}
+	else if (now_side == 'L') {
+		if (now_dir == '+') {	//시계방향
+			Lc(now_dir);
+		}
+		else {					//반시계방향
+			Lc(now_dir);
+			Lc(now_dir);
+			Lc(now_dir);
+		}
+	}
+	else {
+		if (now_dir == '+') {	//시계방향
+			Rc(now_dir);
+		}
+		else {					//반시계방향
+			Rc(now_dir);
+			Rc(now_dir);
+			Rc(now_dir);
+			
+		}
+	}
+}
+
+void cube_clear() {
+	int i, k;
+	for (i = 0; i < 3; ++i) {
+		for (k = 0; k < 3; ++k) {
+			cube[0][i][k] = 'w';
+		}
+	}
+	for (i = 0; i < 3; ++i) {
+		for (k = 0; k < 3; ++k) {
+			cube[1][i][k] = 'y';
+		}
+	}
+	for (i = 0; i < 3; ++i) {
+		for (k = 0; k < 3; ++k) {
+			cube[2][i][k] = 'r';
+		}
+	}
+	for (i = 0; i < 3; ++i) {
+		for (k = 0; k < 3; ++k) {
+			cube[3][i][k] = 'o';
+		}
+	}
+	for (i = 0; i < 3; ++i) {
+		for (k = 0; k < 3; ++k) {
+			cube[4][i][k] = 'g';
+		}
+	}
+	for (i = 0; i < 3; ++i) {
+		for (k = 0; k < 3; ++k) {
+			cube[5][i][k] = 'b';
+		}
+	}
+}
+
+void cube_print() {
+	int i, k;
+	for (i = 0; i < 3; ++i) {
+		for (k = 0; k < 3; ++k) {
+			cout << cube[0][i][k];
+		}
+		cout << "\n";
+	}
+}
+
+void solve() {
+	int i;
+	/*
+	for (i = 0; i < hwetsu; ++i) {
+		cout << what_side[i]<<" ";
+	}
+	cout << endl;
+	for (i = 0; i < hwetsu; ++i) {
+		cout << dir[i] << " ";
+	}
+	cout << endl;
+	*/
+	cube_clear();
+	//cout << endl;
+	//cout << "------------------------------\n";
+	char now_side, now_dir;
+	//cube_print();
+	//cout << endl;
+	for (i = 0; i < hwetsu; ++i) {
+		now_side = what_side[i];
+		now_dir = dir[i];
+		cube_rotate(now_side, now_dir);
+		//cube_print();
+		//cout << endl;
+	}
+	cube_print();
+	
+}
+
+int main(void) {
+	fastio;
+	int testcase, t;
+	cin >> testcase;
+	int i;
+	string s;
+	for (t = 0; t < testcase; ++t) {
+		cin >> hwetsu;
+		for (i = 0; i < hwetsu; ++i) {
+			cin >> s;
+			what_side[i] = s[0];
+			dir[i] = s[1];
+		}
+		solve();
+		//cout << "\n";
+	}
+	return 0;
+}
