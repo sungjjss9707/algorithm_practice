@@ -1,0 +1,128 @@
+#include<iostream>
+#include<vector>
+#include<queue>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+int sero, garo;
+vector<pair<int, int>> Lpos;
+char hosu[1501][1501];
+int dy[4] = { 1,0,-1,0 };
+int dx[4] = { 0,1,0,-1 };
+
+queue<pair<int, int>> now_swan;
+queue<pair<int, int>> now_water;
+queue<pair<int, int>> next_water;
+
+bool swan_visit[1501][1501];
+int gy, gx;
+
+bool swan_bfs() {
+	int y, x, ny, nx, i;
+	queue<pair<int, int>> next_swan;
+	while (!now_swan.empty()) {
+		y = now_swan.front().first;
+		x = now_swan.front().second;
+		now_swan.pop();
+		if (y == gy && x == gx) return true;
+		for (i = 0; i < 4; ++i) {
+			ny = y + dy[i];
+			nx = x + dx[i];
+			if (ny >= 1 && ny <= sero && nx >= 1 && nx <= garo) {
+				if (!swan_visit[ny][nx]) {
+					swan_visit[ny][nx] = true;
+					if (hosu[ny][nx] == 'X') {
+						next_swan.push({ ny, nx });
+					}
+					else {
+						now_swan.push({ ny, nx });
+					}
+				}
+			}
+		}
+	}
+	now_swan = next_swan;
+	return false;
+}
+
+void water_bfs() {
+	
+	int y, x, ny, nx, i;
+	while (!now_water.empty()) {
+		y = now_water.front().first;
+		x = now_water.front().second;
+		now_water.pop();
+		for (i = 0; i < 4; ++i) {
+			ny = y + dy[i];
+			nx = x + dx[i];
+			if (ny >= 1 && ny <= sero && nx >= 1 && nx <= garo) {
+				if (hosu[ny][nx] == 'X') {
+					hosu[ny][nx] = '.';
+					next_water.push({ ny, nx });
+				}
+			}
+		}
+	}
+	//now_water = next_water;
+}
+
+void print_hosu() {
+	int i, k;
+	cout << endl;
+	for (i = 1; i <= sero; ++i) {
+		for (k = 1; k <= garo; ++k) {
+			cout << hosu[i][k];
+		}
+		cout << endl;
+	}
+}
+
+int solve() {
+	int i, k;
+	bool they_meet;
+	
+	int firsty = Lpos[0].first, firstx = Lpos[0].second;
+	now_swan.push({ firsty, firstx });
+	swan_visit[firsty][firstx] = true;
+	
+	for (i = 0; ; ++i) {
+		//print_hosu();
+		they_meet = swan_bfs();
+		if (they_meet) return i;
+		
+		water_bfs();
+		now_water = next_water;
+		next_water = queue<pair<int, int>>();
+	}
+
+}
+
+int main(void)
+{
+	fastio;
+	cin >> sero >> garo;
+	int i, k;
+	
+	for (i = 1; i <= sero; ++i) {
+		for (k = 1; k <= garo; ++k) {
+			swan_visit[i][k] = false;
+		}
+	}
+	
+	for (i = 1; i <= sero; ++i) {
+		for (k = 1; k <= garo; ++k) {
+			cin >> hosu[i][k];
+			if (hosu[i][k] == 'L') {
+				Lpos.push_back({ i,k });
+				now_water.push({ i,k });
+			}
+			if (hosu[i][k] == '.') {
+				now_water.push({ i,k });
+			}
+		}
+	}
+	gy = Lpos[1].first;
+	gx = Lpos[1].second;
+	cout << solve();
+	return 0;
+}
