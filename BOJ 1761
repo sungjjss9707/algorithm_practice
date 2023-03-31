@@ -1,0 +1,123 @@
+#include<iostream>
+#include<vector>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+struct parent {
+	int ver, dist;
+};
+
+parent tree[40001];
+vector<parent> v[40001];
+int num, grandfather;
+bool check[40001];
+
+int find_parent(int x, int y) {
+	bool visit[40001];
+	int i;
+	for (i = 1; i <= num; ++i) {
+		visit[i] = false;
+	}
+	//cout << x << " " << y << endl;
+	int  now = x;
+	while (1) {
+		//cout << now << endl;
+		visit[now] = true;
+		if (now == 1) break;
+		now = tree[now].ver;
+	}
+	now = y;
+	int lowest, dist1=0, dist2=0;
+	while (1) {
+		//cout << now << endl;
+		if (visit[now]) {
+			lowest = now;
+			break;
+		}
+		now = tree[now].ver;
+	}
+	now = x;
+	//cout << lowest << endl;
+	while (1) {
+		if (now == lowest) {
+			break;
+		}
+		dist1 += tree[now].dist;
+		now = tree[now].ver;
+	}
+	now = y;
+	while (1) {
+		if (now == lowest) {
+			break;
+		}
+		dist2 += tree[now].dist;
+		now = tree[now].ver;
+	}
+	return dist1 + dist2;
+}
+
+void parent_clear() {
+	int i;
+	for (i = 1; i <= num; ++i) {
+		tree[i] = { 0,0 };
+	}
+}
+
+void find_grandfather(){
+	int i;
+	for (i = 1; i <= num; ++i) {
+		if (tree[i].ver == 0) {
+			grandfather = i;
+			return;
+		}
+	}
+}
+
+void dfs(int x) {
+	int i;
+	int next;
+	for (i = 0; i < v[x].size(); ++i) {
+		next = v[x][i].ver;
+		if (!check[next]) {
+			//cout << next << "의 부모 : " << x << endl;
+			check[next] = true;
+			tree[next] = { x, v[x][i].dist };
+			dfs(next);
+		}
+	}
+}
+
+void make_tree() {
+	int i;
+	for (i = 1; i <= num; ++i) {
+		check[i] = false;
+	}
+	check[1] = true;
+	dfs(1);
+}
+
+int main(void) 
+{
+	fastio;
+	int i, a,b, d, hap, query;
+	cin >> num;
+	//tree[1] = { 1,0 };
+	//parent_clear();
+	for (i = 0; i < num-1; ++i) {
+		cin >> a >> b >> d;
+		hap = a + b;
+		a = min(a, b);	//a가 더 작기 때문에 parent임
+		b = hap - a;
+		v[a].push_back({ b,d });
+		v[b].push_back({ a,d });
+		//cout << a << b << endl;
+		//tree[b] = { a,d };
+	}
+	make_tree();
+	//find_grandfather();
+	cin >> query;
+	for (i = 0; i < query; ++i) {
+		cin >> a >> b;
+		cout<<find_parent(a,b)<<"\n";
+	}
+}
