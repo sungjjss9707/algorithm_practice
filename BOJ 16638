@@ -1,0 +1,224 @@
+#include<iostream>
+#include<string>
+#include<vector>
+using namespace std;
+
+string sik;
+int len;
+vector<pair<int, int>> v;
+vector<long long> num;
+vector<char> oper;
+bool num_visit[15];
+bool oper_visit[15];
+long long maximum = -100000000000000000;
+
+void visit_clear() {
+	int i;
+	for (i = 0; i < num.size(); ++i) {
+		num_visit[i] = false;
+		oper_visit[i] = false;
+	}
+}
+
+pair<vector<long long>, vector<char>> cal_gwalho() {
+	vector<long long> ret_num;
+	vector<char> ret_oper;
+	vector<long long> temp_num;
+	long long i, front, back, oper_index, temp, front_index, back_index;
+	visit_clear();
+
+	for (i = 0; i < v.size(); ++i) {
+		front_index = v[i].first;
+		back_index = v[i].second;
+		front = num[front_index];
+		back = num[back_index];
+		num_visit[front_index] = true;
+		num_visit[back_index] = true;
+		oper_index = front_index;
+		oper_visit[oper_index] = true;
+		//cout << front_index << " " << back_index << " " << oper_index << endl;
+		if (oper[oper_index] == '+') {
+			temp = front + back;
+		}
+		else if (oper[oper_index]=='-') {
+			temp = front - back;
+		}
+		else {
+			temp = front * back;
+		}
+		temp_num.push_back(temp);
+	}
+	//cout << v.size() << endl;
+	int index = 0;
+	bool flag = false;
+	/*
+	for (i = 0; i < temp_num.size(); ++i) {
+		cout << temp_num[i] << " ";
+	}
+	*/
+	//cout << endl;
+	for (i = 0; i < num.size(); ++i) {
+		if (flag) {
+			flag = false;
+		}
+		else {
+			if (num_visit[i]) {
+				ret_num.push_back(temp_num[index++]);
+				flag = true;
+			}
+			else {
+				ret_num.push_back(num[i]);
+			}
+		}
+		
+	}
+	for (i = 0; i < oper.size(); ++i) {
+		if (!oper_visit[i]) {
+			ret_oper.push_back(oper[i]);
+		}
+	}
+	return { ret_num, ret_oper };
+}
+
+long long do_sachik(vector<long long> now_num, vector<char> now_oper) {
+	int i;
+	vector<long long> ret_num;
+	vector<char> ret_oper;
+	long long num_index=1, next_index, gop;
+	bool flag = false;
+	ret_num.push_back(now_num[0]);
+	for (i = 0; i < now_oper.size(); ++i) {
+		if (now_oper[i] == '*') {
+			
+			gop = ret_num[ret_num.size() - 1] * now_num[num_index++];
+			ret_num.pop_back();
+			ret_num.push_back(gop);
+			
+			//cout << num_index << endl;
+			/*
+			if (ret_num.size() == 0) {
+				gop = now_num[num_index] * now_num[next_index];
+				ret_num.push_back(gop);
+				num_index += 2;
+			}
+			*/
+			/*
+			else {
+				gop = ret_num[ret_num.size() - 1] * now_num[num_index++];
+				ret_num.pop_back();
+				ret_num.push_back(gop);
+			}
+			*/
+		}
+		else {
+			ret_num.push_back(now_num[num_index++]);
+			ret_oper.push_back(now_oper[i]);
+		}
+	}
+	/*
+	for (i = 0; i < ret_num.size(); ++i) {
+		cout << ret_num[i] << " ";
+	}
+	cout << endl;
+	for (i = 0; i < ret_oper.size(); ++i) {
+		cout << ret_oper[i] << " ";
+	}
+	cout << endl;
+	cout << "-------------\n";
+	*/
+	vector<long long> dap;
+	dap.push_back(ret_num[0]);
+	num_index = 1;
+	long long next;
+	for (i = 0; i < ret_oper.size(); ++i) {
+		if (ret_oper[i] == '+') {
+			next = dap[dap.size() - 1] + ret_num[num_index++];
+		}
+		else {
+			next = dap[dap.size() - 1] - ret_num[num_index++];
+		}
+		dap.pop_back();
+		dap.push_back(next);
+	}
+	
+	return dap[0];
+}
+
+long long get_dap() {
+	pair<vector<long long>, vector<char>> num_oper = cal_gwalho();
+	vector<long long> next_num = num_oper.first;
+
+	vector<char> next_oper = num_oper.second;
+	int i;
+	/*
+	cout << endl;
+	for (i = 0; i < next_num.size(); ++i) {
+		cout << next_num[i] << " ";
+	}
+	cout << endl;
+	for (i = 0; i < next_oper.size(); ++i) {
+		cout << next_oper[i] << " ";
+	}
+	cout << endl;
+	*/
+	long long dap = do_sachik(next_num, next_oper);
+	
+
+	return dap;
+}
+
+void brute_force(int yeejeon) {
+	long long dap = get_dap();
+	maximum = max(dap, maximum);
+	int i;
+	/*
+	for (i = 0; i < v.size(); ++i) {
+		cout << v[i].first << " " << v[i].second << endl;
+	}
+	cout << endl;
+	*/
+	//cout << yeejeon << " " << num.size() << endl;
+	int num_size = num.size();
+	if (yeejeon>= num_size - 2) {
+		return;
+	}
+	//cout << "fuck\n";
+	int start = yeejeon + 1, now, next;
+	for (i = start; i < num.size()-1; ++i) {
+		//cout << i << " ";
+		now = num[i];
+		next = num[i + 1];
+		//cout << now << " " << next << endl;
+		v.push_back({ i, i+1});
+		brute_force(i+1);
+		v.pop_back();
+	}
+}
+
+long long solve() {
+	int i;
+	for (i = 0; i < sik.length(); ++i) {
+		if (sik[i] >= '0' && sik[i] <= '9') {
+			num.push_back((int)(sik[i] - '0'));
+		}
+		else {
+			oper.push_back(sik[i]);
+		}
+	}
+	/*
+	for (i = 0; i < num.size(); ++i) {
+		cout << num[i] << " ";
+	}
+	cout << endl;
+	*/
+	brute_force(-1);
+	return maximum;
+}
+
+int main(void)
+{
+	cin >> len;
+	cin >> sik;
+	cout << solve();
+	return 0;
+}
