@@ -1,0 +1,63 @@
+#include<iostream>
+#include<map>
+#define fastio ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+using namespace std;
+
+int numofdish, distinct_dish, len, coupon;
+int dish[3000001];
+int getsu[3001];
+
+int solve() {
+	int i;
+	for (i = 1; i <= 3000; ++i) {
+		getsu[i] = 0;
+	}
+	getsu[coupon]++;
+	for (i = 1; i <= len; ++i) {
+		getsu[dish[i]]++;
+	}
+	int choidae=0;
+	for (i = 1; i <= 3000; ++i) {
+		if (getsu[i] != 0) {
+			//cout << i << ","<<getsu[i]<<"  ";
+			choidae++;
+		}
+	}
+	//cout << endl;
+	int start = 2;
+	int end;
+	if (len == numofdish) {
+		end = 1;
+	}
+	else {
+		end = len + 1;
+	}
+	int nowsize = choidae;
+	while (start!=1) {
+		getsu[dish[start - 1]]--;
+		if (getsu[dish[start - 1]] == 0) nowsize--;
+		if (getsu[dish[end]]==0) {
+			nowsize++;
+		}
+		getsu[dish[end]]++;
+
+		choidae = max(choidae, nowsize);
+		if (start < numofdish) start++;
+		else start = 1;
+		if (end < numofdish) end++;
+		else end = 1;
+	}
+	return choidae;
+}
+
+int main(void)
+{
+	fastio;
+	cin>> numofdish >> distinct_dish >> len >> coupon;
+	int i;
+	for (i = 1; i <=numofdish; ++i) {
+		cin >> dish[i];
+	}
+	cout << solve();
+	return 0;
+}
