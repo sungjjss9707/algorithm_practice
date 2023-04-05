@@ -1,0 +1,101 @@
+#include<iostream>
+#include<vector>
+using namespace std;
+
+int len;
+char miro[7][7];
+int dy[4] = { 1,0,-1,0 };
+int dx[4] = { 0,1,0,-1 };
+vector<pair<int, int>> teacher;
+vector<pair<int, int>> student;
+vector<pair<int, int>> choose_3;
+
+bool panstar() {
+	int i,k, y,x, ny, nx;
+	char temp[7][7];
+	for (i = 1; i <= len; ++i) {
+		for (k = 1; k <= len; ++k) {
+			temp[i][k] = miro[i][k];
+		}
+	}
+	for (i = 0; i < 3; ++i) {
+		y = choose_3[i].first;
+		x = choose_3[i].second;
+		temp[y][x] = 'O';
+	}
+	for (i = 0; i < teacher.size(); ++i) {
+		y = teacher[i].first;
+		x = teacher[i].second;
+		for (k = 0; k < 4; ++k) {
+			ny = y;
+			nx = x;
+			while (ny >= 1 && ny <= len && nx >= 1 && nx <= len) {
+				if (temp[ny][nx] == 'S') {
+					return false;
+				}
+				else if(temp[ny][nx] == 'O'){
+					break;
+				}
+				else {
+					ny += dy[k];
+					nx += dx[k];
+				}
+			}
+		}
+	}
+	return true;
+}
+
+void brute_force(int y, int x) {
+	if (choose_3.size() == 3) {
+		int i;
+		if (panstar()) {
+			cout << "YES";
+			exit(0);
+		}
+		return;
+	}
+	int i, k, nowy, nowx;
+	int startx = x + 1;
+	for (k = startx; k <= len; ++k) {
+		nowy = y;
+		nowx = k;
+		if (miro[nowy][nowx] == 'X') {
+			choose_3.push_back({ nowy, nowx });
+			brute_force(nowy, nowx);
+			choose_3.pop_back();
+		}
+	}
+	for (i = y + 1; i <= len; ++i) {
+		for (k = 1; k <= len; ++k) {
+			nowy = i;
+			nowx = k;
+			if (miro[nowy][nowx] == 'X') {
+				choose_3.push_back({ nowy, nowx });
+				brute_force(nowy, nowx);
+				choose_3.pop_back();
+			}
+		}
+	}
+}
+
+void solve() {
+	//cout << endl;
+	brute_force(1,0);
+	cout << "NO";
+}
+
+int main(void)
+{
+	cin >> len;
+	int i, k;
+	for (i = 1; i <= len; ++i) {
+		for (k = 1; k <= len; ++k) {
+			cin >> miro[i][k];
+			if (miro[i][k] == 'T') teacher.push_back({ i,k });
+			else if(miro[i][k] == 'S') student.push_back({ i,k });
+		}
+	}
+	solve();
+	return 0;
+}
