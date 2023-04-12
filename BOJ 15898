@@ -1,0 +1,245 @@
+#include<iostream>
+#include<vector>
+#define fastio ios::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
+using namespace std;
+
+
+int numofjae, dap = 0;
+int hyo[11][5][5][5];
+char won[11][5][5][5];
+int start_y[4] = {1,1,2,2};
+int start_x[4] = {1,2,1,2};
+vector<int> three;
+bool visit[11];
+
+int rotate_jaeryo(int index1, int start1,int index2,int start2, int index3, int start3){
+	int gama_hyo[6][6];
+	char gama_won[6][6];
+	int i,j,k;
+	for(i=1; i<=5; ++i){
+		for(k=1; k<=5; ++k){
+			gama_hyo[i][k] = 0;
+			gama_won[i][k] = 'W';
+		}
+	}
+	//int start1y = start_y[start1], start1x = start_x[start1];
+	int nowhyo;
+	char nowwon;
+	/*
+	for(i=start1y; i<=start1y+3; ++i){
+		for(k=start1x; k<=start1x+3; ++k){
+			nowhyo = hyo[three[0]][index1][i-start1y+1][k-start1x+1];
+			nowwon = won[three[0]][index1][i-start1y+1][k-start1x+1];
+			gama_hyo[i][k]+=nowhyo;
+			if(gama_hyo[i][k]<0) gama_hyo[i][k]=0;
+			else if(gama_hyo[i][k]>9) gama_hyo[i][k]=9;
+			if(nowwon!='W'){
+				gama_won[i][k] = nowwon;
+			}
+		}
+	}
+	int start2y = start_y[start2], start2x = start_x[start2];
+	for(i=start2y; i<=start2y+3; ++i){
+		for(k=start2x; k<=start2x+3; ++k){
+			nowhyo = hyo[three[1]][index2][i-start2y+1][k-start2x+1];
+			nowwon = won[three[1]][index2][i-start2y+1][k-start2x+1];
+			gama_hyo[i][k]+=nowhyo;
+			if(gama_hyo[i][k]<0) gama_hyo[i][k]=0;
+			else if(gama_hyo[i][k]>9) gama_hyo[i][k]=9;
+			if(nowwon!='W'){
+				gama_won[i][k] = nowwon;
+			}
+		}
+	}
+	int start3y = start_y[start3], start3x = start_x[start3];
+	for(i=start3y; i<=start3y+3; ++i){
+		for(k=start3x; k<=start3x+3; ++k){
+			nowhyo = hyo[three[2]][index3][i-start3y+1][k-start3x+1];
+			nowwon = won[three[2]][index3][i-start3y+1][k-start3x+1];
+			gama_hyo[i][k]+=nowhyo;
+			if(gama_hyo[i][k]<0) gama_hyo[i][k]=0;
+			else if(gama_hyo[i][k]>9) gama_hyo[i][k]=9;
+			if(nowwon!='W'){
+				gama_won[i][k] = nowwon;
+			}
+		}
+	}
+	
+	
+	*/
+	int t, y, x;
+	vector<int> start;
+	start.push_back(start1);
+	start.push_back(start2);
+	start.push_back(start3);
+	vector<int> myindex;
+	myindex.push_back(index1);
+	myindex.push_back(index2);
+	myindex.push_back(index3);
+
+	for(t=0; t<3; ++t){
+		
+		y = start_y[start[t]], x = start_x[start[t]];
+		for(i=y; i<=y+3; ++i){
+			for(k=x; k<=x+3; ++k){
+				nowhyo = hyo[three[t]][myindex[t]][i-y+1][k-x+1];
+				nowwon = won[three[t]][myindex[t]][i-y+1][k-x+1];
+				gama_hyo[i][k]+=nowhyo;
+				if(gama_hyo[i][k]<0) gama_hyo[i][k]=0;
+				else if(gama_hyo[i][k]>9) gama_hyo[i][k]=9;
+				if(nowwon!='W'){
+					gama_won[i][k] = nowwon;
+				}
+			}
+		}
+	}
+	int r=0,g=0,b=0;
+	y=0;
+	/*
+	for(i=1; i<=5; ++i){
+		for(k=1; k<=5; ++k){
+			cout<<gama_hyo[i][k]<<" ";
+		}
+		cout<<endl;
+	}
+	for(i=1; i<=5; ++i){
+		for(k=1; k<=5; ++k){
+			cout<<gama_won[i][k]<<" ";
+		}
+		cout<<endl;
+	}
+	*/
+	for(i=1; i<=5; ++i){
+		for(k=1; k<=5; ++k){
+			if(gama_won[i][k]=='R'){
+				r+=gama_hyo[i][k];
+			}
+			else if(gama_won[i][k]=='B'){
+				b+=gama_hyo[i][k];
+			}
+			else if(gama_won[i][k]=='G'){
+				g+=gama_hyo[i][k];
+			}
+			else if(gama_won[i][k]=='Y'){
+				y+=gama_hyo[i][k];
+			}
+		}
+	}
+	/*
+	if(7*r+5*b+3*g+2*y==634){
+		//exit(0);
+		cout<<r<<" "<<b<<" "<<g<<" "<<y<<endl;
+		for(i=1; i<=5; ++i){
+			for(k=1; k<=5; ++k){
+				cout<<gama_hyo[i][k]<<gama_won[i][k]<<" ";
+			}
+			cout<<endl;
+		}
+		cout<<endl;
+	}
+	*/
+	return 7*r+5*b+3*g+2*y;
+}
+
+void brute_force(){
+	if(three.size()==3){
+		int i,j,k, temp_dap = -1,a,b,c;
+		for(i=1; i<=4; ++i){
+			for(j=1; j<=4; ++j){
+				for(k=1; k<=4; ++k){
+					for(a=0;a<4; ++a){
+						for(b=0; b<4; ++b){
+							for(c=0; c<4; ++c){
+								temp_dap = rotate_jaeryo(i,a,j,b,k,c);
+								//cout<<temp_dap<<endl;	
+								dap = max(dap, temp_dap);
+							}
+						}
+					}
+								
+				}
+			}
+		}
+		/*
+		for(i=0; i<three.size();++i){
+			cout<<three[i]<<" ";
+		}
+		cout<<endl;
+		*/
+		return;
+	}
+	int i;
+	for(i=1; i<=numofjae; ++i){
+		if(!visit[i]){
+			visit[i] = true;
+			three.push_back(i);
+			brute_force();
+			visit[i] = false;
+			three.pop_back();
+		}
+	}
+}
+
+int solve(){
+	int i,j,k,t;
+	for(j=1; j<=numofjae; ++j){
+		for(t=2; t<=4; ++t){
+			for(i=1; i<=4; ++i){
+				for(k=1; k<=4; ++k){
+					hyo[j][t][i][k] = hyo[j][t-1][5-k][i];	
+				}
+			}
+			for(i=1; i<=4; ++i){
+				for(k=1; k<=4; ++k){
+					won[j][t][i][k] = won[j][t-1][5-k][i];	
+				}
+			}
+		}
+	}
+	/*
+	for(j=1; j<=numofjae; ++j){
+		for(t=1; t<=4; ++t){
+			for(i=1; i<=4; ++i){
+				for(k=1; k<=4; ++k){
+					cout<<hyo[j][t][i][k]<<" ";	
+				}
+				cout<<endl;
+			}
+			for(i=1; i<=4; ++i){
+				for(k=1; k<=4; ++k){
+					cout<<won[j][t][i][k]<<" ";	
+				}
+				cout<<endl;
+			}
+			cout<<endl;
+		}
+		
+	}
+	*/
+	for(i=1; i<=numofjae; ++i){
+		visit[i] = false;
+	}
+	brute_force();
+	return dap;
+}
+
+int main(void)
+{
+	fastio;
+	cin>>numofjae;
+	int j,i,k;
+	for(j=1; j<=numofjae; ++j){
+		for(i=1; i<=4; ++i){
+			for(k=1; k<=4; ++k){
+				cin>>hyo[j][1][i][k];	
+			}
+		}
+		for(i=1; i<=4; ++i){
+			for(k=1; k<=4; ++k){
+				cin>>won[j][1][i][k];	
+			}
+		}
+	}
+	cout<<solve();
+	return 0;
+}
