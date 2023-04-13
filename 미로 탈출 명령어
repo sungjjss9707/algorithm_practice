@@ -1,0 +1,59 @@
+#include <string>
+#include<iostream>
+#include<algorithm>
+#include<math.h>
+using namespace std;
+//아래 왼 오 위
+int dy[4] = {1,0,0,-1};
+int dx[4] = {0,-1,1,0};
+int sero, garo, starty, startx, goaly, goalx, choidae;
+string dap = "";
+void dfs(int y, int x, string now){
+    if(dap!="") return;
+    int nowdist = abs(y-goaly)+abs(x-goalx);
+    int yeejeon_len = now.length();
+    int togo = choidae - yeejeon_len;
+    if(nowdist>togo) return;
+    if(y==goaly&&x==goalx&&yeejeon_len==choidae){
+        dap = now;
+        return;
+    }
+    int i,ny, nx;
+    string next;
+    for(i=0; i<4; ++i){
+        ny = y+dy[i];
+        nx = x+dx[i];
+        if(ny>=1&&ny<=sero&&nx>=1&&nx<=garo){
+            next = now;
+            if(i==0){   //아래
+                next.push_back('d');
+            }
+            else if(i==1){  //왼
+                next.push_back('l');
+            }
+            else if(i==2){  //오
+                next.push_back('r');
+            }
+            else{       //위
+                next.push_back('u');
+            }
+            dfs(ny, nx, next);
+        }
+    }
+}
+
+string solution(int n, int m, int y, int x, int r, int c, int k) {
+    int i;
+    choidae =k;
+    sero = n;
+    garo = m;
+    goaly = r;
+    goalx = c;
+    int dist = abs(y-goaly)+abs(x-goalx);
+    if(dist%2!=choidae%2) return "impossible";
+    //visit[y][x] = true;
+    dfs(y,x, "");
+    cout<<dap<<endl;
+    if(dap=="") return "impossible";
+    return dap;
+}
