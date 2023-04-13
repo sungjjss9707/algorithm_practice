@@ -1,0 +1,92 @@
+#include <string>
+#include <vector>
+#include<iostream>
+using namespace std;
+
+int yaksoo[5000001];
+int seg_tree[20000010];
+
+int get_dap(int start, int end){
+    int i, minimum=0, dap;
+    for(i=start; i<=end; ++i){
+        if(minimum<yaksoo[i]){
+            minimum = yaksoo[i];
+            dap = i;
+        }
+    }
+    return dap;
+}
+
+int seg_init(int index, int start, int end){
+    if(start==end){
+        seg_tree[index] = start;
+        return start;
+    }
+    int mid = (start+end)/2;
+    int ret1 = seg_init(2*index, start, mid);
+    int ret2 = seg_init(2*index+1, mid+1, end);
+    int ret;
+    if(yaksoo[ret1]>yaksoo[ret2]){
+        ret = ret1;
+    }
+    else if(yaksoo[ret1]<yaksoo[ret2]){
+        ret = ret2;
+    }
+    else{
+        ret = min(ret1, ret2);
+    }
+    seg_tree[index] = ret;
+    return ret;
+}
+
+int seg_query(int index, int start, int end, int left, int right){
+    if(start>=left&&end<=right){
+        return seg_tree[index];
+    }
+    else if(start>right||end<left){
+        return seg_tree[0];
+    }
+    else{
+        int mid = (start+end)/2;
+        int ret1 = seg_query(2*index, start, mid, left, right);
+        int ret2 = seg_query(2*index+1, mid+1, end, left, right);
+        int ret;
+        if(yaksoo[ret1]>yaksoo[ret2]){
+            ret = ret1;
+        }
+        else if(yaksoo[ret1]<yaksoo[ret2]){
+            ret = ret2;
+        }
+        else{
+            ret = min(ret1, ret2);
+        }
+        return ret;
+    }
+}
+
+vector<int> solution(int e, vector<int> starts) {
+    vector<int> answer;
+    int i,k, num;
+    for(i=1; i<=5000000; ++i){
+        yaksoo[i] = 0;
+    }
+    for(i=1; i<=5000000; ++i){
+        for(k=i; k<=5000000; k=k+i){
+            yaksoo[k]++;
+        }
+    }
+    cout<<"끝"<<endl;
+    //cout<<yaksoo[5000000];
+    //cout<<yaksoo[4324320]<<endl;
+    //cout<<yaksoo[1081080]<<endl;
+    seg_init(1,1,5000000);
+    seg_tree[0] = 0;
+    
+    cout<<seg_query(1,1,5000000, 1,6)<<endl;
+    for(i=0; i<starts.size(); ++i){
+        //num = get_dap(starts[i], e);
+        num = seg_query(1,1,5000000, starts[i],e);
+        answer.push_back(num);
+    }
+    return answer;
+}
