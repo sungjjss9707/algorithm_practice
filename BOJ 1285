@@ -1,0 +1,102 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+using namespace std;
+
+struct line{
+	int index;
+	char c;
+};
+
+string cube[21];
+int len, dap = 500;
+vector<line> v;
+
+void print_cube(){
+	int i,k;
+	cout<<endl;
+	for(i=0; i<len; ++i){
+		for(k=0; k<len; ++k){
+			cout<<cube[i][k];
+		}
+		cout<<endl;
+	}
+	
+}
+
+int hap=0;
+
+int get_dap(){
+	int i,k;
+	int getsu=0, ret=0;
+	for(k=0; k<len; ++k){
+		getsu=0;
+		for(i=0; i<len; ++i){
+			if(cube[i][k]=='T') getsu++;
+		}
+		if(getsu>len/2){
+			ret+=(len-getsu);
+		}
+		else{
+			ret+=getsu;
+		}
+	}
+	//cout<<ret<<endl;
+	return ret;
+}
+
+void brute(int yeejeon_index){
+	int i, k, getsu=0;
+	//cout<<endl;
+	//cout<<yeejeon_index<<endl;
+	hap++;
+	int temp_dap = get_dap();
+	//cout<<getsu<<" "<<dap<<endl;
+	dap = min(temp_dap, dap);
+	if(yeejeon_index==v.size()-1) return;
+	int n,index,start_index = yeejeon_index+1;
+	char c;
+	for(n=start_index; n<v.size(); ++n){
+		c = v[n].c;
+		index = v[n].index;
+		if(c=='s'){
+			for(k=0; k<len; ++k){
+				if(cube[index][k]=='T'){
+					cube[index][k]='H';
+				}
+				else{
+					cube[index][k]='T';
+				}
+			}
+			brute(n);
+			for(k=0; k<len; ++k){
+				if(cube[index][k]=='T'){
+					cube[index][k]='H';
+				}
+				else{
+					cube[index][k]='T';
+				}
+			}
+		}
+	}
+}
+
+int solve(){
+	int i,k;
+	for(i=0; i<len; ++i){
+		v.push_back({i,'s'});
+	}
+	brute(-1);
+	return dap;
+}
+
+int main(void)
+{
+	cin>>len;
+	int i,k;
+	for(i=0; i<len; ++i){
+		cin>>cube[i];
+	}
+	cout<<solve();
+	return 0;
+}
