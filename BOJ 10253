@@ -1,0 +1,53 @@
+#include<iostream>
+#define fastio ios::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
+using namespace std;
+
+int mo, ja;
+
+int choidae(int a, int b){
+	int big = max(a,b);
+	int small = min(a,b);
+	if(small==0) return big;
+	return choidae(small, big-small);
+}
+
+int gcd(int a, int b){
+	int big = max(a,b);
+	int small = min(a,b);
+	return small==0?big:gcd(small,big%small);
+}
+
+int solve(){
+	int biggest, mok_a, mok_b, choidaegong,boonmo, boonja1, boonja2, cha;
+	//cout<<choidae(100, 1)<<endl;
+	while(1){
+		if(ja==1) return mo;
+		if(mo%ja==0){
+			biggest = mo/ja;
+		}
+		else{
+			biggest = (mo/ja)+1;
+		}
+		//cout<<biggest<<endl;
+		choidaegong = gcd(biggest, mo);
+		boonmo = choidaegong*(biggest/choidaegong)*(mo/choidaegong);
+		boonja1 = (boonmo/mo)*ja;
+		boonja2 = (boonmo/biggest);
+		cha = boonja1-boonja2;
+		choidaegong = gcd(boonmo, cha);
+		mo = boonmo/choidaegong;
+		ja = cha/choidaegong;
+	}
+}
+
+int main(void)
+{
+	fastio;
+	int testcase,t;
+	cin>>testcase;
+	for(t=0; t<testcase; ++t){
+		cin>>ja>>mo;
+		cout<<solve()<<"\n";
+	}	
+	return 0;
+}
