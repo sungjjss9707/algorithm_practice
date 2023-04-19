@@ -1,0 +1,129 @@
+#include<iostream>
+using namespace std;
+
+int num;
+int arr[10001];
+int temp_arr[10001];
+
+bool panstar(int start, int end){
+	if(end == start+1){
+		if(arr[end]+1==arr[start]) return true;
+		return false;
+	}
+	int i, value = arr[start];
+	for(i=start; i<=end; ++i){
+		if(value!=arr[i]) return false;
+		else value--;
+	}
+	return true;
+}
+
+
+void solve(){
+	int i,k, start1_i,end1_i, l, mid, temp, index,start2_i,end2_i;
+	for(i=1; i<=num; ++i){
+		temp_arr[i] = arr[i];
+	}
+	for(i=1; i<=num; ++i){
+		if(arr[i]!=i){
+			start1_i = i;
+			break;
+		}
+	}
+	if(i>num){
+		cout<<1<<" "<<1<<"\n"<<1<<" "<<1;
+		exit(0);
+	}
+	for(i=start1_i; i<=num; ++i){
+		if(arr[i]==start1_i){
+			end1_i = i;
+			break;
+		}
+	}
+	//cout<<start1_i<<" "<<end1_i<<endl;
+	mid = (start1_i+end1_i)/2;
+	index = end1_i;
+	for(l=start1_i; l<=mid; ++l){
+		temp = arr[l];
+		arr[l] = arr[index];
+		arr[index] = temp;
+		index--;
+	}
+	for(i=start1_i; i<=num; ++i){
+		if(arr[i]!=i){
+			start2_i = i;
+			break;
+		}
+	}
+	if(i>num){
+		cout<<start1_i<<" "<<end1_i<<"\n"<<1<<" "<<1;
+		exit(0);
+	}
+	for(i=start2_i; i<=num; ++i){
+		if(arr[i]==start2_i){
+			end2_i = i;
+			break;
+		}
+	}
+	if(panstar(start2_i, end2_i)){
+		cout<<start1_i<<" "<<end1_i<<"\n"<<start2_i<<" "<<end2_i;
+		exit(0);
+	}
+	for(i=1; i<=num; ++i){
+		arr[i] = temp_arr[i];
+	}
+	
+	for(i=num; i>=1; --i){
+		if(arr[i]!=i){
+			end1_i = i;
+			break;
+		}
+	}
+	for(i=end1_i; i>=1; --i){
+		if(arr[i]==end1_i){
+			start1_i = i;
+			break;
+		}
+	}
+	//cout<<start1_i<<" "<<end1_i<<endl;
+	mid = (start1_i+end1_i)/2;
+	index = end1_i;
+	for(l=start1_i; l<=mid; ++l){
+		temp = arr[l];
+		arr[l] = arr[index];
+		arr[index] = temp;
+		index--;
+	}
+	for(i=end1_i; i>=1; --i){
+		if(arr[i]!=i){
+			end2_i = i;
+			break;
+		}
+	}
+	if(i>num){
+		cout<<start2_i<<" "<<end2_i<<"\n"<<1<<" "<<1;
+		exit(0);
+	}
+	for(i=end2_i; i>=1; --i){
+		if(arr[i]==end2_i){
+			start2_i = i;
+			break;
+		}
+	}
+	if(panstar(start2_i, end2_i)){
+		cout<<start1_i<<" "<<end1_i<<"\n"<<start2_i<<" "<<end2_i;
+	}
+	
+	
+}
+
+int main(void)
+{
+	cin>>num;
+	int i;
+	for(i=1; i<=num; ++i){
+		cin>>arr[i];
+	}
+	solve();
+	return 0;
+}
