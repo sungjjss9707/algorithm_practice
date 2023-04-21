@@ -1,0 +1,101 @@
+#include<iostream>
+#include<math.h>
+#define fastio ios::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
+using namespace std;
+
+int jisoo, len;
+int y,x, index=1;
+int pan[500][500];
+
+void print_pan(){
+	int i,k;
+	for(i=1; i<=len; ++i){
+		for(k=1; k<=len; ++k){
+			cout<<pan[i][k]<<" ";
+		}
+		cout<<"\n";
+	}
+}
+
+/*
+	get_quad(endy, endx, sy,sx, endy, endx);		//1
+		get_quad(endy, startx, sy,startx, endy, ex);	//2
+		get_quad(starty, endx, starty,sx, ey, endx);	//3
+		get_quad(starty, startx, starty,startx, ey, ex);//4
+*/
+void get_quad(int nowy, int nowx, int sy, int sx, int ey, int ex){
+	//cout<<nowy<<" "<<nowx<<endl;
+	if(ey-sy==1){	//len이 2일때로 고치기  
+		int i,k;
+		for(i=sy; i<=ey; ++i){
+			for(k=sx; k<=ex; ++k){
+				if(i==nowy&&k==nowx) continue;
+				pan[i][k] = index;
+			}
+		}
+		index++;
+		return;
+	}
+	int endy = (ey+sy-1)/2, endx = (ex+sx-1)/2;
+	int starty = endy+1, startx = endx+1;
+	
+	if(nowy>=sy&&nowy<=endy&&nowx>=sx&&nowx<=endx){	//1
+		pan[endy][startx] = index;
+		pan[starty][endx] = index;
+		pan[starty][startx] = index;
+		index++;
+		get_quad(nowy, nowx, sy,sx, endy, endx);		//1
+		get_quad(endy, startx, sy,startx, endy, ex);	//2
+		get_quad(starty, endx, starty,sx, ey, endx);	//3
+		get_quad(starty, startx, starty,startx, ey, ex);//4
+	}
+	else if(nowy>=sy&&nowy<=endy&&nowx>=startx&&nowx<=ex){	//2
+		pan[endy][endx] = index;
+		pan[starty][endx] = index;
+		pan[starty][startx] = index;
+		index++;
+		get_quad(endy, endx, sy,sx, endy, endx);		//1
+		get_quad(nowy, nowx, sy,startx, endy, ex);	//2
+		get_quad(starty, endx, starty,sx, ey, endx);	//3
+		get_quad(starty, startx, starty,startx, ey, ex);//4
+	}
+	else if(nowy>=starty&&nowy<=ey&&nowx>=sx&&nowx<=endx){	//3
+		//cout<<"열로옴\n";
+		pan[endy][endx] = index;
+		pan[endy][startx] = index;
+		pan[starty][startx] = index;
+		index++;
+		get_quad(endy, endx, sy,sx, endy, endx);		//1
+		get_quad(endy, startx, sy,startx, endy, ex);	//2
+		get_quad(nowy, nowx, starty,sx, ey, endx);	//3
+		get_quad(starty, startx, starty,startx, ey, ex);//4
+	}
+	else{	//4
+		pan[endy][endx] = index;
+		pan[endy][startx] = index;
+		pan[starty][endx] = index;
+		index++;
+		get_quad(endy, endx, sy,sx, endy, endx);		//1
+		get_quad(endy, startx, sy,startx, endy, ex);	//2
+		get_quad(starty, endx, starty,sx, ey, endx);	//3
+		get_quad(nowy, nowx, starty,startx, ey, ex);//4
+	}
+}
+
+void solve(){
+	int i,k;
+	pan[y][x] = -1;
+	get_quad(y,x,1,1, len,len);
+	print_pan();
+}
+
+int main(void)
+{
+	fastio;
+	cin>>jisoo;
+	len = pow(2,jisoo);
+	cin>>x>>y;
+	y = len-y+1;
+	solve();
+	return 0;
+}
