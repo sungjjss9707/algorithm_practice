@@ -1,0 +1,160 @@
+#include<iostream>
+#include<vector>
+#include<stack>
+#include<algorithm>
+using namespace std;
+
+int numofline;
+vector<pair<int, int>> lines;
+vector<pair<int, int>> two;
+vector<pair<int, int>> dots;
+
+bool compare(pair<int, int> p1, pair<int, int> p2){
+	return p1.first<p2.first;
+}
+
+void solve(){
+	int i,k, y,x, origin_x;
+	bool flag = false;
+	lines.push_back({lines[0].first, lines[0].second});
+	vector<int> temp;
+	vector<pair<int, int>> temp1;
+	int nowx = lines[0].first, nowy = lines[0].second;
+	int min_x = 2100000000, start_index;
+	for(i=1; i<lines.size(); ++i){
+		x = lines[i].first;
+		y = lines[i].second;
+		if(nowx==x&&nowy<0&&y>0){
+			if(min_x>nowx){
+				start_index = i-1;
+				min_x = nowx;
+			}
+		}
+		nowx = x;
+		nowy = y;
+	}
+	
+	//cout<<endl;
+	//cout<<min_x<<" "<<start_index<<endl;
+	
+	for(i=start_index; i<lines.size(); ++i){
+		temp1.push_back({lines[i].first, lines[i].second});
+	}
+	for(i=0; i<=start_index; ++i){
+		temp1.push_back({lines[i].first, lines[i].second});
+	}
+	lines.clear();
+	for(i=0; i<temp1.size(); ++i){
+		lines.push_back({temp1[i].first, temp1[i].second});
+	}
+	//cout
+	//cout<<endl;
+	nowx = lines[0].first, nowy = lines[0].second;
+	for(i=1; i<lines.size(); ++i){
+		x = lines[i].first;
+		y = lines[i].second;
+		//cout<<nowx<<","<<nowy<<"  "<<x<<","<<y<<endl;
+		if(flag){
+			if(nowx==x&&nowy>0&&y<0){
+				//cout<<"내려감\n"; 
+				flag = false;
+				//temp.push_back({nowx,nowy});
+				//temp.push_back(x);
+				if(temp[0]>x){
+					origin_x = temp[0];
+					temp.pop_back();
+					temp.push_back(x);
+					temp.push_back(origin_x);
+				}
+				else{
+					temp.push_back(x);
+				}
+				//cout<<temp[0]<<" "<<temp[1]<<endl;
+				two.push_back({temp[0], temp[1]});
+				temp.clear();
+			}
+			else{
+				//temp.push_back({x,y});
+			}
+			nowy = y;
+			nowx = x;
+			continue;
+		}
+		if(nowx==x){
+			if(y>0&&nowy<0){
+				flag = true;
+				temp.push_back(x);
+			}
+		}
+		nowy = y;
+		nowx = x;
+	}
+	//cout<<endl;
+
+	for(i=0; i<two.size(); ++i){
+		//cout<<two[i].first<<" "<<two[i].second<<endl;;
+		dots.push_back({two[i].first, i});
+		dots.push_back({two[i].second, i});
+	}
+	sort(dots.begin(), dots.end(), compare);
+	/*
+	cout<<endl;
+	for(i=0; i<dots.size(); ++i){
+		cout<<dots[i].first<<" "<<dots[i].second<<endl;;
+	}
+	*/
+	stack<int> s;
+	int now, index;
+	int not_sosok=0, not_poham=0, getsu, yeejeon;
+	
+	yeejeon = dots[0].second;
+	for(i=1; i<dots.size(); ++i){
+		index = dots[i].second;
+		now = index;
+		if(yeejeon==now){
+			not_poham++;
+		}
+		yeejeon = now;
+	}
+	
+	for(i=0; i<dots.size(); ++i){
+		//now = dots[i].first;
+		index = dots[i].second;
+		/*
+		s.push(index);
+		if(s.size()==1) not_sosok++;
+		else{
+			now = s.top();
+			s.pop();
+			yeejeon = s.top();
+			s.pop();
+			if(now==yeejeon)
+		}
+		*/
+		if(s.empty()){
+			s.push(index);
+			not_sosok++;
+		}
+		else{
+			if(s.top()==index){
+				s.pop();
+			}
+			else{
+				s.push(index);
+			}
+		}
+	}
+	cout<<not_sosok<<" "<<not_poham;
+}
+
+int main(void)
+{
+	cin>>numofline;
+	int i, a,b;
+	for(i=0; i<numofline; ++i){
+		cin>>a>>b;
+		lines.push_back({a,b});
+	}
+	solve();
+	return 0;
+}
