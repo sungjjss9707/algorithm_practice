@@ -1,0 +1,174 @@
+#include<iostream>
+#include<vector>
+#define fastio ios::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
+using namespace std;
+
+int sero, garo, gy, gx;
+char pan[11][11];
+int dy[4] = {0,0,-1,1};
+int dx[4] = {-1,1,0,0};
+char last_c;
+int count=0;
+vector<char> command;
+bool find_dap;
+
+bool can_escape(int sy,int sx){
+	int i,k, y = sy, x = sx, index, ny, nx;
+	char c;
+	for(i=0; i<command.size(); ++i){
+		c = command[i];
+		if(c=='L') index = 0;
+		else if(c=='R') index=1;
+		else if(c=='U') index=2;
+		else index=3;
+		while(1){
+			y+=dy[index];
+			x+=dx[index];
+			if(pan[y][x]!='.'){
+				break;
+			}
+		}
+		if(pan[y][x]=='#'){
+			y-=dy[index];
+			x-=dx[index];
+		}
+		else{		//pan[y][x]==O
+			return true;
+		}
+	}
+	return false;
+}
+
+void brute(){
+	
+	if(find_dap) return;
+	count++;
+	if(command.size()==10){
+		return;
+	}	
+	int i,k;
+	
+	
+	
+	bool flag = true;
+	command.push_back(last_c);
+	/*
+	for(i=0; i<command.size(); ++i){
+		cout<<command[i]<<" ";
+	}
+	cout<<endl;
+	*/
+	int hwetsu = command.size();
+	for(i=1; i<=sero; ++i){
+		for(k=1; k<=garo; ++k){
+			if(pan[i][k]=='.'){
+				if(!can_escape(i,k)){
+					flag = false;
+					break;
+				}
+			}
+		}
+		if(!flag) break;
+	}
+	command.pop_back();
+	if(flag){
+		///print vector
+		find_dap = true;
+		for(i=0; i<command.size(); ++i){
+			cout<<command[i];
+		}
+		cout<<last_c;
+		return;
+	}
+	if(command.size()==0){
+		
+			command.push_back('L');
+			brute();
+			command.pop_back();
+		
+		
+			command.push_back('R');
+			brute();
+			command.pop_back();
+		
+		
+			command.push_back('U');
+			brute();
+			command.pop_back();
+		
+		
+			command.push_back('D');
+			brute();
+			command.pop_back();
+		
+	}
+	else{
+		if(command[command.size()-1]!='L'){
+			command.push_back('L');
+			brute();
+			command.pop_back();
+		}
+		if(command[command.size()-1]!='R'){
+			command.push_back('R');
+			brute();
+			command.pop_back();
+		}
+		if(command[command.size()-1]!='U'){
+			command.push_back('U');
+			brute();
+			command.pop_back();
+		}
+		if(command[command.size()-1]!='D'){
+			command.push_back('D');
+			brute();
+			command.pop_back();
+		}
+	}
+	
+	
+}
+
+
+void solve(){
+	//dp_clear();
+	command.clear();
+	if(gy==1){
+		last_c = 'U';
+	}
+	else if(gy==sero){
+		last_c = 'D';
+	}
+	else if(gx==1){
+		last_c = 'L';
+	}
+	else{
+		last_c = 'R';
+	}
+	brute();
+	if(!find_dap){
+		cout<<"XHAE";
+	}
+}
+
+int main(void)
+{
+	fastio;
+	int testcase, t,i,k;
+	cin>>testcase;
+	for(t=0; t<testcase; ++t){
+		cin>>sero>>garo;
+		for(i=1; i<=sero; ++i){
+			for(k=1; k<=garo; ++k){
+				cin>>pan[i][k];
+				if(pan[i][k]=='O'){
+					gy = i;
+					gx = k;
+				}
+			}
+		}
+		find_dap = false;
+		solve();
+		cout<<"\n";
+	}	
+	return 0;
+}
