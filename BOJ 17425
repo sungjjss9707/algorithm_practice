@@ -1,0 +1,108 @@
+package com.example;
+
+import java.util.Scanner;
+
+public class hello {
+	static int[] goal;
+	static int[] now;
+	static int[] temp;
+	static int getsu;
+	
+	
+	public static int solve() {
+		if(getsu==2) {
+			if(goal[0]==now[0]) {
+				if(goal[1]==now[1])return 0;
+				else return -1;
+			}
+			else {
+				if(goal[1]==now[1])return -1;
+				else return 1;
+			}
+		}
+		int i, hwetsu1=0, hwetsu2=1;
+		temp = new int[getsu];
+		for(i=0; i<getsu; ++i) {
+			temp[i] = now[i];
+		}
+		for(i=1; i<getsu; ++i) {
+			if(temp[i-1]!=goal[i-1]) {
+				if(i==getsu-1) {
+					temp[i-1] = 1-temp[i-1];
+					temp[i] = 1-temp[i];
+				}
+				else {
+					temp[i-1] = 1-temp[i-1];
+					temp[i] = 1-temp[i];
+					temp[i+1] = 1-temp[i+1];
+				}
+				hwetsu1++;
+			}
+		}
+		/*
+		System.out.println();
+		System.out.println(hwetsu1);
+		for(i=0; i<getsu; ++i) {
+			System.out.print(temp[i]+" ");
+		}
+		System.out.println();
+		*/
+		if(temp[getsu-1]!=goal[getsu-1]) hwetsu1 = 2100000000;
+		for(i=0; i<getsu; ++i) {
+			temp[i] = now[i];
+		}
+		temp[0] = 1-temp[0];
+		temp[1] = 1-temp[1];
+		for(i=1; i<getsu; ++i) {
+			if(temp[i-1]!=goal[i-1]) {
+				if(i==getsu-1) {
+					temp[i-1] = 1-temp[i-1];
+					temp[i] = 1-temp[i];
+				}
+				else {
+					temp[i-1] = 1-temp[i-1];
+					temp[i] = 1-temp[i];
+					temp[i+1] = 1-temp[i+1];
+				}
+				hwetsu2++;
+			}
+		}
+		/*
+		System.out.println();
+		System.out.println(hwetsu2);
+		for(i=0; i<getsu; ++i) {
+			System.out.print(temp[i]+" ");
+		}
+		*/
+		if(temp[getsu-1]!=goal[getsu-1]) hwetsu2 = 2100000000;
+		int dap = hwetsu1<hwetsu2?hwetsu1:hwetsu2;
+		if(dap==2100000000) return -1;
+		return dap;
+	}
+	
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		//System.out.println("hihi");
+		Scanner sc = new Scanner(System.in);
+		int num,i;
+		char c;
+		String s;
+		getsu = sc.nextInt();
+		goal = new int[getsu];
+		now = new int[getsu];
+		s = sc.next();
+		for(i=0; i<getsu; ++i) {
+			c = s.charAt(i);
+			now[i] = (int)(c-'0');
+		}
+		s = sc.next();
+		for(i=0; i<getsu; ++i) {
+			c = s.charAt(i);
+			goal[i] = (int)(c-'0');
+		}
+		int dap = solve();
+		System.out.println(dap);
+		return;
+	}
+
+}
