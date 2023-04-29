@@ -1,0 +1,48 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#define fastio ios::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
+using namespace std;
+
+long long num;
+vector<long long> arr;
+long long hap[1000001];
+long long mydap[1000001];
+
+void solve(){
+	long long i,k;
+	//sort(arr.begin(), arr.end());
+	long long maximum = arr[num-1];
+	for(i=1; i<=1000000; ++i){
+		hap[i] = 0;
+	}
+	for(i=1; i<=1000000; ++i){
+		for(k=i; k<=1000000; k=k+i){
+			hap[k]+=(long long)(i);
+		}
+	}
+	long long dap=0;
+	long long index= 0;
+	for(i=1; i<=1000000; ++i){
+		dap+=hap[i];
+		mydap[i] = dap;
+	}
+	long long now;
+	for(i=0; i<num; ++i){
+		now = arr[i];
+		cout<<mydap[now]<<"\n";
+	}
+}
+
+int main(void)
+{
+	fastio;
+	cin>>num;
+	long long i, number;
+	for(i=0; i<num; ++i){
+		cin>>number;
+		arr.push_back(number);
+	}
+	solve();
+	return 0;
+}
