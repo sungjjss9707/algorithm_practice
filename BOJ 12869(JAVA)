@@ -1,0 +1,119 @@
+package com.example;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Scanner;
+
+public class BOJ12869 {
+	static int getsu;
+	static int[] arr = new int[3];
+	static int[][][] dp;
+	public static int get_attack(int a, int b, int c , int hwetsu) {
+		if(a<=0&&b<=0&&c<=0) {
+			return hwetsu;
+		}
+		if(a<0) a=0;
+		if(b<0) b=0;
+		if(c<0) c=0;
+		int big, mid, small;
+		if(a>=b&&b>=c) {
+			big = a; mid = b; small = c;
+		}
+		else if(a>=c&&c>=b) {
+			big = a; mid = c; small = b;
+		}
+		else if(b>=c&&c>=a) {
+			big = b; mid = c; small = a;
+		}
+		else if(b>=a&&a>=c) {
+			big = b; mid = a; small = c;
+		}
+		else if(c>=a&&a>=b) {
+			big = c; mid = a; small = b;
+		}
+		else {
+			big = c; mid = b; small = a;
+		}
+		if(dp[big][mid][small]!=-1) return dp[big][mid][small];
+		int na, nb, nc, ret = 2100000000;
+		na=big;
+		nb=mid;
+		nc=small;
+		if(mid==0) {	//big만 살아있음 
+			na-=9;
+			ret = Math.min(ret, get_attack(na, nb, nc, hwetsu+1));
+			na+=9;
+		}
+		else if(small==0) {	//big, mid 살아있음
+			na-=9;nb-=3;
+			ret = Math.min(ret, get_attack(na, nb, nc, hwetsu+1));
+			na+=9;nb+=3;
+			
+			na-=3;nb-=9;
+			ret = Math.min(ret, get_attack(na, nb, nc, hwetsu+1));
+			na+=3;nb+=9;
+		}
+		else {	//big, mid, small 다 살아있음 
+			na-=9;nb-=3;nc-=1;
+			ret = Math.min(ret, get_attack(na, nb, nc, hwetsu+1));
+			na+=9;nb+=3;nc+=1;
+			
+			na-=9;nb-=1;nc-=3;
+			ret = Math.min(ret, get_attack(na, nb, nc, hwetsu+1));
+			na+=9;nb+=1;nc+=3;
+			
+			na-=3;nb-=9;nc-=1;
+			ret = Math.min(ret, get_attack(na, nb, nc, hwetsu+1));
+			na+=3;nb+=9;nc+=1;
+			
+			na-=3;nb-=1;nc-=9;
+			ret = Math.min(ret, get_attack(na, nb, nc, hwetsu+1));
+			na+=3;nb+=1;nc+=9;
+			
+			na-=1;nb-=9;nc-=3;
+			ret = Math.min(ret, get_attack(na, nb, nc, hwetsu+1));
+			na+=1;nb+=9;nc+=3;
+			
+			na-=1;nb-=3;nc-=9;
+			ret = Math.min(ret, get_attack(na, nb, nc, hwetsu+1));
+			na+=1;nb+=3;nc+=9;
+		}
+		dp[big][mid][small] = ret;
+		return ret;
+	}
+	
+	public static void dp_clear() {
+		dp = new int[61][61][61];
+		int i,j,k;
+		for(i=0; i<=60; ++i) {
+			for(j=0; j<=60; ++j) {
+				for(k=0; k<=60; ++k) {
+					dp[i][j][k] = -1;
+				}
+			}
+		}
+	}
+	
+	public static int solve() {
+		Arrays.sort(arr);
+		int dap;
+		dp_clear();
+		dap = get_attack(arr[0], arr[1], arr[2], 0);
+		return dap;
+	}
+	
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		Scanner sc = new Scanner(System.in);
+		getsu = sc.nextInt();
+		int i;
+		for(i=0; i<3; ++i) {
+			arr[i] = 0;
+		}
+		for(i=0; i<getsu; ++i) {
+			arr[i] = sc.nextInt();
+		}
+		System.out.print(solve());
+	}
+
+}
