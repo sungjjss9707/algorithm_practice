@@ -1,0 +1,112 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+using namespace std;
+
+int sero, garo;
+int pan[5][5];
+bool visit[5][5];
+
+int brute() {
+	int i, k,j;
+	int sy = 0, sx = 0;
+	for (i = 1; i <= sero; ++i) {
+		for (k = 1; k <= garo; ++k) {
+			if (!visit[i][k]) {
+				sy = i;
+				sx = k;
+				break;
+			}
+		}
+		if (sy != 0) break;
+	}
+	if (sy == 0) return 0;
+	/*
+	for (i = 1; i <= sero; ++i) {
+		for (k = 1; k <= garo; ++k) {
+			if (!visit[i][k]) {
+				cout << 0;
+			}
+			else cout << 1;
+		}
+		cout << endl;
+	}
+	cout << endl;
+	*/
+	int num, dap=0;
+	num = 0;
+	int max_y, max_x;
+	for (i = sy; i <= sero; ++i) {
+		if (visit[i][sx]) {
+			break;
+		}
+		visit[i][sx] = true;
+		num = (num * 10) + pan[i][sx];
+		//cout << num << endl;
+		dap = max(dap, num + brute());
+		max_y = i;
+		//cout << dap << endl;
+	}
+	for (i = sy; i <= max_y; ++i) {
+		visit[i][sx] = false;
+	}
+	num = 0;
+	for (k = sx; k <= garo; ++k) {
+		if (visit[sy][k]) {
+			break;
+		}
+		visit[sy][k] = true;
+		num = (num * 10) + pan[sy][k];
+		//cout << num << endl;
+		dap = max(dap, num + brute());
+		max_x = k;
+		//cout << dap << endl;
+	}
+	for (k = sx; k <= max_x; ++k) {
+		visit[sy][k] = false;
+	}
+	/*
+	for (i = 1; i <= sero; ++i) {
+		for (k = 1; k <= garo; ++k) {
+			if (!visit[i][k]) {
+				cout << 0;
+			}
+			else cout << 1;
+		}
+		cout << endl;
+	}
+	cout << dap;
+	cout << endl;
+	cout << endl;
+	*/
+	return dap;
+}
+
+int solve() {
+	int i, k;
+	for (i = 1; i <= sero; ++i) {
+		for (k = 1; k <= garo; ++k) {
+			//cout << pan[i][k] << " ";
+			visit[i][k] = false;
+		}
+		//cout << endl;
+	}
+	int dap = brute();
+	return dap;
+}
+
+int main(void)
+{
+	cin >> sero >> garo;
+	int i,k, num;
+	char c;
+	for (i = 1; i <= sero; ++i) {
+		for (k = 1; k <= garo; ++k) {
+			cin >> c;
+			num = (int)(c - '0');
+			pan[i][k] = num;
+		}
+	}
+	cout << solve();
+	return 0;
+}
