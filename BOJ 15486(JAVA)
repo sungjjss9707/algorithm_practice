@@ -1,0 +1,68 @@
+package com.example;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+
+public class BOJ2447 {
+	static BufferedReader bf;
+	static BufferedWriter bw;
+	static char[][] pan;
+	
+	static void make_pattern(int sy, int sx, int len, int possible) {
+		int ey = sy+len-1, ex = sx+len-1;
+		int i,k;
+		if(possible==0) {
+			for(i=sy; i<=ey; ++i) {
+				for(k=sx; k<=ex; ++k) {
+					pan[i][k] = ' ';
+				}
+			}
+			return;
+		}
+		if(len==1) {
+			pan[sy][sx] = '*';
+			return;
+		}
+		
+		int d = len/3;
+		int ny = sy, nx;
+		for(i=0; i<3; ++i) {
+			nx = sx;
+			for(k=0; k<3; ++k) {
+				if(i==1&&k==1) {
+					make_pattern(ny, nx, d, 0);
+				}
+				else {
+					make_pattern(ny, nx, d, 1);
+				}
+				nx+=d;
+			}
+			ny+=d;
+		}
+	}
+	
+	static void print_pattern(int len) throws IOException {
+		int i,k;
+		for(i=1; i<=len; ++i) {
+			for(k=1; k<=len; ++k) {
+				bw.write(pan[i][k]);
+			}
+			bw.write("\n");
+		}
+		bw.flush();
+	}
+	
+	public static void main(String[] args) throws NumberFormatException, IOException {
+		// TODO Auto-generated method stub
+		bf = new BufferedReader(new InputStreamReader(System.in));
+		bw = new BufferedWriter(new OutputStreamWriter(System.out));
+		int len = Integer.parseInt(bf.readLine());
+		pan = new char[len+1][len+1];
+		make_pattern(1,1, len,1);
+		print_pattern(len);
+	}
+
+}
