@@ -1,0 +1,125 @@
+#include<iostream>
+#include<queue>
+#include<vector>
+using namespace std;
+
+struct quad{
+	int dist,y,x,dir;
+};
+
+struct cmp{
+	bool operator()(quad a, quad b){
+		return a.dist>b.dist;
+	}
+};
+
+int sero, garo;
+char miro[101][101];
+int choiso[101][101][4];
+int inf = 2100000000;
+vector<pair<int, int>> start_end;
+int get_dap(){
+	int i,j,k, sy, sx, ey,ex;
+	sy = start_end[0].first;
+	sx = start_end[0].second;
+	ey = start_end[1].first;
+	ex = start_end[1].second;
+	for(i=1; i<=sero; ++i){
+		for(j=1; j<=garo; ++j){
+			for(k=0; k<4; ++k){
+				choiso[i][j][k] = inf;
+			}
+		}
+	}
+	priority_queue<quad, vector<quad>, cmp> pq;
+	//0 위, 1 아래, 2 왼, 3 오른 
+	for(i=sy-1; i>=1; --i){
+		if(miro[i][sx]=='*') break;
+		pq.push({0,i,sx,0});
+		choiso[i][sx][0] = 0;
+	}
+	for(i=sy+1; i<=sero; ++i){
+		if(miro[i][sx]=='*') break;
+		pq.push({0,i,sx,1});
+		choiso[i][sx][1] = 0;
+	}
+	for(k=sx-1; k>=1; --k){
+		if(miro[sy][k]=='*') break;
+		pq.push({0,sy,k,2});
+		choiso[sy][k][2] = 0;
+	}
+	for(k=sx+1; k<=garo; ++k){
+		if(miro[sy][k]=='*') break;
+		pq.push({0,sy,k,3});
+		choiso[sy][k][3] = 0;
+	}
+	int nowy, nowx, nowdist, nowdir;
+	while(!pq.empty()){
+		nowdist = pq.top().dist;
+		nowy = pq.top().y;
+		nowx = pq.top().x;
+		nowdir = pq.top().dir;
+		pq.pop();
+		//cout<<nowdist<<" "<<nowy<<" "<<nowx<<" "<<nowdir<<endl;
+		if(choiso[nowy][nowx][nowdir]<nowdist) continue;
+		if(nowdir==0||nowdir==1){
+			for(k=nowx-1; k>=1; --k){
+				if(miro[nowy][k]=='*') break;
+				if(choiso[nowy][k][2]>nowdist+1){
+					choiso[nowy][k][2]=nowdist+1;
+					pq.push({nowdist+1,nowy,k,2});
+				}
+			}
+			for(k=nowx+1; k<=garo; ++k){
+				if(miro[nowy][k]=='*') break;
+				if(choiso[nowy][k][3]>nowdist+1){
+					choiso[nowy][k][3]=nowdist+1;
+					pq.push({nowdist+1,nowy,k,3});
+				}
+			}
+		}
+		else{
+			for(i=nowy-1; i>=1; --i){
+				if(miro[i][nowx]=='*') break;
+				if(choiso[i][nowx][0]>nowdist+1){
+					choiso[i][nowx][0] = nowdist+1;
+					pq.push({nowdist+1, i,nowx, 0});
+				}
+			}
+			for(i=nowy+1; i<=sero; ++i){
+				if(miro[i][nowx]=='*') break;
+				if(choiso[i][nowx][1]>nowdist+1){
+					choiso[i][nowx][1] = nowdist+1;
+					pq.push({nowdist+1, i,nowx, 1});
+				}
+			}
+		}
+	}
+	int minimum = inf;
+	//int dap = inf;
+	for(k=0; k<4; ++k){
+		minimum = min(minimum, choiso[ey][ex][k]);
+	}
+	return minimum;
+}
+
+int solve(){
+	int dap = get_dap();
+	return dap;
+}
+
+int main(void)
+{
+	cin>>garo>>sero;
+	int i,k;
+	for(i=1; i<=sero; ++i){
+		for(k=1; k<=garo; ++k){
+			cin>>miro[i][k];
+			if(miro[i][k]=='C'){
+				start_end.push_back({i,k});
+			}
+		}
+	}
+	cout<<solve();
+	return 0;
+}
