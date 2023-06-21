@@ -1,0 +1,146 @@
+#include<iostream>
+#include<vector>
+#include<queue>
+using namespace std;
+
+struct quad{
+	int y,x,dir,d;
+};
+
+struct cmp{
+	bool operator()(quad q1, quad q2){
+		return q1.d>q2.d;
+	}
+};
+
+int len;
+char miro[51][51];
+vector<pair<int, int>> start_end;
+int dist[51][51][4];
+int inf=2100000000;
+//위 아래 왼 오 
+int dy[4] = {-1,1,0,0};
+int dx[4] = {0,0,-1,1}; 
+
+
+
+int get_dap(){
+	int sy, sx, ey, ex;
+	sy = start_end[0].first;
+	sx = start_end[0].second;
+	ey = start_end[1].first;
+	ex = start_end[1].second;
+	int i,j,k;
+	for(i=1; i<=len; ++i){
+		for(j=1; j<=len; ++j){
+			for(k=0; k<4; ++k){
+				dist[i][j][k] = inf;
+			}
+		}
+	}
+	dist[sy][sx][0] = 0;
+	dist[sy][sx][1] = 0;
+	dist[sy][sx][2] = 0;
+	dist[sy][sx][3] = 0;
+	priority_queue<quad, vector<quad>, cmp> pq;
+	pq.push({sy,sx,0,0});
+	pq.push({sy,sx,1,0});
+	pq.push({sy,sx,2,0});
+	pq.push({sy,sx,3,0});
+	
+	int y,x,d,dir, ny, nx, nextdir;
+	while(!pq.empty()){
+		y = pq.top().y;
+		x = pq.top().x;
+		dir = pq.top().dir;
+		d = pq.top().d;
+		//cout<<y<<","<<x<<" "<<dir<<" = "<<d<<endl;
+		pq.pop();
+		//if(miro[y][x]=='*') continue;
+		if(dist[y][x][dir]<d) continue;
+		ny = y+dy[dir];
+		nx = x+dx[dir];
+		if(ny>=1&&ny<=len&&nx>=1&&nx<=len){
+			if(miro[ny][nx]!='*'){
+				if(dist[ny][nx][dir]>d){
+					dist[ny][nx][dir]=d;
+					pq.push({ny,nx,dir,d});
+				}
+			}
+		}
+		if(miro[y][x]=='!'){
+			if(dir==0||dir==1){
+				nextdir = 2;
+				ny = y+dy[nextdir];
+				nx = x+dx[nextdir];
+				if(ny>=1&&ny<=len&&nx>=1&&nx<=len){
+					if(miro[ny][nx]!='*'){
+						if(dist[ny][nx][nextdir]>d+1){
+							dist[ny][nx][nextdir]=d+1;
+							pq.push({ny,nx,nextdir,d+1});
+						}
+					}
+				}
+				nextdir = 3;
+				ny = y+dy[nextdir];
+				nx = x+dx[nextdir];
+				if(ny>=1&&ny<=len&&nx>=1&&nx<=len){
+					if(miro[ny][nx]!='*'){
+						if(dist[ny][nx][nextdir]>d+1){
+							dist[ny][nx][nextdir]=d+1;
+							pq.push({ny,nx,nextdir,d+1});
+						}
+					}
+				}
+			}
+			else{
+				nextdir = 0;
+				ny = y+dy[nextdir];
+				nx = x+dx[nextdir];
+				if(ny>=1&&ny<=len&&nx>=1&&nx<=len){
+					if(miro[ny][nx]!='*'){
+						if(dist[ny][nx][nextdir]>d+1){
+							dist[ny][nx][nextdir]=d+1;
+							pq.push({ny,nx,nextdir,d+1});
+						}
+					}
+				}
+				nextdir = 1;
+				ny = y+dy[nextdir];
+				nx = x+dx[nextdir];
+				if(ny>=1&&ny<=len&&nx>=1&&nx<=len){
+					if(miro[ny][nx]!='*'){
+						if(dist[ny][nx][nextdir]>d+1){
+							dist[ny][nx][nextdir]=d+1;
+							pq.push({ny,nx,nextdir,d+1});
+						}
+					}
+				}
+			}
+		}
+	}
+	int dap = inf;
+	for(i=0; i<4; ++i){
+		dap = min(dist[ey][ex][i], dap);
+	}
+	return dap;
+}
+
+int solve(){
+	int dap = get_dap();
+	return dap;
+}
+
+int main(void)
+{
+	cin>>len;
+	int i,k;
+	for(i=1; i<=len; ++i){
+		for(k=1; k<=len; ++k){
+			cin>>miro[i][k];
+			if(miro[i][k]=='#') start_end.push_back({i,k});
+		}
+	}
+	cout<<solve();
+	return 0;
+}
