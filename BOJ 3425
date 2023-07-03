@@ -1,0 +1,268 @@
+package com.example;
+
+import java.util.*;
+import java.io.*;
+
+class stack{
+	Stack<Integer> s = new Stack<>();
+	stack(int num){
+		s.add(num);
+	}
+	public void push(int x) {
+		s.add(x);
+	}
+	public boolean pop() {
+		if(s.isEmpty()) return false;
+		s.pop();
+		return true;
+	}
+	public boolean inv() {
+		if(s.isEmpty()) return false;
+		int num = s.peek();
+		s.pop();
+		s.push(0-num);
+		return true;
+	}
+	public boolean dup() {
+		if(s.isEmpty()) return false;
+		int num = s.peek();
+		s.push(num);
+		return true;
+	}
+	public boolean swp() {
+		if(s.size()<2) return false;
+		int f = s.peek();
+		s.pop();
+		int b = s.peek();
+		s.pop();
+		s.push(f);
+		s.push(b);
+		return true;
+	}
+	public boolean add() {
+		if(s.size()<2) return false;
+		int f = s.peek();
+		s.pop();
+		int b = s.peek();
+		s.pop();
+		if(Math.abs(f+b)>1000000000) return false;
+		s.push(f+b);
+		return true;
+	}
+	public boolean sub() {
+		if(s.size()<2) return false;
+		int f = s.peek();
+		s.pop();
+		int b = s.peek();
+		s.pop();
+		if(Math.abs(b-f)>1000000000) return false;
+		s.push(b-f);
+		return true;
+	}
+	public boolean mul() {
+		if(s.size()<2) return false;
+		int f = s.peek();
+		s.pop();
+		int b = s.peek();
+		s.pop();
+		long gop = (long)f*(long)b;
+		if(Math.abs(gop)>1000000000) return false;
+		s.push((int)gop);
+		return true;
+	}
+	public boolean div() {
+		if(s.size()<2) return false;
+		int f = s.peek();
+		s.pop();
+		int b = s.peek();
+		s.pop();
+		if(f==0) return false;
+		int numofminus=0;
+		if(f<0) numofminus++;
+		if(b<0) numofminus++;
+		int mok = Math.abs(b)/Math.abs(f);
+		if(numofminus==1) {
+			mok=0-mok;
+		}
+		if(Math.abs(mok)>1000000000) return false;
+		s.push(mok);
+		return true;
+	}
+	public boolean mod() {
+		if(s.size()<2) return false;
+		int f = s.peek();
+		s.pop();
+		int b = s.peek();
+		s.pop();
+		if(f==0) return false;
+		int numofminus=0;
+		if(f<0) numofminus++;
+		if(b<0) numofminus++;
+		int mok = Math.abs(b)/Math.abs(f);
+		if(numofminus==1) {
+			mok=0-mok;
+		}
+		
+		
+		int mod = b-f*mok;
+		if(Math.abs(mod)>1000000000) return false;
+		s.push(mod);
+		return true;
+	}
+	public int count() {
+		return s.size();
+	}
+	public int front() {
+		return s.peek();
+	}
+}
+
+public class BOJ3425 {
+	static ArrayList<String> com;
+	static ArrayList<Integer> num;
+	static BufferedReader br;
+	static BufferedWriter bw;
+	
+	public static void solve(int number) throws IOException {
+		stack s = new stack(number);
+		int i, nownum, index=0;
+		String nowcom;
+		/*
+		System.out.println();
+		System.out.println("com : ");
+		for(i=0; i<com.size(); ++i) {
+			System.out.print(com.get(i)+" ");
+		}
+		System.out.println();
+		System.out.println("num : ");
+		for(i=0; i<num.size(); ++i) {
+			System.out.print(num.get(i)+" ");
+		}
+		System.out.println();
+		System.out.println(com.size());
+		*/
+		for(i=0; i<com.size(); ++i) {
+			nowcom = com.get(i);
+			//System.out.println(nowcom);
+			if(nowcom.equals("NUM")) {
+				//System.out.println("ㅣㅇㄹ로옴");
+				nownum = num.get(index++);
+				s.push(nownum);
+			}
+			else if(nowcom.equals("POP")) {
+				if(!s.pop()) {
+					bw.write("ERROR");
+					return;
+				}
+			}
+			else if(nowcom.equals("INV")) {
+				if(!s.inv()) {
+					bw.write("ERROR");
+					return;
+				}
+			}
+			else if(nowcom.equals("DUP")) {
+				if(!s.dup()) {
+					bw.write("ERROR");
+					return;
+				}
+			}
+			else if(nowcom.equals("SWP")) {
+				if(!s.swp()) {
+					bw.write("ERROR");
+					return;
+				}
+			}
+			else if(nowcom.equals("ADD")) {
+				if(!s.add()) {
+					bw.write("ERROR");
+					return;
+				}
+			}
+			else if(nowcom.equals("SUB")) {
+				if(!s.sub()) {
+					bw.write("ERROR");
+					return;
+				}
+			}
+			else if(nowcom.equals("MUL")) {
+				if(!s.mul()) {
+					bw.write("ERROR");
+					return;
+				}
+			}
+			else if(nowcom.equals("DIV")) {
+				if(!s.div()) {
+					bw.write("ERROR");
+					return;
+				}
+			}
+			else {	//MOD
+				if(!s.mod()) {
+					bw.write("ERROR");
+					return;
+				}
+			}
+		}
+		//System.out.println("일로는 옴");
+		//System.out.println(s.count());
+		if(s.count()!=1) {
+			bw.write("ERROR");
+			return;
+		}
+		bw.write(String.valueOf(s.front()));
+	}
+	
+	public static void main(String[] args) throws IOException {
+		// TODO Auto-generated method stub
+		br = new BufferedReader(new InputStreamReader(System.in));
+		bw = new BufferedWriter(new OutputStreamWriter(System.out));
+		String command;
+		int number,i,count;
+		while(true) {
+			command = br.readLine();
+			if(command.equals("QUIT")) break;
+			com = new ArrayList<>();
+			num = new ArrayList<>();
+			while(!command.equals("END")) {
+				if(command.substring(0,3).equals("NUM")) {
+					com.add("NUM");
+					number = Integer.parseInt(command.substring(4));
+					num.add(number);
+				}
+				else {
+					com.add(command);
+				}
+				command = br.readLine();
+			}
+			//bw.write("명령어 갯수 : ");
+			//bw.write(String.valueOf(com.size()));
+			//bw.write("\n");
+			count = Integer.parseInt(br.readLine());
+			for(i=0; i<count; ++i) {
+				number = Integer.parseInt(br.readLine());
+				solve(number);
+				bw.write("\n");
+			}
+			bw.write("\n");
+			command = br.readLine();
+			//if(command.equals("")) continue;
+			//command = br.readLine();
+		}
+		bw.flush();
+	}
+
+}
+
+/*
+System.out.println();
+for(i=0; i<com.size(); ++i) {
+	System.out.print(com.get(i)+" ");
+}
+System.out.println();
+for(i=0; i<num.size(); ++i) {
+	System.out.print(num.get(i)+" ");
+}
+System.out.println();
+System.out.println();
+*/
